@@ -1,8 +1,10 @@
 # ARKAS DESKTOP
 electron desktop app
 
+- Initiate this app using boilerplate from electron-forge (template: typescript-webpack) https://www.electronforge.io/templates/typescript-+-webpack-template
+
 ### Platform
-- [ ] electron webpack typsecript project
+- [x] electron webpack typsecript project
 - [ ] basic build
 - [ ] local sqlite connection
 - [ ] installation build & script which includes sqlite3 db creation (if not exists)
@@ -22,9 +24,24 @@ electron desktop app
 
 ## Setup
 ### Required
+- yarn
 - nodejs
 - sqlite3
 
-
 ### Run/Build
+
+1. Clone repository
+```bash
+git clone https://gitlab.com/wartek-id/sds/arkas-desktop.git && arkas-desktop
+```
+
+2. Install all dependenies
+```bash
+yarn install
+```
+
+3. Run app
+```bash
+yarn start
+```
 
