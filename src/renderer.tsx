@@ -26,6 +26,12 @@
  * ```
  */
 
-import './index.css';
+import * as React from "react";
+import * as ReactDOM from "react-dom";
+import "./index.css";
 
-console.log('👋 This message is being logged by "renderer.js", included via webpack');
+function render() {
+  ReactDOM.render(<h2>Hello from React!</h2>, document.getElementById("root"));
+}
+
+render();
