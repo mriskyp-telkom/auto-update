@@ -32,7 +32,7 @@ variables:
   GITLAB_AUTH_TOKEN: $CI_JOB_TOKEN
 
 .make:
-  image: 
+  image: 4tqrgqe5yrgfd/electron
   stage: build
   cache:
     key:
@@ -45,7 +45,9 @@ variables:
     policy: pull-push
   artifacts:
     paths:
-      - dist
+      - dist/*.dmg
+      - dist/*.exe
+      - dist/*.deb
 
 .publish:
   stage: publish
@@ -71,7 +73,7 @@ publish-staging:
   variables:
     BUCKET: arkas_releases_staging
     PROJECT: arkas-staging
-  need: ["make-staging"]
+  needs: ["make-staging"]
   allow_failure: false
 
 # production
@@ -82,7 +84,7 @@ make-production:
     - yarn make
   environment:
     name: production
-  need: ["publish-staging"]
+  needs: ["publish-staging"]
   when: manual
   allow_failure: false
 
@@ -93,7 +95,7 @@ publish-production:
   variables:
     BUCKET: arkas_releases_production
     PROJECT: arkas-production
-  need: ["make-production"]
+  needs: ["make-production"]
   when: manual
   allow_failure: false
 
