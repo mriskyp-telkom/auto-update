@@ -26,14 +26,14 @@
           "config": {
             "authors": "Kemendikbudristek",
             "iconUrl": "https://rkas.kemdikbud.go.id/favicon.ico",
-            "exe": "${BUILD_NAME}.exe",
+            "exe": "$npm_package_productName-$npm_package_version.exe",
             "name": "arkas_desktop"
-          },
+          }
         },
         {
           "name": "@electron-forge/maker-zip",
           "platforms": [
-            "darwin"
+            "darwin","linux"
           ]
         },
         {

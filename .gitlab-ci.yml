@@ -32,12 +32,8 @@ variables:
   GITLAB_AUTH_TOKEN: $CI_JOB_TOKEN
 
 .make:
-  tags:
-    - 
   image: 
   stage: build
-  before_script:
-    - 
   script:
     # - cp .env.staging .env
     - yarn make
@@ -54,44 +50,47 @@ variables:
     paths:
       - dist
 
-make-staging:
-  extends: .make
-  environment:
-    name: staging
-  rules:
-    - 
-
-make-production:
-  extends: .make
-  environment:
-    name: production
-  rules:
-    - 
-
 .publish:
   stage: publish
   image: google/cloud-sdk:300.0.0-alpine
   script:
     - gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS
     - gsutil -m cp -r -Z 'dist/*' gs://${BUCKET}/
-    - gcloud compute url-maps invalidate-cdn-cache $GCLB_URL_MAP --host $GCLB_HOST --path="/*" --project $GCLB_PROJECT
+
+# staging
+make-staging:
+  extends: .make
+  environment:
+    name: staging
+  allow_failure: false
 
 publish-staging:
   extends: .publish
   environment:
     name: staging
   variables:
-    BUCKET: arkas-releases
+    BUCKET: arkas_releases_staging
     PROJECT: arkas-staging
-  rules:
-    - 
+  need: ["make-staging"]
+  allow_failure: false
+
+# production
+make-production:
+  extends: .make
+  environment:
+    name: production
+  need: ["publish-staging"]
+  when: manual
+  allow_failure: false
 
 publish-production:
   extends: .publish
   environment:
     name: production
   variables:
-    BUCKET: arkas-releases
+    BUCKET: arkas_releases_production
     PROJECT: arkas-production
-  rules:
-    - 
+  need: ["make-production"]
+  when: manual
+  allow_failure: false
+
