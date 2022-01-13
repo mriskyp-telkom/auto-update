@@ -5,7 +5,8 @@ electron desktop app
 
 ### Platform
 - [x] electron webpack typsecript project
-- [ ] basic build
+- [x] react + wartek's component-library + tailwind + clsx
+- [x] basic build
 - [ ] local sqlite connection
 - [ ] installation build & script which includes sqlite3 db creation (if not exists)
 - [ ] local db migration (for table structure and/or initial data)
@@ -43,5 +44,14 @@ yarn install
 3. Run app
 ```bash
 yarn start
+```
+
+## Generate Installer
+It will generate installer based on your OS,
+If you run this command below using Windows, it will generate .exe
+If you run this command below using Mac, it will generate .dmg
+
+```bash
+yarn make
 ```
 
