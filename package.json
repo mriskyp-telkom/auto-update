@@ -1,8 +1,8 @@
 {
   "name": "arkas-desktop",
-  "productName": "arkas-desktop",
-  "version": "1.0.0",
-  "description": "My Electron application description",
+  "productName": "Arkas",
+  "version": "4.0.0",
+  "description": "Aplikasi Rencana Kegiatan dan Anggaran Sekolah, selanjutnya disingkat Aplikasi RKAS merupakan sistem informasi yang memanfaatkan teknologi informasi dan komunikasi untuk mengfasilitasi penganggaran, pelaksanaan dan penatausahaan serta pertanggungjawaban dana bantuan operasional sekolah di satuan pendidikan dasar dan menengah secara nasional.",
   "main": ".webpack/main",
   "scripts": {
     "start": "electron-forge start",
@@ -24,8 +24,11 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
+            "authors": "Kemendikbudristek",
+            "iconUrl": "https://rkas.kemdikbud.go.id/favicon.ico",
+            "exe": "${BUILD_NAME}.exe",
             "name": "arkas_desktop"
-          }
+          },
         },
         {
           "name": "@electron-forge/maker-zip",
@@ -35,7 +38,13 @@
         },
         {
           "name": "@electron-forge/maker-deb",
-          "config": {}
+          "config": {
+            "options": {
+              "bin": "arkas_desktop",
+              "maintainer": "Kemendikbudristek",
+              "homepage": "https://rkas.kemdikbud.go.id"
+            }
+          }
         },
         {
           "name": "@electron-forge/maker-rpm",

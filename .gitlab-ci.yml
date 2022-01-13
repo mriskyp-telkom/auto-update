@@ -1,0 +1,97 @@
+stages:
+  - build
+  - publish
+
+# build:
+#   image: 4tqrgqe5yrgfd/electron
+#   stage: build
+#   script:
+#     - yarn make
+#   artifacts:
+#     expire_in: 1 day
+#     paths:
+#       - packages/app/desktop/build/installers/*-mac.zip
+#       - packages/app/desktop/build/installers/*.exe
+
+# pages:
+#   stage: publish
+#   script:
+#     - mkdir .public
+#     - cp -r packages/app/desktop/build/installers/* .public
+#     - mv .public public
+#   dependencies:
+#     - build
+#   artifacts:
+#     paths:
+#       - public/*-mac.zip
+#       - public/*.exe
+#   only:
+#     - main
+
+variables:
+  GITLAB_AUTH_TOKEN: $CI_JOB_TOKEN
+
+.make:
+  tags:
+    - 
+  image: 
+  stage: build
+  before_script:
+    - 
+  script:
+    # - cp .env.staging .env
+    - yarn make
+  cache:
+    key:
+      files:
+        - package.json
+        - yarn.lock
+    paths:
+      - node_modules/
+      - .yarn/
+    policy: pull-push
+  artifacts:
+    paths:
+      - dist
+
+make-staging:
+  extends: .make
+  environment:
+    name: staging
+  rules:
+    - 
+
+make-production:
+  extends: .make
+  environment:
+    name: production
+  rules:
+    - 
+
+.publish:
+  stage: publish
+  image: google/cloud-sdk:300.0.0-alpine
+  script:
+    - gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS
+    - gsutil -m cp -r -Z 'dist/*' gs://${BUCKET}/
+    - gcloud compute url-maps invalidate-cdn-cache $GCLB_URL_MAP --host $GCLB_HOST --path="/*" --project $GCLB_PROJECT
+
+publish-staging:
+  extends: .publish
+  environment:
+    name: staging
+  variables:
+    BUCKET: arkas-releases
+    PROJECT: arkas-staging
+  rules:
+    - 
+
+publish-production:
+  extends: .publish
+  environment:
+    name: production
+  variables:
+    BUCKET: arkas-releases
+    PROJECT: arkas-production
+  rules:
+    - 
