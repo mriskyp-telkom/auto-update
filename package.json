@@ -33,7 +33,8 @@
         {
           "name": "@electron-forge/maker-zip",
           "platforms": [
-            "darwin","linux"
+            "darwin",
+            "linux"
           ]
         },
         {
@@ -94,6 +95,7 @@
     "autoprefixer": "^10.4.2",
     "clsx": "^1.1.1",
     "css-loader": "^6.0.0",
+    "dotenv": "^11.0.0",
     "electron": "16.0.6",
     "eslint": "^7.6.0",
     "eslint-plugin-import": "^2.20.0",

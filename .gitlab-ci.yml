@@ -34,9 +34,6 @@ variables:
 .make:
   image: 
   stage: build
-  script:
-    # - cp .env.staging .env
-    - yarn make
   cache:
     key:
       files:
@@ -60,6 +57,9 @@ variables:
 # staging
 make-staging:
   extends: .make
+  script:
+    - cp .env.staging .env
+    - yarn make
   environment:
     name: staging
   allow_failure: false
@@ -77,6 +77,9 @@ publish-staging:
 # production
 make-production:
   extends: .make
+  script:
+    - cp .env.production .env
+    - yarn make
   environment:
     name: production
   need: ["publish-staging"]
