@@ -798,6 +798,32 @@
   resolved "https://registry.yarnpkg.com/@vercel/webpack-asset-relocator-loader/-/webpack-asset-relocator-loader-1.7.0.tgz#d3b707e0aba3111719f941dacb2408eff3c27319"
   integrity sha512-1Dy3BdOliDwxA7VZSIg55E1d/us2KvsCQOZV25fgufG//CsnZBGiSAL7qewTQf7YVHH0A9PHgzwMmKIZ8aFYVw==
 
+"@wartek-id/button@^1.1.1":
+  version "1.1.1"
+  resolved "https://gitlab.com/api/v4/projects/25182406/packages/npm/@wartek-id/button/-/@wartek-id/button-1.1.1.tgz#d34ee8928a1709ba7c48f278e9d066b6eda3d25d"
+  integrity sha1-007okooXCbp8SPJ46dBmtu2j0l0=
+  dependencies:
+    "@wartek-id/react-polymorphic" "*"
+    "@wartek-id/react-primitive" "*"
+    clsx "^1.1.1"
+
+"@wartek-id/design-tokens@^1.4.1":
+  version "1.4.1"
+  resolved "https://gitlab.com/api/v4/projects/24396089/packages/npm/@wartek-id/design-tokens/-/@wartek-id/design-tokens-1.4.1.tgz#48966d04b7da8e6f94b0576bfb3e1ef9f618df19"
+  integrity sha1-SJZtBLfajm+UsFdr+z4e+fYY3xk=
+
+"@wartek-id/react-polymorphic@*":
+  version "0.0.2"
+  resolved "https://gitlab.com/api/v4/projects/25182406/packages/npm/@wartek-id/react-polymorphic/-/@wartek-id/react-polymorphic-0.0.2.tgz#119603b013416d5429b34886779ea6354ce6f290"
+  integrity sha1-EZYDsBNBbVQps0iGd56mNUzm8pA=
+
+"@wartek-id/react-primitive@*":
+  version "0.0.2"
+  resolved "https://gitlab.com/api/v4/projects/25182406/packages/npm/@wartek-id/react-primitive/-/@wartek-id/react-primitive-0.0.2.tgz#b326a8a7de78e840179e4cf449d722bf83316286"
+  integrity sha1-syaop9546EAXnkz0Sdciv4MxYoY=
+  dependencies:
+    "@wartek-id/react-polymorphic" "*"
+
 "@webassemblyjs/ast@1.11.1":
   version "1.11.1"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.11.1.tgz#2bfd767eae1a6996f432ff7e8d7fc75679c0b6a7"
@@ -1635,6 +1661,11 @@ clone@^1.0.2:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/clone/-/clone-1.0.4.tgz#da309cc263df15994c688ca902179ca3c7cd7c7e"
   integrity sha1-2jCcwmPfFZlMaIypAheco8fNfH4=
+
+clsx@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/clsx/-/clsx-1.1.1.tgz#98b3134f9abbdf23b2663491ace13c5c03a73188"
+  integrity sha512-6/bPho624p3S2pMyvP5kKBPXnI3ufHLObBFCfgx+LkeR5lg2XYy2hqZqUf45ypD8COn2bhgGJSUE+l5dhNBieA==
 
 code-point-at@^1.0.0:
   version "1.1.0"

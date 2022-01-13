@@ -28,7 +28,12 @@
 
 import * as React from "react";
 import * as ReactDOM from "react-dom";
+
 import App from "./App";
+
+import '@wartek-id/design-tokens/build/guru-mobile/css/color.css'
+import '@wartek-id/design-tokens/build/guru-mobile/css/font.css'
+import '@wartek-id/design-tokens/build/guru-mobile/css/size.css'
 import "./index.css";
 
 const rootElement = document.getElementById("root");

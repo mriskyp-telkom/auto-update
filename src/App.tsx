@@ -1,6 +1,8 @@
 import React, { FC } from "react";
 import { HashRouter, Link, Route, Routes } from "react-router-dom";
 
+import { Button } from "@wartek-id/button";
+
 import HomeApp from "./app/HomeApp";
 import AboutApp from "./app/AboutApp";
 
@@ -10,10 +12,24 @@ const App: FC = () => {
       <div className="App">
         <div className="menu">
           <Link to="/">
-            <h2>Home</h2>
+            <Button
+              color="blue"
+              onClick={function noRefCheck() {}}
+              size="md"
+              variant="solid"
+            >
+              Home
+            </Button>
           </Link>
           <Link to="/about">
-            <h2>About</h2>
+            <Button
+              color="blue"
+              onClick={function noRefCheck() {}}
+              size="md"
+              variant="solid"
+            >
+              About
+            </Button>
           </Link>
         </div>
         <Routes>
