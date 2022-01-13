@@ -1,6 +1,8 @@
 stages:
-  - build
-  - publish
+  - build-staging
+  - publish-staging
+  - build-production
+  - publish-production
 
 # build:
 #   image: 4tqrgqe5yrgfd/electron
@@ -33,7 +35,6 @@ variables:
 
 .make:
   image: 4tqrgqe5yrgfd/electron
-  stage: build
   cache:
     key:
       files:
@@ -50,7 +51,6 @@ variables:
       - dist/*.deb
 
 .publish:
-  stage: publish
   image: google/cloud-sdk:300.0.0-alpine
   script:
     - gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS
@@ -59,6 +59,7 @@ variables:
 # staging
 make-staging:
   extends: .make
+  stage: build-staging
   script:
     - cp .env.staging .env
     - yarn make
@@ -68,6 +69,7 @@ make-staging:
 
 publish-staging:
   extends: .publish
+  stage: publish-staging
   environment:
     name: staging
   variables:
@@ -79,6 +81,7 @@ publish-staging:
 # production
 make-production:
   extends: .make
+  stage: build-production
   script:
     - cp .env.production .env
     - yarn make
@@ -87,9 +90,12 @@ make-production:
   needs: ["publish-staging"]
   when: manual
   allow_failure: false
+  only:
+    - main
 
 publish-production:
   extends: .publish
+  stage: publish-production
   environment:
     name: production
   variables:
@@ -98,4 +104,6 @@ publish-production:
   needs: ["make-production"]
   when: manual
   allow_failure: false
+  only:
+    - main
 
