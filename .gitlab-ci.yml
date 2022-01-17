@@ -35,7 +35,9 @@ make-win-deb-staging:
   extends: .make
   stage: build-staging
   before_script:
+    - add-apt-repository ppa:git-core/ppa
     - apt update
+    - apt install -y git
     - apt install -y software-properties-common
     - apt install -y python3
     - apt install -y wine64
