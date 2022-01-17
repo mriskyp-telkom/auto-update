@@ -35,13 +35,14 @@ make-win-deb-staging:
   extends: .make
   stage: build-staging
   before_script:
+    - apt update
+    - apt install -y software-properties-common
     - add-apt-repository ppa:git-core/ppa
+    - apt-add-repository 'deb https://download.mono-project.com/repo/ubuntu stable-focal main'
     - apt update
     - apt install -y git
-    - apt install -y software-properties-common
     - apt install -y python3
     - apt install -y wine64
-    - apt-add-repository 'deb https://download.mono-project.com/repo/ubuntu stable-focal main'
     - apt install -y mono-complete
   script:
     - mv ./.env.staging ./.env && rm ./.env.production
