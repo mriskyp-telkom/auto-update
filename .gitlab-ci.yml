@@ -44,6 +44,7 @@ make-win-deb-staging:
   script:
     - mv ./.env.staging ./.env && rm ./.env.production
     - npm install yarn
+    - yarn install
     - yarn make
   environment:
     name: staging
