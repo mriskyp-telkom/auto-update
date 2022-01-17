@@ -82,7 +82,7 @@ publish-staging:
   variables:
     BUCKET: arkas_releases_staging
     PROJECT: arkas-staging
-  needs: ["make-staging"]
+  needs: ["make-win-deb-staging"]
   allow_failure: false
 
 # production
