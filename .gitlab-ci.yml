@@ -37,7 +37,6 @@ make-win-deb-staging:
   before_script:
     - apt update
     - apt install -y software-properties-common
-    - add-apt-repository ppa:git-core/ppa
     - apt-add-repository 'deb https://download.mono-project.com/repo/ubuntu stable-focal main'
     - apt update
     - apt install -y git
