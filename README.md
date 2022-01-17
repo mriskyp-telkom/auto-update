@@ -36,12 +36,18 @@ electron desktop app
 git clone https://gitlab.com/wartek-id/sds/arkas-desktop.git && arkas-desktop
 ```
 
-2. Install all dependenies
+2. Add [gitlab auth token](https://wartek.atlassian.net/wiki/spaces/ENG/pages/1684734334/How+To+Setup+GITLAB+AUTH+TOKEN) to your env.
+
+```bash
+export GITLAB_AUTH_TOKEN=YOUR_TOKEN
+```
+
+3. Install all dependenies
 ```bash
 yarn install
 ```
 
-3. Run app
+4. Run app
 ```bash
 yarn start
 ```
