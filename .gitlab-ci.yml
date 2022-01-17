@@ -35,8 +35,13 @@ make-win-deb-staging:
   extends: .make
   stage: build-staging
   before_script:
+    - node -v 
     - apt update
     - apt install -y software-properties-common
+    - apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A6A19B38D3D831EF
+    - apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A1715D88E1DF1F24
+    - apt update
+    - add-apt-repository ppa:git-core/ppa
     - apt-add-repository 'deb https://download.mono-project.com/repo/ubuntu stable-focal main'
     - apt update
     - apt install -y git
