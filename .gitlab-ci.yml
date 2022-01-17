@@ -4,37 +4,10 @@ stages:
   - build-production
   - publish-production
 
-# build:
-#   image: 4tqrgqe5yrgfd/electron
-#   stage: build
-#   script:
-#     - yarn make
-#   artifacts:
-#     expire_in: 1 day
-#     paths:
-#       - packages/app/desktop/build/installers/*-mac.zip
-#       - packages/app/desktop/build/installers/*.exe
-
-# pages:
-#   stage: publish
-#   script:
-#     - mkdir .public
-#     - cp -r packages/app/desktop/build/installers/* .public
-#     - mv .public public
-#   dependencies:
-#     - build
-#   artifacts:
-#     paths:
-#       - public/*-mac.zip
-#       - public/*.exe
-#   only:
-#     - main
-
 variables:
   GITLAB_AUTH_TOKEN: $CI_JOB_TOKEN
 
 .make:
-  image: 4tqrgqe5yrgfd/electron
   cache:
     key:
       files:
@@ -46,7 +19,7 @@ variables:
     policy: pull-push
   artifacts:
     paths:
-      - dist/*.dmg
+      # - dist/*.dmg
       - dist/*.exe
       - dist/*.deb
 
@@ -57,15 +30,49 @@ variables:
     - gsutil -m cp -r -Z 'dist/*' gs://${BUCKET}/
 
 # staging
-make-staging:
+make-win-deb-staging:
+  image: node:fermium-bullseye-slim
   extends: .make
   stage: build-staging
+  before_script:
+    - apt update
+    - apt install -y software-properties-common
+    - apt install -y python3
+    - apt install -y wine64
+    - apt-add-repository 'deb https://download.mono-project.com/repo/ubuntu stable-focal main'
+    - apt install -y mono-complete
   script:
-    - cp .env.staging .env
+    - mv ./.env.staging ./.env && rm ./.env.production
+    - npm install yarn
     - yarn make
   environment:
     name: staging
+  variables:
+    USED_ENV: .env.staging
+    DELETED_ENV: .env.production
   allow_failure: false
+
+# make-osx-staging:
+#   image: sickcodes/docker-osx
+#   extends: .make
+#   stage: build-staging
+#   environment:
+#     name: staging
+#   variables:
+#     USED_ENV: .env.staging
+#     DELETED_ENV: .env.production
+#   allow_failure: false
+
+# make-deb-staging:
+#   image: node:fermium-bullseye
+#   extends: .make
+#   stage: build-staging
+#   environment:
+#     name: staging
+#   variables:
+#     USED_ENV: .env.staging
+#     DELETED_ENV: .env.production
+#   allow_failure: false
 
 publish-staging:
   extends: .publish
@@ -79,31 +86,33 @@ publish-staging:
   allow_failure: false
 
 # production
-make-production:
-  extends: .make
-  stage: build-production
-  script:
-    - cp .env.production .env
-    - yarn make
-  environment:
-    name: production
-  needs: ["publish-staging"]
-  when: manual
-  allow_failure: false
-  only:
-    - main
+# make-production:
+#   extends: .make
+#   stage: build-production
+#   before_script:
+#     - npm install --global yarn
+#   script:
+#     - mv .env.production .env && rm .env.staging
+#     - yarn make
+#   environment:
+#     name: production
+#   needs: ["publish-staging"]
+#   when: manual
+#   allow_failure: false
+#   only:
+#     - main
 
-publish-production:
-  extends: .publish
-  stage: publish-production
-  environment:
-    name: production
-  variables:
-    BUCKET: arkas_releases_production
-    PROJECT: arkas-production
-  needs: ["make-production"]
-  when: manual
-  allow_failure: false
-  only:
-    - main
+# publish-production:
+#   extends: .publish
+#   stage: publish-production
+#   environment:
+#     name: production
+#   variables:
+#     BUCKET: arkas_releases_production
+#     PROJECT: arkas-production
+#   needs: ["make-production"]
+#   when: manual
+#   allow_failure: false
+#   only:
+#     - main
 
