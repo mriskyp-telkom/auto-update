@@ -37,6 +37,7 @@ make-win-deb-staging:
   before_script:
     - node -v 
     - apt update
+    - apt install -y gnupg
     - apt install -y software-properties-common
     - apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A6A19B38D3D831EF
     - apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A1715D88E1DF1F24
