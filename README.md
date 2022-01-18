@@ -8,6 +8,7 @@ electron desktop app
 
 - [x] electron webpack typsecript project
 - [x] react + wartek's component-library + tailwind + clsx
+- [x] eslint + prettier + pre-commit (husky)
 - [x] basic build
 - [ ] local sqlite connection
 - [ ] installation build & script which includes sqlite3 db creation (if not exists)
@@ -39,7 +40,7 @@ electron desktop app
 1. Clone repository
 
 ```bash
-git clone https://gitlab.com/wartek-id/sds/arkas-desktop.git && arkas-desktop
+git clone https://gitlab.com/wartek-id/sds/arkas-desktop.git && cd arkas-desktop
 ```
 
 2. Add [gitlab auth token](https://wartek.atlassian.net/wiki/spaces/ENG/pages/1684734334/How+To+Setup+GITLAB+AUTH+TOKEN) to your env.
