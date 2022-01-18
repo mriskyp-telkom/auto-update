@@ -14,7 +14,6 @@ const App: FC = () => {
           <Link to="/">
             <Button
               color="blue"
-              onClick={function noRefCheck() {}}
               size="md"
               variant="solid"
             >
@@ -24,7 +23,6 @@ const App: FC = () => {
           <Link to="/about">
             <Button
               color="blue"
-              onClick={function noRefCheck() {}}
               size="md"
               variant="solid"
             >
