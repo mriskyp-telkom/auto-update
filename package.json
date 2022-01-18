@@ -10,7 +10,8 @@
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint:script": "eslint . --ext ts,tsx,js --fix --max-warnings=0",
-    "postinstall": "husky install"
+    "postinstall": "husky install",
+    "format": "prettier --write . "
   },
   "keywords": [],
   "author": {
@@ -93,6 +94,7 @@
     "husky": "^7.0.4",
     "node-loader": "^2.0.0",
     "postcss-loader": "^6.2.1",
+    "prettier": "2.5.1",
     "style-loader": "^3.0.0",
     "tailwindcss": "2.1.1",
     "ts-loader": "^9.2.2",

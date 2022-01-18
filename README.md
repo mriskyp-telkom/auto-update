@@ -1,9 +1,11 @@
 # ARKAS DESKTOP
+
 electron desktop app
 
 - Initiate this app using boilerplate from electron-forge (template: typescript-webpack) https://www.electronforge.io/templates/typescript-+-webpack-template
 
 ### Platform
+
 - [x] electron webpack typsecript project
 - [x] react + wartek's component-library + tailwind + clsx
 - [x] basic build
@@ -13,6 +15,7 @@ electron desktop app
 - [ ] version auto update mechanism
 
 ### Features
+
 - [ ] Login
 - [ ] Registrasi
 - [ ] Aktivasi Kertas Kerja
@@ -24,7 +27,9 @@ electron desktop app
 - [ ] Pergeseran Kertas Kerja
 
 ## Setup
+
 ### Required
+
 - yarn
 - nodejs
 - sqlite3
@@ -32,6 +37,7 @@ electron desktop app
 ### Run/Build
 
 1. Clone repository
+
 ```bash
 git clone https://gitlab.com/wartek-id/sds/arkas-desktop.git && arkas-desktop
 ```
@@ -43,21 +49,25 @@ export GITLAB_AUTH_TOKEN=YOUR_TOKEN
 ```
 
 3. Install all dependenies
+
 ```bash
 yarn install
 ```
 
 4. Preparation
+
 ```bash
 yarn postinstall
 ```
 
 5. Run app
+
 ```bash
 yarn start
 ```
 
 ## Generate Installer
+
 It will generate installer based on your OS,
 If you run this command below using Windows, it will generate .exe
 If you run this command below using Mac, it will generate .dmg
@@ -65,4 +75,3 @@ If you run this command below using Mac, it will generate .dmg
 ```bash
 yarn make
 ```
-
