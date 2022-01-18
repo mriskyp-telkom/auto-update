@@ -9,7 +9,8 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "lint": "eslint --ext .ts,.tsx ."
+    "lint:script": "eslint . --ext ts,tsx,js --fix --max-warnings=0",
+    "postinstall": "husky install"
   },
   "keywords": [],
   "author": {

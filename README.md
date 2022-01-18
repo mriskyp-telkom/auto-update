@@ -47,7 +47,12 @@ export GITLAB_AUTH_TOKEN=YOUR_TOKEN
 yarn install
 ```
 
-4. Run app
+4. Preparation
+```bash
+yarn postinstall
+```
+
+5. Run app
 ```bash
 yarn start
 ```
