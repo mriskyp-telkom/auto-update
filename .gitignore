@@ -88,5 +88,5 @@ typings/
 # Electron-Forge
 out/
 
-Dockerfile
+Dockerfile*
 .dockerignore

@@ -8,6 +8,7 @@
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
+    "make-win32": "electron-forge make --platform win32",
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx ."
   },
@@ -28,7 +29,6 @@
           "config": {
             "authors": "Kemendikbudristek",
             "iconUrl": "https://rkas.kemdikbud.go.id/favicon.ico",
-            "exe": "$npm_package_productName-$npm_package_version.exe",
             "name": "arkas_desktop"
           }
         },

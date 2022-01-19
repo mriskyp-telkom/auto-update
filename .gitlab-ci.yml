@@ -31,32 +31,16 @@ variables:
 
 # staging
 make-win-deb-staging:
-  image: node:fermium-buster-slim
+  image: asia.gcr.io/belajar-id-networks/sds/arkas-builder-base:aa457e041ed32e3cf46bb1aaa4e4e077fee8744b
   extends: .make
   stage: build-staging
-  before_script:
-    - node -v 
-    - apt update && apt upgrade
-    - apt install -y gnupg
-    - apt install -y software-properties-common
-    - apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A6A19B38D3D831EF
-    - apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A1715D88E1DF1F24
-    - apt update
-    - apt install -y git
-    - apt install -y python3
-    - apt install -y wine64
-    - apt install -y dpkg
-    - apt install -y fakeroot
-    - apt install -y dirmngr apt-transport-https ca-certificates 
-    - apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
-    - sh -c 'echo "deb https://download.mono-project.com/repo/debian stable-buster main" > /etc/apt/sources.list.d/mono-official-stable.list'
-    - apt update
-    - apt install -y mono-complete
   script:
     - mv ./.env.staging ./.env && rm ./.env.production
     - npm install yarn
     - yarn install
+    - yarn make-win32
     - yarn make
+    - apt install -y tree && tree out/make/
   environment:
     name: staging
   allow_failure: false
