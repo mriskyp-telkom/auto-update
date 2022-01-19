@@ -10,6 +10,7 @@ const App: FC = () => {
   return (
     <HashRouter>
       <div className="App">
+        <img src="./assets/logo-arkas.png" />
         <div className="menu">
           <Link to="/">
             <Button color="blue" size="md" variant="solid">

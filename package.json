@@ -46,7 +46,7 @@
         {
           "name": "@electron-forge/maker-dmg",
           "config": {
-            "background": "./assets/dmg-background.png",
+            "background": "./public/assets/logo-arkas.png",
             "format": "ULFO"
           }
         }
@@ -86,6 +86,7 @@
     "@vercel/webpack-asset-relocator-loader": "1.7.0",
     "autoprefixer": "^10.4.2",
     "clsx": "^1.1.1",
+    "copy-webpack-plugin": "^10.2.0",
     "css-loader": "^6.0.0",
     "electron": "16.0.6",
     "eslint": "^7.6.0",
