@@ -29,8 +29,6 @@ electron desktop app
 - nodejs
 - sqlite3
 
-add environment variable GITLAB_AUTH_TOKEN, with the value of your gitlab personal access token. if you don't have it yet, follow [this](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html) to create one. alternatively, always run the commands with that variable. e.g: `$ GITLAB_AUTH_TOKEN=<your_token> yarn install`.
-
 ### Run/Build
 
 1. Clone repository

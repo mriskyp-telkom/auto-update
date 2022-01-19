@@ -19,7 +19,9 @@
   "license": "MIT",
   "config": {
     "forge": {
-      "packagerConfig": {},
+      "packagerConfig": {
+        "executableName": "arkas_desktop"
+      },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
@@ -31,13 +33,6 @@
           }
         },
         {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin",
-            "linux"
-          ]
-        },
-        {
           "name": "@electron-forge/maker-deb",
           "config": {
             "options": {
@@ -46,10 +41,6 @@
               "homepage": "https://rkas.kemdikbud.go.id"
             }
           }
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
         },
         {
           "name": "@electron-forge/maker-dmg",
