@@ -22,6 +22,7 @@ variables:
       - out/make
   only:
     - tags
+    - main
 
 .publish:
   image: google/cloud-sdk:300.0.0-alpine
@@ -30,6 +31,7 @@ variables:
     - gsutil -m cp -r -Z out/make gs://${BUCKET}/arkas-$CI_COMMIT_TAG
   only:
     - tags
+    - main
 
 # staging
 make-win-deb-staging:
