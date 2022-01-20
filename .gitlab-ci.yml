@@ -26,9 +26,8 @@ variables:
 .publish:
   image: google/cloud-sdk:300.0.0-alpine
   script:
-    - cp out/make /arkas-$CI_COMMIT_TAG
     - gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS
-    - gsutil -m cp -r -Z '/arkas-$CI_COMMIT_TAG' gs://${BUCKET}/
+    - gsutil -m cp -r -Z out/make gs://${BUCKET}/arkas-$CI_COMMIT_TAG
 
 # staging
 make-win-deb-staging:
@@ -64,7 +63,6 @@ publish-staging:
     name: staging
   variables:
     BUCKET: arkas_releases_staging
-  needs: ["make-win-deb-staging"]
   allow_failure: false
 
 # production
