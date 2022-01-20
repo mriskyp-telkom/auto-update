@@ -76,3 +76,8 @@ If you run this command below using Mac, it will generate .dmg
 ```bash
 yarn make
 ```
+
+## Release Pipeline
+Make sure the changes are merged to `main` branch and *tagged with the expected version*. Staging build and release will happen automatically, production is to be triggered manually from pipeline.
+- staging releases: https://console.cloud.google.com/storage/browser/arkas_releases_staging;tab=objects?project=arkas-staging
+- production releases: https://console.cloud.google.com/storage/browser/arkas_releases_production;tab=objects?project=arkas-production

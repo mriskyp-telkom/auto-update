@@ -1,0 +1,100 @@
+stages:
+  - build-staging
+  - publish-staging
+  - build-production
+  - publish-production
+
+variables:
+  GITLAB_AUTH_TOKEN: $CI_JOB_TOKEN
+
+.make:
+  cache:
+    key:
+      files:
+        - package.json
+        - yarn.lock
+    paths:
+      - node_modules/
+      - .yarn/
+    policy: pull-push
+  artifacts:
+    paths:
+      - out/make
+  only:
+    - tags
+
+.publish:
+  image: google/cloud-sdk:300.0.0-alpine
+  script:
+    - gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS
+    - gsutil -m cp -r -Z out/make gs://${BUCKET}/arkas-$CI_COMMIT_TAG
+  only:
+    - tags
+
+# staging
+make-win-deb-staging:
+  image: asia.gcr.io/belajar-id-networks/sds/arkas-builder-base:aa457e041ed32e3cf46bb1aaa4e4e077fee8744b
+  extends: .make
+  stage: build-staging
+  script:
+    - mv ./.env.staging ./.env && rm ./.env.production
+    - npm install yarn
+    - yarn install
+    - yarn make-win32
+    - yarn make
+    - apt install -y tree && tree out/make/
+  environment:
+    name: staging
+  allow_failure: false
+
+# make-osx-staging:
+#   image: sickcodes/docker-osx
+#   extends: .make
+#   stage: build-staging
+#   environment:
+#     name: staging
+#   variables:
+#     USED_ENV: .env.staging
+#     DELETED_ENV: .env.production
+#   allow_failure: false
+
+publish-staging:
+  extends: .publish
+  stage: publish-staging
+  environment:
+    name: staging
+  variables:
+    BUCKET: arkas_releases_staging
+  needs: ["make-win-deb-staging"]
+  allow_failure: false
+
+# production
+# make-production:
+#   extends: .make
+#   stage: build-production
+#   before_script:
+#     - npm install --global yarn
+#   script:
+#     - mv .env.production .env && rm .env.staging
+#     - yarn make
+#   environment:
+#     name: production
+#   needs: ["publish-staging"]
+#   when: manual
+#   allow_failure: false
+#   only:
+#     - main
+
+# publish-production:
+#   extends: .publish
+#   stage: publish-production
+#   environment:
+#     name: production
+#   variables:
+#     BUCKET: arkas_releases_production
+#   needs: ["make-production"]
+#   when: manual
+#   allow_failure: false
+#   only:
+#     - main
+
