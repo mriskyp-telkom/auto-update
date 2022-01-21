@@ -5,10 +5,9 @@ import { useNavigate } from 'react-router-dom'
 import { Button } from '@wartek-id/button'
 import { Input, InputGroup } from '@wartek-id/input'
 
-interface FormLoginData {
-  email: string
-  password: string
-}
+import { emailRegex } from '../../constants/regex'
+
+import { FormLoginData } from '../../types/LoginType'
 
 const LoginForm: FC = () => {
   const navigate = useNavigate()
@@ -16,13 +15,37 @@ const LoginForm: FC = () => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isValid, submitCount },
   } = useForm<FormLoginData>({
     mode: 'onChange',
   })
 
   const onSubmit = async (data: FormLoginData) => {
-    console.log(data)
+    if (!emailRegex.test(data.email)) {
+      setError('email', {
+        type: 'manual',
+        message: 'Masukkan email dengan format nama@domain.com',
+      })
+      return
+    }
+
+    if (data.email === 'yasmin@dummy.com') {
+      setError('email', {
+        type: 'manual',
+        message: 'Email tidak terdaftar',
+      })
+      return
+    }
+
+    if (data.password === '1234') {
+      setError('password', {
+        type: 'manual',
+        message: 'Password salah',
+      })
+      return
+    }
+
     navigate('/dashboard')
   }
 
