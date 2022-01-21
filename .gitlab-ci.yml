@@ -21,7 +21,7 @@ variables:
     paths:
       - out/make
   rules:
-    - if: '$CI_COMMIT_BRANCH == "main" && $CI_COMMIT_TAG != null'
+    - if: '$CI_COMMIT_REF_NAME == "main" && $CI_COMMIT_TAG != null'
 
 .publish:
   image: google/cloud-sdk:300.0.0-alpine
@@ -29,7 +29,7 @@ variables:
     - gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS
     - gsutil -m cp -r -Z out/make gs://${BUCKET}/arkas-$CI_COMMIT_TAG
   rules:
-    - if: '$CI_COMMIT_BRANCH == "main" && $CI_COMMIT_TAG != null'
+    - if: '$CI_COMMIT_REF_NAME == "main" && $CI_COMMIT_TAG != null'
 
 # staging
 make-win-deb-staging:
