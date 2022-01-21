@@ -4,7 +4,9 @@ import clsx from 'clsx'
 import { Button } from '@wartek-id/button'
 import { BearsStates, useBearStore } from '../stores/bear'
 
-const HomeApp: FC = () => {
+import Header from '../components/Header'
+
+const DashboardView: FC = () => {
   const bears = useBearStore((state: BearsStates) => state.bears)
   const increasePopulation = useBearStore(
     (state: BearsStates) => state.increasePopulation
@@ -15,6 +17,7 @@ const HomeApp: FC = () => {
 
   return (
     <div className={clsx('text-pink-600', 'text-center')}>
+      <Header />
       Home App
       <br />
       bears : {bears}
@@ -33,4 +36,4 @@ const HomeApp: FC = () => {
   )
 }
 
-export default HomeApp
+export default DashboardView
