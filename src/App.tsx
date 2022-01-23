@@ -3,8 +3,8 @@ import { HashRouter, Link, Route, Routes } from 'react-router-dom'
 
 import { Button } from '@wartek-id/button'
 
-import HomeApp from './app/HomeApp'
-import AboutApp from './app/AboutApp'
+import HomeView from 'views/HomeView'
+import AboutView from 'views/AboutView'
 
 const App: FC = () => {
   return (
@@ -24,8 +24,8 @@ const App: FC = () => {
           </Link>
         </div>
         <Routes>
-          <Route path="/" element={<HomeApp />} />
-          <Route path="/about" element={<AboutApp />} />
+          <Route path="/" element={<HomeView />} />
+          <Route path="/about" element={<AboutView />} />
         </Routes>
       </div>
     </HashRouter>

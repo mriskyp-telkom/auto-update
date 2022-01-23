@@ -2,9 +2,10 @@ import React, { FC } from 'react'
 import clsx from 'clsx'
 
 import { Button } from '@wartek-id/button'
-import { BearsStates, useBearStore } from '../stores/bear'
 
-const HomeApp: FC = () => {
+import { BearsStates, useBearStore } from 'stores/bear'
+
+const HomeView: FC = () => {
   const bears = useBearStore((state: BearsStates) => state.bears)
   const increasePopulation = useBearStore(
     (state: BearsStates) => state.increasePopulation
@@ -33,4 +34,4 @@ const HomeApp: FC = () => {
   )
 }
 
-export default HomeApp
+export default HomeView

@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
-import { BearsStates, useBearStore } from '../stores/bear'
+import { BearsStates, useBearStore } from 'stores/bear'
 
-const AboutApp: FC = () => {
+const AboutView: FC = () => {
   const bears = useBearStore((state: BearsStates) => state.bears)
   return (
     <div>
@@ -11,4 +11,4 @@ const AboutApp: FC = () => {
   )
 }
 
-export default AboutApp
+export default AboutView
