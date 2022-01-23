@@ -2,9 +2,10 @@ import React, { FC } from 'react'
 import clsx from 'clsx'
 
 import { Button } from '@wartek-id/button'
-import { BearsStates, useBearStore } from '../stores/bear'
 
-import Header from '../components/Header'
+import { BearsStates, useBearStore } from 'stores/bear'
+
+import Header from 'components/Header'
 
 const DashboardView: FC = () => {
   const bears = useBearStore((state: BearsStates) => state.bears)

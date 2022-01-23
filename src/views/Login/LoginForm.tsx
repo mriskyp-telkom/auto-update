@@ -5,9 +5,9 @@ import { useNavigate } from 'react-router-dom'
 import { Button } from '@wartek-id/button'
 import { Input, InputGroup } from '@wartek-id/input'
 
-import { emailRegex } from '../../constants/regex'
+import { emailRegex } from 'constants/regex'
 
-import { FormLoginData } from '../../types/LoginType'
+import { FormLoginData } from 'types/LoginType'
 
 const LoginForm: FC = () => {
   const navigate = useNavigate()

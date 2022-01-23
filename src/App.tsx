@@ -1,11 +1,11 @@
 import React, { FC } from 'react'
 import { HashRouter, Route, Routes } from 'react-router-dom'
 
-import HeaderComponent from './components/HeaderComponent'
+import HeaderComponent from 'components/HeaderComponent'
 
-import DashboardView from './views/DashboardView'
-import AboutView from './views/AboutView'
-import LoginView from './views/Login/LoginView'
+import DashboardView from 'views/DashboardView'
+import AboutView from 'views/AboutView'
+import LoginView from 'views/Login/LoginView'
 
 const App: FC = () => {
   return (
