@@ -1,9 +1,10 @@
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 
 import { Button } from '@wartek-id/button'
-import { Input, InputGroup } from '@wartek-id/input'
+import { Input, InputGroup, InputRightAddon } from '@wartek-id/input'
+import { Icon } from '@wartek-id/icon'
 
 import { emailRegex } from 'constants/regex'
 
@@ -11,6 +12,8 @@ import { FormLoginData } from 'types/LoginType'
 
 const LoginForm: FC = () => {
   const navigate = useNavigate()
+
+  const [visibilityPassword, setVisibilityPassword] = useState(false)
 
   const {
     register,
@@ -77,7 +80,7 @@ const LoginForm: FC = () => {
         </div>
         <InputGroup>
           <Input
-            type="password"
+            type={visibilityPassword ? 'text' : 'password'}
             placeholder="Masukkan password"
             id="password"
             name="password"
@@ -86,6 +89,17 @@ const LoginForm: FC = () => {
               required: 'Wajib diisi.',
             })}
           />
+          <InputRightAddon>
+            <Icon
+              as="i"
+              color="default"
+              fontSize="default"
+              onClick={() => setVisibilityPassword(!visibilityPassword)}
+              className="pointer-events-initial"
+            >
+              {visibilityPassword ? 'visibility_off' : 'visibility'}
+            </Icon>
+          </InputRightAddon>
         </InputGroup>
         {errors.password && (
           <div className="text-red-500 text-sm h-6">

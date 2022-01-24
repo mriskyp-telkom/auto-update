@@ -19,3 +19,7 @@ body {
 .h-content {
   height: fit-content;
 }
+
+.pointer-events-initial {
+  pointer-events: initial;
+}
