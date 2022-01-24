@@ -35,6 +35,7 @@ import '@wartek-id/design-tokens/build/guru-mobile/css/color.css'
 import '@wartek-id/design-tokens/build/guru-mobile/css/font.css'
 import '@wartek-id/design-tokens/build/guru-mobile/css/size.css'
 import './index.css'
+import '../public/assets/fonts/MaterialIcon.css'
 
 const rootElement = document.getElementById('root')
 function render() {
