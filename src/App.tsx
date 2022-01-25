@@ -5,7 +5,8 @@ import HeaderComponent from 'components/HeaderComponent'
 
 import DashboardView from 'views/DashboardView'
 import AboutView from 'views/AboutView'
-import LoginView from 'views/Login/LoginView'
+import LoginView from 'views/LoginView'
+import RegistrationView from 'views/RegistrationView'
 
 const App: FC = () => {
   return (
@@ -14,6 +15,7 @@ const App: FC = () => {
         <HeaderComponent />
         <Routes>
           <Route path="/" element={<LoginView />} />
+          <Route path="/registration" element={<RegistrationView />} />
           <Route path="/about" element={<AboutView />} />
           <Route path="/dashboard" element={<DashboardView />} />
         </Routes>

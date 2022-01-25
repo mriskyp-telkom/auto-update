@@ -80,6 +80,7 @@
     "@electron-forge/maker-squirrel": "^6.0.0-beta.61",
     "@electron-forge/maker-zip": "^6.0.0-beta.61",
     "@electron-forge/plugin-webpack": "6.0.0-beta.61",
+    "@popperjs/core": "^2.11.2",
     "@types/react": "^17.0.38",
     "@types/react-dom": "^17.0.11",
     "@typescript-eslint/eslint-plugin": "^4.0.1",
@@ -112,10 +113,12 @@
     "@wartek-id/icon": "^1.0.0",
     "@wartek-id/input": "^1.1.2",
     "@wartek-id/tailwind-config": "^0.7.0",
+    "@wartek-id/tooltip": "^1.1.2",
     "electron-squirrel-startup": "^1.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.24.2",
+    "react-popper": "^2.2.5",
     "react-router-dom": "^6.2.1",
     "zustand": "^3.5.10"
   }
