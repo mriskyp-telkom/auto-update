@@ -1,31 +1,21 @@
 import React, { FC } from 'react'
-import { HashRouter, Link, Route, Routes } from 'react-router-dom'
+import { HashRouter, Route, Routes } from 'react-router-dom'
 
-import { Button } from '@wartek-id/button'
+import HeaderComponent from 'components/HeaderComponent'
 
-import HomeApp from './app/HomeApp'
-import AboutApp from './app/AboutApp'
+import DashboardView from 'views/DashboardView'
+import AboutView from 'views/AboutView'
+import LoginView from 'views/Login/LoginView'
 
 const App: FC = () => {
   return (
     <HashRouter>
       <div className="App">
-        <img src="./assets/logo-arkas.png" />
-        <div className="menu">
-          <Link to="/">
-            <Button color="blue" size="md" variant="solid">
-              Home
-            </Button>
-          </Link>
-          <Link to="/about">
-            <Button color="blue" size="md" variant="solid">
-              About
-            </Button>
-          </Link>
-        </div>
+        <HeaderComponent />
         <Routes>
-          <Route path="/" element={<HomeApp />} />
-          <Route path="/about" element={<AboutApp />} />
+          <Route path="/" element={<LoginView />} />
+          <Route path="/about" element={<AboutView />} />
+          <Route path="/dashboard" element={<DashboardView />} />
         </Routes>
       </div>
     </HashRouter>

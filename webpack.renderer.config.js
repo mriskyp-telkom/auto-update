@@ -1,6 +1,7 @@
 /* eslint-disable */
 const rules = require('./webpack.rules')
 const plugins = require('./webpack.plugins')
+const path = require('path')
 
 rules.push({
   test: /\.css$/,
@@ -8,11 +9,6 @@ rules.push({
     { loader: 'style-loader' },
     {
       loader: 'css-loader',
-      options: {
-        modules: {
-          localIdentName: '[folder]_[local]__[hash:base64:5]',
-        },
-      },
     },
     { loader: 'postcss-loader' },
   ],
@@ -25,5 +21,12 @@ module.exports = {
   plugins: plugins,
   resolve: {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css'],
+    alias: {
+      components: path.resolve(__dirname, './src/components'),
+      constants: path.resolve(__dirname, './src/constants'),
+      stores: path.resolve(__dirname, './src/stores'),
+      types: path.resolve(__dirname, './src/types'),
+      views: path.resolve(__dirname, './src/views'),
+    },
   },
 }
