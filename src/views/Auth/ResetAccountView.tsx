@@ -1,61 +1,38 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
 
-import LoginLayout from 'views/Layout/LoginLayout'
+import AuthLayout from 'views/Layout/AuthLayout'
 
 import { Button } from '@wartek-id/button'
 import { Input, InputGroup, InputRightAddon } from '@wartek-id/input'
 import { Icon } from '@wartek-id/icon'
 
-import { emailRegex } from 'constants/regex'
+import { FormResetAccountData } from 'types/LoginType'
 
-import { FormLoginData } from 'types/LoginType'
-
-const LoginView: FC = () => {
-  const navigate = useNavigate()
-
+const ResetAccountForm: FC = () => {
   const [visibilityPassword, setVisibilityPassword] = useState(false)
+  const [visibilityPasswordConfirm, setVisibilityPasswordConfirm] =
+    useState(false)
 
   const {
     register,
     handleSubmit,
-    setError,
+    setValue,
     formState: { errors, isValid, submitCount },
-  } = useForm<FormLoginData>({
+  } = useForm<FormResetAccountData>({
     mode: 'onChange',
   })
 
-  const onSubmit = async (data: FormLoginData) => {
-    if (!emailRegex.test(data.email)) {
-      setError('email', {
-        type: 'manual',
-        message: 'Masukkan email dengan format nama@domain.com',
-      })
-      return
-    }
-
-    if (data.email === 'yasmin@dummy.com') {
-      setError('email', {
-        type: 'manual',
-        message: 'Email tidak terdaftar',
-      })
-      return
-    }
-
-    if (data.password === '1234') {
-      setError('password', {
-        type: 'manual',
-        message: 'Password salah',
-      })
-      return
-    }
-
-    navigate('/dashboard')
+  const onSubmit = async (data: FormResetAccountData) => {
+    console.log(data)
   }
 
+  useEffect(() => {
+    setValue('email', 'yasmin@gmail.com', { shouldValidate: true })
+  }, [setValue])
+
   return (
-    <LoginLayout>
+    <AuthLayout>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
           <div className="text-[14px] pb-[4px] font-normal text-gray-900">
@@ -67,6 +44,7 @@ const LoginView: FC = () => {
             id="email"
             name="email"
             isInvalid={!!errors.email}
+            isDisabled
             {...register('email', {
               required: 'Wajib diisi.',
             })}
@@ -110,10 +88,42 @@ const LoginView: FC = () => {
             </div>
           )}
         </div>
-        <div className="text-[16px] pt-[8px] pb-[50px] font-normal">
-          Lupa Password? <span className="text-blue-700">Reset Akun</span>
+        <div className="pt-[20px]">
+          <div className="text-[14px] pb-[4px] font-normal text-gray-900">
+            Konfirmasi Password
+          </div>
+          <InputGroup>
+            <Input
+              type={visibilityPasswordConfirm ? 'text' : 'password'}
+              placeholder="Masukkan password"
+              id="password_confirmation"
+              name="password_confirmation"
+              isInvalid={!!errors.password_confirmation}
+              {...register('password_confirmation', {
+                required: 'Wajib diisi.',
+              })}
+            />
+            <InputRightAddon>
+              <Icon
+                as="i"
+                color="default"
+                fontSize="default"
+                onClick={() =>
+                  setVisibilityPasswordConfirm(!visibilityPasswordConfirm)
+                }
+                className="pointer-events-initial"
+              >
+                {visibilityPasswordConfirm ? 'visibility_off' : 'visibility'}
+              </Icon>
+            </InputRightAddon>
+          </InputGroup>
+          {errors.password_confirmation && (
+            <div className="text-red-500 text-sm h-6">
+              {errors?.password_confirmation?.message}
+            </div>
+          )}
         </div>
-        <div className="grid justify-items-end pb-[20px]">
+        <div className="grid justify-items-end pt-[50px] pb-[20px]">
           <Button
             className="px-[72px]"
             color="blue"
@@ -126,11 +136,11 @@ const LoginView: FC = () => {
           </Button>
         </div>
         <div className="text-blue-700 text-[12px] text-right">
-          <b>“Reset Akun”</b> membutuhkan koneksi internet
+          <b>“Daftar”</b> membutuhkan koneksi internet
         </div>
       </form>
-    </LoginLayout>
+    </AuthLayout>
   )
 }
 
-export default LoginView
+export default ResetAccountForm

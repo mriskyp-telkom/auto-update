@@ -2,7 +2,7 @@ import React, { FC } from 'react'
 
 import clsx from 'clsx'
 
-const LoginHeader: FC = () => {
+const AuthHeader: FC = () => {
   return (
     <div>
       <img
@@ -21,4 +21,4 @@ const LoginHeader: FC = () => {
   )
 }
 
-export default LoginHeader
+export default AuthHeader

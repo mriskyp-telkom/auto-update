@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import { useForm } from 'react-hook-form'
 
-import LoginLayout from 'views/Layout/LoginLayout'
+import AuthLayout from 'views/Layout/AuthLayout'
 
 import { Button } from '@wartek-id/button'
 import { Input, InputGroup } from '@wartek-id/input'
@@ -24,7 +24,7 @@ const RegistrationView: FC = () => {
   }
 
   return (
-    <LoginLayout>
+    <AuthLayout>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
           <div className="text-[14px] pb-[4px] font-normal text-gray-900">
@@ -47,7 +47,7 @@ const RegistrationView: FC = () => {
           )}
         </div>
         <div className="pt-[20px]">
-          <div className="flex text-[14px] pb-[4px] font-normal text-gray-900">
+          <div className="flex items-center text-[14px] pb-[4px] font-normal text-gray-900">
             Kode Aktivasi
             <Tooltip
               content="Kode aktivasi yang didapatkan dari dinas ketika aktivasi akun"
@@ -62,7 +62,7 @@ const RegistrationView: FC = () => {
                 color="default"
                 fontSize="small"
                 style={{ fontSize: '14px' }}
-                className="m-[4px]"
+                className="ml-1"
               >
                 info
               </Icon>
@@ -102,7 +102,7 @@ const RegistrationView: FC = () => {
           <b>“Daftar”</b> membutuhkan koneksi internet
         </div>
       </form>
-    </LoginLayout>
+    </AuthLayout>
   )
 }
 

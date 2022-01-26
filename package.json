@@ -110,6 +110,7 @@
     "@wartek-id/avatar": "^1.1.2",
     "@wartek-id/button": "^1.1.1",
     "@wartek-id/design-tokens": "^1.4.1",
+    "@wartek-id/dialog": "^0.2.1",
     "@wartek-id/header-bar": "^1.3.3",
     "@wartek-id/icon": "^1.0.0",
     "@wartek-id/input": "^1.1.2",

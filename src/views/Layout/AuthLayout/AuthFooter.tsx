@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 
-const LoginFooter: FC = () => {
+const AuthFooter: FC = () => {
   return (
     <div className="flex items-center py-[60px]">
       <img className="icon-32 mr-[16px]" src="./assets/logo-kemdikbud.png" />
@@ -12,4 +12,4 @@ const LoginFooter: FC = () => {
   )
 }
 
-export default LoginFooter
+export default AuthFooter
