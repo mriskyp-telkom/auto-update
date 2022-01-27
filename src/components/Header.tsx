@@ -16,11 +16,6 @@ const Header: FC = () => {
           About
         </Button>
       </Link>
-      <Link to="/">
-        <Button color="blue" size="md" variant="solid">
-          Login
-        </Button>
-      </Link>
       <Link to="/registration">
         <Button color="blue" size="md" variant="solid">
           Registration

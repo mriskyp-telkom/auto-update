@@ -1,88 +1,129 @@
-import React, { FC } from 'react'
+import React, { FC, useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 
 import AuthLayout from 'views/Layout/AuthLayout'
 
 import { Button } from '@wartek-id/button'
-import { Input, InputGroup } from '@wartek-id/input'
-import { Tooltip } from '@wartek-id/tooltip'
+import { Input, InputGroup, InputRightAddon } from '@wartek-id/input'
 import { Icon } from '@wartek-id/icon'
 
-import { FormRegisterData } from 'types/LoginType'
+import { FormResetAccountData } from 'types/LoginType'
 
 const RegistrationView: FC = () => {
+  const navigate = useNavigate()
+
+  const [visibilityPassword, setVisibilityPassword] = useState(false)
+  const [visibilityPasswordConfirm, setVisibilityPasswordConfirm] =
+    useState(false)
+
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isValid, submitCount },
-  } = useForm<FormRegisterData>({
+  } = useForm<FormResetAccountData>({
     mode: 'onChange',
   })
 
-  const onSubmit = async (data: FormRegisterData) => {
+  const onSubmit = async (data: FormResetAccountData) => {
     console.log(data)
+    navigate('/dashboard')
   }
+
+  useEffect(() => {
+    setValue('email', 'yasmin@gmail.com', { shouldValidate: true })
+  }, [setValue])
 
   return (
     <AuthLayout>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
           <div className="text-[14px] pb-[4px] font-normal text-gray-900">
-            NSPN
+            Email
           </div>
           <Input
             type="text"
-            placeholder="Masukkan NSPN sekolah"
-            id="nspn"
-            name="nspn"
-            isInvalid={!!errors.nspn}
-            {...register('nspn', {
+            placeholder="Masukkan email yang terdaftar di sekolah"
+            id="email"
+            name="email"
+            isInvalid={!!errors.email}
+            isDisabled
+            {...register('email', {
               required: 'Wajib diisi.',
             })}
           />
-          {errors.nspn && (
+          {errors.email && (
             <div className="text-red-500 text-sm h-6">
-              {errors?.nspn?.message}
+              {errors?.email?.message}
             </div>
           )}
         </div>
         <div className="pt-[20px]">
-          <div className="flex items-center text-[14px] pb-[4px] font-normal text-gray-900">
-            Kode Aktivasi
-            <Tooltip
-              content="Kode aktivasi yang didapatkan dari dinas ketika aktivasi akun"
-              maxWidth={362}
-              placement="right-start"
-              strategy="fixed"
-              trigger="hover"
-              offset={{ x: -12 }}
-            >
-              <Icon
-                as="i"
-                color="default"
-                fontSize="small"
-                style={{ fontSize: '14px' }}
-                className="ml-1"
-              >
-                info
-              </Icon>
-            </Tooltip>
+          <div className="text-[14px] pb-[4px] font-normal text-gray-900">
+            Password
           </div>
           <InputGroup>
             <Input
-              type="text"
-              placeholder="Masukkan kode aktivasi"
-              id="activation_code"
-              name="activation_code"
-              isInvalid={!!errors.activation_code}
-              {...register('activation_code', {
+              type={visibilityPassword ? 'text' : 'password'}
+              placeholder="Masukkan password"
+              id="password"
+              name="password"
+              isInvalid={!!errors.password}
+              {...register('password', {
                 required: 'Wajib diisi.',
               })}
             />
+            <InputRightAddon>
+              <Icon
+                as="i"
+                color="default"
+                fontSize="default"
+                onClick={() => setVisibilityPassword(!visibilityPassword)}
+                className="pointer-events-initial"
+              >
+                {visibilityPassword ? 'visibility_off' : 'visibility'}
+              </Icon>
+            </InputRightAddon>
           </InputGroup>
-          {errors.activation_code && (
+          {errors.password && (
             <div className="text-red-500 text-sm h-6">
-              {errors?.activation_code?.message}
+              {errors?.password?.message}
+            </div>
+          )}
+        </div>
+        <div className="pt-[20px]">
+          <div className="text-[14px] pb-[4px] font-normal text-gray-900">
+            Konfirmasi Password
+          </div>
+          <InputGroup>
+            <Input
+              type={visibilityPasswordConfirm ? 'text' : 'password'}
+              placeholder="Masukkan password"
+              id="password_confirmation"
+              name="password_confirmation"
+              isInvalid={!!errors.password_confirmation}
+              {...register('password_confirmation', {
+                required: 'Wajib diisi.',
+              })}
+            />
+            <InputRightAddon>
+              <Icon
+                as="i"
+                color="default"
+                fontSize="default"
+                onClick={() =>
+                  setVisibilityPasswordConfirm(!visibilityPasswordConfirm)
+                }
+                className="pointer-events-initial"
+              >
+                {visibilityPasswordConfirm ? 'visibility_off' : 'visibility'}
+              </Icon>
+            </InputRightAddon>
+          </InputGroup>
+          {errors.password_confirmation && (
+            <div className="text-red-500 text-sm h-6">
+              {errors?.password_confirmation?.message}
             </div>
           )}
         </div>
@@ -95,7 +136,7 @@ const RegistrationView: FC = () => {
             type="submit"
             disabled={!isValid && submitCount > 0}
           >
-            Daftar
+            Masuk
           </Button>
         </div>
         <div className="text-blue-700 text-[12px] text-right">

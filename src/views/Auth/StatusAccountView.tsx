@@ -1,6 +1,10 @@
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import AuthLayout from 'views/Layout/AuthLayout'
+
+import DialogComponent from 'components/DialogComponent'
+import SyncDialogComponent from 'components/SyncDialogComponent'
 
 import { Button } from '@wartek-id/button'
 import { Icon } from '@wartek-id/icon'
@@ -8,6 +12,30 @@ import { Icon } from '@wartek-id/icon'
 import clsx from 'clsx'
 
 const StatusAccountView: FC = () => {
+  const navigate = useNavigate()
+
+  const [isSync, setIsSync] = useState(false)
+  const [openModalInfo, setOpenModalInfo] = useState(false)
+  const [openModalSuccess, setOpenModalSuccess] = useState(false)
+
+  const onCheckStatus = () => {
+    setIsSync(true)
+    setTimeout(() => {
+      setIsSync(false)
+      setOpenModalInfo(true)
+      // setOpenModalSuccess(true)
+    }, 3000)
+  }
+
+  const onSubmitModalSuccess = () => {
+    setOpenModalSuccess(false)
+    navigate('/registration')
+  }
+
+  const onSubmitModalInfo = () => {
+    setOpenModalInfo(false)
+  }
+
   return (
     <AuthLayout>
       <div className="border border-warning border-solid rounded bg-[#FFF2DB] p-[24px] mt-[5px] mb-[20px]">
@@ -31,7 +59,7 @@ const StatusAccountView: FC = () => {
         <div className="font-normal	text-[14px] text-gray-900 my-3">
           Silakan cek status pengajuan Anda secara berkala untuk melihat update.
         </div>
-        <Button color="white" size="sm" variant="solid">
+        <Button color="white" size="sm" variant="solid" onClick={onCheckStatus}>
           Cek Status
         </Button>
         <div className="font-normal text-[12px] text-blue-700 mt-3">
@@ -41,6 +69,29 @@ const StatusAccountView: FC = () => {
       <div className="text-blue-700 text-[12px] text-right">
         <b>“Cek Status”</b> membutuhkan koneksi internet
       </div>
+      <DialogComponent
+        type="success"
+        icon="done"
+        title="Pengajuan Diterima!"
+        desc="Anda sudah bisa membuat password baru untuk akun Anda."
+        isOpen={openModalSuccess}
+        hideBtnCancel={true}
+        btnActionText="Buat Password Baru"
+        setIsOpen={setOpenModalSuccess}
+        onSubmit={onSubmitModalSuccess}
+      />
+      <DialogComponent
+        type="warning"
+        icon="hourglass_bottom"
+        title="Pengajuan Masih Diproses"
+        desc="Mohon menunggu beberapa waktu atau hubungi dinas setempat jika sudah lebih dari 7 hari."
+        isOpen={openModalInfo}
+        hideBtnCancel={true}
+        btnActionText="Saya Mengerti"
+        setIsOpen={setOpenModalInfo}
+        onSubmit={onSubmitModalInfo}
+      />
+      <SyncDialogComponent isOpen={isSync} setIsOpen={setIsSync} />
     </AuthLayout>
   )
 }

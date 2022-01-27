@@ -9,7 +9,7 @@ import AboutView from 'views/AboutView'
 import StatusAccountView from 'views/Auth/StatusAccountView'
 import LoginView from 'views/Auth/LoginView'
 import RegistrationView from 'views/Auth/RegistrationView'
-import ResetAccountView from 'views/Auth/ResetAccountView'
+import ActivateAccountView from 'views/Auth/ActivateAccountView'
 
 const App: FC = () => {
   return (
@@ -20,7 +20,7 @@ const App: FC = () => {
           <Route path="/" element={<LoginView />} />
           <Route path="/account-status" element={<StatusAccountView />} />
           <Route path="/registration" element={<RegistrationView />} />
-          <Route path="/reset-account" element={<ResetAccountView />} />
+          <Route path="/activate-account" element={<ActivateAccountView />} />
           <Route path="/about" element={<AboutView />} />
           <Route path="/dashboard" element={<DashboardView />} />
         </Routes>

@@ -9,8 +9,8 @@ interface AuthLayoutProps {
 
 const AuthLayout: FC = (props: AuthLayoutProps) => {
   return (
-    <div className="flex bg-blue-900 h-full">
-      <div className="w-[633px] mx-auto mt-[85px] bg-default rounded-lg h-content">
+    <div className="grid place-content-center bg-blue-900 h-screen">
+      <div className="w-[633px] mx-auto bg-default rounded-lg h-content">
         <div className="m-auto w-[393px]">
           <AuthHeader />
           {props.children}
