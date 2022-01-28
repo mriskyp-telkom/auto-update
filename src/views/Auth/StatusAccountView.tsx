@@ -22,14 +22,14 @@ const StatusAccountView: FC = () => {
     setIsSync(true)
     setTimeout(() => {
       setIsSync(false)
-      setOpenModalInfo(true)
-      // setOpenModalSuccess(true)
+      // setOpenModalInfo(true)
+      setOpenModalSuccess(true)
     }, 3000)
   }
 
   const onSubmitModalSuccess = () => {
     setOpenModalSuccess(false)
-    navigate('/registration')
+    navigate('/create-account/reset')
   }
 
   const onSubmitModalInfo = () => {
@@ -91,7 +91,11 @@ const StatusAccountView: FC = () => {
         setIsOpen={setOpenModalInfo}
         onSubmit={onSubmitModalInfo}
       />
-      <SyncDialogComponent isOpen={isSync} setIsOpen={setIsSync} />
+      <SyncDialogComponent
+        title="Sinkronisasi Data..."
+        isOpen={isSync}
+        setIsOpen={setIsSync}
+      />
     </AuthLayout>
   )
 }

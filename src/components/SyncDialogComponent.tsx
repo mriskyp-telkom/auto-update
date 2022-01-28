@@ -9,6 +9,7 @@ import {
 } from '@wartek-id/dialog'
 
 interface SyncDialogProps {
+  title: string
   isOpen: boolean
   setIsOpen: (value: boolean) => void
 }
@@ -24,7 +25,7 @@ const SyncDialogComponent: FC<SyncDialogProps> = (props: SyncDialogProps) => {
       <DialogContent>
         <div className="p-3">
           <DialogTitle className="font-semibold text-[22px] text-gray-900 pb-[12px]">
-            Sinkronisasi Data...
+            {props.title}
           </DialogTitle>
           <DialogDescription className="font-normal text-[16px] text-gray-900">
             Pastikan Anda terkoneksi ke internet yang lancar.

@@ -1,10 +1,10 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
 
 import AuthLayout from 'views/Layout/AuthLayout'
 
-import ResetAccountLinkView from './ResetAccountLinkView'
+import SyncDialogComponent from 'components/SyncDialogComponent'
 
 import { Button } from '@wartek-id/button'
 import { Input, InputGroup, InputRightAddon } from '@wartek-id/input'
@@ -12,41 +12,48 @@ import { Icon } from '@wartek-id/icon'
 
 import { emailRegex } from 'constants/regex'
 
-import { FormLoginData } from 'types/LoginType'
+import { FormResetAccountData } from 'types/LoginType'
 
-const LoginView: FC = () => {
+const CreateAccountView: FC = () => {
   const navigate = useNavigate()
+  const { mode } = useParams()
 
+  const [isSync, setIsSync] = useState(false)
   const [visibilityPassword, setVisibilityPassword] = useState(false)
+  const [visibilityPasswordConfirm, setVisibilityPasswordConfirm] =
+    useState(false)
 
   const {
     register,
     handleSubmit,
+    setValue,
     setError,
     formState: { errors, isValid, submitCount },
-  } = useForm<FormLoginData>({
+  } = useForm<FormResetAccountData>({
     mode: 'onChange',
   })
 
-  const onSubmit = async (data: FormLoginData) => {
-    if (data.email === 'yasmin@gmail.com') {
-      setError('email', {
+  const onSubmit = async (data: FormResetAccountData) => {
+    if (data.password !== data.password_confirmation) {
+      setError('password_confirmation', {
         type: 'manual',
-        message: 'Email tidak terdaftar',
+        message: 'Password tidak sesuai',
       })
       return
     }
 
-    if (data.password === '12345678') {
-      setError('password', {
-        type: 'manual',
-        message: 'Password salah',
-      })
-      return
-    }
-
-    navigate('/dashboard')
+    setIsSync(true)
+    setTimeout(() => {
+      setIsSync(false)
+      navigate('/dashboard')
+    }, 3000)
   }
+
+  useEffect(() => {
+    if (mode === 'reset') {
+      setValue('email', 'yasmin@gmail.com', { shouldValidate: true })
+    }
+  }, [setValue])
 
   return (
     <AuthLayout>
@@ -61,6 +68,7 @@ const LoginView: FC = () => {
             id="email"
             name="email"
             isInvalid={!!errors.email}
+            isDisabled={mode === 'reset' ? true : false}
             {...register('email', {
               required: 'Wajib diisi.',
               pattern: {
@@ -112,8 +120,46 @@ const LoginView: FC = () => {
             </div>
           )}
         </div>
-        <ResetAccountLinkView />
-        <div className="grid justify-items-end pb-[20px]">
+        <div className="pt-[20px]">
+          <div className="text-[14px] pb-[4px] font-normal text-gray-900">
+            Konfirmasi Password
+          </div>
+          <InputGroup>
+            <Input
+              type={visibilityPasswordConfirm ? 'text' : 'password'}
+              placeholder="Masukkan password"
+              id="password_confirmation"
+              name="password_confirmation"
+              isInvalid={!!errors.password_confirmation}
+              {...register('password_confirmation', {
+                required: 'Wajib diisi.',
+                minLength: {
+                  value: 8,
+                  message: 'Minimal 8 karakter',
+                },
+              })}
+            />
+            <InputRightAddon>
+              <Icon
+                as="i"
+                color="default"
+                fontSize="default"
+                onClick={() =>
+                  setVisibilityPasswordConfirm(!visibilityPasswordConfirm)
+                }
+                className="pointer-events-initial"
+              >
+                {visibilityPasswordConfirm ? 'visibility_off' : 'visibility'}
+              </Icon>
+            </InputRightAddon>
+          </InputGroup>
+          {errors.password_confirmation && (
+            <div className="text-red-500 text-sm h-6">
+              {errors?.password_confirmation?.message}
+            </div>
+          )}
+        </div>
+        <div className="grid justify-items-end pt-[50px] pb-[20px]">
           <Button
             className="px-[72px]"
             color="blue"
@@ -126,11 +172,16 @@ const LoginView: FC = () => {
           </Button>
         </div>
         <div className="text-blue-700 text-[12px] text-right">
-          <b>“Reset Akun”</b> membutuhkan koneksi internet
+          <b>“Daftar”</b> membutuhkan koneksi internet
         </div>
       </form>
+      <SyncDialogComponent
+        title="Mengirim Data..."
+        isOpen={isSync}
+        setIsOpen={setIsSync}
+      />
     </AuthLayout>
   )
 }
 
-export default LoginView
+export default CreateAccountView

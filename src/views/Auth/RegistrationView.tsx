@@ -1,129 +1,133 @@
-import React, { FC, useState, useEffect } from 'react'
+import React, { FC, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 
 import AuthLayout from 'views/Layout/AuthLayout'
 
+import DialogComponent from 'components/DialogComponent'
+import SyncDialogComponent from 'components/SyncDialogComponent'
+
 import { Button } from '@wartek-id/button'
-import { Input, InputGroup, InputRightAddon } from '@wartek-id/input'
+import { Input, InputGroup } from '@wartek-id/input'
+import { Tooltip } from '@wartek-id/tooltip'
 import { Icon } from '@wartek-id/icon'
 
-import { FormResetAccountData } from 'types/LoginType'
+import { onlyNumberRegex } from 'constants/regex'
+
+import { FormRegisterData } from 'types/LoginType'
 
 const RegistrationView: FC = () => {
   const navigate = useNavigate()
 
-  const [visibilityPassword, setVisibilityPassword] = useState(false)
-  const [visibilityPasswordConfirm, setVisibilityPasswordConfirm] =
-    useState(false)
+  const [isSync, setIsSync] = useState(false)
+  const [openModalInfo, setOpenModalInfo] = useState(false)
 
   const {
     register,
     handleSubmit,
-    setValue,
+    setError,
     formState: { errors, isValid, submitCount },
-  } = useForm<FormResetAccountData>({
+  } = useForm<FormRegisterData>({
     mode: 'onChange',
   })
 
-  const onSubmit = async (data: FormResetAccountData) => {
-    console.log(data)
-    navigate('/dashboard')
-  }
+  const onSubmit = async (data: FormRegisterData) => {
+    if (data.npsn === '012345678901234567') {
+      setError('npsn', {
+        type: 'manual',
+        message: 'NPSN Anda sudah terdaftar di perangkat lain.',
+      })
+      setOpenModalInfo(true)
+      return
+    }
 
-  useEffect(() => {
-    setValue('email', 'yasmin@gmail.com', { shouldValidate: true })
-  }, [setValue])
+    if (data.activation_code === 'JIF89K') {
+      setError('activation_code', {
+        type: 'manual',
+        message: 'Kode aktivasi salah',
+      })
+      return
+    }
+
+    setIsSync(true)
+    setTimeout(() => {
+      setIsSync(false)
+      navigate('/create-account/new')
+    }, 3000)
+  }
 
   return (
     <AuthLayout>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
           <div className="text-[14px] pb-[4px] font-normal text-gray-900">
-            Email
+            NPSN
           </div>
           <Input
             type="text"
-            placeholder="Masukkan email yang terdaftar di sekolah"
-            id="email"
-            name="email"
-            isInvalid={!!errors.email}
-            isDisabled
-            {...register('email', {
+            placeholder="Masukkan NPSN sekolah"
+            id="npsn"
+            name="npsn"
+            isInvalid={!!errors.npsn}
+            {...register('npsn', {
               required: 'Wajib diisi.',
+              pattern: {
+                value: onlyNumberRegex,
+                message: 'Isi dengan format angka',
+              },
+              maxLength: {
+                value: 18,
+                message: 'NPSN harus terdiri dari 18 angka',
+              },
+              minLength: {
+                value: 18,
+                message: 'NPSN harus terdiri dari 18 angka',
+              },
             })}
           />
-          {errors.email && (
+          {errors.npsn && (
             <div className="text-red-500 text-sm h-6">
-              {errors?.email?.message}
+              {errors?.npsn?.message}
             </div>
           )}
         </div>
         <div className="pt-[20px]">
-          <div className="text-[14px] pb-[4px] font-normal text-gray-900">
-            Password
-          </div>
-          <InputGroup>
-            <Input
-              type={visibilityPassword ? 'text' : 'password'}
-              placeholder="Masukkan password"
-              id="password"
-              name="password"
-              isInvalid={!!errors.password}
-              {...register('password', {
-                required: 'Wajib diisi.',
-              })}
-            />
-            <InputRightAddon>
+          <div className="flex items-center text-[14px] pb-[4px] font-normal text-gray-900">
+            Kode Aktivasi
+            <Tooltip
+              content="Kode aktivasi yang didapatkan dari dinas ketika aktivasi akun"
+              maxWidth={362}
+              placement="right-start"
+              strategy="fixed"
+              trigger="hover"
+              offset={{ x: -12 }}
+            >
               <Icon
                 as="i"
                 color="default"
-                fontSize="default"
-                onClick={() => setVisibilityPassword(!visibilityPassword)}
-                className="pointer-events-initial"
+                fontSize="small"
+                style={{ fontSize: '14px' }}
+                className="ml-1"
               >
-                {visibilityPassword ? 'visibility_off' : 'visibility'}
+                info
               </Icon>
-            </InputRightAddon>
-          </InputGroup>
-          {errors.password && (
-            <div className="text-red-500 text-sm h-6">
-              {errors?.password?.message}
-            </div>
-          )}
-        </div>
-        <div className="pt-[20px]">
-          <div className="text-[14px] pb-[4px] font-normal text-gray-900">
-            Konfirmasi Password
+            </Tooltip>
           </div>
           <InputGroup>
             <Input
-              type={visibilityPasswordConfirm ? 'text' : 'password'}
-              placeholder="Masukkan password"
-              id="password_confirmation"
-              name="password_confirmation"
-              isInvalid={!!errors.password_confirmation}
-              {...register('password_confirmation', {
+              type="text"
+              placeholder="Masukkan kode aktivasi"
+              id="activation_code"
+              name="activation_code"
+              isInvalid={!!errors.activation_code}
+              {...register('activation_code', {
                 required: 'Wajib diisi.',
               })}
             />
-            <InputRightAddon>
-              <Icon
-                as="i"
-                color="default"
-                fontSize="default"
-                onClick={() =>
-                  setVisibilityPasswordConfirm(!visibilityPasswordConfirm)
-                }
-                className="pointer-events-initial"
-              >
-                {visibilityPasswordConfirm ? 'visibility_off' : 'visibility'}
-              </Icon>
-            </InputRightAddon>
           </InputGroup>
-          {errors.password_confirmation && (
+          {errors.activation_code && (
             <div className="text-red-500 text-sm h-6">
-              {errors?.password_confirmation?.message}
+              {errors?.activation_code?.message}
             </div>
           )}
         </div>
@@ -136,13 +140,29 @@ const RegistrationView: FC = () => {
             type="submit"
             disabled={!isValid && submitCount > 0}
           >
-            Masuk
+            Daftar
           </Button>
         </div>
         <div className="text-blue-700 text-[12px] text-right">
           <b>“Daftar”</b> membutuhkan koneksi internet
         </div>
       </form>
+      <SyncDialogComponent
+        title="Mengirim Data..."
+        isOpen={isSync}
+        setIsOpen={setIsSync}
+      />
+      <DialogComponent
+        type="warning"
+        icon="priority_high"
+        title="NPSN Anda sudah terdaftar di perangkat lain"
+        desc="Anda hanya bisa menggunakan ARKAS di 1 perangkat. Gunakan perangkat yang biasa dipakai untuk masuk ke ARKAS, atau hubungi dinas pendidikan setempat untuk menghapus perangkat lama dan mengaktifkan perangkat ini."
+        isOpen={openModalInfo}
+        hideBtnCancel={true}
+        btnActionText="Saya Mengerti"
+        setIsOpen={setOpenModalInfo}
+        onSubmit={() => setOpenModalInfo(false)}
+      />
     </AuthLayout>
   )
 }

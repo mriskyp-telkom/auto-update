@@ -4,7 +4,7 @@ export interface FormLoginData {
 }
 
 export interface FormRegisterData {
-  nspn: string
+  npsn: string
   activation_code: string
 }
 
