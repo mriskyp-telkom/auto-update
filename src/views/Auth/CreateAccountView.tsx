@@ -34,6 +34,14 @@ const CreateAccountView: FC = () => {
   })
 
   const onSubmit = async (data: FormResetAccountData) => {
+    if (mode === 'new' && data.email === 'yasmin@gmail.com') {
+      setError('email', {
+        type: 'manual',
+        message: 'Email sudah terdaftar',
+      })
+      return
+    }
+
     if (data.password !== data.password_confirmation) {
       setError('password_confirmation', {
         type: 'manual',
