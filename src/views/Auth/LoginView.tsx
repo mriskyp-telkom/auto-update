@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom'
 
 import AuthLayout from 'views/Layout/AuthLayout'
 
+import SyncDialogComponent from 'components/SyncDialogComponent'
+
 import ResetAccountLinkView from './ResetAccountLinkView'
 
 import { Button } from '@wartek-id/button'
@@ -17,6 +19,7 @@ import { FormLoginData } from 'types/LoginType'
 const LoginView: FC = () => {
   const navigate = useNavigate()
 
+  const [isSync, setIsSync] = useState(false)
   const [visibilityPassword, setVisibilityPassword] = useState(false)
 
   const {
@@ -45,7 +48,11 @@ const LoginView: FC = () => {
       return
     }
 
-    navigate('/dashboard')
+    setIsSync(true)
+    setTimeout(() => {
+      setIsSync(false)
+      navigate('/dashboard')
+    }, 3000)
   }
 
   return (
@@ -129,6 +136,11 @@ const LoginView: FC = () => {
           <b>“Reset Akun”</b> membutuhkan koneksi internet
         </div>
       </form>
+      <SyncDialogComponent
+        title="Mengirim Data..."
+        isOpen={isSync}
+        setIsOpen={setIsSync}
+      />
     </AuthLayout>
   )
 }
