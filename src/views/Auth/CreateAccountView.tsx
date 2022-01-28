@@ -185,6 +185,7 @@ const CreateAccountView: FC = () => {
       </form>
       <SyncDialogComponent
         title="Mengirim Data..."
+        percentage={50}
         isOpen={isSync}
         setIsOpen={setIsSync}
       />

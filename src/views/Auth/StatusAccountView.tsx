@@ -93,6 +93,7 @@ const StatusAccountView: FC = () => {
       />
       <SyncDialogComponent
         title="Sinkronisasi Data..."
+        percentage={50}
         isOpen={isSync}
         setIsOpen={setIsSync}
       />

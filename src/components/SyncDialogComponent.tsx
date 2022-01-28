@@ -1,5 +1,7 @@
 import React, { FC } from 'react'
 
+import Pie from './PieComponent'
+
 import {
   Dialog,
   DialogOverlay,
@@ -11,6 +13,7 @@ import {
 interface SyncDialogProps {
   title: string
   isOpen: boolean
+  percentage: number
   setIsOpen: (value: boolean) => void
 }
 
@@ -24,7 +27,8 @@ const SyncDialogComponent: FC<SyncDialogProps> = (props: SyncDialogProps) => {
       <DialogOverlay closeOnOverlayClick={false} />
       <DialogContent>
         <div className="p-3">
-          <DialogTitle className="font-semibold text-[22px] text-gray-900 pb-[12px]">
+          <Pie percentage={props.percentage} />
+          <DialogTitle className="font-semibold text-[22px] text-gray-900 pt-[20px] pb-[12px]">
             {props.title}
           </DialogTitle>
           <DialogDescription className="font-normal text-[16px] text-gray-900">
