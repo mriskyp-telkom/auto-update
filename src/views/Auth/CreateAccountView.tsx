@@ -76,6 +76,7 @@ const CreateAccountView: FC = () => {
             id="email"
             name="email"
             isInvalid={!!errors.email}
+            errorMessage={errors?.email?.message}
             isDisabled={mode === 'reset' ? true : false}
             {...register('email', {
               required: 'Wajib diisi.',
@@ -85,11 +86,6 @@ const CreateAccountView: FC = () => {
               },
             })}
           />
-          {errors.email && (
-            <div className="text-red-500 text-sm h-6">
-              {errors?.email?.message}
-            </div>
-          )}
         </div>
         <div className="pt-[20px]">
           <div className="text-[14px] pb-[4px] font-normal text-gray-900">
@@ -102,6 +98,7 @@ const CreateAccountView: FC = () => {
               id="password"
               name="password"
               isInvalid={!!errors.password}
+              errorMessage={errors?.password?.message}
               {...register('password', {
                 required: 'Wajib diisi.',
                 minLength: {
@@ -118,15 +115,10 @@ const CreateAccountView: FC = () => {
                 onClick={() => setVisibilityPassword(!visibilityPassword)}
                 className="pointer-events-initial"
               >
-                {visibilityPassword ? 'visibility_off' : 'visibility'}
+                {visibilityPassword ? 'visibility' : 'visibility_off'}
               </Icon>
             </InputRightAddon>
           </InputGroup>
-          {errors.password && (
-            <div className="text-red-500 text-sm h-6">
-              {errors?.password?.message}
-            </div>
-          )}
         </div>
         <div className="pt-[20px]">
           <div className="text-[14px] pb-[4px] font-normal text-gray-900">
@@ -139,6 +131,7 @@ const CreateAccountView: FC = () => {
               id="password_confirmation"
               name="password_confirmation"
               isInvalid={!!errors.password_confirmation}
+              errorMessage={errors?.password_confirmation?.message}
               {...register('password_confirmation', {
                 required: 'Wajib diisi.',
                 minLength: {
@@ -157,15 +150,10 @@ const CreateAccountView: FC = () => {
                 }
                 className="pointer-events-initial"
               >
-                {visibilityPasswordConfirm ? 'visibility_off' : 'visibility'}
+                {visibilityPasswordConfirm ? 'visibility' : 'visibility_off'}
               </Icon>
             </InputRightAddon>
           </InputGroup>
-          {errors.password_confirmation && (
-            <div className="text-red-500 text-sm h-6">
-              {errors?.password_confirmation?.message}
-            </div>
-          )}
         </div>
         <div className="grid justify-items-end pt-[50px] pb-[20px]">
           <Button
@@ -184,7 +172,7 @@ const CreateAccountView: FC = () => {
         </div>
       </form>
       <SyncDialogComponent
-        title="Mengirim Data..."
+        title="Mencoba masuk ke ARKAS..."
         percentage={50}
         isOpen={isSync}
         setIsOpen={setIsSync}

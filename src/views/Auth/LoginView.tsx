@@ -68,6 +68,7 @@ const LoginView: FC = () => {
             id="email"
             name="email"
             isInvalid={!!errors.email}
+            errorMessage={errors?.email?.message}
             {...register('email', {
               required: 'Wajib diisi.',
               pattern: {
@@ -76,11 +77,6 @@ const LoginView: FC = () => {
               },
             })}
           />
-          {errors.email && (
-            <div className="text-red-500 text-sm h-6">
-              {errors?.email?.message}
-            </div>
-          )}
         </div>
         <div className="pt-[20px]">
           <div className="text-[14px] pb-[4px] font-normal text-gray-900">
@@ -93,6 +89,7 @@ const LoginView: FC = () => {
               id="password"
               name="password"
               isInvalid={!!errors.password}
+              errorMessage={errors?.password?.message}
               {...register('password', {
                 required: 'Wajib diisi.',
                 minLength: {
@@ -109,15 +106,10 @@ const LoginView: FC = () => {
                 onClick={() => setVisibilityPassword(!visibilityPassword)}
                 className="pointer-events-initial"
               >
-                {visibilityPassword ? 'visibility_off' : 'visibility'}
+                {visibilityPassword ? 'visibility' : 'visibility_off'}
               </Icon>
             </InputRightAddon>
           </InputGroup>
-          {errors.password && (
-            <div className="text-red-500 text-sm h-6">
-              {errors?.password?.message}
-            </div>
-          )}
         </div>
         <ResetAccountLinkView />
         <div className="grid justify-items-end pb-[20px]">
@@ -137,7 +129,7 @@ const LoginView: FC = () => {
         </div>
       </form>
       <SyncDialogComponent
-        title="Mengirim Data..."
+        title="Mencoba masuk ke ARKAS..."
         percentage={50}
         isOpen={isSync}
         setIsOpen={setIsSync}

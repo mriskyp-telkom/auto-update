@@ -69,6 +69,7 @@ const RegistrationView: FC = () => {
             id="npsn"
             name="npsn"
             isInvalid={!!errors.npsn}
+            errorMessage={errors?.npsn?.message}
             {...register('npsn', {
               required: 'Wajib diisi.',
               pattern: {
@@ -76,20 +77,15 @@ const RegistrationView: FC = () => {
                 message: 'Isi dengan format angka',
               },
               maxLength: {
-                value: 18,
-                message: 'NPSN harus terdiri dari 18 angka',
+                value: 8,
+                message: 'NPSN harus terdiri dari 8 angka',
               },
               minLength: {
-                value: 18,
-                message: 'NPSN harus terdiri dari 18 angka',
+                value: 8,
+                message: 'NPSN harus terdiri dari 8 angka',
               },
             })}
           />
-          {errors.npsn && (
-            <div className="text-red-500 text-sm h-6">
-              {errors?.npsn?.message}
-            </div>
-          )}
         </div>
         <div className="pt-[20px]">
           <div className="flex items-center text-[14px] pb-[4px] font-normal text-gray-900">
@@ -120,16 +116,12 @@ const RegistrationView: FC = () => {
               id="activation_code"
               name="activation_code"
               isInvalid={!!errors.activation_code}
+              errorMessage={errors?.activation_code?.message}
               {...register('activation_code', {
                 required: 'Wajib diisi.',
               })}
             />
           </InputGroup>
-          {errors.activation_code && (
-            <div className="text-red-500 text-sm h-6">
-              {errors?.activation_code?.message}
-            </div>
-          )}
         </div>
         <div className="grid justify-items-end pt-[50px] pb-[20px]">
           <Button
