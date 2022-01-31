@@ -16,9 +16,9 @@ const Header: FC = () => {
           About
         </Button>
       </Link>
-      <Link to="/">
+      <Link to="/registration">
         <Button color="blue" size="md" variant="solid">
-          Login
+          Registration
         </Button>
       </Link>
     </div>

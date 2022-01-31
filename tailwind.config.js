@@ -15,6 +15,10 @@ module.exports = {
         ...guruMobile.colors,
         ...guruMobile.backgroundColor,
         default: '#ffffff',
+        warning: '#ffc453',
+      },
+      borderColor: {
+        warning: '#ffc453',
       },
     },
   },

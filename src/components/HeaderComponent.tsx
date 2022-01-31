@@ -1,4 +1,5 @@
 import React, { FC } from 'react'
+import { Link } from 'react-router-dom'
 
 import {
   HeaderBar,
@@ -13,7 +14,9 @@ const LogoArkas: FC = () => {
 const HeaderComponent: FC = () => {
   return (
     <HeaderBar>
-      <HeaderBarLeftAction icon={<LogoArkas />} />
+      <Link to="/">
+        <HeaderBarLeftAction icon={<LogoArkas />} />
+      </Link>
       <HeaderBarTitle>ARKAS</HeaderBarTitle>
     </HeaderBar>
   )
