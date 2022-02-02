@@ -32,12 +32,20 @@ const RegistrationView: FC = () => {
   })
 
   const onSubmit = async (data: FormRegisterData) => {
-    if (data.npsn === '012345678901234567') {
+    if (data.npsn === '01234567') {
       setError('npsn', {
         type: 'manual',
-        message: 'NPSN Anda sudah terdaftar di perangkat lain.',
+        message: 'NPSN Anda sudah terdaftar di perangkat lain',
       })
       setOpenModalInfo(true)
+      return
+    }
+
+    if (data.npsn === '12345678') {
+      setError('npsn', {
+        type: 'manual',
+        message: 'NPSN tidak terdaftar',
+      })
       return
     }
 
