@@ -8,15 +8,15 @@ import clsx from 'clsx'
 const MenusTop = () => {
   return [
     {
-      route: 'budget',
+      route: '/anggaran',
       label: 'Anggaran',
     },
     {
-      route: 'administration',
+      route: '/administration',
       label: 'Tata Usaha',
     },
     {
-      route: 'archieve',
+      route: '/archieve',
       label: 'Arsip',
     },
   ]
@@ -25,28 +25,28 @@ const MenusTop = () => {
 const MenusBottom = () => {
   return [
     {
-      route: 'tutorial',
+      route: '/tutorial',
       icon: 'info',
       iconType: 'outlined',
       label: 'Tutorial',
     },
     {
-      route: 'faq',
+      route: '/faq',
       icon: 'forum',
       iconType: 'outlined',
       label: 'FAQ',
     },
     {
-      route: 'help',
+      route: '/help',
       icon: 'help_outline',
       iconType: 'default',
       label: 'Bantuan',
     },
     {
-      route: 'update-app',
+      route: '/update-app',
       icon: 'update',
       iconType: 'default',
-      label: 'Update',
+      label: 'Perbarui Aplikasi',
     },
   ]
 }
@@ -54,17 +54,17 @@ const MenusBottom = () => {
 const SidebarComponent: FC = () => {
   const activeClassName = 'rounded bg-blue-700 font-semibold'
   return (
-    <nav className="w-[260px] h-screen bg-blue-900 px-[21px] py-[41px] text-white text-[16px]">
+    <nav className="w-[260px] h-screen bg-blue-900 px-[21px] py-[57px] text-white text-[16px]">
       <ul>
         {MenusTop().map((menu) => {
           return (
-            <li>
+            <li key={menu.route}>
               <NavLink to={menu.route}>
                 {({ isActive }) => (
                   <div
                     className={clsx(
                       isActive ? activeClassName : undefined,
-                      'px-[23px] py-[8px] my-[1px]'
+                      'px-[23px] py-[8px] my-[1px] hover:font-semibold'
                     )}
                   >
                     {menu.label}
@@ -75,16 +75,16 @@ const SidebarComponent: FC = () => {
           )
         })}
       </ul>
-      <ul className="absolute bottom-[14px] w-[217px]">
+      <ul className="absolute bottom-[29px] w-[217px]">
         {MenusBottom().map((menu) => {
           return (
-            <li>
+            <li key={menu.route}>
               <NavLink to={menu.route}>
                 {({ isActive }) => (
                   <div
                     className={clsx(
                       isActive ? activeClassName : undefined,
-                      'flex items-center px-[12px] py-[8px]'
+                      'flex items-center px-[12px] py-[8px] hover:font-semibold'
                     )}
                   >
                     <Icon

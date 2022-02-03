@@ -12,6 +12,8 @@ import LoginView from 'views/Auth/LoginView'
 import CreateAccountView from 'views/Auth/CreateAccountView'
 import RegistrationView from 'views/Auth/RegistrationView'
 
+import DashboardAnggaranView from 'views/Anggaran/DashboardAnggaranView'
+
 const App: FC = () => {
   return (
     <HashRouter>
@@ -23,6 +25,8 @@ const App: FC = () => {
           <Route path="/registration" element={<RegistrationView />} />
           <Route path="/account-status" element={<StatusAccountView />} />
           <Route path="/create-account/:mode" element={<CreateAccountView />} />
+
+          <Route path="/anggaran" element={<DashboardAnggaranView />} />
           <Route path="/about" element={<AboutView />} />
           <Route path="/dashboard" element={<DashboardView />} />
         </Routes>
