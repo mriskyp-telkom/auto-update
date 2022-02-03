@@ -10,8 +10,8 @@ electron desktop app
 - [x] react + wartek's component-library + tailwind + clsx
 - [x] eslint + prettier + pre-commit (husky)
 - [x] basic build
-- [ ] local sqlite connection
-- [ ] installation build & script which includes sqlite3 db creation (if not exists)
+- [x] local sqlite connection
+- [x] installation build & script which includes sqlite3 db creation (if not exists)
 - [ ] local db migration (for table structure and/or initial data)
 - [ ] version auto update mechanism
 

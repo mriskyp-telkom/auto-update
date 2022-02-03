@@ -15,6 +15,7 @@ import { Icon } from '@wartek-id/icon'
 import { emailRegex } from 'constants/regex'
 
 import { FormLoginData } from 'types/LoginType'
+const ipcRenderer = window.require('electron').ipcRenderer
 
 const LoginView: FC = () => {
   const navigate = useNavigate()
@@ -32,6 +33,8 @@ const LoginView: FC = () => {
   })
 
   const onSubmit = async (data: FormLoginData) => {
+    const ipc = ipcRenderer.sendSync('user:checkUsername', data.email)
+    console.log(ipc)
     if (data.email === 'yasmin@gmail.com') {
       setError('email', {
         type: 'manual',
