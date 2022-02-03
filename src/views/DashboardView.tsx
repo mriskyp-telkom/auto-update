@@ -1,11 +1,12 @@
 import React, { FC } from 'react'
-import clsx from 'clsx'
+
+import PageLayout from 'views/Layout/PageLayout'
+
+import Header from 'components/Header'
 
 import { Button } from '@wartek-id/button'
 
 import { BearsStates, useBearStore } from 'stores/bear'
-
-import Header from 'components/Header'
 
 const DashboardView: FC = () => {
   const bears = useBearStore((state: BearsStates) => state.bears)
@@ -17,7 +18,7 @@ const DashboardView: FC = () => {
   )
 
   return (
-    <div className={clsx('text-pink-600', 'text-center')}>
+    <PageLayout>
       <Header />
       Home App
       <br />
@@ -33,7 +34,7 @@ const DashboardView: FC = () => {
       <Button color="blue" size="md" variant="solid" onClick={removeAllBears}>
         Remove All Bear
       </Button>
-    </div>
+    </PageLayout>
   )
 }
 
