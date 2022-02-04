@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "target": "es2017",
     "jsx": "react",
     "allowJs": true,
     "module": "commonjs",
@@ -11,10 +12,14 @@
     "outDir": "dist",
     "moduleResolution": "node",
     "resolveJsonModule": true,
+    "experimentalDecorators": true,
     "paths": {
       "*": ["node_modules/*"],
       "components/*": ["src/components/*"],
       "constants/*": ["src/constants/*"],
+      "helpers/*": ["src/helpers/*"],
+      "repositories/*": ["src/repositories/*"],
+      "services/*": ["src/services/*"],
       "stores/*": ["src/stores/*"],
       "types/*": ["src/types/*"],
       "views/*": ["src/views/*"]

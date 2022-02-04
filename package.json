@@ -6,7 +6,7 @@
   "main": ".webpack/main",
   "scripts": {
     "start": "cross-env BUILD=false electron-forge start",
-    "package": "electron-forge package",
+    "package": "cross-env BUILD=true electron-forge package",
     "make": "cross-env BUILD=true electron-forge make",
     "make-win32": "cross-env BUILD=true electron-forge make --platform win32",
     "publish": "electron-forge publish",
@@ -15,10 +15,6 @@
     "format": "prettier --write . "
   },
   "keywords": [],
-  "author": {
-    "name": "yasmin.ghassani",
-    "email": "yasmin.ghassani@wartek.belajar.id"
-  },
   "license": "MIT",
   "config": {
     "forge": {
@@ -32,7 +28,10 @@
             "authors": "Kemendikbudristek",
             "iconUrl": "https://rkas.kemdikbud.go.id/favicon.ico",
             "name": "arkas_desktop"
-          }
+          },
+          "afterExtract": [
+            "./build-scripts/zip-directory.js"
+          ]
         },
         {
           "name": "@electron-forge/maker-deb",
@@ -116,12 +115,16 @@
     "@wartek-id/input": "^1.1.2",
     "@wartek-id/tailwind-config": "^0.7.0",
     "@wartek-id/tooltip": "^1.1.2",
+    "better-sqlite3": "^7.5.0",
+    "better-sqlite3-multiple-ciphers": "^7.5.0",
     "electron-squirrel-startup": "^1.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.24.2",
     "react-popper": "^2.2.5",
     "react-router-dom": "^6.2.1",
+    "sqlite3": "^5.0.2",
+    "typeorm": "^0.2.41",
     "zustand": "^3.5.10"
   }
 }

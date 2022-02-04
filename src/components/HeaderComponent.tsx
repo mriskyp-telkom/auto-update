@@ -13,7 +13,7 @@ const LogoArkas: FC = () => {
 
 const HeaderComponent: FC = () => {
   return (
-    <HeaderBar>
+    <HeaderBar className="max-w-none">
       <Link to="/">
         <HeaderBarLeftAction icon={<LogoArkas />} />
       </Link>
