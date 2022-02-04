@@ -6,7 +6,7 @@
   "main": ".webpack/main",
   "scripts": {
     "start": "cross-env BUILD=false electron-forge start",
-    "package": "electron-forge package",
+    "package": "cross-env BUILD=true electron-forge package",
     "make": "cross-env BUILD=true electron-forge make",
     "make-win32": "cross-env BUILD=true electron-forge make --platform win32",
     "publish": "electron-forge publish",
@@ -15,10 +15,6 @@
     "format": "prettier --write . "
   },
   "keywords": [],
-  "author": {
-    "name": "yasmin.ghassani",
-    "email": "yasmin.ghassani@wartek.belajar.id"
-  },
   "license": "MIT",
   "config": {
     "forge": {
