@@ -4,8 +4,8 @@ import { useForm } from 'react-hook-form'
 
 import AuthLayout from 'views/Layout/AuthLayout'
 
-import DialogComponent from 'components/DialogComponent'
-import SyncDialogComponent from 'components/SyncDialogComponent'
+import AlertDialogComponent from 'components/Dialog/AlertDialogComponent'
+import SyncDialogComponent from 'components/Dialog/SyncDialogComponent'
 
 import { Button } from '@wartek-id/button'
 import { Input, InputGroup } from '@wartek-id/input'
@@ -153,7 +153,7 @@ const RegistrationView: FC = () => {
         isOpen={isSync}
         setIsOpen={setIsSync}
       />
-      <DialogComponent
+      <AlertDialogComponent
         type="warning"
         icon="priority_high"
         title="NPSN Anda sudah terdaftar di perangkat lain"
