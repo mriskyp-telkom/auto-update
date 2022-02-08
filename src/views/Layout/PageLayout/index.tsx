@@ -8,9 +8,9 @@ interface PageLayoutProps {
 
 const PageLayout: FC = (props: PageLayoutProps) => {
   return (
-    <div className="flex">
+    <div className="flex bg-gray-0">
       <SidebarComponent />
-      <div>{props.children}</div>
+      <div className="w-full">{props.children}</div>
     </div>
   )
 }

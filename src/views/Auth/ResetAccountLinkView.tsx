@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import DialogComponent from 'components/DialogComponent'
+import AlertDialogComponent from 'components/Dialog/AlertDialogComponent'
 
 const ResetAccountLinkView: FC = () => {
   const navigate = useNavigate()
@@ -30,7 +30,7 @@ const ResetAccountLinkView: FC = () => {
           Reset Akun
         </span>
       </div>
-      <DialogComponent
+      <AlertDialogComponent
         type="warning"
         icon="send"
         title="Ajukan reset akun ke dinas?"
@@ -41,7 +41,7 @@ const ResetAccountLinkView: FC = () => {
         setIsOpen={setOpenModalConfirm}
         onSubmit={onSubmitConfirm}
       />
-      <DialogComponent
+      <AlertDialogComponent
         type="success"
         icon="done"
         title="Pengajuan Terkirim!"

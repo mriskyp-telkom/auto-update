@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 
-import Pie from './PieComponent'
+import Pie from 'components/PieComponent'
 
 import {
   Dialog,

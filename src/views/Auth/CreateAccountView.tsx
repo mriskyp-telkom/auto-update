@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 
 import AuthLayout from 'views/Layout/AuthLayout'
 
-import SyncDialogComponent from 'components/SyncDialogComponent'
+import SyncDialogComponent from 'components/Dialog/SyncDialogComponent'
 
 import { Button } from '@wartek-id/button'
 import { Input, InputGroup, InputRightAddon } from '@wartek-id/input'

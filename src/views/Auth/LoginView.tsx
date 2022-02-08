@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 
 import AuthLayout from 'views/Layout/AuthLayout'
 
-import SyncDialogComponent from 'components/SyncDialogComponent'
+import SyncDialogComponent from 'components/Dialog/SyncDialogComponent'
 
 import ResetAccountLinkView from './ResetAccountLinkView'
 

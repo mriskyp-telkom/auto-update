@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom'
 
 import AuthLayout from 'views/Layout/AuthLayout'
 
-import DialogComponent from 'components/DialogComponent'
-import SyncDialogComponent from 'components/SyncDialogComponent'
+import AlertDialogComponent from 'components/Dialog/AlertDialogComponent'
+import SyncDialogComponent from 'components/Dialog/SyncDialogComponent'
 
 import { Button } from '@wartek-id/button'
 import { Icon } from '@wartek-id/icon'
@@ -69,7 +69,7 @@ const StatusAccountView: FC = () => {
       <div className="text-blue-700 text-[12px] text-right">
         <b>“Cek Status”</b> membutuhkan koneksi internet
       </div>
-      <DialogComponent
+      <AlertDialogComponent
         type="success"
         icon="done"
         title="Pengajuan Diterima!"
@@ -80,7 +80,7 @@ const StatusAccountView: FC = () => {
         setIsOpen={setOpenModalSuccess}
         onSubmit={onSubmitModalSuccess}
       />
-      <DialogComponent
+      <AlertDialogComponent
         type="warning"
         icon="hourglass_bottom"
         title="Pengajuan Masih Diproses"

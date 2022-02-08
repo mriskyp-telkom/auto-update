@@ -14,8 +14,8 @@ import { Icon } from '@wartek-id/icon'
 
 import clsx from 'clsx'
 
-interface DialogProps {
-  type: 'success' | 'warning'
+interface AlertDialogProps {
+  type: 'success' | 'warning' | 'failed'
   icon: string
   title: string
   desc: string
@@ -27,13 +27,18 @@ interface DialogProps {
   onSubmit: () => void
 }
 
-const DialogComponent: FC<DialogProps> = (props: DialogProps) => {
+const AlertDialogComponent: FC<AlertDialogProps> = (
+  props: AlertDialogProps
+) => {
   const iconColor = () => {
     if (props.type === 'success') {
       return 'bg-green-500'
     }
     if (props.type === 'warning') {
       return 'bg-warning'
+    }
+    if (props.type === 'failed') {
+      return 'bg-red-600'
     }
   }
 
@@ -97,4 +102,4 @@ const DialogComponent: FC<DialogProps> = (props: DialogProps) => {
   )
 }
 
-export default DialogComponent
+export default AlertDialogComponent
