@@ -963,6 +963,11 @@
     react-focus-lock "~2.5.1"
     react-transition-group "~4.4.1"
 
+"@wartek-id/fe-toolbox@^1.0.1":
+  version "1.0.1"
+  resolved "https://gitlab.com/api/v4/projects/32422776/packages/npm/@wartek-id/fe-toolbox/-/@wartek-id/fe-toolbox-1.0.1.tgz#292c3d7a6952a5d17b7ce7ad1e00da32b98beaf9"
+  integrity sha1-KSw9emlSpdF7fOetHgDaMrmL6vk=
+
 "@wartek-id/header-bar@^1.3.3":
   version "1.3.3"
   resolved "https://gitlab.com/api/v4/projects/25182406/packages/npm/@wartek-id/header-bar/-/@wartek-id/header-bar-1.3.3.tgz#4a4ab8fdb2a6be2216ee04bb3ba3a6be85bf7b11"

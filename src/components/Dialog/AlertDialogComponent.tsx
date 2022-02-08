@@ -23,8 +23,9 @@ interface AlertDialogProps {
   hideBtnCancel?: boolean
   btnCancelText?: string
   btnActionText: string
-  setIsOpen: (value: boolean) => void
+  onCancel?: () => void
   onSubmit: () => void
+  layer?: number
 }
 
 const AlertDialogComponent: FC<AlertDialogProps> = (
@@ -43,13 +44,17 @@ const AlertDialogComponent: FC<AlertDialogProps> = (
   }
 
   return (
-    <Dialog
-      customSize={560}
-      onClose={() => props.setIsOpen(false)}
-      isOpen={props.isOpen}
-    >
-      <DialogOverlay closeOnOverlayClick={false} />
-      <DialogContent>
+    <Dialog onClose={props.onCancel} isOpen={props.isOpen}>
+      <DialogOverlay
+        closeOnOverlayClick={false}
+        style={{ zIndex: props.layer > 1 ? props.layer * 100 : 100 }}
+      />
+      <DialogContent
+        style={{
+          width: 560,
+          zIndex: props.layer > 1 ? props.layer * 101 : 101,
+        }}
+      >
         <div className="p-3">
           <div
             className={clsx(
@@ -80,7 +85,7 @@ const AlertDialogComponent: FC<AlertDialogProps> = (
                 size="sm"
                 variant="solid"
                 className="px-4 py-2 mr-4"
-                onClick={() => props.setIsOpen(false)}
+                onClick={props.onCancel}
               >
                 {props.btnCancelText}
               </DialogCancel>
@@ -91,7 +96,7 @@ const AlertDialogComponent: FC<AlertDialogProps> = (
               size="sm"
               variant="solid"
               className="px-4 py-2"
-              onClick={() => props.onSubmit()}
+              onClick={props.onSubmit}
             >
               {props.btnActionText}
             </DialogAction>

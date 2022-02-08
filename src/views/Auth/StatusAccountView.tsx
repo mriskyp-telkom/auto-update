@@ -77,7 +77,6 @@ const StatusAccountView: FC = () => {
         isOpen={openModalSuccess}
         hideBtnCancel={true}
         btnActionText="Buat Password Baru"
-        setIsOpen={setOpenModalSuccess}
         onSubmit={onSubmitModalSuccess}
       />
       <AlertDialogComponent
@@ -88,7 +87,6 @@ const StatusAccountView: FC = () => {
         isOpen={openModalInfo}
         hideBtnCancel={true}
         btnActionText="Saya Mengerti"
-        setIsOpen={setOpenModalInfo}
         onSubmit={onSubmitModalInfo}
       />
       <SyncDialogComponent

@@ -62,7 +62,7 @@ const LoginView: FC = () => {
     <AuthLayout>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
-          <div className="text-[14px] pb-[4px] font-normal text-gray-900">
+          <div className="text-[14px] pb-1 font-normal text-gray-900">
             Email
           </div>
           <Input
@@ -81,8 +81,8 @@ const LoginView: FC = () => {
             })}
           />
         </div>
-        <div className="pt-[20px]">
-          <div className="text-[14px] pb-[4px] font-normal text-gray-900">
+        <div className="pt-5">
+          <div className="text-[14px] pb-1 font-normal text-gray-900">
             Password
           </div>
           <InputGroup>

@@ -38,7 +38,7 @@ const ResetAccountLinkView: FC = () => {
         isOpen={openModalConfirm}
         btnCancelText="Batal"
         btnActionText="Ajukan Reset Akun"
-        setIsOpen={setOpenModalConfirm}
+        onCancel={() => setOpenModalConfirm(false)}
         onSubmit={onSubmitConfirm}
       />
       <AlertDialogComponent
@@ -49,7 +49,6 @@ const ResetAccountLinkView: FC = () => {
         isOpen={openModalSuccess}
         hideBtnCancel={true}
         btnActionText="Saya Mengerti"
-        setIsOpen={setOpenModalSuccess}
         onSubmit={onSubmitSuccess}
       />
     </div>
