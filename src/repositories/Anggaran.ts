@@ -72,6 +72,14 @@ export class Anggaran extends BaseEntity {
   isAktif: number
 
   @Column('numeric', {
+    name: 'tahun_anggaran',
+    precision: 4,
+    scale: 0,
+    default: () => '2022',
+  })
+  tahunAnggaran: number
+
+  @Column('numeric', {
     name: 'soft_delete',
     precision: 1,
     scale: 0,

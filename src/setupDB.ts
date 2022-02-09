@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import { execFile } from 'child_process'
 import { Anggaran } from './repositories/Anggaran'
 import { AppConfig } from './repositories/AppConfig'
 import { ConfigAnggaran } from './repositories/ConfigAnggaran'
@@ -571,14 +572,8 @@ async function addRefSumberDana(): Promise<void> {
   await repoRefSumberDana.save(refSumberDanaData)
 }
 
-export const setupDB = async (): Promise<void> => {
-  const appDataPath = await getAppData()
-
-  if (!fs.existsSync(appDataPath)) {
-    // If the AppData dir doesn't exist at expected Path. Then Create
-    // Maybe the case when the user runs the app first.
-    fs.mkdirSync(appDataPath)
-
+async function createDBLocal(appDataPath: string): Promise<void> {
+  if (!fs.existsSync(appDataPath + '/arkas.db')) {
     const connDBLocal = await createConnection({
       type: 'better-sqlite3',
       database: appDataPath + '/arkas.db',
@@ -634,6 +629,41 @@ export const setupDB = async (): Promise<void> => {
     await addRefPeriode()
     await addRefSumberDana()
     await connDBLocal.close()
-    await encryptDB()
+  }
+
+  await encryptDB()
+}
+
+export const setupDB = async (): Promise<void> => {
+  const appDataPath = await getAppData()
+
+  if (!fs.existsSync(appDataPath)) {
+    // If the AppData dir doesn't exist at expected Path. Then Create
+    // Maybe the case when the user runs the app first.
+    fs.mkdirSync(appDataPath)
+  }
+
+  if (
+    process.platform == 'win32' &&
+    !fs.existsSync(appDataPath + '/arkas.db')
+  ) {
+    let paramStr = ''
+    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'production') {
+      paramStr = ''
+    } else {
+      paramStr = appDataPath + '\\arkas.db'
+    }
+    execFile(
+      __dirname + '\\convert\\ConvertArkasToVer4.exe',
+      [paramStr],
+      (error) => {
+        if (error) {
+          throw error
+        }
+        createDBLocal(appDataPath)
+      }
+    )
+  } else {
+    await createDBLocal(appDataPath)
   }
 }
