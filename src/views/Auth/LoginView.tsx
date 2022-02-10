@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 
@@ -14,7 +14,10 @@ import { Icon } from '@wartek-id/icon'
 
 import { emailRegex } from 'constants/regex'
 
+// import analytics from 'configs/analytics'
+
 import { FormLoginData } from 'types/LoginType'
+
 const ipcRenderer = window.require('electron').ipcRenderer
 
 const LoginView: FC = () => {
@@ -58,11 +61,20 @@ const LoginView: FC = () => {
     }, 3000)
   }
 
+  useEffect(() => {
+    // analytics.send('event', {
+    //   ec: 'Scroll',
+    //   ea: 'scrollto',
+    //   el: 'row',
+    //   ev: 123,
+    // })
+  })
+
   return (
     <AuthLayout>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
-          <div className="text-[14px] pb-[4px] font-normal text-gray-900">
+          <div className="text-[14px] pb-1 font-normal text-gray-900">
             Email
           </div>
           <Input
@@ -81,8 +93,8 @@ const LoginView: FC = () => {
             })}
           />
         </div>
-        <div className="pt-[20px]">
-          <div className="text-[14px] pb-[4px] font-normal text-gray-900">
+        <div className="pt-5">
+          <div className="text-[14px] pb-1 font-normal text-gray-900">
             Password
           </div>
           <InputGroup>

@@ -68,9 +68,7 @@ const RegistrationView: FC = () => {
     <AuthLayout>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
-          <div className="text-[14px] pb-[4px] font-normal text-gray-900">
-            NPSN
-          </div>
+          <div className="text-[14px] pb-1 font-normal text-gray-900">NPSN</div>
           <Input
             type="text"
             placeholder="Masukkan NPSN sekolah"
@@ -95,8 +93,8 @@ const RegistrationView: FC = () => {
             })}
           />
         </div>
-        <div className="pt-[20px]">
-          <div className="flex items-center text-[14px] pb-[4px] font-normal text-gray-900">
+        <div className="pt-5">
+          <div className="flex items-center text-[14px] pb-1 font-normal text-gray-900">
             Kode Aktivasi
             <Tooltip
               content="Kode aktivasi yang didapatkan dari dinas ketika aktivasi akun"
@@ -161,7 +159,6 @@ const RegistrationView: FC = () => {
         isOpen={openModalInfo}
         hideBtnCancel={true}
         btnActionText="Saya Mengerti"
-        setIsOpen={setOpenModalInfo}
         onSubmit={() => setOpenModalInfo(false)}
       />
     </AuthLayout>

@@ -653,16 +653,20 @@ export const setupDB = async (): Promise<void> => {
     } else {
       paramStr = appDataPath + '\\arkas.db'
     }
-    execFile(
+    const convertExec = execFile(
       __dirname + '\\convert\\ConvertArkasToVer4.exe',
       [paramStr],
       (error) => {
         if (error) {
           throw error
         }
-        createDBLocal(appDataPath)
       }
     )
+    convertExec.on('exit', async (code): Promise<void> => {
+      if (code == 0) {
+        await createDBLocal(appDataPath)
+      }
+    })
   } else {
     await createDBLocal(appDataPath)
   }

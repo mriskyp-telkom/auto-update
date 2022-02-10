@@ -20,10 +20,14 @@ const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (
   const ready = props.status === 'approved' ? true : false
 
   return (
-    <div className="bg-gray-5 rounded-[10px] py-4 px-7 mb-5">
+    <div className="bg-gray-5 rounded-[10px] py-4 px-7 mb-5 h-[116px]">
       <div className="flex justify-between">
-        <span>
-          <span className="mr-7">{props.title}</span>
+        <span className="flex items-center">
+          <img
+            className="inline-block mr-4"
+            src="./assets/icons/document.svg"
+          />
+          <span className="mr-7 text-[20px]">{props.title}</span>
           {STATUS_KERTAS_KERJA.filter(
             (data) => data.status === props.status
           ).map((status, index) => (
@@ -47,7 +51,7 @@ const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (
                   as="i"
                   color="default"
                   fontSize="small"
-                  style={{ fontSize: '18px' }}
+                  style={{ fontSize: '18px', color: '#45474a' }}
                 >
                   open_in_new
                 </Icon>
@@ -65,7 +69,7 @@ const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (
                   as="i"
                   color="default"
                   fontSize="small"
-                  style={{ fontSize: '18px' }}
+                  style={{ fontSize: '18px', color: '#b3b5b7' }}
                 >
                   delete
                 </Icon>
@@ -82,7 +86,7 @@ const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (
                   as="i"
                   color="default"
                   fontSize="small"
-                  style={{ fontSize: '18px' }}
+                  style={{ fontSize: '18px', color: '#45474a' }}
                 >
                   print
                 </Icon>

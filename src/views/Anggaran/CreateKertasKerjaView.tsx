@@ -5,21 +5,25 @@ import { Icon } from '@wartek-id/icon'
 
 import AlertDialogComponent from 'components/Dialog/AlertDialogComponent'
 import SyncDialogComponent from 'components/Dialog/SyncDialogComponent'
-import FormDialogComponent from 'components/Dialog/FormDialogComponent'
 
 import FormKertasKerjaView from './FormKertasKerjaView'
+
+import { AnggaranStates, useAnggaranStore } from 'stores/anggaran'
 
 const CreateKertasKerjaView: FC = () => {
   const [isSync, setIsSync] = useState(false)
   const [openModalFailed, setOpenModalFailed] = useState(false)
-  const [openModalForm, setOpenModalForm] = useState(false)
+
+  const setCreateKertasKerja = useAnggaranStore(
+    (state: AnggaranStates) => state.setCreateKertasKerja
+  )
 
   const onClickCreate = () => {
     setIsSync(true)
     setTimeout(() => {
       setIsSync(false)
       // setOpenModalFailed(true)
-      setOpenModalForm(true)
+      setCreateKertasKerja(true)
     }, 3000)
   }
 
@@ -44,7 +48,6 @@ const CreateKertasKerjaView: FC = () => {
         isOpen={openModalFailed}
         hideBtnCancel={true}
         btnActionText="Tutup"
-        setIsOpen={setOpenModalFailed}
         onSubmit={() => setOpenModalFailed(false)}
       />
       <SyncDialogComponent
@@ -53,14 +56,7 @@ const CreateKertasKerjaView: FC = () => {
         isOpen={isSync}
         setIsOpen={setIsSync}
       />
-      <FormDialogComponent
-        width={960}
-        title="Isi Data Penanggung Jawab"
-        subtitle="Data kepala sekolah dan bendahara terisi otomatis dari Dapodik."
-        content={<FormKertasKerjaView />}
-        isOpen={openModalForm}
-        setIsOpen={setOpenModalForm}
-      />
+      <FormKertasKerjaView />
     </div>
   )
 }

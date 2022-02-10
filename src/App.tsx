@@ -13,6 +13,7 @@ import CreateAccountView from 'views/Auth/CreateAccountView'
 import RegistrationView from 'views/Auth/RegistrationView'
 
 import DashboardAnggaranView from 'views/Anggaran/DashboardAnggaranView'
+import MenyusunAnggaranView from 'views/Anggaran/MenyusunAnggaranView'
 
 const App: FC = () => {
   return (
@@ -26,7 +27,10 @@ const App: FC = () => {
           <Route path="/account-status" element={<StatusAccountView />} />
           <Route path="/create-account/:mode" element={<CreateAccountView />} />
 
-          <Route path="/anggaran" element={<DashboardAnggaranView />} />
+          <Route path="anggaran">
+            <Route index={true} element={<DashboardAnggaranView />} />
+            <Route path="menyusun" element={<MenyusunAnggaranView />} />
+          </Route>
           <Route path="/about" element={<AboutView />} />
           <Route path="/dashboard" element={<DashboardView />} />
         </Routes>
