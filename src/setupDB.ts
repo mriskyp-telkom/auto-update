@@ -1,6 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import { execFile } from 'child_process'
+import { promisify } from 'util'
 import { Anggaran } from './repositories/Anggaran'
 import { AppConfig } from './repositories/AppConfig'
 import { ConfigAnggaran } from './repositories/ConfigAnggaran'
@@ -50,6 +51,7 @@ async function encryptDB(): Promise<void> {
   db.pragma(`legacy=4`)
   db.pragma("rekey='K3md1kbudRIS3n4yan'")
   db.close()
+  return
 }
 
 async function addApp(): Promise<void> {
@@ -63,6 +65,7 @@ async function addApp(): Promise<void> {
   app.createDate = new Date()
   app.lastUpdate = new Date()
   await app.save()
+  return
 }
 
 async function addRole(): Promise<void> {
@@ -76,6 +79,7 @@ async function addRole(): Promise<void> {
   role.lastUpdate = new Date()
   role.updaterId = ''
   await role.save()
+  return
 }
 
 async function addRefBKU(): Promise<void> {
@@ -279,6 +283,7 @@ async function addRefBKU(): Promise<void> {
     },
   ]
   await repoRefBku.save(refBKUData)
+  return
 }
 
 async function addRefJabatan(): Promise<void> {
@@ -300,6 +305,7 @@ async function addRefJabatan(): Promise<void> {
     },
   ]
   await repoRefJabatan.save(refJabatanData)
+  return
 }
 
 async function addRefJenisInstansi(): Promise<void> {
@@ -325,6 +331,7 @@ async function addRefJenisInstansi(): Promise<void> {
     },
   ]
   await repoRefJenisInstansi.save(refJenisInstansiData)
+  return
 }
 
 async function addRefLevelKode(): Promise<void> {
@@ -350,6 +357,7 @@ async function addRefLevelKode(): Promise<void> {
     },
   ]
   await repoRefLevelKode.save(refLevelKodeData)
+  return
 }
 
 async function addRefLevelWilayah(): Promise<void> {
@@ -387,6 +395,7 @@ async function addRefLevelWilayah(): Promise<void> {
     },
   ]
   await repoRefLevelWilayah.save(refLevelwilayahData)
+  return
 }
 
 async function addRefNegara(): Promise<void> {
@@ -397,6 +406,7 @@ async function addRefNegara(): Promise<void> {
   refNegara.createDate = new Date()
   refNegara.lastUpdate = new Date()
   await refNegara.save()
+  return
 }
 
 async function addRefPeriode(): Promise<void> {
@@ -500,6 +510,7 @@ async function addRefPeriode(): Promise<void> {
     },
   ]
   await repoRefPeriode.save(refPeriodeData)
+  return
 }
 
 async function addRefSumberDana(): Promise<void> {
@@ -570,13 +581,14 @@ async function addRefSumberDana(): Promise<void> {
     },
   ]
   await repoRefSumberDana.save(refSumberDanaData)
+  return
 }
 
 async function createDBLocal(appDataPath: string): Promise<void> {
-  if (!fs.existsSync(appDataPath + '/arkas.db')) {
+  if (!fs.existsSync(path.join(appDataPath, 'arkas.db'))) {
     const connDBLocal = await createConnection({
       type: 'better-sqlite3',
-      database: appDataPath + '/arkas.db',
+      database: path.join(appDataPath, 'arkas.db'),
       entities: [
         MstSekolah,
         MstWilayah,
@@ -632,42 +644,38 @@ async function createDBLocal(appDataPath: string): Promise<void> {
   }
 
   await encryptDB()
+  return
 }
 
 export const setupDB = async (): Promise<void> => {
   const appDataPath = await getAppData()
 
   if (!fs.existsSync(appDataPath)) {
-    // If the AppData dir doesn't exist at expected Path. Then Create
-    // Maybe the case when the user runs the app first.
     fs.mkdirSync(appDataPath)
   }
 
   if (
     process.platform == 'win32' &&
-    !fs.existsSync(appDataPath + '/arkas.db')
+    !fs.existsSync(path.join(appDataPath, 'arkas.db'))
   ) {
     let paramStr = ''
     if (!process.env.NODE_ENV || process.env.NODE_ENV === 'production') {
       paramStr = ''
     } else {
-      paramStr = appDataPath + '\\arkas.db'
+      paramStr = path.join(appDataPath, 'arkas.db')
     }
-    const convertExec = execFile(
-      __dirname + '\\convert\\ConvertArkasToVer4.exe',
-      [paramStr],
-      (error) => {
-        if (error) {
-          throw error
-        }
-      }
+    const execPromisify = promisify(execFile)
+    return execPromisify(
+      path.join(__dirname, 'convert', 'ConvertArkasToVer4.exe'),
+      [paramStr]
     )
-    convertExec.on('exit', async (code): Promise<void> => {
-      if (code == 0) {
-        await createDBLocal(appDataPath)
-      }
-    })
+      .then(() => {
+        createDBLocal(appDataPath)
+      })
+      .catch((err) => {
+        throw err
+      })
   } else {
-    await createDBLocal(appDataPath)
+    return await createDBLocal(appDataPath)
   }
 }
