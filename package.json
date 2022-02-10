@@ -56,6 +56,7 @@
           "@electron-forge/plugin-webpack",
           {
             "mainConfig": "./webpack.main.config.js",
+            "devContentSecurityPolicy": "script-src 'self' https://www.google-analytics.com",
             "renderer": {
               "config": "./webpack.renderer.config.js",
               "entryPoints": [
@@ -120,6 +121,7 @@
     "@wartek-id/tooltip": "^1.1.2",
     "better-sqlite3": "^7.5.0",
     "better-sqlite3-multiple-ciphers": "^7.5.0",
+    "electron-ga-uuid": "^1.0.2",
     "electron-squirrel-startup": "^1.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

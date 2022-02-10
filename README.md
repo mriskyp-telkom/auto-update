@@ -14,6 +14,7 @@ electron desktop app
 - [x] installation build & script which includes sqlite3 db creation (if not exists)
 - [ ] local db migration (for table structure and/or initial data)
 - [ ] version auto update mechanism
+- [ ] unit test
 
 ### Features
 

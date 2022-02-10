@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 
@@ -14,7 +14,10 @@ import { Icon } from '@wartek-id/icon'
 
 import { emailRegex } from 'constants/regex'
 
+// import analytics from 'configs/analytics'
+
 import { FormLoginData } from 'types/LoginType'
+
 const ipcRenderer = window.require('electron').ipcRenderer
 
 const LoginView: FC = () => {
@@ -57,6 +60,15 @@ const LoginView: FC = () => {
       navigate('/dashboard')
     }, 3000)
   }
+
+  useEffect(() => {
+    // analytics.send('event', {
+    //   ec: 'Scroll',
+    //   ea: 'scrollto',
+    //   el: 'row',
+    //   ev: 123,
+    // })
+  })
 
   return (
     <AuthLayout>
