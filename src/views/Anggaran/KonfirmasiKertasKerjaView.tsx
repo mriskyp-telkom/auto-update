@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 
 import { Input } from '@wartek-id/input'
-import { numberUtils } from '@wartek-id/fe-toolbox'
+// import { numberUtils } from '@wartek-id/fe-toolbox'
 
 import FormDialogComponent from 'components/Dialog/FormDialogComponent'
 
@@ -39,9 +39,9 @@ const KonfirmasiKertasKerjaView: FC = () => {
   }
 
   useEffect(() => {
-    setValue('nominal', `Rp ${numberUtils.delimit(300000000, '.')}`, {
-      shouldValidate: true,
-    })
+    // setValue('nominal', `Rp ${numberUtils.delimit(300000000, '.')}`, {
+    //   shouldValidate: true,
+    // })
   }, [setValue])
 
   return (
