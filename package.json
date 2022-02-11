@@ -56,7 +56,7 @@
           "@electron-forge/plugin-webpack",
           {
             "mainConfig": "./webpack.main.config.js",
-            "devContentSecurityPolicy": "script-src 'self' https://www.google-analytics.com",
+            "devContentSecurityPolicy": "script-src 'self' https://www.google-analytics.com 'unsafe-eval'",
             "renderer": {
               "config": "./webpack.renderer.config.js",
               "entryPoints": [
