@@ -2,10 +2,10 @@ import React, { FC, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 
-import { Input } from '@wartek-id/input'
 import { numberUtils } from '@wartek-id/fe-toolbox'
 
 import FormDialogComponent from 'components/Dialog/FormDialogComponent'
+import InputComponent from 'components/Form/InputComponent'
 
 import { KonfirmasiKertasKerjaData } from 'types/AnggaranType'
 import { AnggaranStates, useAnggaranStore } from 'stores/anggaran'
@@ -58,16 +58,13 @@ const KonfirmasiKertasKerjaView: FC = () => {
           <div className="text-[14px] pb-1 font-normal text-gray-900">
             Nominal Penerimaan
           </div>
-          <Input
+          <InputComponent
             type="text"
-            placeholder="Masukkan nominal penerimaan"
-            id="nominal"
             name="nominal"
-            isInvalid={!!errors.nominal}
-            errorMessage={errors?.nominal?.message}
-            {...register('nominal', {
-              required: 'Wajib diisi.',
-            })}
+            placeholder="Masukkan nominal penerimaan"
+            errors={errors}
+            register={register}
+            required={true}
           />
           <div className="pt-1 text-[12px] text-gray-600">
             (jumlah murid) x (nominal BOS per daerah)

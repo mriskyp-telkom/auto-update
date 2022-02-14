@@ -6,9 +6,9 @@ import AuthLayout from 'views/Layout/AuthLayout'
 
 import AlertDialogComponent from 'components/Dialog/AlertDialogComponent'
 import SyncDialogComponent from 'components/Dialog/SyncDialogComponent'
+import InputComponent from 'components/Form/InputComponent'
 
 import { Button } from '@wartek-id/button'
-import { Input, InputGroup } from '@wartek-id/input'
 import { Tooltip } from '@wartek-id/tooltip'
 import { Icon } from '@wartek-id/icon'
 
@@ -69,15 +69,14 @@ const RegistrationView: FC = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
           <div className="text-[14px] pb-1 font-normal text-gray-900">NPSN</div>
-          <Input
+          <InputComponent
             type="text"
-            placeholder="Masukkan NPSN sekolah"
-            id="npsn"
             name="npsn"
-            isInvalid={!!errors.npsn}
-            errorMessage={errors?.npsn?.message}
-            {...register('npsn', {
-              required: 'Wajib diisi.',
+            placeholder="Masukkan NPSN sekolah"
+            errors={errors}
+            register={register}
+            required={true}
+            registerOption={{
               pattern: {
                 value: onlyNumberRegex,
                 message: 'Isi dengan format angka',
@@ -90,7 +89,7 @@ const RegistrationView: FC = () => {
                 value: 8,
                 message: 'NPSN harus terdiri dari 8 angka',
               },
-            })}
+            }}
           />
         </div>
         <div className="pt-5">
@@ -115,19 +114,14 @@ const RegistrationView: FC = () => {
               </Icon>
             </Tooltip>
           </div>
-          <InputGroup>
-            <Input
-              type="text"
-              placeholder="Masukkan kode aktivasi"
-              id="activation_code"
-              name="activation_code"
-              isInvalid={!!errors.activation_code}
-              errorMessage={errors?.activation_code?.message}
-              {...register('activation_code', {
-                required: 'Wajib diisi.',
-              })}
-            />
-          </InputGroup>
+          <InputComponent
+            type="text"
+            name="activation_code"
+            placeholder="Masukkan kode aktivasi"
+            errors={errors}
+            register={register}
+            required={true}
+          />
         </div>
         <div className="grid justify-items-end pt-[50px] pb-[20px]">
           <Button
