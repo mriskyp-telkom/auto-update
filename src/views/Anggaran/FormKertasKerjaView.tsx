@@ -114,7 +114,7 @@ const FormKertasKerjaView: FC = () => {
               <InputComponent
                 type="text"
                 name="nip_kepala_sekolah"
-                placeholder="Masukkan nip kepala sekolah"
+                placeholder="Masukkan NIP kepala sekolah"
                 errors={errors}
                 register={register}
                 required={false}
@@ -132,7 +132,7 @@ const FormKertasKerjaView: FC = () => {
               <InputComponent
                 type="text"
                 name="nip_bendahara"
-                placeholder="Masukkan nip bendahara"
+                placeholder="Masukkan NIP bendahara"
                 errors={errors}
                 register={register}
                 required={false}

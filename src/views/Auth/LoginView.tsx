@@ -16,7 +16,7 @@ import sendEvent from 'configs/analytics'
 
 import { FormLoginData } from 'types/LoginType'
 
-const ipcRenderer = window.require('electron').ipcRenderer
+// const ipcRenderer = window.require('electron').ipcRenderer
 
 const LoginView: FC = () => {
   const navigate = useNavigate()
@@ -33,8 +33,8 @@ const LoginView: FC = () => {
   })
 
   const onSubmit = async (data: FormLoginData) => {
-    const ipc = ipcRenderer.sendSync('user:checkUsername', data.email)
-    console.log(ipc)
+    // const ipc = ipcRenderer.sendSync('user:checkUsername', data.email)
+    // console.log(ipc)
     console.log(data)
     sendEvent({
       category: 'Login',

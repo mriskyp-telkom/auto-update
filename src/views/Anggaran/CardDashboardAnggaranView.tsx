@@ -20,7 +20,7 @@ const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (
   const ready = props.status === 'approved' ? true : false
 
   return (
-    <div className="bg-gray-5 rounded-[10px] py-4 px-7 mb-5 h-[116px]">
+    <div className="bg-gray-5 w-[900px] rounded-[10px] py-4 px-7 mb-5 h-[116px]">
       <div className="flex justify-between">
         <span className="flex items-center">
           <img
