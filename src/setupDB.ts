@@ -43,14 +43,19 @@ import { getAppData } from './pathConfig'
 
 async function encryptDB(): Promise<void> {
   const appDataPath = path.join(await getAppData(), 'arkas.db')
-
   /* eslint @typescript-eslint/no-var-requires: "off" */
   const db = require('better-sqlite3-multiple-ciphers')(appDataPath)
-  db.pragma('foreign_keys = ON')
-  db.pragma("cipher='sqlcipher'")
-  db.pragma(`legacy=4`)
-  db.pragma("rekey='K3md1kbudRIS3n4yan'")
-  db.close()
+  try {
+    db.pragma("cipher='sqlcipher'")
+    db.pragma(`legacy=4`)
+    db.pragma("key='K3md1kbudRIS3n4yan'")
+    db.close()
+  } catch {
+    db.pragma("cipher='sqlcipher'")
+    db.pragma(`legacy=4`)
+    db.pragma("rekey='K3md1kbudRIS3n4yan'")
+    db.close()
+  }
   return
 }
 
@@ -584,6 +589,20 @@ async function addRefSumberDana(): Promise<void> {
   return
 }
 
+async function addAppConfig(): Promise<void> {
+  const repoAppConfig = getRepository(AppConfig)
+  const appConfigData = [
+    { varname: 'active', varvalue: '0' },
+    { varname: 'sekolah_id', varvalue: '0' },
+    { varname: 'koreg', varvalue: '0' },
+    { varname: 'koreg_invalid', varvalue: '0' },
+    { varname: 'koreg_invalid', varvalue: '0' },
+    { varname: 'requestReset', varvalue: '0' },
+  ]
+  await repoAppConfig.save(appConfigData)
+  return
+}
+
 async function createDBLocal(appDataPath: string): Promise<void> {
   if (!fs.existsSync(path.join(appDataPath, 'arkas.db'))) {
     const connDBLocal = await createConnection({
@@ -640,9 +659,11 @@ async function createDBLocal(appDataPath: string): Promise<void> {
     await addRefNegara()
     await addRefPeriode()
     await addRefSumberDana()
+    await addAppConfig()
     await connDBLocal.close()
+  } else {
+    console.log('----not create db----')
   }
-
   await encryptDB()
   return
 }
@@ -676,6 +697,7 @@ export const setupDB = async (): Promise<void> => {
         throw err
       })
   } else {
-    return await createDBLocal(appDataPath)
+    await createDBLocal(appDataPath)
+    return
   }
 }
