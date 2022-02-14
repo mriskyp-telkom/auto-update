@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 
@@ -14,7 +14,7 @@ import { Icon } from '@wartek-id/icon'
 
 import { emailRegex } from 'constants/regex'
 
-// import analytics from 'configs/analytics'
+import sendEvent from 'configs/analytics'
 
 import { FormLoginData } from 'types/LoginType'
 
@@ -38,6 +38,13 @@ const LoginView: FC = () => {
   const onSubmit = async (data: FormLoginData) => {
     const ipc = ipcRenderer.sendSync('user:checkUsername', data.email)
     console.log(ipc)
+
+    sendEvent({
+      category: 'Login',
+      action: 'CLICK_LOGIN',
+      customDimension1: data.email,
+    })
+
     if (data.email === 'yasmin@gmail.com') {
       setError('email', {
         type: 'manual',
@@ -60,15 +67,6 @@ const LoginView: FC = () => {
       navigate('/dashboard')
     }, 3000)
   }
-
-  useEffect(() => {
-    // analytics.send('event', {
-    //   ec: 'Scroll',
-    //   ea: 'scrollto',
-    //   el: 'row',
-    //   ev: 123,
-    // })
-  })
 
   return (
     <AuthLayout>
