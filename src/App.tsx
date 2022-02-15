@@ -26,7 +26,6 @@ const App: FC = () => {
           <Route path="/registration" element={<RegistrationView />} />
           <Route path="/account-status" element={<StatusAccountView />} />
           <Route path="/create-account/:mode" element={<CreateAccountView />} />
-
           <Route path="anggaran">
             <Route index={true} element={<DashboardAnggaranView />} />
             <Route path="menyusun" element={<MenyusunAnggaranView />} />

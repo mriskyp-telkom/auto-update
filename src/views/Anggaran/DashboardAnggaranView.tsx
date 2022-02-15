@@ -29,18 +29,23 @@ const BosReguler = [
 const DashboardAnggaranView: FC = () => {
   return (
     <PageLayout>
-      <div className="flex justify-center w-[980px] bg-white rounded-[10px] mt-[45px] mx-auto">
-        <Tabs>
-          <TabList>
-            <Tab>BOS Reguler</Tab>
-            <Tab>BOS Daerah</Tab>
-            <Tab>BOS Afirmasi/Kinerja</Tab>
-            <Tab>SILPA BOS Reguler</Tab>
-            <Tab>SILPA BOS Afirmasi/Kinerja</Tab>
-            <Tab>Lainnya</Tab>
-          </TabList>
+      <div className="flex w-[980px] bg-white rounded-[10px] mt-[45px] mx-auto">
+        <Tabs className="w-full">
+          <div
+            className="pt-[14px]"
+            style={{ boxShadow: 'inset 0px -1px 0px #C9CBCF' }}
+          >
+            <TabList style={{ marginLeft: 0 }}>
+              <Tab>BOS Reguler</Tab>
+              <Tab>BOS Daerah</Tab>
+              <Tab>BOS Afirmasi/Kinerja</Tab>
+              <Tab>SILPA BOS Reguler</Tab>
+              <Tab>SILPA BOS Afirmasi/Kinerja</Tab>
+              <Tab>Lainnya</Tab>
+            </TabList>
+          </div>
           <TabPanels>
-            <TabPanel className="my-5">
+            <TabPanel className="mt-6 mb-[2px] grid justify-items-center">
               {BosReguler.map((data: CardDashboardType) => {
                 return (
                   <CardDashboardAnggaranView

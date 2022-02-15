@@ -4,27 +4,24 @@ import { useNavigate } from 'react-router-dom'
 
 import AuthLayout from 'views/Layout/AuthLayout'
 
+import InputComponent from 'components/Form/InputComponent'
 import SyncDialogComponent from 'components/Dialog/SyncDialogComponent'
+import InputPasswordComponent from 'components/Form/InputPasswordComponent'
 
 import ResetAccountLinkView from './ResetAccountLinkView'
 
 import { Button } from '@wartek-id/button'
-import { Input, InputGroup, InputRightAddon } from '@wartek-id/input'
-import { Icon } from '@wartek-id/icon'
-
-import { emailRegex } from 'constants/regex'
 
 import sendEvent from 'configs/analytics'
 
 import { FormLoginData } from 'types/LoginType'
 
-const ipcRenderer = window.require('electron').ipcRenderer
+// const ipcRenderer = window.require('electron').ipcRenderer
 
 const LoginView: FC = () => {
   const navigate = useNavigate()
 
   const [isSync, setIsSync] = useState(false)
-  const [visibilityPassword, setVisibilityPassword] = useState(false)
 
   const {
     register,
@@ -36,9 +33,9 @@ const LoginView: FC = () => {
   })
 
   const onSubmit = async (data: FormLoginData) => {
-    const ipc = ipcRenderer.sendSync('user:checkUsername', data.email)
-    console.log(ipc)
-
+    // const ipc = ipcRenderer.sendSync('user:checkUsername', data.email)
+    // console.log(ipc)
+    console.log(data)
     sendEvent({
       category: 'Login',
       action: 'CLICK_LOGIN',
@@ -75,54 +72,24 @@ const LoginView: FC = () => {
           <div className="text-[14px] pb-1 font-normal text-gray-900">
             Email
           </div>
-          <Input
-            type="text"
-            placeholder="Masukkan email yang terdaftar di sekolah"
-            id="email"
+          <InputComponent
+            type="email"
             name="email"
-            isInvalid={!!errors.email}
-            errorMessage={errors?.email?.message}
-            {...register('email', {
-              required: 'Wajib diisi.',
-              pattern: {
-                value: emailRegex,
-                message: 'Masukkan email dengan contoh format arini@yahoo.com',
-              },
-            })}
+            placeholder="Masukkan email yang terdaftar di sekolah"
+            errors={errors}
+            register={register}
+            required={true}
           />
         </div>
         <div className="pt-5">
           <div className="text-[14px] pb-1 font-normal text-gray-900">
             Password
           </div>
-          <InputGroup>
-            <Input
-              type={visibilityPassword ? 'text' : 'password'}
-              placeholder="Masukkan password"
-              id="password"
-              name="password"
-              isInvalid={!!errors.password}
-              errorMessage={errors?.password?.message}
-              {...register('password', {
-                required: 'Wajib diisi.',
-                minLength: {
-                  value: 8,
-                  message: 'Minimal 8 karakter',
-                },
-              })}
-            />
-            <InputRightAddon>
-              <Icon
-                as="i"
-                color="default"
-                fontSize="default"
-                onClick={() => setVisibilityPassword(!visibilityPassword)}
-                className="pointer-events-initial"
-              >
-                {visibilityPassword ? 'visibility' : 'visibility_off'}
-              </Icon>
-            </InputRightAddon>
-          </InputGroup>
+          <InputPasswordComponent
+            name="password"
+            errors={errors}
+            register={register}
+          />
         </div>
         <ResetAccountLinkView />
         <div className="grid justify-items-end pb-[20px]">
