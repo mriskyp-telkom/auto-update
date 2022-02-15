@@ -19,7 +19,8 @@
   "config": {
     "forge": {
       "packagerConfig": {
-        "executableName": "arkas_desktop"
+        "executableName": "arkas_desktop",
+        "icon": "public/assets/icons/arkas.ico"
       },
       "makers": [
         {
@@ -123,6 +124,8 @@
     "better-sqlite3-multiple-ciphers": "^7.5.0",
     "electron-ga-uuid": "^1.0.2",
     "electron-squirrel-startup": "^1.0.0",
+    "node-machine-id": "^1.1.12",
+    "npm": "^8.5.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.24.2",
