@@ -1,7 +1,8 @@
 import { InstansiPengguna } from '../repositories/InstansiPengguna'
 import { Pengguna } from '../repositories/Pengguna'
 import { UserRole } from '../repositories/UserRole'
-import { createQueryBuilder } from 'typeorm'
+import { AppConfig } from '../repositories/AppConfig'
+import { createQueryBuilder, getRepository } from 'typeorm'
 
 export const CheckUser = async (username: string): Promise<boolean> => {
   const getUser = await createQueryBuilder(UserRole, 'ur')
@@ -34,4 +35,24 @@ export const CheckUserPass = async (
     })
     .getOne()
   return getUser === undefined ? false : true
+}
+
+export const CheckLogin = async (): Promise<number> => {
+  const getAktif = (
+    await getRepository(AppConfig).findOne({ where: { varname: 'active' } })
+  ).varvalue
+  const getKoregInvalid = (
+    await getRepository(AppConfig).findOne({
+      where: { varname: 'koreg_invalid' },
+    })
+  ).varvalue
+  const getRequestReset = (
+    await getRepository(AppConfig).findOne({
+      where: { varname: 'requestReset' },
+    })
+  ).varvalue
+  if (getAktif === '1') return 2
+  else if (getKoregInvalid === '1') return 3
+  else if (getRequestReset === '1') return 4
+  else return 1
 }
