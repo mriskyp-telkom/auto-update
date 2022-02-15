@@ -4,11 +4,11 @@ import { useNavigate } from 'react-router-dom'
 
 import { numberUtils } from '@wartek-id/fe-toolbox'
 
-import FormDialogComponent from 'components/Dialog/FormDialogComponent'
-import InputComponent from 'components/Form/InputComponent'
+import FormDialogComponent from '../../components/Dialog/FormDialogComponent'
+import InputComponent from '../../components/Form/InputComponent'
 
-import { KonfirmasiKertasKerjaData } from 'types/AnggaranType'
-import { AnggaranStates, useAnggaranStore } from 'stores/anggaran'
+import { KonfirmasiKertasKerjaData } from '../../types/AnggaranType'
+import { AnggaranStates, useAnggaranStore } from '../../stores/anggaran'
 
 const KonfirmasiKertasKerjaView: FC = () => {
   const navigate = useNavigate()

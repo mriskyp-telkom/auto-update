@@ -1,14 +1,14 @@
 import React, { FC, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
-import InputComponent from 'components/Form/InputComponent'
-import AlertDialogComponent from 'components/Dialog/AlertDialogComponent'
-import FormDialogComponent from 'components/Dialog/FormDialogComponent'
+import InputComponent from '../../components/Form/InputComponent'
+import AlertDialogComponent from '../../components/Dialog/AlertDialogComponent'
+import FormDialogComponent from '../../components/Dialog/FormDialogComponent'
 
 import KonfirmasiKertasKerjaView from './KonfirmasiKertasKerjaView'
 
-import { FormCreateKertasKerjaData } from 'types/AnggaranType'
-import { AnggaranStates, useAnggaranStore } from 'stores/anggaran'
+import { FormCreateKertasKerjaData } from '../../types/AnggaranType'
+import { AnggaranStates, useAnggaranStore } from '../../stores/anggaran'
 
 const FormKertasKerjaView: FC = () => {
   const [openModalConfirmCancel, setOpenModalConfirmCancel] = useState(false)

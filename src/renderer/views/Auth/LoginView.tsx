@@ -2,19 +2,19 @@ import React, { FC, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 
-import AuthLayout from 'views/Layout/AuthLayout'
+import AuthLayout from '../Layout/AuthLayout'
 
-import InputComponent from 'components/Form/InputComponent'
-import SyncDialogComponent from 'components/Dialog/SyncDialogComponent'
-import InputPasswordComponent from 'components/Form/InputPasswordComponent'
+import InputComponent from '../../components/Form/InputComponent'
+import SyncDialogComponent from '../../components/Dialog/SyncDialogComponent'
+import InputPasswordComponent from '../../components/Form/InputPasswordComponent'
 
 import ResetAccountLinkView from './ResetAccountLinkView'
 
 import { Button } from '@wartek-id/button'
 
-import sendEvent from 'configs/analytics'
+import sendEvent from '../../configs/analytics'
 
-import { FormLoginData } from 'types/LoginType'
+import { FormLoginData } from '../../types/LoginType'
 
 // const ipcRenderer = window.require('electron').ipcRenderer
 

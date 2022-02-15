@@ -1,10 +1,10 @@
 import React, { FC, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import AuthLayout from 'views/Layout/AuthLayout'
+import AuthLayout from '../Layout/AuthLayout'
 
-import AlertDialogComponent from 'components/Dialog/AlertDialogComponent'
-import SyncDialogComponent from 'components/Dialog/SyncDialogComponent'
+import AlertDialogComponent from '../../components/Dialog/AlertDialogComponent'
+import SyncDialogComponent from '../../components/Dialog/SyncDialogComponent'
 
 import { Button } from '@wartek-id/button'
 import { Icon } from '@wartek-id/icon'

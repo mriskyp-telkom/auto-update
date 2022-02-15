@@ -2,19 +2,19 @@ import React, { FC, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 
-import AuthLayout from 'views/Layout/AuthLayout'
+import AuthLayout from '../Layout/AuthLayout'
 
-import AlertDialogComponent from 'components/Dialog/AlertDialogComponent'
-import SyncDialogComponent from 'components/Dialog/SyncDialogComponent'
-import InputComponent from 'components/Form/InputComponent'
+import AlertDialogComponent from '../../components/Dialog/AlertDialogComponent'
+import SyncDialogComponent from '../../components/Dialog/SyncDialogComponent'
+import InputComponent from '../../components/Form/InputComponent'
 
 import { Button } from '@wartek-id/button'
 import { Tooltip } from '@wartek-id/tooltip'
 import { Icon } from '@wartek-id/icon'
 
-import { onlyNumberRegex } from 'constants/regex'
+import { onlyNumberRegex } from '../../constants/regex'
 
-import { FormRegisterData } from 'types/LoginType'
+import { FormRegisterData } from '../../types/LoginType'
 
 const RegistrationView: FC = () => {
   const navigate = useNavigate()

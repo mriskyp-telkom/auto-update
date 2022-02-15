@@ -1,10 +1,10 @@
 import React, { FC } from 'react'
 
-import BadgeComponent, { BadgeType } from 'components/BadgeComponent'
+import BadgeComponent, { BadgeType } from '../../components/BadgeComponent'
 
 import CreateKertasKerjaView from './CreateKertasKerjaView'
 
-import { STATUS_KERTAS_KERJA } from 'constants/anggaran'
+import { STATUS_KERTAS_KERJA } from '../../constants/anggaran'
 
 import { Icon } from '@wartek-id/icon'
 import { Tooltip } from '@wartek-id/tooltip'

@@ -15,16 +15,16 @@
     "experimentalDecorators": true,
     "paths": {
       "*": ["node_modules/*"],
-      "components/*": ["src/components/*"],
-      "configs/*": ["src/configs/*"],
-      "constants/*": ["src/constants/*"],
-      "helpers/*": ["src/helpers/*"],
-      "repositories/*": ["src/repositories/*"],
-      "services/*": ["src/services/*"],
-      "stores/*": ["src/stores/*"],
-      "types/*": ["src/types/*"],
-      "views/*": ["src/views/*"]
+      "components/*": ["src/renderer/components/*"],
+      "configs/*": ["src/renderer/configs/*"],
+      "constants/*": ["src/renderer/constants/*"],
+      "helpers/*": ["src/main/helpers/*"],
+      "repositories/*": ["src/main/repositories/*"],
+      "services/*": ["src/main/services/*"],
+      "stores/*": ["src/renderer/stores/*"],
+      "types/*": ["src/renderer/types/*"],
+      "views/*": ["src/renderer/views/*"]
     }
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/**/*"]
 }
