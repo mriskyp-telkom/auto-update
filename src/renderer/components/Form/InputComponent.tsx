@@ -3,7 +3,7 @@ import { FieldErrors, RegisterOptions } from 'react-hook-form'
 
 import { Input, InputGroup } from '@wartek-id/input'
 
-import { emailRegex } from 'constants/regex'
+import { emailRegex } from '../../constants/regex'
 
 interface InputProps {
   type: 'text' | 'email'

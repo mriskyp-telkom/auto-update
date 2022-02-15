@@ -2,15 +2,15 @@ import React, { FC, useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 
-import AuthLayout from 'views/Layout/AuthLayout'
+import AuthLayout from '../Layout/AuthLayout'
 
-import SyncDialogComponent from 'components/Dialog/SyncDialogComponent'
-import InputComponent from 'components/Form/InputComponent'
-import InputPasswordComponent from 'components/Form/InputPasswordComponent'
+import SyncDialogComponent from '../../components/Dialog/SyncDialogComponent'
+import InputComponent from '../../components/Form/InputComponent'
+import InputPasswordComponent from '../../components/Form/InputPasswordComponent'
 
 import { Button } from '@wartek-id/button'
 
-import { FormResetAccountData } from 'types/LoginType'
+import { FormResetAccountData } from '../../types/LoginType'
 
 const CreateAccountView: FC = () => {
   const navigate = useNavigate()

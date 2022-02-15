@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 
-import PageLayout from 'views/Layout/PageLayout'
+import PageLayout from '../Layout/PageLayout'
 
 import CardDashboardAnggaranView from './CardDashboardAnggaranView'
 

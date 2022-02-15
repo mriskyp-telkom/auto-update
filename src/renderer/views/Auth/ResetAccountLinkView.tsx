@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import AlertDialogComponent from 'components/Dialog/AlertDialogComponent'
+import AlertDialogComponent from '../../components/Dialog/AlertDialogComponent'
 
 const ResetAccountLinkView: FC = () => {
   const navigate = useNavigate()
