@@ -10,6 +10,7 @@ module.exports = {
       textColor: {
         ...guruMobile.colors,
         ...guruMobile.textColor,
+        blueCustom: '#0b5ae2',
       },
       backgroundColor: {
         ...guruMobile.colors,
@@ -18,6 +19,7 @@ module.exports = {
         warning: '#ffc453',
       },
       borderColor: {
+        ...guruMobile.colors,
         warning: '#ffc453',
       },
     },

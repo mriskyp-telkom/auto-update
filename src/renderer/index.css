@@ -23,3 +23,7 @@ body {
 .pointer-events-initial {
   pointer-events: initial;
 }
+
+ul.list {
+  list-style: disc inside;
+}
