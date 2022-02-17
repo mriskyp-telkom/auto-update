@@ -12,6 +12,14 @@ module.exports = [
         from: path.resolve(__dirname, 'convert'),
         to: path.resolve(__dirname, '.webpack/main/convert'),
       },
+      {
+        from: path.resolve(__dirname, 'src/splash.html'),
+        to: path.resolve(__dirname, '.webpack/main'),
+      },
+      {
+        from: path.resolve(__dirname, 'public/assets/splash.png'),
+        to: path.resolve(__dirname, '.webpack/main'),
+      },
     ],
   }),
 ]

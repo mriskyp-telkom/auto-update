@@ -15,16 +15,8 @@
     "experimentalDecorators": true,
     "paths": {
       "*": ["node_modules/*"],
-      "components/*": ["src/components/*"],
-      "configs/*": ["src/configs/*"],
-      "constants/*": ["src/constants/*"],
-      "helpers/*": ["src/helpers/*"],
-      "repositories/*": ["src/repositories/*"],
-      "services/*": ["src/services/*"],
-      "stores/*": ["src/stores/*"],
-      "types/*": ["src/types/*"],
-      "views/*": ["src/views/*"]
+      "renderer/*": ["src/renderer/*"]
     }
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/**/*"]
 }

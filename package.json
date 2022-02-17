@@ -19,7 +19,8 @@
   "config": {
     "forge": {
       "packagerConfig": {
-        "executableName": "arkas_desktop"
+        "executableName": "arkas_desktop",
+        "icon": "public/assets/icons/arkas.ico"
       },
       "makers": [
         {
@@ -61,8 +62,8 @@
               "config": "./webpack.renderer.config.js",
               "entryPoints": [
                 {
-                  "html": "./src/index.html",
-                  "js": "./src/renderer.tsx",
+                  "html": "./src/renderer/index.html",
+                  "js": "./src/renderer/renderer.tsx",
                   "name": "main_window"
                 }
               ]
@@ -83,6 +84,7 @@
     "@popperjs/core": "^2.11.2",
     "@types/react": "^17.0.38",
     "@types/react-dom": "^17.0.11",
+    "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^4.0.1",
     "@typescript-eslint/parser": "^4.0.1",
     "@vercel/webpack-asset-relocator-loader": "1.7.0",
@@ -123,6 +125,8 @@
     "better-sqlite3-multiple-ciphers": "^7.5.0",
     "electron-ga-uuid": "^1.0.2",
     "electron-squirrel-startup": "^1.0.0",
+    "node-machine-id": "^1.1.12",
+    "npm": "^8.5.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.24.2",
@@ -130,6 +134,8 @@
     "react-router-dom": "^6.2.1",
     "sqlite3": "^5.0.2",
     "typeorm": "0.2.42-dev.1446e02",
+    "uuid": "^8.3.2",
+    "uuid-base64-ts": "^1.0.2",
     "zustand": "^3.5.10"
   }
 }

@@ -2,42 +2,42 @@ import fs from 'fs'
 import path from 'path'
 import { execFile } from 'child_process'
 import { promisify } from 'util'
-import { Anggaran } from './repositories/Anggaran'
-import { AppConfig } from './repositories/AppConfig'
-import { ConfigAnggaran } from './repositories/ConfigAnggaran'
-import { Instansi } from './repositories/Instansi'
-import { InstansiPengguna } from './repositories/InstansiPengguna'
-import { KasUmum } from './repositories/KasUmum'
-import { KasUmumNota } from './repositories/KasUmumNota'
-import { MstSekolah } from './repositories/MstSekolah'
-import { MstWilayah } from './repositories/MstWilayah'
-import { Pengguna } from './repositories/Pengguna'
-import { Ptk } from './repositories/Ptk'
-import { Rapbs } from './repositories/Rapbs'
-import { RapbsPeriode } from './repositories/RapbsPeriode'
-import { RapbsPtk } from './repositories/RapbsPtk'
-import { RefAcuanBarang } from './repositories/RefAcuanBarang'
-import { RefBku } from './repositories/RefBku'
-import { RefBulan } from './repositories/RefBulan'
-import { RefIndikator } from './repositories/RefIndikator'
-import { RefJabatan } from './repositories/RefJabatan'
-import { RefJenisInstansi } from './repositories/RefJenisInstansi'
-import { RefKode } from './repositories/RefKode'
-import { RefLevelKode } from './repositories/RefLevelKode'
-import { RefLevelWilayah } from './repositories/RefLevelWilayah'
-import { RefNegara } from './repositories/RefNegara'
-import { RefPajak } from './repositories/RefPajak'
-import { RefPeriode } from './repositories/RefPeriode'
-import { RefRekening } from './repositories/RefRekening'
-import { RefRekeningTransfer } from './repositories/RefRekeningTransfer'
-import { RefSumberDana } from './repositories/RefSumberDana'
-import { RefTahunAnggaran } from './repositories/RefTahunAnggaran'
-import { Role } from './repositories/Role'
-import { Token } from './repositories/Token'
-import { UserRole } from './repositories/UserRole'
-import { App } from './repositories/App'
-import { SekolahPenjab } from './repositories/SekolahPenjab'
-import { ReportBku } from './repositories/ReportBku'
+import { Anggaran } from './main/repositories/Anggaran'
+import { AppConfig } from './main/repositories/AppConfig'
+import { ConfigAnggaran } from './main/repositories/ConfigAnggaran'
+import { Instansi } from './main/repositories/Instansi'
+import { InstansiPengguna } from './main/repositories/InstansiPengguna'
+import { KasUmum } from './main/repositories/KasUmum'
+import { KasUmumNota } from './main/repositories/KasUmumNota'
+import { MstSekolah } from './main/repositories/MstSekolah'
+import { MstWilayah } from './main/repositories/MstWilayah'
+import { Pengguna } from './main/repositories/Pengguna'
+import { Ptk } from './main/repositories/Ptk'
+import { Rapbs } from './main/repositories/Rapbs'
+import { RapbsPeriode } from './main/repositories/RapbsPeriode'
+import { RapbsPtk } from './main/repositories/RapbsPtk'
+import { RefAcuanBarang } from './main/repositories/RefAcuanBarang'
+import { RefBku } from './main/repositories/RefBku'
+import { RefBulan } from './main/repositories/RefBulan'
+import { RefIndikator } from './main/repositories/RefIndikator'
+import { RefJabatan } from './main/repositories/RefJabatan'
+import { RefJenisInstansi } from './main/repositories/RefJenisInstansi'
+import { RefKode } from './main/repositories/RefKode'
+import { RefLevelKode } from './main/repositories/RefLevelKode'
+import { RefLevelWilayah } from './main/repositories/RefLevelWilayah'
+import { RefNegara } from './main/repositories/RefNegara'
+import { RefPajak } from './main/repositories/RefPajak'
+import { RefPeriode } from './main/repositories/RefPeriode'
+import { RefRekening } from './main/repositories/RefRekening'
+import { RefRekeningTransfer } from './main/repositories/RefRekeningTransfer'
+import { RefSumberDana } from './main/repositories/RefSumberDana'
+import { RefTahunAnggaran } from './main/repositories/RefTahunAnggaran'
+import { Role } from './main/repositories/Role'
+import { Token } from './main/repositories/Token'
+import { UserRole } from './main/repositories/UserRole'
+import { App } from './main/repositories/App'
+import { SekolahPenjab } from './main/repositories/SekolahPenjab'
+import { ReportBku } from './main/repositories/ReportBku'
 import { createConnection, getRepository } from 'typeorm'
 import { getAppData } from './pathConfig'
 
@@ -48,12 +48,12 @@ async function encryptDB(): Promise<void> {
   try {
     db.pragma("cipher='sqlcipher'")
     db.pragma(`legacy=4`)
-    db.pragma("key='K3md1kbudRIS3n4yan'")
+    db.pragma("rekey='K3md1kbudRIS3n4yan'")
     db.close()
   } catch {
     db.pragma("cipher='sqlcipher'")
     db.pragma(`legacy=4`)
-    db.pragma("rekey='K3md1kbudRIS3n4yan'")
+    db.pragma("key='K3md1kbudRIS3n4yan'")
     db.close()
   }
   return
@@ -596,8 +596,9 @@ async function addAppConfig(): Promise<void> {
     { varname: 'sekolah_id', varvalue: '0' },
     { varname: 'koreg', varvalue: '0' },
     { varname: 'koreg_invalid', varvalue: '0' },
-    { varname: 'koreg_invalid', varvalue: '0' },
     { varname: 'requestReset', varvalue: '0' },
+    { varname: 'hdd_vol', varvalue: '' },
+    { varname: 'hdd_vol_old', varvalue: '' },
   ]
   await repoAppConfig.save(appConfigData)
   return
@@ -661,8 +662,6 @@ async function createDBLocal(appDataPath: string): Promise<void> {
     await addRefSumberDana()
     await addAppConfig()
     await connDBLocal.close()
-  } else {
-    console.log('----not create db----')
   }
   await encryptDB()
   return
@@ -691,7 +690,7 @@ export const setupDB = async (): Promise<void> => {
       [paramStr]
     )
       .then(() => {
-        createDBLocal(appDataPath)
+        return createDBLocal(appDataPath)
       })
       .catch((err) => {
         throw err
