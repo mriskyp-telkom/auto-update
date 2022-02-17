@@ -1,8 +1,7 @@
 import { getRepository, InsertResult } from 'typeorm'
 import { Token } from '../repositories/Token'
-import { IToken } from '../types/IToken'
 
-export const CreateToken = async (token: IToken): Promise<InsertResult> => {
+export const CreateToken = async (token: Token): Promise<InsertResult> => {
   return await getRepository(Token).insert({
     tokenId: token.tokenId,
     userroleId: token.userroleId,
