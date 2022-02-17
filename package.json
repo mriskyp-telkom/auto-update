@@ -133,7 +133,7 @@
     "react-popper": "^2.2.5",
     "react-router-dom": "^6.2.1",
     "sqlite3": "^5.0.2",
-    "typeorm": "0.2.42-dev.1446e02",
+    "typeorm": "^0.2.42",
     "uuid": "^8.3.2",
     "uuid-base64-ts": "^1.0.2",
     "zustand": "^3.5.10"
