@@ -84,6 +84,7 @@
     "@popperjs/core": "^2.11.2",
     "@types/react": "^17.0.38",
     "@types/react-dom": "^17.0.11",
+    "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^4.0.1",
     "@typescript-eslint/parser": "^4.0.1",
     "@vercel/webpack-asset-relocator-loader": "1.7.0",
@@ -133,6 +134,8 @@
     "react-router-dom": "^6.2.1",
     "sqlite3": "^5.0.2",
     "typeorm": "0.2.42-dev.1446e02",
+    "uuid": "^8.3.2",
+    "uuid-base64-ts": "^1.0.2",
     "zustand": "^3.5.10"
   }
 }

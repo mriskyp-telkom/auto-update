@@ -16,7 +16,7 @@ import sendEvent from '../../configs/analytics'
 
 import { FormLoginData } from '../../types/LoginType'
 
-// const ipcRenderer = window.require('electron').ipcRenderer
+const ipcRenderer = window.require('electron').ipcRenderer
 
 const LoginView: FC = () => {
   const navigate = useNavigate()
@@ -33,32 +33,36 @@ const LoginView: FC = () => {
   })
 
   const onSubmit = async (data: FormLoginData) => {
-    // const ipc = ipcRenderer.sendSync('user:checkUsername', data.email)
-    // console.log(ipc)
-    console.log(data)
     sendEvent({
       category: 'Login',
       action: 'CLICK_LOGIN',
       customDimension1: data.email,
     })
-
-    if (data.email === 'yasmin@gmail.com') {
+    const ipcCheckUserName = ipcRenderer.sendSync(
+      'user:checkUsername',
+      data.email
+    )
+    if (!ipcCheckUserName) {
       setError('email', {
         type: 'manual',
         message: 'Email tidak terdaftar',
       })
       return
     }
-
-    if (data.password === '12345678') {
+    const ipcCheckUserPass = ipcRenderer.sendSync(
+      'user:checkUserPass',
+      data.email,
+      data.password
+    )
+    if (!ipcCheckUserPass) {
       setError('password', {
         type: 'manual',
         message: 'Password salah',
       })
       return
     }
-
     setIsSync(true)
+    ipcRenderer.sendSync('token:createSession', data.email)
     setTimeout(() => {
       setIsSync(false)
       navigate('/dashboard')

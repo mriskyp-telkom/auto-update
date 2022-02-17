@@ -3,6 +3,7 @@ import { Pengguna } from '../repositories/Pengguna'
 import { UserRole } from '../repositories/UserRole'
 import { AppConfig } from '../repositories/AppConfig'
 import { createQueryBuilder, getRepository } from 'typeorm'
+import CommonUtils from '../utils/CommonUtils'
 
 export const CheckUser = async (username: string): Promise<boolean> => {
   const getUser = await createQueryBuilder(UserRole, 'ur')
@@ -21,7 +22,7 @@ export const CheckUserPass = async (
   username: string,
   password: string
 ): Promise<boolean> => {
-  const passMD5: string = password.toUpperCase()
+  const passMD5: string = CommonUtils.getMD5(password).toUpperCase()
   const getUser = await createQueryBuilder(UserRole, 'ur')
     .innerJoin(
       InstansiPengguna,
@@ -29,7 +30,7 @@ export const CheckUserPass = async (
       'ur.instansi_pengguna_id = ip.instansi_pengguna_id'
     )
     .innerJoin(Pengguna, 'p', 'ip.pengguna_id = p.pengguna_id')
-    .where('p.email = :email, p.password = :pass', {
+    .where('p.email = :email AND p.password = :pass', {
       email: username,
       pass: passMD5,
     })
@@ -55,4 +56,17 @@ export const CheckLogin = async (): Promise<number> => {
   else if (getKoregInvalid === '1') return 3
   else if (getRequestReset === '1') return 4
   else return 1
+}
+
+export const GetUserRole = async (username: string): Promise<UserRole> => {
+  const getUser = await createQueryBuilder(UserRole, 'ur')
+    .innerJoin(
+      InstansiPengguna,
+      'ip',
+      'ur.instansi_pengguna_id = ip.instansi_pengguna_id'
+    )
+    .innerJoin(Pengguna, 'p', 'ip.pengguna_id = p.pengguna_id')
+    .where('p.email = :email', { email: username })
+    .getOne()
+  return getUser
 }

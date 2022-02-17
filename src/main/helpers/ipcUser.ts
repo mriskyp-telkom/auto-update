@@ -1,5 +1,5 @@
 import { ipcMain } from 'electron'
-import { CheckUser, CheckUserPass } from '../services/User'
+import { CheckUser, CheckUserPass, CheckLogin } from '../services/User'
 
 module.exports = {
   checkUsername: ipcMain.on('user:checkUsername', async (e, username) => {
@@ -12,4 +12,8 @@ module.exports = {
       e.returnValue = await CheckUserPass(username, password)
     }
   ),
+
+  checkLogin: ipcMain.on('user:checkLogin', async (e) => {
+    e.returnValue = await CheckLogin()
+  }),
 }
