@@ -72,6 +72,7 @@ app.on('ready', async () => {
       machineId(true).then((id) => {
         SetConfig('hdd_vol', id)
         require('./main/helpers/ipcUser')
+        require('./main/helpers/ipcToken')
 
         setTimeout(function () {
           splashWindow.close()
