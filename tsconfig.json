@@ -15,6 +15,7 @@
     "experimentalDecorators": true,
     "paths": {
       "*": ["node_modules/*"],
+      "main/*": ["src/main/*"],
       "renderer/*": ["src/renderer/*"]
     }
   },

@@ -1,6 +1,6 @@
 /* eslint-disable */
 const rules = require('./webpack.rules')
-const plugins = require('./webpack.plugins')
+const plugins = require('./webpack.renderer.plugins')
 const path = require('path')
 
 rules.push({

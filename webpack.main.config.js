@@ -1,5 +1,6 @@
 /* eslint-disable */
 const plugins = require('./webpack.main.plugins')
+const path = require('path')
 
 module.exports = {
   /**
@@ -14,5 +15,8 @@ module.exports = {
   plugins: plugins,
   resolve: {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.json'],
+    alias: {
+      main: path.resolve(__dirname, './src/main'),
+    },
   },
 }
