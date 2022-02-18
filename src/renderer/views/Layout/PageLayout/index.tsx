@@ -1,5 +1,6 @@
 import React, { FC } from 'react'
 
+import HeaderComponent from 'renderer/components/HeaderComponent'
 import SidebarComponent from 'renderer/components/SidebarComponent'
 
 interface PageLayoutProps {
@@ -8,9 +9,12 @@ interface PageLayoutProps {
 
 const PageLayout: FC = (props: PageLayoutProps) => {
   return (
-    <div className="flex bg-gray-0">
-      <SidebarComponent />
-      <div className="w-full">{props.children}</div>
+    <div>
+      <HeaderComponent />
+      <div className="flex bg-gray-0">
+        <SidebarComponent />
+        <div className="w-full">{props.children}</div>
+      </div>
     </div>
   )
 }

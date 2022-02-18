@@ -3,12 +3,12 @@ import React, { FC, useState } from 'react'
 import { Button } from '@wartek-id/button'
 import { Icon } from '@wartek-id/icon'
 
-import AlertDialogComponent from '../../components/Dialog/AlertDialogComponent'
-import SyncDialogComponent from '../../components/Dialog/SyncDialogComponent'
+import AlertDialogComponent from 'renderer/components/Dialog/AlertDialogComponent'
+import SyncDialogComponent from 'renderer/components/Dialog/SyncDialogComponent'
 
-import FormKertasKerjaView from './FormKertasKerjaView'
+import FormKertasKerjaView from './FormPenanggungJawabView'
 
-import { AnggaranStates, useAnggaranStore } from '../../stores/anggaran'
+import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
 
 const CreateKertasKerjaView: FC = () => {
   const [isSync, setIsSync] = useState(false)

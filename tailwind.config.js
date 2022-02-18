@@ -7,6 +7,9 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
+      fontSize: {
+        base: '.875rem', //14px
+      },
       textColor: {
         ...guruMobile.colors,
         ...guruMobile.textColor,

@@ -1,16 +1,17 @@
 import React, { FC, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
-import InputComponent from '../../components/Form/InputComponent'
-import AlertDialogComponent from '../../components/Dialog/AlertDialogComponent'
-import FormDialogComponent from '../../components/Dialog/FormDialogComponent'
+import InputComponent from 'renderer/components/Form/InputComponent'
+import AlertDialogComponent from 'renderer/components/Dialog/AlertDialogComponent'
+import FormDialogComponent from 'renderer/components/Dialog/FormDialogComponent'
 
-import KonfirmasiKertasKerjaView from './KonfirmasiKertasKerjaView'
+import KonfirmasiKertasKerjaView from './KonfirmasiPaguView'
 
-import { FormCreateKertasKerjaData } from '../../types/AnggaranType'
-import { AnggaranStates, useAnggaranStore } from '../../stores/anggaran'
+import { FormCreateKertasKerjaData } from 'renderer/types/AnggaranType'
 
-const FormKertasKerjaView: FC = () => {
+import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
+
+const FormPenanggungJawabView: FC = () => {
   const [openModalConfirmCancel, setOpenModalConfirmCancel] = useState(false)
 
   const createKertasKerja = useAnggaranStore(
@@ -67,7 +68,7 @@ const FormKertasKerjaView: FC = () => {
         <div>
           <div className="flex pb-5">
             <div className="flex-1 pr-7">
-              <div className="text-[14px] pb-1 font-normal text-gray-900">
+              <div className="text-base pb-1 font-normal text-gray-900">
                 Nama Kepala Sekolah
               </div>
               <InputComponent
@@ -80,7 +81,7 @@ const FormKertasKerjaView: FC = () => {
               />
             </div>
             <div className="flex-1 pr-7">
-              <div className="text-[14px] pb-1 font-normal text-gray-900">
+              <div className="text-base pb-1 font-normal text-gray-900">
                 Nama Bendahara
               </div>
               <InputComponent
@@ -93,7 +94,7 @@ const FormKertasKerjaView: FC = () => {
               />
             </div>
             <div className="flex-1">
-              <div className="text-[14px] pb-1 font-normal text-gray-900">
+              <div className="text-base pb-1 font-normal text-gray-900">
                 Nama Komite
               </div>
               <InputComponent
@@ -108,7 +109,7 @@ const FormKertasKerjaView: FC = () => {
           </div>
           <div className="flex">
             <div className="flex-1 pr-7">
-              <div className="text-[14px] pb-1 font-normal text-gray-900">
+              <div className="text-base pb-1 font-normal text-gray-900">
                 NIP Kepala Sekolah (Opsional)
               </div>
               <InputComponent
@@ -126,7 +127,7 @@ const FormKertasKerjaView: FC = () => {
               />
             </div>
             <div className="flex-1 pr-7">
-              <div className="text-[14px] pb-1 font-normal text-gray-900">
+              <div className="text-base pb-1 font-normal text-gray-900">
                 NIP Bendahara (Opsional)
               </div>
               <InputComponent
@@ -144,7 +145,7 @@ const FormKertasKerjaView: FC = () => {
               />
             </div>
             <div className="flex-1">
-              <div className="text-[14px] pb-1 font-normal text-gray-900">
+              <div className="text-base pb-1 font-normal text-gray-900">
                 Email Komite
               </div>
               <InputComponent
@@ -176,4 +177,4 @@ const FormKertasKerjaView: FC = () => {
   )
 }
 
-export default FormKertasKerjaView
+export default FormPenanggungJawabView

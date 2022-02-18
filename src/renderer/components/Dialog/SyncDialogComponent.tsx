@@ -12,12 +12,18 @@ import {
 
 interface SyncDialogProps {
   title: string
+  subtitle?: string
   isOpen: boolean
   percentage: number
   setIsOpen: (value: boolean) => void
 }
 
 const SyncDialogComponent: FC<SyncDialogProps> = (props: SyncDialogProps) => {
+  const subtitle =
+    props.subtitle === ''
+      ? 'Pastikan Anda terkoneksi ke internet yang lancar.'
+      : props.subtitle
+
   return (
     <Dialog
       customSize={560}
@@ -32,7 +38,7 @@ const SyncDialogComponent: FC<SyncDialogProps> = (props: SyncDialogProps) => {
             {props.title}
           </DialogTitle>
           <DialogDescription className="font-normal text-[16px] text-gray-900">
-            Pastikan Anda terkoneksi ke internet yang lancar.
+            {subtitle}
           </DialogDescription>
         </div>
       </DialogContent>

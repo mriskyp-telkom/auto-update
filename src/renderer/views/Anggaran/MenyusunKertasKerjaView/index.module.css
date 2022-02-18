@@ -1,0 +1,22 @@
+.tableKertasKerja thead tr {
+  box-shadow: inset 0px -1px 0px #c9cbcf;
+}
+
+.tableKertasKerja thead th {
+  padding-top: 1.5rem;
+  padding-bottom: 1rem;
+}
+
+.tableKertasKerja tbody tr {
+  height: 52px;
+  box-shadow: inset 0px -1px 0px #c9cbcf;
+}
+
+.pointKertasKerja ul {
+  list-style: disc inside;
+}
+
+.pointKertasKerja ul li span {
+  position: relative;
+  left: -6px;
+}
