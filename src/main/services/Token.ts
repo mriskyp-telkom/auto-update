@@ -1,5 +1,5 @@
-import { getRepository, InsertResult } from 'typeorm'
-import { Token } from '../repositories/Token'
+import { getRepository, InsertResult, createQueryBuilder } from 'typeorm'
+import { Token } from 'main/repositories/Token'
 
 export const CreateToken = async (token: Token): Promise<InsertResult> => {
   return await getRepository(Token).insert({
@@ -11,4 +11,14 @@ export const CreateToken = async (token: Token): Promise<InsertResult> => {
     lastUpdate: token.lastUpdate,
     expiredDate: token.expiredDate,
   })
+}
+
+export const ExpiryToken = async (tokenId: string): Promise<void> => {
+  await createQueryBuilder()
+    .update(Token)
+    .set({
+      expiryDate: Date.now(),
+    })
+    .where('tokenId = :tokenId', { tokenId })
+    .execute()
 }
