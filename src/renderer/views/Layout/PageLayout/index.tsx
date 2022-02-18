@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 
-import SidebarComponent from '../../../components/SidebarComponent'
+import SidebarComponent from 'renderer/components/SidebarComponent'
 
 interface PageLayoutProps {
   children: React.ReactNode
