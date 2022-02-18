@@ -68,7 +68,7 @@ const RegistrationView: FC = () => {
     <AuthLayout>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
-          <div className="text-[14px] pb-1 font-normal text-gray-900">NPSN</div>
+          <div className="text-base pb-1 font-normal text-gray-900">NPSN</div>
           <InputComponent
             type="text"
             name="npsn"
@@ -93,7 +93,7 @@ const RegistrationView: FC = () => {
           />
         </div>
         <div className="pt-5">
-          <div className="flex items-center text-[14px] pb-1 font-normal text-gray-900">
+          <div className="flex items-center text-base pb-1 font-normal text-gray-900">
             Kode Aktivasi
             <Tooltip
               content="Kode aktivasi yang didapatkan dari dinas ketika aktivasi akun"

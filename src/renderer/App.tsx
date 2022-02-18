@@ -1,8 +1,6 @@
 import React, { FC } from 'react'
 import { HashRouter, Route, Routes } from 'react-router-dom'
 
-import HeaderComponent from 'renderer/components/HeaderComponent'
-
 import DashboardView from 'renderer/views/DashboardView'
 import AboutView from 'renderer/views/AboutView'
 import NotFoundView from 'renderer/views/NotFoundView'
@@ -13,13 +11,12 @@ import CreateAccountView from 'renderer/views/Auth/CreateAccountView'
 import RegistrationView from 'renderer/views/Auth/RegistrationView'
 
 import DashboardAnggaranView from 'renderer/views/Anggaran/DashboardAnggaranView'
-import MenyusunAnggaranView from 'renderer/views/Anggaran/MenyusunAnggaranView'
+import MenyusunKertasKerjaView from 'renderer/views/Anggaran/MenyusunKertasKerjaView'
 
 const App: FC = () => {
   return (
     <HashRouter>
       <div className="App">
-        <HeaderComponent />
         <Routes>
           <Route path="*" element={<NotFoundView />} />
           <Route path="/" element={<LoginView />} />
@@ -28,7 +25,7 @@ const App: FC = () => {
           <Route path="/create-account/:mode" element={<CreateAccountView />} />
           <Route path="anggaran">
             <Route index={true} element={<DashboardAnggaranView />} />
-            <Route path="menyusun" element={<MenyusunAnggaranView />} />
+            <Route path="menyusun" element={<MenyusunKertasKerjaView />} />
           </Route>
           <Route path="/about" element={<AboutView />} />
           <Route path="/dashboard" element={<DashboardView />} />

@@ -1,15 +1,44 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 
-import PageLayout from 'renderer/views/Layout/PageLayout'
 import AmountCardComponent from 'renderer/components/Card/AmountCardComponent'
+import AlertDialogComponent from 'renderer/components/Dialog/AlertDialogComponent'
+import SyncDialogComponent from 'renderer/components/Dialog/SyncDialogComponent'
+
+import FormIsiDetailKertasKerjaView from './FormIsiDetailKertasKerjaView'
+import TabelKertasKerjaView from './TabelKertasKerjaView'
 
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from '@wartek-id/tabs'
 import { Icon } from '@wartek-id/icon'
 import { Button } from '@wartek-id/button'
 
-const MenyusunAnggaranView: FC = () => {
+import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
+
+import styles from './index.module.css'
+
+import clsx from 'clsx'
+
+const MenyusunKertasKerjaView: FC = () => {
+  const [isSync, setIsSync] = useState(false)
+  const [openModalInit, setOpenModalInit] = useState(false)
+
+  const setCreateKertasKerja = useAnggaranStore(
+    (state: AnggaranStates) => state.setCreateKertasKerja
+  )
+
+  const handleSalinKertasKerja = () => {
+    setOpenModalInit(false)
+    setIsSync(true)
+    setTimeout(() => {
+      setIsSync(false)
+    }, 3000)
+  }
+
+  useEffect(() => {
+    setOpenModalInit(true)
+  }, [])
+
   return (
-    <PageLayout>
+    <div>
       <div className="flex justify-between pt-10 px-10">
         <span>
           <div className="flex items-center text-[12px] font-semibold text-blue-700 mb-[12px]">
@@ -27,16 +56,17 @@ const MenyusunAnggaranView: FC = () => {
           <div className="flex items-center text-[22px] font-semibold">
             Menyusun Kertas Kerja
             <Icon
-              as="i"
+              as="button"
               color="default"
               fontSize="default"
               className="ml-[10px]"
               style={{ color: '#054BCC' }}
+              onClick={() => setCreateKertasKerja(true)}
             >
               edit
             </Icon>
           </div>
-          <div className="text-[14px] font-semibold text-gray-600 mb-[88px]">
+          <div className="text-base font-semibold text-gray-600 mb-[88px]">
             BOS reguler 2021
           </div>
           <AmountCardComponent
@@ -47,41 +77,45 @@ const MenyusunAnggaranView: FC = () => {
           />
         </span>
         <span>
-          <div className="bg-gray-300 rounded p-6">
-            <div>
+          <div
+            className={clsx(styles.pointKertasKerja, 'bg-gray-300 rounded p-6')}
+          >
+            <div className="mb-2">
               <Icon
                 as="i"
                 color="default"
                 fontSize="small"
                 style={{ fontSize: '14px' }}
-                className="ml-1"
+                className="mr-[10px]"
               >
                 info
               </Icon>
               Panduan
             </div>
-            <ul className="list font-normal text-[14px] text-gray-900">
+            <ul className="list font-normal text-base text-gray-900 ml-[48px]">
               <li>
-                Anda harus menghabiskan seluruh anggaran untuk bisa mengajukan
-                pengesahan.
+                <span>
+                  Anda harus menghabiskan seluruh anggaran untuk bisa mengajukan
+                  pengesahan.
+                </span>
               </li>
               <li>
-                Pastikan Anda membuat anggaran berdasarkan juknis yang berlaku.{' '}
-                <a>Lihat Juknis</a>
+                <span>
+                  Pastikan Anda membuat anggaran berdasarkan juknis yang
+                  berlaku.
+                  <a>Lihat Juknis</a>
+                </span>
               </li>
               <li>
-                Dalam membuat rencana anggaran sebaiknya juga memperhatikan
-                prioritas kegiatan daerah. <a>Lihat Prioritas Daerah</a>
+                <span>
+                  Dalam membuat rencana anggaran sebaiknya juga memperhatikan
+                  prioritas kegiatan daerah. <a>Lihat Prioritas Daerah</a>
+                </span>
               </li>
             </ul>
           </div>
           <div className="flex justify-end pt-5 pb-6">
-            <Button color="white" size="md" variant="solid" className="mr-3">
-              <Icon as="i" color="default" fontSize="default">
-                add
-              </Icon>
-              Tambah Kegiatan
-            </Button>
+            <FormIsiDetailKertasKerjaView />
             <Button color="black" size="md" variant="solid">
               Selesai
             </Button>
@@ -144,25 +178,65 @@ const MenyusunAnggaranView: FC = () => {
             </TabList>
           </div>
           <TabPanels>
-            <TabPanel className="mt-6 mb-[2px] grid justify-items-center">
-              Januari
+            <TabPanel>
+              <TabelKertasKerjaView />
             </TabPanel>
-            <TabPanel>Februari</TabPanel>
-            <TabPanel>Maret</TabPanel>
-            <TabPanel>April</TabPanel>
-            <TabPanel>Mei</TabPanel>
-            <TabPanel>Juni</TabPanel>
-            <TabPanel>Juli</TabPanel>
-            <TabPanel>Agustus</TabPanel>
-            <TabPanel>September</TabPanel>
-            <TabPanel>Oktober</TabPanel>
-            <TabPanel>November</TabPanel>
-            <TabPanel>Desember</TabPanel>
+            <TabPanel>
+              <TabelKertasKerjaView />
+            </TabPanel>
+            <TabPanel>
+              <TabelKertasKerjaView />
+            </TabPanel>
+            <TabPanel>
+              <TabelKertasKerjaView />
+            </TabPanel>
+            <TabPanel>
+              <TabelKertasKerjaView />
+            </TabPanel>
+            <TabPanel>
+              <TabelKertasKerjaView />
+            </TabPanel>
+            <TabPanel>
+              <TabelKertasKerjaView />
+            </TabPanel>
+            <TabPanel>
+              <TabelKertasKerjaView />
+            </TabPanel>
+            <TabPanel>
+              <TabelKertasKerjaView />
+            </TabPanel>
+            <TabPanel>
+              <TabelKertasKerjaView />
+            </TabPanel>
+            <TabPanel>
+              <TabelKertasKerjaView />
+            </TabPanel>
+            <TabPanel>
+              <TabelKertasKerjaView />
+            </TabPanel>
           </TabPanels>
         </Tabs>
       </div>
-    </PageLayout>
+      <AlertDialogComponent
+        type="warning"
+        icon="file_copy"
+        title="Salin dari Kertas Kerja sebelumnya? "
+        desc="Anda dapat menyalin isi Kertas Kerja pada tahun anggaran sebelumnya ke lembar ini atau membuat Kertas Kerja baru."
+        isOpen={openModalInit}
+        btnCancelText="Buat Baru"
+        btnActionText="Salin Kertas Kerja"
+        onCancel={() => setOpenModalInit(false)}
+        onSubmit={handleSalinKertasKerja}
+      />
+      <SyncDialogComponent
+        title="Menyalin Kertas Kerja..."
+        subtitle="Mohon tunggu sebentar."
+        percentage={50}
+        isOpen={isSync}
+        setIsOpen={setIsSync}
+      />
+    </div>
   )
 }
 
-export default MenyusunAnggaranView
+export default MenyusunKertasKerjaView

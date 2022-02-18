@@ -13,7 +13,7 @@ import { Button } from '@wartek-id/button'
 
 interface FormDialogProps {
   title: string
-  subtitle: string
+  subtitle?: string
   width: number
   isOpen: boolean
   children: React.ReactNode

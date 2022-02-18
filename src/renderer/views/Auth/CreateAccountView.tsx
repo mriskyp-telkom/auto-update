@@ -63,9 +63,7 @@ const CreateAccountView: FC = () => {
     <AuthLayout>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
-          <div className="text-[14px] pb-1 font-normal text-gray-900">
-            Email
-          </div>
+          <div className="text-base pb-1 font-normal text-gray-900">Email</div>
           <InputComponent
             type="email"
             name="email"
@@ -77,7 +75,7 @@ const CreateAccountView: FC = () => {
           />
         </div>
         <div className="pt-5">
-          <div className="text-[14px] pb-1 font-normal text-gray-900">
+          <div className="text-base pb-1 font-normal text-gray-900">
             Password
           </div>
           <InputPasswordComponent
@@ -87,7 +85,7 @@ const CreateAccountView: FC = () => {
           />
         </div>
         <div className="pt-5">
-          <div className="text-[14px] pb-1 font-normal text-gray-900">
+          <div className="text-base pb-1 font-normal text-gray-900">
             Konfirmasi Password
           </div>
           <InputPasswordComponent

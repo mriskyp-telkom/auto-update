@@ -4,13 +4,13 @@ import { useNavigate } from 'react-router-dom'
 
 import { numberUtils } from '@wartek-id/fe-toolbox'
 
-import FormDialogComponent from '../../components/Dialog/FormDialogComponent'
-import InputComponent from '../../components/Form/InputComponent'
+import FormDialogComponent from 'renderer/components/Dialog/FormDialogComponent'
+import InputComponent from 'renderer/components/Form/InputComponent'
 
-import { KonfirmasiKertasKerjaData } from '../../types/AnggaranType'
-import { AnggaranStates, useAnggaranStore } from '../../stores/anggaran'
+import { KonfirmasiKertasKerjaData } from 'renderer/types/AnggaranType'
+import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
 
-const KonfirmasiKertasKerjaView: FC = () => {
+const KonfirmasiPaguView: FC = () => {
   const navigate = useNavigate()
 
   const confirmKertasKerja = useAnggaranStore(
@@ -55,7 +55,7 @@ const KonfirmasiKertasKerjaView: FC = () => {
     >
       <div>
         <div className="pr-7">
-          <div className="text-[14px] pb-1 font-normal text-gray-900">
+          <div className="text-base pb-1 font-normal text-gray-900">
             Nominal Penerimaan
           </div>
           <InputComponent
@@ -75,4 +75,4 @@ const KonfirmasiKertasKerjaView: FC = () => {
   )
 }
 
-export default KonfirmasiKertasKerjaView
+export default KonfirmasiPaguView
