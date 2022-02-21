@@ -31,10 +31,7 @@ const DashboardAnggaranView: FC = () => {
     <PageLayout>
       <div className="flex w-[980px] bg-white rounded-[10px] mt-[45px] mx-auto">
         <Tabs className="w-full">
-          <div
-            className="pt-[14px]"
-            style={{ boxShadow: 'inset 0px -1px 0px #C9CBCF' }}
-          >
+          <div className="shadow pt-[14px]">
             <TabList style={{ marginLeft: 0 }}>
               <Tab>BOS Reguler</Tab>
               <Tab>BOS Daerah</Tab>

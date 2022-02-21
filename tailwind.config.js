@@ -9,6 +9,7 @@ module.exports = {
     extend: {
       fontSize: {
         base: '.875rem', //14px
+        large: '1rem', //16px
       },
       textColor: {
         ...guruMobile.colors,
@@ -24,6 +25,9 @@ module.exports = {
       borderColor: {
         ...guruMobile.colors,
         warning: '#ffc453',
+      },
+      boxShadow: {
+        DEFAULT: 'inset 0px -1px 0px #c9cbcf',
       },
     },
   },
