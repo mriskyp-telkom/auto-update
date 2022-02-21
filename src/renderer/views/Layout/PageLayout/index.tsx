@@ -1,6 +1,7 @@
 import React, { FC } from 'react'
 
-import SidebarComponent from '../../../components/SidebarComponent'
+import HeaderComponent from 'renderer/components/HeaderComponent'
+import SidebarComponent from 'renderer/components/SidebarComponent'
 
 interface PageLayoutProps {
   children: React.ReactNode
@@ -8,9 +9,12 @@ interface PageLayoutProps {
 
 const PageLayout: FC = (props: PageLayoutProps) => {
   return (
-    <div className="flex bg-gray-0">
-      <SidebarComponent />
-      <div className="w-full">{props.children}</div>
+    <div>
+      <HeaderComponent />
+      <div className="flex bg-gray-0">
+        <SidebarComponent />
+        <div className="w-full">{props.children}</div>
+      </div>
     </div>
   )
 }

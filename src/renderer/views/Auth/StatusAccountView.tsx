@@ -49,14 +49,14 @@ const StatusAccountView: FC = () => {
             as="i"
             color="default"
             fontSize="small"
-            className="text-[14px] mr-[4px]"
+            className="text-base mr-[4px]"
             style={{ fontSize: '14px' }}
           >
             schedule
           </Icon>
           Pengajuan Reset Akun Masih Diproses
         </div>
-        <div className="font-normal	text-[14px] text-gray-900 my-3">
+        <div className="font-normal	text-base text-gray-900 my-3">
           Silakan cek status pengajuan Anda secara berkala untuk melihat update.
         </div>
         <Button color="white" size="sm" variant="solid" onClick={onCheckStatus}>

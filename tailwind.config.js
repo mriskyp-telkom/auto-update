@@ -7,9 +7,13 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
+      fontSize: {
+        base: '.875rem', //14px
+      },
       textColor: {
         ...guruMobile.colors,
         ...guruMobile.textColor,
+        blueCustom: '#0b5ae2',
       },
       backgroundColor: {
         ...guruMobile.colors,
@@ -18,6 +22,7 @@ module.exports = {
         warning: '#ffc453',
       },
       borderColor: {
+        ...guruMobile.colors,
         warning: '#ffc453',
       },
     },
