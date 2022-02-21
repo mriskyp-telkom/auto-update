@@ -10,3 +10,10 @@ export interface FormCreateKertasKerjaData {
 export interface KonfirmasiKertasKerjaData {
   nominal: string
 }
+
+export interface FormIsiKertasKerjaData {
+  kegiatan: string
+  rekening_belanja: string
+  uraian: string
+  harga_satuan: number
+}

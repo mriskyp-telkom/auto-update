@@ -9,6 +9,7 @@ table.searchTable > tbody {
   width: 100%;
   display: block;
 }
+
 table.searchTable > thead,
 table.searchTable > tbody tr {
   display: table;
