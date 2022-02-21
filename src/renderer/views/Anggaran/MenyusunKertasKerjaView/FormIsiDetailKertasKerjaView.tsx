@@ -2,6 +2,7 @@ import React, { FC } from 'react'
 import { useForm } from 'react-hook-form'
 
 import FormDialogComponent from 'renderer/components/Dialog/FormDialogComponent'
+import SearchComponent from 'renderer/components/Search/SearchComponent'
 
 import { Icon } from '@wartek-id/icon'
 import { Button } from '@wartek-id/button'
@@ -57,7 +58,7 @@ const FormIsiDetailKertasKerjaView: FC = () => {
         onCancel={onCancel}
         onSubmit={handleSubmit(onSubmit)}
       >
-        <div>Form</div>
+        <SearchComponent />
       </FormDialogComponent>
     </div>
   )
