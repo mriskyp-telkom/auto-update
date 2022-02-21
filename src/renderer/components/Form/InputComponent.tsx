@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import { FieldErrors, RegisterOptions } from 'react-hook-form'
 
-import { Input, InputGroup } from '@wartek-id/input'
+import { Input } from '@wartek-id/input'
 
 import { emailRegex } from '../../constants/regex'
 
@@ -40,18 +40,16 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
   }
 
   return (
-    <InputGroup>
-      <Input
-        type="text"
-        placeholder={placeholder}
-        isDisabled={isDisabled}
-        id={name}
-        name={name}
-        isInvalid={!!errors[name]}
-        errorMessage={errors[name]?.message}
-        {...register(name, validation)}
-      />
-    </InputGroup>
+    <Input
+      type="text"
+      placeholder={placeholder}
+      isDisabled={isDisabled}
+      id={name}
+      name={name}
+      isInvalid={!!errors[name]}
+      errorMessage={errors[name]?.message}
+      {...register(name, validation)}
+    />
   )
 }
 
