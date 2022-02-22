@@ -37,15 +37,17 @@ const createWindow = (): void => {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
+      webSecurity: false,
     },
   })
 
-  //console.log(connDB())
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY)
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools({ mode: 'detach' })
+
+  mainWindow.webContents.setUserAgent('ARKAS Agent')
 
   console.log('\n\n====> This is ', process.env.ENVIRONMENT, ' env. <====\n\n')
 }

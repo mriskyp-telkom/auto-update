@@ -1,20 +1,22 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 
-import AuthLayout from '../Layout/AuthLayout'
+import AuthLayout from 'renderer/views/Layout/AuthLayout'
 
-import InputComponent from '../../components/Form/InputComponent'
-import SyncDialogComponent from '../../components/Dialog/SyncDialogComponent'
-import InputPasswordComponent from '../../components/Form/InputPasswordComponent'
+import InputComponent from 'renderer/components/Form/InputComponent'
+import SyncDialogComponent from 'renderer/components/Dialog/SyncDialogComponent'
+import InputPasswordComponent from 'renderer/components/Form/InputPasswordComponent'
 
 import ResetAccountLinkView from './ResetAccountLinkView'
 
 import { Button } from '@wartek-id/button'
 
-import sendEvent from '../../configs/analytics'
+import sendEvent from 'renderer/configs/analytics'
 
-import { FormLoginData } from '../../types/LoginType'
+import { FormLoginData } from 'renderer/types/LoginType'
+
+import { useAPIGetToken } from 'renderer/apis/token'
 
 const ipcRenderer = window.require('electron').ipcRenderer
 
@@ -22,6 +24,11 @@ const LoginView: FC = () => {
   const navigate = useNavigate()
 
   const [isSync, setIsSync] = useState(false)
+
+  const { data: dataToken } = useAPIGetToken({
+    username: '103019252021',
+    password: 'E2TS',
+  })
 
   const {
     register,
@@ -38,6 +45,7 @@ const LoginView: FC = () => {
       action: 'CLICK_LOGIN',
       customDimension1: data.email,
     })
+
     const ipcCheckUserName = ipcRenderer.sendSync(
       'user:checkUsername',
       data.email
@@ -49,6 +57,7 @@ const LoginView: FC = () => {
       })
       return
     }
+
     const ipcCheckUserPass = ipcRenderer.sendSync(
       'user:checkUserPass',
       data.email,
@@ -61,6 +70,7 @@ const LoginView: FC = () => {
       })
       return
     }
+
     setIsSync(true)
     ipcRenderer.sendSync('token:createSession', data.email)
     setTimeout(() => {
@@ -68,6 +78,10 @@ const LoginView: FC = () => {
       navigate('/dashboard')
     }, 3000)
   }
+
+  useEffect(() => {
+    //action hit hdd vol
+  }, [dataToken])
 
   return (
     <AuthLayout>
