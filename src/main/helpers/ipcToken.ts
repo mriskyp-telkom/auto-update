@@ -1,7 +1,7 @@
 import { ipcMain } from 'electron'
 import { CreateToken, ExpiryToken } from 'main/services/Token'
 import { GetUserRole } from 'main/services/User'
-import { SetConfig, GetConfig } from 'main/services/Config'
+import { SetConfig, GetConfig, DeleteConfig } from 'main/services/Config'
 import { Token } from 'main/repositories/Token'
 import CommonUtils from 'main/utils/CommonUtils'
 
@@ -18,15 +18,16 @@ module.exports = {
     token.createDate = new Date()
     token.lastUpdate = new Date()
     await CreateToken(token)
-    SetConfig('token', uuid).catch()
+    SetConfig('sessionId', uuid).catch()
     e.returnValue = uuid
   }),
 
   expirySession: ipcMain.on('token:expiryToken', async (e) => {
     try {
-      const token = await GetConfig('token')
+      const token = await GetConfig('sessionId')
       const tokenId = CommonUtils.decodeUUID(token)
       await ExpiryToken(tokenId)
+      await DeleteConfig('sessionId')
       e.returnValue = true
     } catch (e) {
       e.returnValue = false
@@ -34,7 +35,7 @@ module.exports = {
   }),
 
   isUserLoggedIn: ipcMain.on('token:isUserLoggedIn', async (e) => {
-    const token = await GetConfig('token')
+    const token = await GetConfig('sessionId')
     e.returnValue = token !== null && token !== undefined
   }),
 }
