@@ -5,18 +5,17 @@ import { api } from 'renderer/configs/api'
 import { API_GET_TOKEN } from 'renderer/constants/api'
 
 import { TokenData, ParamTokenType } from 'renderer/types/TokenType'
-import type { APIResponse } from 'renderer/types/Api'
 
 export function useAPIGetToken(
   paramToken: ParamTokenType,
-  queryOpts?: UseQueryOptions<AxiosResponse<APIResponse<TokenData>>>
+  queryOpts?: UseQueryOptions<AxiosResponse<TokenData>>
 ) {
   const params = new URLSearchParams()
   params.append('username', paramToken.username)
   params.append('password', paramToken.password)
   params.append('grant_type', 'password')
 
-  return useQuery<AxiosResponse<APIResponse<TokenData>>>(
+  return useQuery<AxiosResponse<TokenData>>(
     ['get-token', params],
     () => api().post(API_GET_TOKEN, params),
     queryOpts
