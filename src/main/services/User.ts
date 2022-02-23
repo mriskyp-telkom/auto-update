@@ -4,7 +4,7 @@ import { UserRole } from '../repositories/UserRole'
 import { AppConfig } from '../repositories/AppConfig'
 import { createQueryBuilder, getRepository, InsertResult } from 'typeorm'
 import CommonUtils from '../utils/CommonUtils'
-import { DeleteConfig, GetConfig, SetConfig } from './Config'
+import { GetConfig } from './Config'
 
 export const CheckUser = async (username: string): Promise<boolean> => {
   const getUser = await createQueryBuilder(UserRole, 'ur')
@@ -55,25 +55,15 @@ export const CheckLogin = async (): Promise<number> => {
   ).varvalue
 
   if (getAktif === '1') {
-    const results = await Promise.all([
-      GetConfig('hdd_vol'),
-      GetConfig('hdd_vol_old'),
-    ])
     const sessionId = await GetConfig('sessionId')
-    if (results[0] !== results[1]) {
-      await SetConfig('koreg_invalid', '1')
-      await DeleteConfig('sessionId')
-      return 3 // koreg invalid
-    } else {
-      if (sessionId !== null && sessionId !== undefined) {
-        return 5 // auto login
-      }
-      return 2 // login
+    if (sessionId !== null && sessionId !== undefined) {
+      return 5 // auto login
     }
+    return 2 // login
   } else if (getKoregInvalid === '1') return 3
-  // request koreg
+  //koreg invalid
   else if (getRequestReset === '1') return 4
-  // lock user
+  //lockAccount
   else return 1 // registrasi
 }
 
