@@ -36,7 +36,6 @@ table.searchTable tbody td {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: 30%;
 }
 
 table.searchTable tbody td:first-child {
