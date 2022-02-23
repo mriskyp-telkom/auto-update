@@ -1,14 +1,13 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC } from 'react'
 import { useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
 
 import AuthLayout from 'renderer/views/Layout/AuthLayout'
+import ResetAccountLinkView from 'renderer/views/Auth/ResetAccountLinkView'
 
 import InputComponent from 'renderer/components/Form/InputComponent'
-import SyncDialogComponent from 'renderer/components/Dialog/SyncDialogComponent'
 import InputPasswordComponent from 'renderer/components/Form/InputPasswordComponent'
 
-import ResetAccountLinkView from './ResetAccountLinkView'
+import SyncLoginView from './SyncLoginView'
 
 import { Button } from '@wartek-id/button'
 
@@ -16,19 +15,12 @@ import sendEvent from 'renderer/configs/analytics'
 
 import { FormLoginData } from 'renderer/types/LoginType'
 
-import { useAPIGetToken } from 'renderer/apis/token'
+import { AuthStates, useAuthStore } from 'renderer/stores/auth'
 
 const ipcRenderer = window.require('electron').ipcRenderer
 
 const LoginView: FC = () => {
-  const navigate = useNavigate()
-
-  const [isSync, setIsSync] = useState(false)
-
-  const { data: dataToken } = useAPIGetToken({
-    username: '103019252021',
-    password: 'E2TS',
-  })
+  const setSyncLogin = useAuthStore((state: AuthStates) => state.setSyncLogin)
 
   const {
     register,
@@ -50,6 +42,7 @@ const LoginView: FC = () => {
       'user:checkUsername',
       data.email
     )
+
     if (!ipcCheckUserName) {
       setError('email', {
         type: 'manual',
@@ -63,6 +56,7 @@ const LoginView: FC = () => {
       data.email,
       data.password
     )
+
     if (!ipcCheckUserPass) {
       setError('password', {
         type: 'manual',
@@ -71,17 +65,8 @@ const LoginView: FC = () => {
       return
     }
 
-    setIsSync(true)
-    ipcRenderer.sendSync('token:createSession', data.email)
-    setTimeout(() => {
-      setIsSync(false)
-      navigate('/dashboard')
-    }, 3000)
+    setSyncLogin(true)
   }
-
-  useEffect(() => {
-    //action hit hdd vol
-  }, [dataToken])
 
   return (
     <AuthLayout>
@@ -124,12 +109,7 @@ const LoginView: FC = () => {
           <b>“Reset Akun”</b> membutuhkan koneksi internet
         </div>
       </form>
-      <SyncDialogComponent
-        title="Mencoba masuk ke ARKAS..."
-        percentage={50}
-        isOpen={isSync}
-        setIsOpen={setIsSync}
-      />
+      <SyncLoginView />
     </AuthLayout>
   )
 }
