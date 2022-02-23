@@ -4,55 +4,12 @@ import styles from './index.module.css'
 
 import clsx from 'clsx'
 
-const datas = [
-  {
-    id: 1,
-    kode: '03.02.01',
-    program: 'Pengembangan Standar Proses',
-    kegiatan: 'Pelaksanaan Pendaftaran Peserta Didik Baru (PPDB)',
-  },
-  {
-    id: 2,
-    kode: '02.02.01',
-    program: 'Pengembangan Standar Isi',
-    kegiatan: 'Penyusunan Kompetensi Ketuntasan Minimum',
-  },
-  {
-    id: 3,
-    kode: '01.02.01',
-    program: 'Pengembangan Kompetensi Lulusan Pengajar/Guru',
-    kegiatan: 'Pelaksanaan Uji Coba UASBN Tk.kecamatan',
-  },
-  {
-    id: 4,
-    kode: '01.03.01',
-    program: 'Pengembangan Kompetensi Lulusan Pengajar/Guru',
-    kegiatan: 'Pemantapan Persiapan Ujian/Try Out',
-  },
-  {
-    id: 5,
-    kode: '01.04.01',
-    program: 'Pengembangan Kompetensi Lulusan Pengajar/Guru',
-    kegiatan: 'Pelaksanaan Ujian Nasional',
-  },
-  {
-    id: 6,
-    kode: '03.02.02',
-    program: 'Pengembangan Standar Proses',
-    kegiatan: 'Pelaksanaan Ujian Sekolah Berstandar Nasional',
-  },
-  {
-    id: 7,
-    kode: '03.02.03',
-    program: 'Pengembangan Standar Proses',
-    kegiatan: 'Pemugaran Sarana Prasarana',
-  },
-]
-
 interface OptionsSearchProps {
   children: React.ReactNode
   open: boolean
+  filter: string
   setOpen: (open: boolean) => void
+  dataOptions: Array<any>
 }
 
 const OptionsSearch: FC<OptionsSearchProps> = (props: OptionsSearchProps) => {
@@ -71,6 +28,18 @@ const OptionsSearch: FC<OptionsSearchProps> = (props: OptionsSearchProps) => {
     }
   })
 
+  const makeBold = (item: string) => {
+    const { filter } = props
+    const begin = item.toLowerCase().indexOf(filter.toLowerCase())
+    const end = filter.length
+    const tempItem = item
+    const textReplace = tempItem.substr(begin, end)
+    if (begin > -1) {
+      return item.replace(textReplace, '<b>' + textReplace + '</b>')
+    }
+    return item
+  }
+
   return (
     <table className={clsx(styles.searchTable, 'w-full text-left')}>
       <thead ref={ref} className="text-[14px] font-semibold bg-gray-5">
@@ -84,11 +53,24 @@ const OptionsSearch: FC<OptionsSearchProps> = (props: OptionsSearchProps) => {
         </tr>
       </thead>
       <tbody className="text-[14px] font-normal truncate">
-        {datas.map((data) => (
+        {props.dataOptions.map((data: any) => (
           <tr key={data.id} className="hover:bg-gray-5 cursor-pointer">
-            <td>{data.kode}</td>
-            <td>{data.program}</td>
-            <td>{data.kegiatan}</td>
+            <td
+              dangerouslySetInnerHTML={{
+                __html: makeBold(data.kode),
+              }}
+              width="20%"
+            ></td>
+            <td
+              dangerouslySetInnerHTML={{
+                __html: makeBold(data.program),
+              }}
+            ></td>
+            <td
+              dangerouslySetInnerHTML={{
+                __html: makeBold(data.kegiatan),
+              }}
+            ></td>
           </tr>
         ))}
       </tbody>
