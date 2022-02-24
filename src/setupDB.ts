@@ -59,7 +59,7 @@ async function encryptDB(): Promise<void> {
   return
 }
 
-async function addApp(): Promise<void> {
+async function addApp(): Promise<App> {
   const app = new App()
   app.appId = 'CNhMM6obP06_yBqZAw2PZg'
   app.nama = 'ARKAS 4.0'
@@ -69,11 +69,10 @@ async function addApp(): Promise<void> {
   app.tag = 1
   app.createDate = new Date()
   app.lastUpdate = new Date()
-  await app.save()
-  return
+  return await app.save()
 }
 
-async function addRole(): Promise<void> {
+async function addRole(): Promise<Role> {
   const role = new Role()
   role.roleId = 'CNhMM6obP06_yBqZAw2PZg'
   role.appId = 'kG0LFX0OXEuso0DtvGmniw'
@@ -83,11 +82,10 @@ async function addRole(): Promise<void> {
   role.createDate = new Date()
   role.lastUpdate = new Date()
   role.updaterId = ''
-  await role.save()
-  return
+  return await role.save()
 }
 
-async function addRefBKU(): Promise<void> {
+async function addRefBKU(): Promise<RefBku[]> {
   const repoRefBku = getRepository(RefBku)
   const refBKUData = [
     {
@@ -287,11 +285,10 @@ async function addRefBKU(): Promise<void> {
       lastUpdate: new Date(),
     },
   ]
-  await repoRefBku.save(refBKUData)
-  return
+  return await repoRefBku.save(refBKUData)
 }
 
-async function addRefJabatan(): Promise<void> {
+async function addRefJabatan(): Promise<RefJabatan[]> {
   const repoRefJabatan = getRepository(RefJabatan)
   const refJabatanData = [
     {
@@ -309,11 +306,10 @@ async function addRefJabatan(): Promise<void> {
       lastUpdate: new Date(),
     },
   ]
-  await repoRefJabatan.save(refJabatanData)
-  return
+  return await repoRefJabatan.save(refJabatanData)
 }
 
-async function addRefJenisInstansi(): Promise<void> {
+async function addRefJenisInstansi(): Promise<RefJenisInstansi[]> {
   const repoRefJenisInstansi = getRepository(RefJenisInstansi)
   const refJenisInstansiData = [
     {
@@ -335,11 +331,10 @@ async function addRefJenisInstansi(): Promise<void> {
       lastUpdate: new Date(),
     },
   ]
-  await repoRefJenisInstansi.save(refJenisInstansiData)
-  return
+  return await repoRefJenisInstansi.save(refJenisInstansiData)
 }
 
-async function addRefLevelKode(): Promise<void> {
+async function addRefLevelKode(): Promise<RefLevelKode[]> {
   const repoRefLevelKode = getRepository(RefLevelKode)
   const refLevelKodeData = [
     {
@@ -361,11 +356,10 @@ async function addRefLevelKode(): Promise<void> {
       lastUpdate: new Date(),
     },
   ]
-  await repoRefLevelKode.save(refLevelKodeData)
-  return
+  return await repoRefLevelKode.save(refLevelKodeData)
 }
 
-async function addRefLevelWilayah(): Promise<void> {
+async function addRefLevelWilayah(): Promise<RefLevelWilayah[]> {
   const repoRefLevelWilayah = getRepository(RefLevelWilayah)
   const refLevelwilayahData = [
     {
@@ -399,22 +393,20 @@ async function addRefLevelWilayah(): Promise<void> {
       lastUpdate: new Date(),
     },
   ]
-  await repoRefLevelWilayah.save(refLevelwilayahData)
-  return
+  return await repoRefLevelWilayah.save(refLevelwilayahData)
 }
 
-async function addRefNegara(): Promise<void> {
+async function addRefNegara(): Promise<RefNegara> {
   const refNegara = new RefNegara()
   refNegara.negaraId = 'ID'
   refNegara.nama = 'Indonesia'
   refNegara.luarNegeri = false
   refNegara.createDate = new Date()
   refNegara.lastUpdate = new Date()
-  await refNegara.save()
-  return
+  return await refNegara.save()
 }
 
-async function addRefPeriode(): Promise<void> {
+async function addRefPeriode(): Promise<RefPeriode[]> {
   const repoRefPeriode = getRepository(RefPeriode)
   const refPeriodeData = [
     {
@@ -514,11 +506,10 @@ async function addRefPeriode(): Promise<void> {
       lastUpdate: new Date(),
     },
   ]
-  await repoRefPeriode.save(refPeriodeData)
-  return
+  return await repoRefPeriode.save(refPeriodeData)
 }
 
-async function addRefSumberDana(): Promise<void> {
+async function addRefSumberDana(): Promise<RefSumberDana[]> {
   const repoRefSumberDana = getRepository(RefSumberDana)
   const refSumberDanaData = [
     {
@@ -585,23 +576,42 @@ async function addRefSumberDana(): Promise<void> {
       lastUpdate: new Date(),
     },
   ]
-  await repoRefSumberDana.save(refSumberDanaData)
-  return
+  return await repoRefSumberDana.save(refSumberDanaData)
 }
 
-async function addAppConfig(): Promise<void> {
+async function addAppConfig(): Promise<AppConfig[]> {
   const repoAppConfig = getRepository(AppConfig)
   const appConfigData = [
-    { varname: 'active', varvalue: '0' },
-    { varname: 'sekolah_id', varvalue: '0' },
-    { varname: 'koreg', varvalue: '0' },
-    { varname: 'koreg_invalid', varvalue: '0' },
-    { varname: 'requestReset', varvalue: '0' },
-    { varname: 'hdd_vol', varvalue: '' },
-    { varname: 'hdd_vol_old', varvalue: '' },
+    {
+      varname: 'active',
+      varvalue: '0',
+    },
+    {
+      varname: 'sekolah_id',
+      varvalue: '0',
+    },
+    {
+      varname: 'koreg',
+      varvalue: '0',
+    },
+    {
+      varname: 'koreg_invalid',
+      varvalue: '0',
+    },
+    {
+      varname: 'requestReset',
+      varvalue: '0',
+    },
+    {
+      varname: 'hdd_vol',
+      varvalue: '',
+    },
+    {
+      varname: 'hdd_vol_old',
+      varvalue: '',
+    },
   ]
-  await repoAppConfig.save(appConfigData)
-  return
+  return await repoAppConfig.save(appConfigData)
 }
 
 async function createDBLocal(appDataPath: string): Promise<void> {
