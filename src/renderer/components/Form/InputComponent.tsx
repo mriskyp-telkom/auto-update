@@ -14,6 +14,7 @@ interface InputProps {
   errors: FieldErrors
   register: (arg0: string, arg1: RegisterOptions) => void
   registerOption?: RegisterOptions
+  className?: string
 }
 
 const InputComponent: FC<InputProps> = (props: InputProps) => {
@@ -42,6 +43,7 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
   return (
     <Input
       type="text"
+      className={props.className}
       placeholder={placeholder}
       isDisabled={isDisabled}
       id={name}
