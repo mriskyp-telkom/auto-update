@@ -11,9 +11,17 @@ export interface KonfirmasiKertasKerjaData {
   nominal: string
 }
 
+export interface AnggaranBulanData {
+  id: string
+  bulan: string
+  jumlah: number
+  satuan: number
+}
+
 export interface FormIsiKertasKerjaData {
   kegiatan: string
   rekening_belanja: string
   uraian: string
   harga_satuan: number
+  anggaran_bulan: AnggaranBulanData[]
 }

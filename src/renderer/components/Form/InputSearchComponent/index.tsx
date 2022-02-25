@@ -1,4 +1,4 @@
-import React, { FC, useState, ChangeEvent } from 'react'
+import React, { FC, useState, ChangeEvent, useRef } from 'react'
 import { FieldErrors, RegisterOptions } from 'react-hook-form'
 
 import { InputGroup, InputLeftAddon, Input } from '@wartek-id/input'
@@ -6,52 +6,11 @@ import { Icon } from '@wartek-id/icon'
 
 import OptionsSearch from './OptionsSearch'
 
-const datas: Array<any> = [
-  {
-    id: 1,
-    kode: '03.02.01',
-    program: 'Pengembangan Standar Proses',
-    kegiatan: 'Pelaksanaan Pendaftaran Peserta Didik Baru (PPDB)',
-  },
-  {
-    id: 2,
-    kode: '02.02.01',
-    program: 'Pengembangan Standar Isi',
-    kegiatan: 'Penyusunan Kompetensi Ketuntasan Minimum',
-  },
-  {
-    id: 3,
-    kode: '01.02.01',
-    program: 'Pengembangan Kompetensi Lulusan Pengajar/Guru',
-    kegiatan: 'Pelaksanaan Uji Coba UASBN Tk.kecamatan',
-  },
-  {
-    id: 4,
-    kode: '01.03.01',
-    program: 'Pengembangan Kompetensi Lulusan Pengajar/Guru',
-    kegiatan: 'Pemantapan Persiapan Ujian/Try Out',
-  },
-  {
-    id: 5,
-    kode: '01.04.01',
-    program: 'Pengembangan Kompetensi Lulusan Pengajar/Guru',
-    kegiatan: 'Pelaksanaan Ujian Nasional',
-  },
-  {
-    id: 6,
-    kode: '03.02.02',
-    program: 'Pengembangan Standar Proses',
-    kegiatan: 'Pelaksanaan Ujian Sekolah Berstandar Nasional',
-  },
-  {
-    id: 7,
-    kode: '03.02.03',
-    program: 'Pengembangan Standar Proses',
-    kegiatan: 'Pemugaran Sarana Prasarana',
-  },
-]
+import clsx from 'clsx'
 
 interface InputSearchProps {
+  headers?: Array<any>
+  dataOptions?: Array<any>
   width: number
   required: boolean
   isDisabled?: boolean
@@ -59,14 +18,17 @@ interface InputSearchProps {
   placeholder: string
   errors: FieldErrors
   register: (arg0: string, arg1: RegisterOptions) => void
+  onClick: (e: any) => void
 }
 
 const InputSearchComponent: FC<InputSearchProps> = (
   props: InputSearchProps
 ) => {
+  const ref = useRef()
+
   const [open, setOpen] = useState(false)
   const [filter, setFilter] = useState('')
-  const [data, setData] = useState(datas)
+  const [data, setData] = useState(props.dataOptions)
 
   const { required, name, placeholder, isDisabled, errors, register } = props
 
@@ -85,7 +47,7 @@ const InputSearchComponent: FC<InputSearchProps> = (
     const lowercasedFilter = value.toLowerCase()
     setFilter(value)
     setData(
-      datas.filter((item) => {
+      props.dataOptions.filter((item: any) => {
         const res = Object.keys(item).some((key) =>
           `${item[key]}`.toLowerCase().includes(lowercasedFilter)
         )
@@ -94,7 +56,7 @@ const InputSearchComponent: FC<InputSearchProps> = (
     )
   }
 
-  const InputSearch = () => {
+  const InputSearch = React.memo(() => {
     return (
       <InputGroup>
         <InputLeftAddon>
@@ -103,12 +65,13 @@ const InputSearchComponent: FC<InputSearchProps> = (
           </Icon>
         </InputLeftAddon>
         <Input
+          ref={ref}
           type="text"
           placeholder={placeholder}
           id={name}
           name={name}
           onClick={() => setOpen(true)}
-          className={open ? 'border-none rounded-none' : ''}
+          className={clsx(open ? 'border-none rounded-none' : '', 'text-base')}
           isDisabled={isDisabled}
           isInvalid={open ? false : !!errors[name]}
           errorMessage={open ? '' : errors[name]?.message}
@@ -116,19 +79,25 @@ const InputSearchComponent: FC<InputSearchProps> = (
         />
       </InputGroup>
     )
-  }
+  })
 
   return (
-    <div className={`w-[${props.width}px] bg-white`}>
-      {!open && InputSearch()}
+    <div
+      className={clsx(open ? 'absolute z-10 bg-white' : '', 'bg-white')}
+      style={{ width: `${props.width}px` }}
+    >
+      {!open && <InputSearch />}
       {open && (
         <OptionsSearch
+          width={props.width}
           open={open}
           setOpen={setOpen}
+          headers={props.headers}
           dataOptions={data}
           filter={filter}
+          onClick={props.onClick}
         >
-          {InputSearch()}
+          <InputSearch />
         </OptionsSearch>
       )}
     </div>
