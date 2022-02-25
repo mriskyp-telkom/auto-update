@@ -68,6 +68,20 @@ yarn postinstall
 yarn start
 ```
 
+## Shortcut Open Dev Tools
+
+### MAC OS
+
+```bash
+Shift+Command+I
+```
+
+### Windows
+
+```bash
+Shift+Control+I
+```
+
 ## Generate Installer
 
 It will generate installer based on your OS,

@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, globalShortcut } from 'electron'
 import 'dotenv/config'
 import path from 'path'
 import { setupDB } from './setupDB'
@@ -37,15 +37,22 @@ const createWindow = (): void => {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
+      webSecurity: false,
     },
   })
 
-  //console.log(connDB())
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY)
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools({ mode: 'detach' })
+  globalShortcut.register(
+    process.platform === 'darwin' ? 'Shift+Command+I' : 'Shift+Control+I',
+    function () {
+      mainWindow.webContents.openDevTools()
+    }
+  )
+
+  mainWindow.webContents.setUserAgent('ARKAS Agent')
 
   console.log('\n\n====> This is ', process.env.ENVIRONMENT, ' env. <====\n\n')
 }

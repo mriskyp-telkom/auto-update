@@ -9,6 +9,7 @@ table.searchTable > tbody {
   width: 100%;
   display: block;
 }
+
 table.searchTable > thead,
 table.searchTable > tbody tr {
   display: table;
@@ -35,7 +36,6 @@ table.searchTable tbody td {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: 30%;
 }
 
 table.searchTable tbody td:first-child {

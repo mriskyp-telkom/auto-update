@@ -4,6 +4,7 @@ import { UserRole } from '../repositories/UserRole'
 import { AppConfig } from '../repositories/AppConfig'
 import { createQueryBuilder, getRepository, InsertResult } from 'typeorm'
 import CommonUtils from '../utils/CommonUtils'
+import { GetConfig } from './Config'
 
 export const CheckUser = async (username: string): Promise<boolean> => {
   const getUser = await createQueryBuilder(UserRole, 'ur')
@@ -52,10 +53,18 @@ export const CheckLogin = async (): Promise<number> => {
       where: { varname: 'requestReset' },
     })
   ).varvalue
-  if (getAktif === '1') return 2
-  else if (getKoregInvalid === '1') return 3
+
+  if (getAktif === '1') {
+    const sessionId = await GetConfig('sessionId')
+    if (sessionId !== null && sessionId !== undefined) {
+      return 5 // auto login
+    }
+    return 2 // login
+  } else if (getKoregInvalid === '1') return 3
+  //koreg invalid
   else if (getRequestReset === '1') return 4
-  else return 1
+  //lockAccount
+  else return 1 // registrasi
 }
 
 export const GetUserRole = async (username: string): Promise<UserRole> => {
