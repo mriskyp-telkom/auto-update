@@ -3,6 +3,7 @@ import { useForm, useFieldArray } from 'react-hook-form'
 
 import AlertDialogComponent from 'renderer/components/Dialog/AlertDialogComponent'
 import FormDialogComponent from 'renderer/components/Dialog/FormDialogComponent'
+import InputWithInfoComponent from 'renderer/components/Form/InputWithInfoComponent'
 import InputSearchComponent from 'renderer/components/Form/InputSearchComponent'
 import InputComponent from 'renderer/components/Form/InputComponent'
 
@@ -27,6 +28,8 @@ import {
   optionsUraian,
   headerSatuan,
   optionsSatuan,
+  headerHarga,
+  optionsHarga,
 } from 'renderer/constants/table'
 
 import { numberUtils } from '@wartek-id/fe-toolbox'
@@ -251,16 +254,34 @@ const FormIsiDetailKertasKerjaView: FC = () => {
               <div className="text-base pb-1 font-normal text-gray-900">
                 Harga Satuan yang Dianggarkan
               </div>
-              <InputComponent
-                type="text"
+              <InputWithInfoComponent
+                width={289}
                 name="harga_satuan"
                 placeholder="Berapa perkiraan harganya?"
-                className="text-base"
                 errors={errors}
                 register={register}
                 required={true}
                 isDisabled={formDisable.harga_satuan}
+                headers={headerHarga}
+                dataOptions={optionsHarga}
                 registerOption={{
+                  validate: {
+                    positive: (value) => {
+                      if (value.replace(/[^,\d]/g, '').toString().length < 2) {
+                        return 'Harga satuan minimal 2 digit angka'
+                      }
+                    },
+                    lessThanTen: (value) => {
+                      if (parseInt(value.replace(/[^,\d]/g, '')) < 20000) {
+                        return 'Harga kurang dari batas bawah SSH'
+                      }
+                    },
+                    moreThan: (value) => {
+                      if (parseInt(value.replace(/[^,\d]/g, '')) > 100000) {
+                        return 'Harga melebihi batas atas SSH'
+                      }
+                    },
+                  },
                   onChange: (e) => {
                     const numb = e.target.value
                       .replace(/[^,\d]/g, '')
