@@ -18,10 +18,22 @@ export interface AnggaranBulanData {
   satuan: number
 }
 
+export type FormIsiKertasKerjaType =
+  | 'kegiatan'
+  | 'rekening_belanja'
+  | 'uraian'
+  | 'harga_satuan'
+  | 'anggaran_bulan'
+  | `anggaran_bulan.${number}`
+  | `anggaran_bulan.${number}.id`
+  | `anggaran_bulan.${number}.bulan`
+  | `anggaran_bulan.${number}.jumlah`
+  | `anggaran_bulan.${number}.satuan`
+
 export interface FormIsiKertasKerjaData {
   kegiatan: string
   rekening_belanja: string
   uraian: string
-  harga_satuan: number
+  harga_satuan: string
   anggaran_bulan: AnggaranBulanData[]
 }

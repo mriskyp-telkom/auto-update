@@ -4,6 +4,8 @@ import AmountCardComponent from 'renderer/components/Card/AmountCardComponent'
 import AlertDialogComponent from 'renderer/components/Dialog/AlertDialogComponent'
 import SyncDialogComponent from 'renderer/components/Dialog/SyncDialogComponent'
 
+import FormKertasKerjaView from 'renderer/views/Anggaran/CreateKertasKerjaView/FormPenanggungJawabView'
+
 import FormIsiDetailKertasKerjaView from './FormIsiDetailKertasKerjaView'
 import TabelKertasKerjaView from './TabelKertasKerjaView'
 
@@ -12,6 +14,8 @@ import { Icon } from '@wartek-id/icon'
 import { Button } from '@wartek-id/button'
 
 import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
+
+import { DATA_BULAN } from 'renderer/constants/general'
 
 import styles from './index.module.css'
 
@@ -160,57 +164,19 @@ const MenyusunKertasKerjaView: FC = () => {
         <Tabs className="w-full">
           <div className="shadow pt-[14px]">
             <TabList style={{ marginLeft: 0 }}>
-              <Tab>Januari</Tab>
-              <Tab>Februari</Tab>
-              <Tab>Maret</Tab>
-              <Tab>April</Tab>
-              <Tab>Mei</Tab>
-              <Tab>Juni</Tab>
-              <Tab>Juli</Tab>
-              <Tab>Agustus</Tab>
-              <Tab>September</Tab>
-              <Tab>Oktober</Tab>
-              <Tab>November</Tab>
-              <Tab>Desember</Tab>
+              {DATA_BULAN.map((bulan) => (
+                <Tab key={bulan} className="capitalize-first">
+                  {bulan}
+                </Tab>
+              ))}
             </TabList>
           </div>
           <TabPanels>
-            <TabPanel>
-              <TabelKertasKerjaView />
-            </TabPanel>
-            <TabPanel>
-              <TabelKertasKerjaView />
-            </TabPanel>
-            <TabPanel>
-              <TabelKertasKerjaView />
-            </TabPanel>
-            <TabPanel>
-              <TabelKertasKerjaView />
-            </TabPanel>
-            <TabPanel>
-              <TabelKertasKerjaView />
-            </TabPanel>
-            <TabPanel>
-              <TabelKertasKerjaView />
-            </TabPanel>
-            <TabPanel>
-              <TabelKertasKerjaView />
-            </TabPanel>
-            <TabPanel>
-              <TabelKertasKerjaView />
-            </TabPanel>
-            <TabPanel>
-              <TabelKertasKerjaView />
-            </TabPanel>
-            <TabPanel>
-              <TabelKertasKerjaView />
-            </TabPanel>
-            <TabPanel>
-              <TabelKertasKerjaView />
-            </TabPanel>
-            <TabPanel>
-              <TabelKertasKerjaView />
-            </TabPanel>
+            {DATA_BULAN.map((bulan) => (
+              <TabPanel key={bulan}>
+                <TabelKertasKerjaView bulan={bulan} />
+              </TabPanel>
+            ))}
           </TabPanels>
         </Tabs>
       </div>
@@ -232,6 +198,7 @@ const MenyusunKertasKerjaView: FC = () => {
         isOpen={isSync}
         setIsOpen={setIsSync}
       />
+      <FormKertasKerjaView mode="update" />
     </div>
   )
 }

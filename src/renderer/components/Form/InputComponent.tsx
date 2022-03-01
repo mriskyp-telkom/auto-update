@@ -21,7 +21,9 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
   const { type, required, isDisabled, placeholder, name, errors, register } =
     props
 
-  let validation = {}
+  let validation = {
+    ...props.registerOption,
+  }
 
   if (required) {
     validation = {

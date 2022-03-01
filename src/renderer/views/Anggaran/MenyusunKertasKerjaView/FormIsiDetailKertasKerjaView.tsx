@@ -10,6 +10,7 @@ import { Icon } from '@wartek-id/icon'
 import { Button } from '@wartek-id/button'
 
 import {
+  FormIsiKertasKerjaType,
   FormIsiKertasKerjaData,
   AnggaranBulanData,
 } from 'renderer/types/AnggaranType'
@@ -24,17 +25,28 @@ import {
   optionsRekeningBelanja,
   headerUraian,
   optionsUraian,
-  headerHarga,
-  optionsHarga,
+  headerSatuan,
+  optionsSatuan,
 } from 'renderer/constants/table'
+
+import { numberUtils } from '@wartek-id/fe-toolbox'
 
 import styles from './index.module.css'
 
 import clsx from 'clsx'
 
+const initialFormDisable = {
+  kegiatan: false,
+  rekening_belanja: true,
+  uraian: true,
+  harga_satuan: true,
+  harga_per_month: true,
+}
+
 const FormIsiDetailKertasKerjaView: FC = () => {
   const [openModalConfirmCancel, setOpenModalConfirmCancel] = useState(false)
   const [urutanBulan, setUrutanBulan] = useState(0)
+  const [formDisable, setFormDisable] = useState(initialFormDisable)
 
   const isiKertasKerja = useAnggaranStore(
     (state: AnggaranStates) => state.isiKertasKerja
@@ -46,8 +58,9 @@ const FormIsiDetailKertasKerjaView: FC = () => {
   const {
     register,
     handleSubmit,
-    // setValue,
+    setValue,
     control,
+    reset,
     formState: { errors },
   } = useForm<FormIsiKertasKerjaData>({
     mode: 'onChange',
@@ -66,10 +79,36 @@ const FormIsiDetailKertasKerjaView: FC = () => {
   const onConfirmCancel = () => {
     setOpenModalConfirmCancel(false)
     setIsiKertasKerja(false)
+    reset()
+    setFormDisable(initialFormDisable)
+    append({ jumlah: null, satuan: null, bulan: DATA_BULAN[urutanBulan] })
   }
 
-  const handleClick = (e: any) => {
-    console.log(e.target.value)
+  const handleClick = (data: {
+    id: number
+    name: FormIsiKertasKerjaType
+    value: string
+  }) => {
+    setValue(data.name, data.value)
+
+    if (data.name === 'kegiatan') {
+      setFormDisable({
+        ...formDisable,
+        rekening_belanja: false,
+      })
+    }
+    if (data.name === 'rekening_belanja') {
+      setFormDisable({
+        ...formDisable,
+        uraian: false,
+      })
+    }
+    if (data.name === 'uraian') {
+      setFormDisable({
+        ...formDisable,
+        harga_satuan: false,
+      })
+    }
   }
 
   const handleTambahBulan = () => {
@@ -109,7 +148,7 @@ const FormIsiDetailKertasKerjaView: FC = () => {
               errors={errors}
               register={register}
               required={true}
-              isDisabled={true}
+              isDisabled={formDisable.harga_per_month}
             />
           </span>
           <span className="flex-grow">
@@ -121,9 +160,10 @@ const FormIsiDetailKertasKerjaView: FC = () => {
               register={register}
               onClick={handleClick}
               required={true}
-              headers={headerHarga}
-              dataOptions={optionsHarga}
-              isDisabled={true}
+              headers={headerSatuan}
+              headerShow={false}
+              dataOptions={optionsSatuan}
+              isDisabled={formDisable.harga_per_month}
             />
           </span>
         </div>
@@ -183,7 +223,7 @@ const FormIsiDetailKertasKerjaView: FC = () => {
             register={register}
             onClick={handleClick}
             required={true}
-            isDisabled={true}
+            isDisabled={formDisable.rekening_belanja}
             headers={headerRekeningBelanja}
             dataOptions={optionsRekeningBelanja}
           />
@@ -202,7 +242,7 @@ const FormIsiDetailKertasKerjaView: FC = () => {
                 register={register}
                 onClick={handleClick}
                 required={true}
-                isDisabled={true}
+                isDisabled={formDisable.uraian}
                 headers={headerUraian}
                 dataOptions={optionsUraian}
               />
@@ -212,14 +252,31 @@ const FormIsiDetailKertasKerjaView: FC = () => {
                 Harga Satuan yang Dianggarkan
               </div>
               <InputComponent
-                className="text-base"
                 type="text"
                 name="harga_satuan"
                 placeholder="Berapa perkiraan harganya?"
+                className="text-base"
                 errors={errors}
                 register={register}
                 required={true}
-                isDisabled={true}
+                isDisabled={formDisable.harga_satuan}
+                registerOption={{
+                  onChange: (e) => {
+                    const numb = e.target.value
+                      .replace(/[^,\d]/g, '')
+                      .toString()
+                    if (numb !== null) {
+                      setValue(
+                        'harga_satuan',
+                        `Rp ${numberUtils.delimit(numb, '.')}`
+                      )
+                    }
+                    setFormDisable({
+                      ...formDisable,
+                      harga_per_month: false,
+                    })
+                  },
+                }}
               />
             </span>
           </div>

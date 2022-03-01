@@ -11,6 +11,7 @@ import clsx from 'clsx'
 interface InputSearchProps {
   headers?: Array<any>
   dataOptions?: Array<any>
+  headerShow?: boolean
   width: number
   required: boolean
   isDisabled?: boolean
@@ -82,16 +83,15 @@ const InputSearchComponent: FC<InputSearchProps> = (
   })
 
   return (
-    <div
-      className={clsx(open ? 'absolute z-10 bg-white' : '', 'bg-white')}
-      style={{ width: `${props.width}px` }}
-    >
+    <>
       {!open && <InputSearch />}
       {open && (
         <OptionsSearch
+          name={props.name}
           width={props.width}
           open={open}
           setOpen={setOpen}
+          headerShow={props.headerShow}
           headers={props.headers}
           dataOptions={data}
           filter={filter}
@@ -100,7 +100,7 @@ const InputSearchComponent: FC<InputSearchProps> = (
           <InputSearch />
         </OptionsSearch>
       )}
-    </div>
+    </>
   )
 }
 

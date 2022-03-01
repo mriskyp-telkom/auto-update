@@ -10,29 +10,27 @@ table.searchTable > tbody {
   display: block;
 }
 
-table.searchTable > thead,
+table.searchTable > thead tr,
 table.searchTable > tbody tr {
   display: table;
   width: 100%;
   table-layout: fixed;
 }
 
-table.searchTable thead tr:last-child th {
-  padding-top: 10px;
-  padding-bottom: 10px;
+table.searchTable thead tr.headerTable th {
+  padding: 10px 14px;
 }
 
-table.searchTable thead tr:last-child th:first-child {
+table.searchTable thead tr.headerTable th:first-child {
   padding-left: 20px;
 }
 
-table.searchTable thead tr:last-child th:last-child {
+table.searchTable thead tr.headerTable th:last-child {
   padding-right: 20px;
 }
 
 table.searchTable tbody td {
-  padding-top: 14px;
-  padding-bottom: 14px;
+  padding: 14px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
