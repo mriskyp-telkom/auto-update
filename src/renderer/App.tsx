@@ -49,7 +49,8 @@ const App: FC = () => {
       default:
         setFirstPage(<RegistrationView />)
     }
-  })
+  }, [])
+
   return (
     <QueryClientProvider client={queryClient}>
       <HashRouter>
