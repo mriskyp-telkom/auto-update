@@ -80,6 +80,11 @@ app.on('ready', async () => {
         SetConfig('hdd_vol', id)
         require('./main/helpers/ipcUser')
         require('./main/helpers/ipcToken')
+        require('./main/helpers/ipcConfig')
+        require('./main/helpers/ipcReferensiKode')
+        require('./main/helpers/ipcReferensiRekening')
+        require('./main/helpers/ipcReferensiBarang')
+        require('./main/helpers/ipcSekolah')
 
         setTimeout(function () {
           splashWindow.close()
