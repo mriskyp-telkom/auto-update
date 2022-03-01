@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { HashRouter, Route, Routes } from 'react-router-dom'
 
 import { QueryClient, QueryClientProvider } from 'react-query'
@@ -15,6 +15,8 @@ import RegistrationView from 'renderer/views/Auth/RegistrationView'
 import DashboardAnggaranView from 'renderer/views/Anggaran/DashboardAnggaranView'
 import MenyusunKertasKerjaView from 'renderer/views/Anggaran/MenyusunKertasKerjaView'
 
+const ipcRenderer = window.require('electron').ipcRenderer
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -24,13 +26,38 @@ const queryClient = new QueryClient({
 })
 
 const App: FC = () => {
+  const [firstPage, setFirstPage] = useState(null)
+
+  useEffect(() => {
+    const result = ipcRenderer.sendSync('user:checkLogin')
+    switch (result) {
+      case 1:
+        setFirstPage(<RegistrationView />)
+        break
+      case 2:
+        setFirstPage(<LoginView />)
+        break
+      case 3:
+        setFirstPage(<RegistrationView />)
+        break
+      case 4:
+        setFirstPage(<StatusAccountView />)
+        break
+      case 5:
+        setFirstPage(<DashboardView />)
+        break
+      default:
+        setFirstPage(<RegistrationView />)
+    }
+  })
   return (
     <QueryClientProvider client={queryClient}>
       <HashRouter>
         <div className="App">
           <Routes>
             <Route path="*" element={<NotFoundView />} />
-            <Route path="/" element={<LoginView />} />
+            <Route path="/" element={firstPage} />
+            <Route path="/login" element={<LoginView />} />
             <Route path="/registration" element={<RegistrationView />} />
             <Route path="/account-status" element={<StatusAccountView />} />
             <Route
