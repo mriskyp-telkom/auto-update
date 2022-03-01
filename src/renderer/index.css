@@ -31,3 +31,12 @@ body {
 .capitalize-first::first-letter {
   text-transform: uppercase;
 }
+
+.scrollBar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollBar::-webkit-scrollbar-thumb {
+  background: #d9dbdd;
+  border-radius: 8px;
+}

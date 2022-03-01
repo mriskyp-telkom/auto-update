@@ -19,6 +19,7 @@ export interface AnggaranBulanData {
 }
 
 export type FormIsiKertasKerjaType =
+  | 'program_kegiatan'
   | 'kegiatan'
   | 'rekening_belanja'
   | 'uraian'
@@ -31,6 +32,7 @@ export type FormIsiKertasKerjaType =
   | `anggaran_bulan.${number}.satuan`
 
 export interface FormIsiKertasKerjaData {
+  program_kegiatan: string
   kegiatan: string
   rekening_belanja: string
   uraian: string
