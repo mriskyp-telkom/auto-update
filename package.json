@@ -128,6 +128,7 @@
     "better-sqlite3-multiple-ciphers": "^7.5.0",
     "electron-ga-uuid": "^1.0.2",
     "electron-squirrel-startup": "^1.0.0",
+    "moment": "^2.29.1",
     "loadash": "^1.0.0",
     "node-machine-id": "^1.1.12",
     "npm": "^8.5.0",
