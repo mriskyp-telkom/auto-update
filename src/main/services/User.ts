@@ -40,29 +40,26 @@ export const CheckUserPass = async (
 }
 
 export const CheckLogin = async (): Promise<number> => {
-  const getAktif = (
-    await getRepository(AppConfig).findOne({ where: { varname: 'active' } })
-  ).varvalue
-  const getKoregInvalid = (
-    await getRepository(AppConfig).findOne({
-      where: { varname: 'koreg_invalid' },
-    })
-  ).varvalue
-  const getRequestReset = (
-    await getRepository(AppConfig).findOne({
-      where: { varname: 'requestReset' },
-    })
-  ).varvalue
+  const getAktif = await getRepository(AppConfig).findOne({
+    where: { varname: 'active' },
+  })
+  const getKoregInvalid = await getRepository(AppConfig).findOne({
+    where: { varname: 'koreg_invalid' },
+  })
+  const getRequestReset = await getRepository(AppConfig).findOne({
+    where: { varname: 'requestReset' },
+  })
 
-  if (getAktif === '1') {
+  if (getAktif != null && getAktif.varvalue === '1') {
     const sessionId = await GetConfig('sessionId')
     if (sessionId !== null && sessionId !== undefined) {
       return 5 // auto login
     }
     return 2 // login
-  } else if (getKoregInvalid === '1') return 3
+  } else if (getKoregInvalid != null && getKoregInvalid.varvalue === '1')
+    return 3
   //koreg invalid
-  else if (getRequestReset === '1') return 4
+  else if (getRequestReset != null && getRequestReset.varvalue === '1') return 4
   //lockAccount
   else return 1 // registrasi
 }
