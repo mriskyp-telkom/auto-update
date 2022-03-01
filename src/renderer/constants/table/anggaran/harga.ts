@@ -2,42 +2,19 @@ export const headerHarga = [
   {
     key: 'batas_bawah',
     label: 'Batas Bawah',
+    width: '50%',
   },
   {
     key: 'batas_atas',
     label: 'Batas Atas',
+    width: '50%',
   },
 ]
 
 export const optionsHarga = [
   {
     id: 1,
-    batas_bawah: '03.02.01',
-    batas_atas: 'Pengembangan Standar Proses',
-  },
-  {
-    id: 2,
-    batas_bawah: '03.02.01',
-    batas_atas: 'Pengembangan Standar Proses',
-  },
-  {
-    id: 3,
-    batas_bawah: '03.02.01',
-    batas_atas: 'Pengembangan Standar Proses',
-  },
-  {
-    id: 4,
-    batas_bawah: '03.02.01',
-    batas_atas: 'Pengembangan Standar Proses',
-  },
-  {
-    id: 5,
-    batas_bawah: '03.02.01',
-    batas_atas: 'Pengembangan Standar Proses',
-  },
-  {
-    id: 6,
-    batas_bawah: '03.02.01',
-    batas_atas: 'Pengembangan Standar Proses',
+    batas_bawah: 'Rp 20.000',
+    batas_atas: 'Rp 100.000',
   },
 ]
