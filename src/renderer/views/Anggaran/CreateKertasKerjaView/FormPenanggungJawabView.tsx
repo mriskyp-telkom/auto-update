@@ -11,7 +11,12 @@ import { FormCreateKertasKerjaData } from 'renderer/types/AnggaranType'
 
 import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
 
-const FormPenanggungJawabView: FC = () => {
+interface FormPenanggungJawabProps {
+  mode: 'create' | 'update'
+}
+const FormPenanggungJawabView: FC<FormPenanggungJawabProps> = (
+  props: FormPenanggungJawabProps
+) => {
   const [openModalConfirmCancel, setOpenModalConfirmCancel] = useState(false)
 
   const createKertasKerja = useAnggaranStore(
@@ -36,7 +41,10 @@ const FormPenanggungJawabView: FC = () => {
   const onSubmit = async (data: FormCreateKertasKerjaData) => {
     console.log(data)
     setCreateKertasKerja(false)
-    setConfirmKertasKerja(true)
+
+    if (props.mode === 'create') {
+      setConfirmKertasKerja(true)
+    }
   }
 
   const onCancel = () => {
@@ -61,6 +69,7 @@ const FormPenanggungJawabView: FC = () => {
         width={960}
         title="Isi Data Penanggung Jawab"
         subtitle="Data kepala sekolah dan bendahara terisi otomatis dari Dapodik."
+        btnSubmitText={props.mode === 'create' ? 'Lanjutkan' : 'Perbarui'}
         isOpen={createKertasKerja}
         onCancel={onCancel}
         onSubmit={handleSubmit(onSubmit)}

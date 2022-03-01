@@ -65,6 +65,14 @@ const KonfirmasiPaguView: FC = () => {
             errors={errors}
             register={register}
             required={true}
+            registerOption={{
+              onChange: (e) => {
+                const numb = e.target.value.replace(/[^,\d]/g, '').toString()
+                if (numb !== null) {
+                  setValue('nominal', `Rp ${numberUtils.delimit(numb, '.')}`)
+                }
+              },
+            }}
           />
           <div className="pt-1 text-[12px] text-gray-600">
             (jumlah murid) x (nominal BOS per daerah)
