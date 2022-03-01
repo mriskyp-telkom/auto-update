@@ -9,7 +9,10 @@ import {
   DialogCancel,
   DialogAction,
 } from '@wartek-id/dialog'
+import { Icon } from '@wartek-id/icon'
 import { Button } from '@wartek-id/button'
+
+import clsx from 'clsx'
 
 interface FormDialogProps {
   title: string
@@ -17,6 +20,9 @@ interface FormDialogProps {
   width: number
   isOpen: boolean
   children: React.ReactNode
+  classDesc?: string
+  btnSubmitText?: string
+  icon?: string
   onCancel: () => void
   onSubmit: () => void
 }
@@ -37,7 +43,10 @@ const FormDialogComponent: FC<FormDialogProps> = (props: FormDialogProps) => {
           </DialogTitle>
           <DialogDescription
             as="div"
-            className="font-normal text-gray-900 py-7 px-9"
+            className={clsx(
+              props.classDesc,
+              'font-normal text-gray-900 py-7 px-9'
+            )}
           >
             {props.children}
           </DialogDescription>
@@ -63,7 +72,18 @@ const FormDialogComponent: FC<FormDialogProps> = (props: FormDialogProps) => {
               className="px-4 py-2"
               type="submit"
             >
-              Lanjutkan
+              {props.icon && (
+                <Icon
+                  as="i"
+                  color="default"
+                  fontSize="default"
+                  style={{ color: '#ffffff', fontSize: '22px' }}
+                  className="mr-2"
+                >
+                  {props.icon}
+                </Icon>
+              )}
+              {props.btnSubmitText ? props.btnSubmitText : 'Lanjutkan'}
             </DialogAction>
           </div>
         </form>

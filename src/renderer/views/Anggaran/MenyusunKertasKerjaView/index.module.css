@@ -5,11 +5,35 @@ table.tableKertasKerja thead tr {
 table.tableKertasKerja thead th {
   padding-top: 1.5rem;
   padding-bottom: 1rem;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+table.tableKertasKerja > thead tr,
+table.tableKertasKerja > tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+table.tableKertasKerja > tbody {
+  overflow-y: scroll;
+  max-height: 260px;
+  width: 100%;
+  display: block;
 }
 
 table.tableKertasKerja tbody tr {
   height: 52px;
   box-shadow: inset 0px -1px 0px #c9cbcf;
+}
+
+table.tableKertasKerja tbody td span {
+  padding-left: 10px;
+  padding-right: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .pointKertasKerja ul {

@@ -56,7 +56,7 @@ const CreateKertasKerjaView: FC = () => {
         isOpen={isSync}
         setIsOpen={setIsSync}
       />
-      <FormKertasKerjaView />
+      <FormKertasKerjaView mode="create" />
     </div>
   )
 }

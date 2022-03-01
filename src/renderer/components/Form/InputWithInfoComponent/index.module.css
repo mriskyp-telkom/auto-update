@@ -3,13 +3,6 @@ table.searchTable {
   border-radius: 4px;
 }
 
-table.searchTable > tbody {
-  overflow-y: scroll;
-  height: 100px;
-  width: 100%;
-  display: block;
-}
-
 table.searchTable > thead tr,
 table.searchTable > tbody tr {
   display: table;
