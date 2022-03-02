@@ -18,6 +18,8 @@ import { FormRegisterData } from 'renderer/types/LoginType'
 import { useAPICheckActivation } from 'renderer/apis/utils'
 import { AuthStates, useAuthStore } from 'renderer/stores/auth'
 import { APP_CONFIG } from '../../constants/appConfig'
+import AlertNoConnection from '../AlertNoConnection'
+import { AppStates, useAppStore } from '../../stores/app'
 
 const ipcRenderer = window.require('electron').ipcRenderer
 
@@ -26,7 +28,6 @@ const RegistrationView: FC = () => {
   const ref = useRef(null)
   const [isSync, setIsSync] = useState(false)
   const [openModalInfo, setOpenModalInfo] = useState(false)
-  const [openModalNoConnection, setOpenModalNoConnection] = useState(false)
   const [openModalConnectionTrouble, setOpenModalConnectionTrouble] =
     useState(false)
   const [koregInvalid, setKoregInvalid] = useState('')
@@ -35,6 +36,11 @@ const RegistrationView: FC = () => {
   const setKoreg = useAuthStore((state: AuthStates) => state.setKoreg)
   const npsn = useAuthStore((state: AuthStates) => state.npsn)
   const koreg = useAuthStore((state: AuthStates) => state.koreg)
+
+  const setAlertNoConnection = useAppStore(
+    (state: AppStates) => state.setAlertNoConnection
+  )
+
   const [hddVol, setHddVol] = useState('')
   const { data: checkActivationResult, isError } = useAPICheckActivation(
     {
@@ -106,15 +112,15 @@ const RegistrationView: FC = () => {
   }, [isError])
 
   const onSubmit = async (data: FormRegisterData) => {
+    setAlertNoConnection(false)
+    setOpenModalConnectionTrouble(false)
+    setIsSync(true)
     if (!navigator.onLine) {
-      setOpenModalNoConnection(true)
+      setAlertNoConnection(true)
       return
     }
-    setOpenModalNoConnection(false)
-    setOpenModalConnectionTrouble(false)
     setNpsn(data.npsn)
     setKoreg(data.activation_code)
-    setIsSync(true)
   }
 
   return (
@@ -208,18 +214,6 @@ const RegistrationView: FC = () => {
         btnActionText="Saya Mengerti"
         onSubmit={() => setOpenModalInfo(false)}
       />
-      <AlertDialogComponent
-        type="info"
-        icon="wifi_off"
-        title="Tidak Ada Koneksi Internet"
-        desc="Koneksikan perangkat Anda lalu sinkronisasi ulang."
-        isOpen={openModalNoConnection}
-        hideBtnCancel={false}
-        btnCancelText="Kembali"
-        btnActionText="Sinkronisasi Ulang"
-        onCancel={() => setOpenModalNoConnection(false)}
-        onSubmit={handleSubmit(onSubmit)}
-      />
 
       <AlertDialogComponent
         type="info"
@@ -232,6 +226,10 @@ const RegistrationView: FC = () => {
         btnActionText="Sinkronisasi Ulang"
         onCancel={() => setOpenModalConnectionTrouble(false)}
         onSubmit={handleSubmit(onSubmit)}
+      />
+      <AlertNoConnection
+        onSubmit={handleSubmit(onSubmit)}
+        onCancel={() => setAlertNoConnection(false)}
       />
     </AuthLayout>
   )
