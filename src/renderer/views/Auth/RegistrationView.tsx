@@ -1,26 +1,52 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 
 import AuthLayout from '../Layout/AuthLayout'
 
-import AlertDialogComponent from '../../components/Dialog/AlertDialogComponent'
-import SyncDialogComponent from '../../components/Dialog/SyncDialogComponent'
-import InputComponent from '../../components/Form/InputComponent'
+import AlertDialogComponent from 'renderer/components/Dialog/AlertDialogComponent'
+import SyncDialogComponent from 'renderer/components/Dialog/SyncDialogComponent'
+import InputComponent from 'renderer/components/Form/InputComponent'
 
 import { Button } from '@wartek-id/button'
 import { Tooltip } from '@wartek-id/tooltip'
 import { Icon } from '@wartek-id/icon'
 
-import { onlyNumberRegex } from '../../constants/regex'
+import { onlyNumberRegex } from 'renderer/constants/regex'
 
-import { FormRegisterData } from '../../types/LoginType'
+import { FormRegisterData } from 'renderer/types/LoginType'
+import { useAPICheckActivation } from 'renderer/apis/utils'
+import { AuthStates, useAuthStore } from 'renderer/stores/auth'
+import { APP_CONFIG } from '../../constants/appConfig'
+
+const ipcRenderer = window.require('electron').ipcRenderer
 
 const RegistrationView: FC = () => {
   const navigate = useNavigate()
-
+  const ref = useRef(null)
   const [isSync, setIsSync] = useState(false)
   const [openModalInfo, setOpenModalInfo] = useState(false)
+  const [openModalNoConnection, setOpenModalNoConnection] = useState(false)
+  const [openModalConnectionTrouble, setOpenModalConnectionTrouble] =
+    useState(false)
+  const [koregInvalid, setKoregInvalid] = useState('')
+
+  const setNpsn = useAuthStore((state: AuthStates) => state.setNpsn)
+  const setKoreg = useAuthStore((state: AuthStates) => state.setKoreg)
+  const npsn = useAuthStore((state: AuthStates) => state.npsn)
+  const koreg = useAuthStore((state: AuthStates) => state.koreg)
+  const [hddVol, setHddVol] = useState('')
+  const { data: checkActivationResult, isError } = useAPICheckActivation(
+    {
+      npsn,
+      koreg,
+      hdd_vol: hddVol,
+    },
+    {
+      retry: 0,
+      enabled: npsn !== '' && koreg !== '' && hddVol !== '',
+    }
+  )
 
   const {
     register,
@@ -31,42 +57,69 @@ const RegistrationView: FC = () => {
     mode: 'onChange',
   })
 
-  const onSubmit = async (data: FormRegisterData) => {
-    if (data.npsn === '01234567') {
-      setError('npsn', {
-        type: 'manual',
-        message: 'NPSN Anda sudah terdaftar di perangkat lain',
-      })
-      setOpenModalInfo(true)
-      return
-    }
+  useEffect(() => {
+    const ipcHddVol = ipcRenderer.sendSync(
+      'config:getConfig',
+      APP_CONFIG.hddVol
+    )
+    const ipcKoregInvalid = ipcRenderer.sendSync(
+      'config:getConfig',
+      APP_CONFIG.koregInvalid
+    )
+    setKoregInvalid(ipcKoregInvalid)
+    setHddVol(ipcHddVol)
+  }, [])
 
-    if (data.npsn === '12345678') {
-      setError('npsn', {
-        type: 'manual',
-        message: 'NPSN tidak terdaftar',
-      })
-      return
-    }
-
-    if (data.activation_code === 'JIF89K') {
-      setError('activation_code', {
-        type: 'manual',
-        message: 'Kode aktivasi salah',
-      })
-      return
-    }
-
-    setIsSync(true)
-    setTimeout(() => {
+  useEffect(() => {
+    if (checkActivationResult !== undefined) {
       setIsSync(false)
-      navigate('/create-account/new')
-    }, 3000)
+      const result = Number(checkActivationResult.data)
+      if (result === 1) {
+        if (koregInvalid === '0') {
+          navigate('/create-account/new')
+        } else {
+          navigate('/login')
+        }
+      } else if (result === 2) {
+        setNpsn('')
+        setKoreg('')
+        setError('activation_code', {
+          type: 'manual',
+          message: 'Kode aktivasi salah',
+        })
+      } else {
+        setNpsn('')
+        setKoreg('')
+        setError('npsn', {
+          type: 'manual',
+          message: 'NPSN Anda sudah terdaftar di perangkat lain',
+        })
+        setOpenModalInfo(true)
+      }
+    }
+  }, [checkActivationResult])
+
+  useEffect(() => {
+    if (isError) {
+      setOpenModalConnectionTrouble(true)
+    }
+  }, [isError])
+
+  const onSubmit = async (data: FormRegisterData) => {
+    if (!navigator.onLine) {
+      setOpenModalNoConnection(true)
+      return
+    }
+    setOpenModalNoConnection(false)
+    setOpenModalConnectionTrouble(false)
+    setNpsn(data.npsn)
+    setKoreg(data.activation_code)
+    setIsSync(true)
   }
 
   return (
     <AuthLayout>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form ref={ref} onSubmit={handleSubmit(onSubmit)}>
         <div>
           <div className="text-base pb-1 font-normal text-gray-900">NPSN</div>
           <InputComponent
@@ -154,6 +207,31 @@ const RegistrationView: FC = () => {
         hideBtnCancel={true}
         btnActionText="Saya Mengerti"
         onSubmit={() => setOpenModalInfo(false)}
+      />
+      <AlertDialogComponent
+        type="info"
+        icon="wifi_off"
+        title="Tidak Ada Koneksi Internet"
+        desc="Koneksikan perangkat Anda lalu sinkronisasi ulang."
+        isOpen={openModalNoConnection}
+        hideBtnCancel={false}
+        btnCancelText="Kembali"
+        btnActionText="Sinkronisasi Ulang"
+        onCancel={() => setOpenModalNoConnection(false)}
+        onSubmit={handleSubmit(onSubmit)}
+      />
+
+      <AlertDialogComponent
+        type="info"
+        icon="wifi_off"
+        title="Koneksi Internet Terputus"
+        desc="Perikas kembalik koneksi internet Anda lalu sinkronisasi ulang."
+        isOpen={openModalConnectionTrouble}
+        hideBtnCancel={false}
+        btnCancelText="Kembali"
+        btnActionText="Sinkronisasi Ulang"
+        onCancel={() => setOpenModalConnectionTrouble(false)}
+        onSubmit={handleSubmit(onSubmit)}
       />
     </AuthLayout>
   )
