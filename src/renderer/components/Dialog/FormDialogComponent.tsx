@@ -18,9 +18,10 @@ interface FormDialogProps {
   title: string
   subtitle?: string
   width: number
+  maxHeight?: number
   isOpen: boolean
   children: React.ReactNode
-  classDesc?: string
+  className?: string
   btnSubmitText?: string
   icon?: string
   onCancel: () => void
@@ -44,9 +45,14 @@ const FormDialogComponent: FC<FormDialogProps> = (props: FormDialogProps) => {
           <DialogDescription
             as="div"
             className={clsx(
-              props.classDesc,
-              'font-normal text-gray-900 py-7 px-9'
+              props.className,
+              props.maxHeight > 0 && 'scrollBar overflow-y-scroll',
+              props.maxHeight > 0 ? 'm-3 py-4 px-6' : 'py-7 px-9',
+              'font-normal text-gray-900'
             )}
+            style={
+              props.maxHeight > 0 ? { maxHeight: `${props.maxHeight}px` } : {}
+            }
           >
             {props.children}
           </DialogDescription>

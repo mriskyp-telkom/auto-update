@@ -1,7 +1,6 @@
 import { InstansiPengguna } from '../repositories/InstansiPengguna'
 import { Pengguna } from '../repositories/Pengguna'
 import { UserRole } from '../repositories/UserRole'
-import { AppConfig } from '../repositories/AppConfig'
 import { createQueryBuilder, getRepository, InsertResult } from 'typeorm'
 import CommonUtils from '../utils/CommonUtils'
 import { GetConfig } from './Config'
@@ -40,29 +39,19 @@ export const CheckUserPass = async (
 }
 
 export const CheckLogin = async (): Promise<number> => {
-  const getAktif = (
-    await getRepository(AppConfig).findOne({ where: { varname: 'active' } })
-  ).varvalue
-  const getKoregInvalid = (
-    await getRepository(AppConfig).findOne({
-      where: { varname: 'koreg_invalid' },
-    })
-  ).varvalue
-  const getRequestReset = (
-    await getRepository(AppConfig).findOne({
-      where: { varname: 'requestReset' },
-    })
-  ).varvalue
+  const getAktif = await GetConfig('active')
+  const getKoregInvalid = await GetConfig('koreg_invalid')
+  const getRequestReset = await GetConfig('requestReset')
 
-  if (getAktif === '1') {
+  if (getAktif == '1') {
     const sessionId = await GetConfig('sessionId')
-    if (sessionId !== null && sessionId !== undefined) {
+    if (sessionId != '') {
       return 5 // auto login
     }
     return 2 // login
-  } else if (getKoregInvalid === '1') return 3
+  } else if (getKoregInvalid == '1') return 3
   //koreg invalid
-  else if (getRequestReset === '1') return 4
+  else if (getRequestReset == '1') return 4
   //lockAccount
   else return 1 // registrasi
 }

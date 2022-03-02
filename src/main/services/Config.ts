@@ -12,7 +12,10 @@ export const SetConfig = async (
 }
 
 export const GetConfig = async (varname: string): Promise<string> => {
-  return (await getRepository(AppConfig).findOne({ varname: varname })).varvalue
+  return (
+    (await getRepository(AppConfig).findOne({ varname: varname }))?.varvalue ??
+    ''
+  )
 }
 
 export const DeleteConfig = async (varname: string): Promise<DeleteResult> => {
