@@ -4,5 +4,5 @@ export const APP_CONFIG = {
   sessionId: 'sessionId',
   tahunAktif: 'tahun_aktif',
   tahunAnggaran: 'tahun_anggaran',
-  koregInvalid: 'koreg_invali',
+  koregInvalid: 'koreg_invalid',
 }

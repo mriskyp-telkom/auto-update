@@ -7,3 +7,9 @@ export const API_GET_REFERENSI = (referensi: string, lastUpdate: string) =>
 
 export const API_GET_CONFIG_ALL = `/api/config/all`
 export const API_GET_CONFIG = (varname: string) => `/api/config/all/${varname}`
+export const API_CHECK_ACTIVATION = (
+  npsn: string,
+  koreg: string,
+  hdd_vol: string
+) => `/api/utils/check_activation/${npsn}/${koreg}/${hdd_vol}`
+export const API_REGISTRATION = 'api/user/registration'
