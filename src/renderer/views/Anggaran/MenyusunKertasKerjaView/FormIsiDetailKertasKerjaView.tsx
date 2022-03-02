@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useState } from 'react'
 import { useForm, useFieldArray } from 'react-hook-form'
 
 import AlertDialogComponent from 'renderer/components/Dialog/AlertDialogComponent'
@@ -64,9 +64,22 @@ const FormIsiDetailKertasKerjaView: FC = () => {
     setValue,
     control,
     reset,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm<FormIsiKertasKerjaData>({
     mode: 'onChange',
+    defaultValues: {
+      kegiatan: '',
+      rekening_belanja: '',
+      uraian: '',
+      harga_satuan: '',
+      anggaran_bulan: [
+        {
+          jumlah: null,
+          satuan: null,
+          bulan: DATA_BULAN[urutanBulan],
+        },
+      ],
+    },
   })
 
   const { fields, append } = useFieldArray({
@@ -84,7 +97,7 @@ const FormIsiDetailKertasKerjaView: FC = () => {
     setIsiKertasKerja(false)
     reset()
     setFormDisable(initialFormDisable)
-    append({ jumlah: null, satuan: null, bulan: DATA_BULAN[urutanBulan] })
+    setUrutanBulan(0)
   }
 
   const handleClick = (data: {
@@ -92,7 +105,7 @@ const FormIsiDetailKertasKerjaView: FC = () => {
     name: FormIsiKertasKerjaType
     value: string
   }) => {
-    setValue(data.name, data.value)
+    setValue(data.name, data.value, { shouldDirty: true })
 
     if (data.name === 'kegiatan') {
       setFormDisable({
@@ -114,6 +127,14 @@ const FormIsiDetailKertasKerjaView: FC = () => {
     }
   }
 
+  const handleCancel = () => {
+    if (isDirty) {
+      setOpenModalConfirmCancel(true)
+    } else {
+      setIsiKertasKerja(false)
+    }
+  }
+
   const handleTambahBulan = () => {
     if (urutanBulan === DATA_BULAN.length - 1) {
       return
@@ -122,10 +143,6 @@ const FormIsiDetailKertasKerjaView: FC = () => {
     append({ jumlah: null, satuan: null, bulan: DATA_BULAN[next] })
     setUrutanBulan(next)
   }
-
-  useEffect(() => {
-    append({ jumlah: null, satuan: null, bulan: DATA_BULAN[urutanBulan] })
-  }, [])
 
   const FormHargaPerMonth = (props: {
     index: number
@@ -190,13 +207,13 @@ const FormIsiDetailKertasKerjaView: FC = () => {
       </Button>
       <FormDialogComponent
         width={960}
+        maxHeight={600}
         icon="add"
         title="Isi Detail Anggaran Kegiatan"
         isOpen={isiKertasKerja}
         btnSubmitText="Masukkan ke Anggaran"
-        onCancel={() => setOpenModalConfirmCancel(true)}
+        onCancel={handleCancel}
         onSubmit={handleSubmit(onSubmit)}
-        classDesc="overflow-y-scroll max-h-[600px]"
       >
         <div className="mb-5">
           <div className="text-base pb-1 font-normal text-gray-900">
@@ -221,7 +238,7 @@ const FormIsiDetailKertasKerjaView: FC = () => {
           <InputSearchComponent
             width={888}
             name="rekening_belanja"
-            placeholder="Belanja Makanan dan Minuman pada Fasilitas Pelayanan Urusan Pendidikan"
+            placeholder="Apa jenis rekening belanja yang ingin Anda anggarkan untuk kegiatan tersebut?"
             errors={errors}
             register={register}
             onClick={handleClick}

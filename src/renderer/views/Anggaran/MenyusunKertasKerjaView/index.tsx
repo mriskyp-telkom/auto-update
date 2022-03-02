@@ -43,7 +43,7 @@ const MenyusunKertasKerjaView: FC = () => {
 
   return (
     <div>
-      <div className="flex justify-between pt-10 px-10">
+      <div className="flex justify-between pt-10 px-10 bg-gray-0">
         <span>
           <div className="flex items-center text-[12px] font-semibold text-blue-700 mb-[12px]">
             <Icon
@@ -96,7 +96,7 @@ const MenyusunKertasKerjaView: FC = () => {
               </Icon>
               Panduan
             </div>
-            <ul className="list font-normal text-base text-gray-900 ml-[48px]">
+            <ul className="list font-normal text-base text-gray-900 ml-7">
               <li>
                 <span>
                   Anda harus menghabiskan seluruh anggaran untuk bisa mengajukan
