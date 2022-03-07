@@ -1,6 +1,6 @@
 table.searchTable {
   box-shadow: 0px 8px 20px rgba(37, 40, 43, 0.2);
-  border-radius: 4px;
+  border-radius: 0 0 4px 4px;
 }
 
 table.searchTable > tbody {
