@@ -1,10 +1,12 @@
-import React, { FC, useState, ChangeEvent, useRef } from 'react'
+import React, { FC, useState, useEffect, ChangeEvent, useRef } from 'react'
 import { FieldErrors, RegisterOptions } from 'react-hook-form'
 
 import { InputGroup, InputLeftAddon, Input } from '@wartek-id/input'
 import { Icon } from '@wartek-id/icon'
 
-import OptionsSearch from './OptionsSearch'
+import filter from 'lodash/filter'
+
+import styles from './index.module.css'
 
 import clsx from 'clsx'
 
@@ -25,10 +27,10 @@ interface InputSearchProps {
 const InputSearchComponent: FC<InputSearchProps> = (
   props: InputSearchProps
 ) => {
-  const ref = useRef()
+  const ref = useRef(null)
 
   const [open, setOpen] = useState(false)
-  const [filter, setFilter] = useState('')
+  const [query, setQuery] = useState('')
   const [data, setData] = useState(props.dataOptions)
 
   const { required, name, placeholder, isDisabled, errors, register } = props
@@ -46,7 +48,7 @@ const InputSearchComponent: FC<InputSearchProps> = (
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
     const lowercasedFilter = value.toLowerCase()
-    setFilter(value)
+    setQuery(value)
     setData(
       props.dataOptions.filter((item: any) => {
         const res = Object.keys(item).some((key) =>
@@ -57,8 +59,46 @@ const InputSearchComponent: FC<InputSearchProps> = (
     )
   }
 
-  const InputSearch = React.memo(() => {
-    return (
+  const makeBold = (item: string) => {
+    const begin = item.toLowerCase().indexOf(query.toLowerCase())
+    const end = query.length
+    const tempItem = item
+    const textReplace = tempItem.substr(begin, end)
+    if (begin > -1) {
+      return item.replace(textReplace, '<b>' + textReplace + '</b>')
+    }
+    return item
+  }
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (open && ref.current && !ref.current.contains(event.target)) {
+      setOpen(false)
+    }
+  }
+
+  const handleClick = (event: any) => {
+    const id = event.target.dataset.id
+    const name = event.target.dataset.name
+    const fieldShow = filter(props.headers, ['show', true])[0].key
+    const value = filter(props.dataOptions, ['id', parseInt(id)])[0][fieldShow]
+    const sendData = {
+      id: id,
+      name: name,
+      value: value,
+    }
+    setOpen(false)
+    props.onClick(sendData)
+  }
+
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutside, true)
+    return () => {
+      document.removeEventListener('click', handleClickOutside, true)
+    }
+  })
+
+  return (
+    <div ref={ref}>
       <InputGroup>
         <InputLeftAddon>
           <Icon as="i" color="default" fontSize="default">
@@ -66,7 +106,6 @@ const InputSearchComponent: FC<InputSearchProps> = (
           </Icon>
         </InputLeftAddon>
         <Input
-          ref={ref}
           type="text"
           placeholder={placeholder}
           id={name}
@@ -76,32 +115,66 @@ const InputSearchComponent: FC<InputSearchProps> = (
           isDisabled={isDisabled}
           isInvalid={open ? false : !!errors[name]}
           errorMessage={open ? '' : errors[name]?.message}
+          style={
+            open
+              ? {
+                  boxShadow: '0px 8px 20px rgba(37, 40, 43, 0.2)',
+                  borderRadius: '4px 4px 0px 0px',
+                }
+              : {}
+          }
           {...register(name, validation)}
         />
       </InputGroup>
-    )
-  })
-
-  return (
-    <>
-      {!open && <InputSearch />}
       {open && (
-        <OptionsSearch
-          name={props.name}
-          width={props.width}
-          open={open}
-          setOpen={setOpen}
-          headerShow={props.headerShow}
-          headers={props.headers}
-          dataOptions={data}
-          filter={filter}
-          onClick={props.onClick}
+        <table
+          className={clsx(
+            styles.searchTable,
+            'text-left absolute z-10 bg-white'
+          )}
+          style={{ width: `${props.width - 8}px` }}
         >
-          <InputSearch />
-        </OptionsSearch>
+          <thead className="text-[14px] font-semibold bg-gray-5">
+            {props.headerShow && (
+              <tr className={styles.headerTable} style={{ display: 'flex' }}>
+                {props.headers?.map((header: any) => (
+                  <th key={header.key} style={{ width: header.width }}>
+                    {header.label}
+                  </th>
+                ))}
+              </tr>
+            )}
+          </thead>
+          <tbody className={`text-[14px] font-normal`}>
+            {data?.map((data: any, indexData) => (
+              <tr
+                key={indexData}
+                className="hover:bg-gray-5 cursor-pointer"
+                onClick={handleClick}
+                style={{ display: 'flex' }}
+              >
+                {props.headers?.map((header: any) => (
+                  <td
+                    key={header.key}
+                    dangerouslySetInnerHTML={{
+                      __html: makeBold(data[header.key]),
+                    }}
+                    data-name={props.name}
+                    data-id={data.id}
+                    style={{ width: header.width }}
+                  ></td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
-    </>
+    </div>
   )
+}
+
+InputSearchComponent.defaultProps = {
+  headerShow: true,
 }
 
 export default InputSearchComponent

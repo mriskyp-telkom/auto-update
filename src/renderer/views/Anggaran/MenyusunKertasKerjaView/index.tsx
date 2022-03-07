@@ -1,5 +1,7 @@
 import React, { FC, useEffect, useState } from 'react'
 
+import { Tooltip } from '@wartek-id/tooltip'
+
 import AmountCardComponent from 'renderer/components/Card/AmountCardComponent'
 import AlertDialogComponent from 'renderer/components/Dialog/AlertDialogComponent'
 import SyncDialogComponent from 'renderer/components/Dialog/SyncDialogComponent'
@@ -70,8 +72,19 @@ const MenyusunKertasKerjaView: FC = () => {
               edit
             </Icon>
           </div>
-          <div className="text-base font-semibold text-gray-600 mb-[88px]">
-            BOS reguler 2021
+          <div
+            className="text-base font-semibold text-gray-600 mb-[88px]"
+            style={{ display: 'inline-block' }}
+          >
+            Bos reguler 2021
+            <Tooltip
+              content="BOS reguler 2021"
+              placement="top"
+              strategy="fixed"
+              trigger="hover"
+            >
+              <span className="hidden">BOS reguler 2021</span>
+            </Tooltip>
           </div>
           <AmountCardComponent
             type="disabled"

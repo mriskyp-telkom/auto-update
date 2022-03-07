@@ -105,7 +105,7 @@ const FormIsiDetailKertasKerjaView: FC = () => {
     name: FormIsiKertasKerjaType
     value: string
   }) => {
-    setValue(data.name, data.value, { shouldDirty: true })
+    setValue(data.name, data.value, { shouldDirty: true, shouldValidate: true })
 
     if (data.name === 'kegiatan') {
       setFormDisable({
@@ -215,138 +215,142 @@ const FormIsiDetailKertasKerjaView: FC = () => {
         onCancel={handleCancel}
         onSubmit={handleSubmit(onSubmit)}
       >
-        <div className="mb-5">
-          <div className="text-base pb-1 font-normal text-gray-900">
-            Kegiatan
+        <div>
+          <div className="mb-5">
+            <div className="text-base pb-1 font-normal text-gray-900">
+              Kegiatan
+            </div>
+            <InputSearchComponent
+              width={888}
+              name="kegiatan"
+              placeholder="Apa kegiatan yang ingin Anda anggarkan?"
+              errors={errors}
+              register={register}
+              onClick={handleClick}
+              required={true}
+              headers={headerKegiatan}
+              dataOptions={optionsKegiatan}
+            />
           </div>
-          <InputSearchComponent
-            width={888}
-            name="kegiatan"
-            placeholder="Apa kegiatan yang ingin Anda anggarkan?"
-            errors={errors}
-            register={register}
-            onClick={handleClick}
-            required={true}
-            headers={headerKegiatan}
-            dataOptions={optionsKegiatan}
-          />
-        </div>
-        <div className="mb-5">
-          <div className="text-base pb-1 font-normal text-gray-900">
-            Rekening Belanja
+          <div className="mb-5">
+            <div className="text-base pb-1 font-normal text-gray-900">
+              Rekening Belanja
+            </div>
+            <InputSearchComponent
+              width={888}
+              name="rekening_belanja"
+              placeholder="Apa jenis rekening belanja yang ingin Anda anggarkan untuk kegiatan tersebut?"
+              errors={errors}
+              register={register}
+              onClick={handleClick}
+              required={true}
+              isDisabled={formDisable.rekening_belanja}
+              headers={headerRekeningBelanja}
+              dataOptions={optionsRekeningBelanja}
+            />
           </div>
-          <InputSearchComponent
-            width={888}
-            name="rekening_belanja"
-            placeholder="Apa jenis rekening belanja yang ingin Anda anggarkan untuk kegiatan tersebut?"
-            errors={errors}
-            register={register}
-            onClick={handleClick}
-            required={true}
-            isDisabled={formDisable.rekening_belanja}
-            headers={headerRekeningBelanja}
-            dataOptions={optionsRekeningBelanja}
-          />
-        </div>
-        <div className="p-4 rounded border border-solid	border-gray-300 text-base">
-          <div className="flex mb-5">
-            <span className="flex-grow pr-6">
-              <div className="text-base pb-1 font-normal text-gray-900">
-                Uraian
-              </div>
-              <InputSearchComponent
-                width={543}
-                name="uraian"
-                placeholder="Apa detail barang atau jasanya? (mis. papan tulis, honor narasumber)"
-                errors={errors}
-                register={register}
-                onClick={handleClick}
-                required={true}
-                isDisabled={formDisable.uraian}
-                headers={headerUraian}
-                dataOptions={optionsUraian}
-              />
-            </span>
-            <span className="flex-none w-[289px]">
-              <div className="text-base pb-1 font-normal text-gray-900">
-                Harga Satuan yang Dianggarkan
-              </div>
-              <InputWithInfoComponent
-                width={289}
-                name="harga_satuan"
-                placeholder="Berapa perkiraan harganya?"
-                errors={errors}
-                register={register}
-                required={true}
-                isDisabled={formDisable.harga_satuan}
-                headers={headerHarga}
-                dataOptions={optionsHarga}
-                registerOption={{
-                  validate: {
-                    positive: (value) => {
-                      if (value.replace(/[^,\d]/g, '').toString().length < 2) {
-                        return 'Harga satuan minimal 2 digit angka'
-                      }
-                    },
-                    lessThanTen: (value) => {
-                      if (parseInt(value.replace(/[^,\d]/g, '')) < 20000) {
-                        return 'Harga kurang dari batas bawah SSH'
-                      }
-                    },
-                    moreThan: (value) => {
-                      if (parseInt(value.replace(/[^,\d]/g, '')) > 100000) {
-                        return 'Harga melebihi batas atas SSH'
-                      }
-                    },
-                  },
-                  onChange: (e) => {
-                    const numb = e.target.value
-                      .replace(/[^,\d]/g, '')
-                      .toString()
-                    if (numb !== null) {
-                      setValue(
-                        'harga_satuan',
-                        `Rp ${numberUtils.delimit(numb, '.')}`
-                      )
-                    }
-                    setFormDisable({
-                      ...formDisable,
-                      harga_per_month: false,
-                    })
-                  },
-                }}
-              />
-            </span>
-          </div>
-          <div className="mb-5">Dianggarkan untuk Bulan</div>
-          <div className="grid grid-cols-2 gap-x-[40px] gap-y-[20px]">
-            {fields.map((field, index) => {
-              return (
-                <FormHargaPerMonth key={index} index={index} field={field} />
-              )
-            })}
-            {fields.length <= DATA_BULAN.length - 1 && (
-              <div
-                className={clsx(
-                  styles.borderDashed,
-                  'grid place-content-center cursor-pointer p-11'
-                )}
-                onClick={handleTambahBulan}
-              >
-                <div className="flex items-center">
-                  <Icon
-                    as="i"
-                    color="default"
-                    fontSize="default"
-                    className="mr-2"
-                    style={{ fontSize: '15px' }}
-                  >
-                    add
-                  </Icon>
-                  Tambah Bulan
+          <div className="p-4 rounded border border-solid	border-gray-300 text-base">
+            <div className="flex mb-5">
+              <span className="flex-grow pr-6">
+                <div className="text-base pb-1 font-normal text-gray-900">
+                  Uraian
                 </div>
-              </div>
-            )}
+                <InputSearchComponent
+                  width={543}
+                  name="uraian"
+                  placeholder="Apa detail barang atau jasanya? (mis. papan tulis, honor narasumber)"
+                  errors={errors}
+                  register={register}
+                  onClick={handleClick}
+                  required={true}
+                  isDisabled={formDisable.uraian}
+                  headers={headerUraian}
+                  dataOptions={optionsUraian}
+                />
+              </span>
+              <span className="flex-none w-[289px]">
+                <div className="text-base pb-1 font-normal text-gray-900">
+                  Harga Satuan yang Dianggarkan
+                </div>
+                <InputWithInfoComponent
+                  width={289}
+                  name="harga_satuan"
+                  placeholder="Berapa perkiraan harganya?"
+                  errors={errors}
+                  register={register}
+                  required={true}
+                  isDisabled={formDisable.harga_satuan}
+                  headers={headerHarga}
+                  dataOptions={optionsHarga}
+                  registerOption={{
+                    validate: {
+                      positive: (value) => {
+                        if (
+                          value.replace(/[^,\d]/g, '').toString().length < 2
+                        ) {
+                          return 'Harga satuan minimal 2 digit angka'
+                        }
+                      },
+                      lessThanTen: (value) => {
+                        if (parseInt(value.replace(/[^,\d]/g, '')) < 20000) {
+                          return 'Harga kurang dari batas bawah SSH'
+                        }
+                      },
+                      moreThan: (value) => {
+                        if (parseInt(value.replace(/[^,\d]/g, '')) > 100000) {
+                          return 'Harga melebihi batas atas SSH'
+                        }
+                      },
+                    },
+                    onChange: (e) => {
+                      const numb = e.target.value
+                        .replace(/[^,\d]/g, '')
+                        .toString()
+                      if (numb !== null) {
+                        setValue(
+                          'harga_satuan',
+                          `Rp ${numberUtils.delimit(numb, '.')}`
+                        )
+                      }
+                      setFormDisable({
+                        ...formDisable,
+                        harga_per_month: false,
+                      })
+                    },
+                  }}
+                />
+              </span>
+            </div>
+            <div className="mb-5">Dianggarkan untuk Bulan</div>
+            <div className="grid grid-cols-2 gap-x-[40px] gap-y-[20px]">
+              {fields.map((field, index) => {
+                return (
+                  <FormHargaPerMonth key={index} index={index} field={field} />
+                )
+              })}
+              {fields.length <= DATA_BULAN.length - 1 && (
+                <div
+                  className={clsx(
+                    styles.borderDashed,
+                    'grid place-content-center cursor-pointer p-11'
+                  )}
+                  onClick={handleTambahBulan}
+                >
+                  <div className="flex items-center">
+                    <Icon
+                      as="i"
+                      color="default"
+                      fontSize="default"
+                      className="mr-2"
+                      style={{ fontSize: '15px' }}
+                    >
+                      add
+                    </Icon>
+                    Tambah Bulan
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </FormDialogComponent>
