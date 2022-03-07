@@ -1,5 +1,6 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { useForm, useFieldArray } from 'react-hook-form'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import AlertDialogComponent from 'renderer/components/Dialog/AlertDialogComponent'
 import FormDialogComponent from 'renderer/components/Dialog/FormDialogComponent'
@@ -8,15 +9,12 @@ import InputSearchComponent from 'renderer/components/Form/InputSearchComponent'
 import InputComponent from 'renderer/components/Form/InputComponent'
 
 import { Icon } from '@wartek-id/icon'
-import { Button } from '@wartek-id/button'
 
 import {
   FormIsiKertasKerjaType,
   FormIsiKertasKerjaData,
   AnggaranBulanData,
 } from 'renderer/types/AnggaranType'
-
-import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
 
 import { DATA_BULAN } from 'renderer/constants/general'
 import {
@@ -34,9 +32,13 @@ import {
 
 import { numberUtils } from '@wartek-id/fe-toolbox'
 
+import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
+
 import styles from './index.module.css'
 
 import clsx from 'clsx'
+
+import mapKeys from 'lodash/mapKeys'
 
 const initialFormDisable = {
   kegiatan: false,
@@ -46,16 +48,20 @@ const initialFormDisable = {
   harga_per_month: true,
 }
 
-const FormIsiDetailKertasKerjaView: FC = () => {
+const FormDetailKertasKerjaView: FC = () => {
+  const navigate = useNavigate()
+  const { mode } = useParams()
+
   const [openModalConfirmCancel, setOpenModalConfirmCancel] = useState(false)
   const [urutanBulan, setUrutanBulan] = useState(0)
   const [formDisable, setFormDisable] = useState(initialFormDisable)
 
-  const isiKertasKerja = useAnggaranStore(
-    (state: AnggaranStates) => state.isiKertasKerja
+  const tempDetailKertasKerja = useAnggaranStore(
+    (state: AnggaranStates) => state.tempDetailKertasKerja
   )
-  const setIsiKertasKerja = useAnggaranStore(
-    (state: AnggaranStates) => state.setIsiKertasKerja
+
+  const setTempDetailKertasKerja = useAnggaranStore(
+    (state: AnggaranStates) => state.setTempDetailKertasKerja
   )
 
   const {
@@ -87,14 +93,19 @@ const FormIsiDetailKertasKerjaView: FC = () => {
     name: 'anggaran_bulan',
   })
 
+  const closeModal = () => {
+    setTempDetailKertasKerja(null)
+    navigate(-1)
+  }
+
   const onSubmit = async (data: FormIsiKertasKerjaData) => {
     console.log(data)
-    setIsiKertasKerja(false)
+    closeModal()
   }
 
   const onConfirmCancel = () => {
     setOpenModalConfirmCancel(false)
-    setIsiKertasKerja(false)
+    closeModal()
     reset()
     setFormDisable(initialFormDisable)
     setUrutanBulan(0)
@@ -131,7 +142,7 @@ const FormIsiDetailKertasKerjaView: FC = () => {
     if (isDirty) {
       setOpenModalConfirmCancel(true)
     } else {
-      setIsiKertasKerja(false)
+      closeModal()
     }
   }
 
@@ -151,7 +162,7 @@ const FormIsiDetailKertasKerjaView: FC = () => {
     const { field } = props
     return (
       <div
-        key={field.id}
+        key={field.bulan}
         className="border rounded border-solid border-gray-500 py-3 px-4 text-base"
       >
         <div className="flex justify-between shadow pb-[6px] ">
@@ -191,27 +202,34 @@ const FormIsiDetailKertasKerjaView: FC = () => {
     )
   }
 
+  useEffect(() => {
+    if (mode === 'update' && tempDetailKertasKerja === null) {
+      closeModal()
+    }
+    if (mode === 'update' && tempDetailKertasKerja !== null) {
+      mapKeys(tempDetailKertasKerja, (value, key: FormIsiKertasKerjaType) => {
+        setValue(key, value, { shouldValidate: true })
+      })
+      setFormDisable({
+        kegiatan: false,
+        rekening_belanja: false,
+        uraian: false,
+        harga_satuan: false,
+        harga_per_month: false,
+      })
+    }
+  }, [])
+
   return (
     <div>
-      <Button
-        color="white"
-        size="md"
-        variant="solid"
-        className="mr-3"
-        onClick={() => setIsiKertasKerja(true)}
-      >
-        <Icon as="i" color="default" fontSize="default">
-          add
-        </Icon>
-        Tambah Kegiatan
-      </Button>
       <FormDialogComponent
         width={960}
         maxHeight={600}
-        icon="add"
+        icon={mode !== 'update' && 'add'}
         title="Isi Detail Anggaran Kegiatan"
-        isOpen={isiKertasKerja}
-        btnSubmitText="Masukkan ke Anggaran"
+        isOpen={true}
+        btnSubmitText={mode === 'update' ? 'Perbarui' : 'Masukkan ke Anggaran'}
+        btnCancelText={mode === 'update' && 'Tutup'}
         onCancel={handleCancel}
         onSubmit={handleSubmit(onSubmit)}
       >
@@ -370,4 +388,4 @@ const FormIsiDetailKertasKerjaView: FC = () => {
   )
 }
 
-export default FormIsiDetailKertasKerjaView
+export default FormDetailKertasKerjaView

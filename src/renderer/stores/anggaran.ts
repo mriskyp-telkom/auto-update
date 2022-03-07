@@ -1,21 +1,26 @@
 import create, { State } from 'zustand'
 
+import { FormIsiKertasKerjaData } from 'renderer/types/AnggaranType'
+
 export interface AnggaranStates extends State {
   createKertasKerja: boolean
   confirmKertasKerja: boolean
-  isiKertasKerja: boolean
+  tempDetailKertasKerja: FormIsiKertasKerjaData
   setCreateKertasKerja: (createKertasKerja: boolean) => void
   setConfirmKertasKerja: (confirmKertasKerja: boolean) => void
-  setIsiKertasKerja: (isiKertasKerja: boolean) => void
+  setTempDetailKertasKerja: (
+    tempDetailKertasKerja: FormIsiKertasKerjaData
+  ) => void
 }
 
 export const useAnggaranStore = create<AnggaranStates>((set) => ({
   createKertasKerja: false,
   confirmKertasKerja: false,
-  isiKertasKerja: false,
+  tempDetailKertasKerja: null,
   setCreateKertasKerja: (createKertasKerja) =>
     set(() => ({ createKertasKerja })),
   setConfirmKertasKerja: (confirmKertasKerja) =>
     set(() => ({ confirmKertasKerja })),
-  setIsiKertasKerja: (isiKertasKerja) => set(() => ({ isiKertasKerja })),
+  setTempDetailKertasKerja: (tempDetailKertasKerja) =>
+    set(() => ({ tempDetailKertasKerja })),
 }))
