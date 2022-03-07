@@ -5,7 +5,7 @@ import clsx from 'clsx'
 
 interface AmountCardProps {
   type: 'default' | 'disabled'
-  label: string
+  label?: string
   amount: number
   width?: number
   class?: string
