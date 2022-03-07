@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from 'react'
-import { HashRouter, Route, Routes } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'react-router-dom'
 
 import { QueryClient, QueryClientProvider } from 'react-query'
 
@@ -14,6 +14,9 @@ import RegistrationView from 'renderer/views/Auth/RegistrationView'
 
 import DashboardAnggaranView from 'renderer/views/Anggaran/DashboardAnggaranView'
 import MenyusunKertasKerjaView from 'renderer/views/Anggaran/MenyusunKertasKerjaView'
+import MengulasKertasKerjaView from 'renderer/views/Anggaran/MengulasKertasKerjaView'
+
+import FormDetailKertasKerjaView from 'renderer/views/Anggaran/FormDetailKertasKerjaView'
 
 const ipcRenderer = window.require('electron').ipcRenderer
 
@@ -27,6 +30,9 @@ const queryClient = new QueryClient({
 
 const App: FC = () => {
   const [firstPage, setFirstPage] = useState(null)
+
+  const location = useLocation()
+  const state = location.state as { backgroundLocation?: Location }
 
   useEffect(() => {
     const result = ipcRenderer.sendSync('user:checkLogin')
@@ -53,27 +59,31 @@ const App: FC = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <HashRouter>
-        <div className="App">
+      <div className="App">
+        <Routes location={state?.backgroundLocation || location}>
+          <Route path="*" element={<NotFoundView />} />
+          <Route path="/" element={firstPage} />
+          <Route path="/login" element={<LoginView />} />
+          <Route path="/registration" element={<RegistrationView />} />
+          <Route path="/account-status" element={<StatusAccountView />} />
+          <Route path="/create-account/:mode" element={<CreateAccountView />} />
+          <Route path="anggaran">
+            <Route index={true} element={<DashboardAnggaranView />} />
+            <Route path="menyusun" element={<MenyusunKertasKerjaView />} />
+            <Route path="mengulas" element={<MengulasKertasKerjaView />} />
+          </Route>
+          <Route path="/about" element={<AboutView />} />
+          <Route path="/dashboard" element={<DashboardView />} />
+        </Routes>
+        {state?.backgroundLocation && (
           <Routes>
-            <Route path="*" element={<NotFoundView />} />
-            <Route path="/" element={firstPage} />
-            <Route path="/login" element={<LoginView />} />
-            <Route path="/registration" element={<RegistrationView />} />
-            <Route path="/account-status" element={<StatusAccountView />} />
             <Route
-              path="/create-account/:mode"
-              element={<CreateAccountView />}
+              path="/form/kertas-kerja/:mode"
+              element={<FormDetailKertasKerjaView />}
             />
-            <Route path="anggaran">
-              <Route index={true} element={<DashboardAnggaranView />} />
-              <Route path="menyusun" element={<MenyusunKertasKerjaView />} />
-            </Route>
-            <Route path="/about" element={<AboutView />} />
-            <Route path="/dashboard" element={<DashboardView />} />
           </Routes>
-        </div>
-      </HashRouter>
+        )}
+      </div>
     </QueryClientProvider>
   )
 }

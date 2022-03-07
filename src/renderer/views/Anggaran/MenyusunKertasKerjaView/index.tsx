@@ -1,4 +1,5 @@
 import React, { FC, useEffect, useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 import { Tooltip } from '@wartek-id/tooltip'
 
@@ -8,7 +9,6 @@ import SyncDialogComponent from 'renderer/components/Dialog/SyncDialogComponent'
 
 import FormKertasKerjaView from 'renderer/views/Anggaran/CreateKertasKerjaView/FormPenanggungJawabView'
 
-import FormIsiDetailKertasKerjaView from './FormIsiDetailKertasKerjaView'
 import TabelKertasKerjaView from './TabelKertasKerjaView'
 
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from '@wartek-id/tabs'
@@ -24,6 +24,9 @@ import styles from './index.module.css'
 import clsx from 'clsx'
 
 const MenyusunKertasKerjaView: FC = () => {
+  const navigate = useNavigate()
+  const location = useLocation()
+
   const [isSync, setIsSync] = useState(false)
   const [openModalInit, setOpenModalInit] = useState(false)
 
@@ -37,6 +40,10 @@ const MenyusunKertasKerjaView: FC = () => {
     setTimeout(() => {
       setIsSync(false)
     }, 3000)
+  }
+
+  const handleBackToBeranda = () => {
+    navigate('/anggaran')
   }
 
   useEffect(() => {
@@ -54,10 +61,13 @@ const MenyusunKertasKerjaView: FC = () => {
               fontSize="default"
               className="mr-[10px]"
               style={{ color: '#054BCC' }}
+              onClick={handleBackToBeranda}
             >
               keyboard_backspace
             </Icon>
-            Kembali ke Beranda
+            <span className="cursor-pointer" onClick={handleBackToBeranda}>
+              Kembali ke Beranda
+            </span>
           </div>
           <div className="flex items-center text-[22px] font-semibold">
             Menyusun Kertas Kerja
@@ -132,10 +142,22 @@ const MenyusunKertasKerjaView: FC = () => {
             </ul>
           </div>
           <div className="flex justify-end pt-5 pb-6">
-            <FormIsiDetailKertasKerjaView />
-            <Button color="black" size="md" variant="solid">
-              Selesai
-            </Button>
+            <Link
+              to="/form/kertas-kerja/create"
+              state={{ backgroundLocation: location }}
+            >
+              <Button color="white" size="md" variant="solid" className="mr-3">
+                <Icon as="i" color="default" fontSize="default">
+                  add
+                </Icon>
+                Tambah Kegiatan
+              </Button>
+            </Link>
+            <Link to="/anggaran/mengulas">
+              <Button color="black" size="md" variant="solid">
+                Selesai
+              </Button>
+            </Link>
           </div>
         </span>
       </div>
@@ -145,7 +167,7 @@ const MenyusunKertasKerjaView: FC = () => {
             Periode Anggaran 2021
           </span>
           <span className="pt-4 pb-3">
-            <div className="w-full flex text-center justify-end font-normal text-[12px] text-blue-700 pb-[28px]">
+            <div className="w-full flex text-center justify-end font-normal text-tiny text-blue-700 pb-[28px]">
               <Icon
                 as="i"
                 color="default"

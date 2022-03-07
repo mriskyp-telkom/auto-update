@@ -1,4 +1,5 @@
 import React, { FC } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 import { Tooltip } from '@wartek-id/tooltip'
 
@@ -10,6 +11,8 @@ import { FormIsiKertasKerjaData } from 'renderer/types/AnggaranType'
 
 import { headerKertasKerja } from 'renderer/constants/table'
 
+import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
+
 import styles from './index.module.css'
 
 import clsx from 'clsx'
@@ -20,10 +23,11 @@ interface TabelKertasKerjaProps {
 
 const data = [
   {
+    id: 1,
     program_kegiatan: 'Pelaksanaan Pendaftaran Peserta Didik Baru (PPDB)',
     anggaran_bulan: [
-      { jumlah: '2', satuan: 'Botol', bulan: 'januari' },
-      { jumlah: '1', satuan: 'Box', bulan: 'februari' },
+      { jumlah: 2, satuan: 'Botol', bulan: 'januari' },
+      { jumlah: 1, satuan: 'Box', bulan: 'februari' },
     ],
     harga_satuan: 'Rp 12.000',
     kegiatan: 'Pelaksanaan Pendaftaran Peserta Didik Baru (PPDB)',
@@ -35,6 +39,22 @@ const data = [
 const TabelKertasKerjaView: FC<TabelKertasKerjaProps> = (
   props: TabelKertasKerjaProps
 ) => {
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  const setTempDetailKertasKerja = useAnggaranStore(
+    (state: AnggaranStates) => state.setTempDetailKertasKerja
+  )
+
+  const handleClickRow = (event: any, row: FormIsiKertasKerjaData) => {
+    if (!event.target.id.includes('headlessui-popover-button')) {
+      setTempDetailKertasKerja(row)
+      navigate(`/form/kertas-kerja/update`, {
+        state: { backgroundLocation: location },
+      })
+    }
+  }
+
   const TDTable = (props: { text: string; width: string }) => {
     return (
       <td style={{ width: props.width }}>
@@ -44,7 +64,7 @@ const TabelKertasKerjaView: FC<TabelKertasKerjaProps> = (
           strategy="fixed"
           trigger="hover"
         >
-          <span>{props.text}</span>
+          <span className="cursor-pointer">{props.text}</span>
         </Tooltip>
       </td>
     )
@@ -71,14 +91,14 @@ const TabelKertasKerjaView: FC<TabelKertasKerjaProps> = (
             if (indexRow < 5) return <tr></tr>
           }
           const total_harga =
-            parseInt(row.harga_satuan.replace(/[^,\d]/g, '')) *
-            parseInt(harga[0].jumlah)
+            parseInt(row.harga_satuan.replace(/[^,\d]/g, '')) * harga[0].jumlah
           return (
-            <tr key={indexRow}>
+            <tr key={indexRow} onClick={(e) => handleClickRow(e, row)}>
               {headerKertasKerja.map((col) => {
                 if (col.key === 'no') {
                   return (
                     <TDTable
+                      key={col.key}
                       text={(indexRow + 1).toString()}
                       width={col.width}
                     />
@@ -86,6 +106,7 @@ const TabelKertasKerjaView: FC<TabelKertasKerjaProps> = (
                 } else if (col.key === 'total') {
                   return (
                     <TDTable
+                      key={col.key}
                       text={`Rp ${numberUtils.delimit(total_harga, '.')}`}
                       width={col.width}
                     />
@@ -93,6 +114,7 @@ const TabelKertasKerjaView: FC<TabelKertasKerjaProps> = (
                 } else if (col.key === 'jumlah' || col.key === 'satuan') {
                   return (
                     <TDTable
+                      key={col.key}
                       text={harga[0][col.key]?.toString()}
                       width={col.width}
                     />
@@ -100,6 +122,7 @@ const TabelKertasKerjaView: FC<TabelKertasKerjaProps> = (
                 } else {
                   return (
                     <TDTable
+                      key={col.key}
                       text={
                         row[col.key as keyof FormIsiKertasKerjaData] as string
                       }

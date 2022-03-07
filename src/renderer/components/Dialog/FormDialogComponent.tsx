@@ -23,6 +23,7 @@ interface FormDialogProps {
   children: React.ReactNode
   className?: string
   btnSubmitText?: string
+  btnCancelText?: string
   icon?: string
   onCancel: () => void
   onSubmit: () => void
@@ -68,7 +69,7 @@ const FormDialogComponent: FC<FormDialogProps> = (props: FormDialogProps) => {
               className="px-4 py-2 mr-4"
               onClick={props.onCancel}
             >
-              Batal
+              {props.btnCancelText ? props.btnCancelText : 'Batal'}
             </DialogCancel>
             <DialogAction
               as={Button}
