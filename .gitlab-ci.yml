@@ -22,6 +22,10 @@ variables:
       - out/make
   only:
     - tags
+  tags:
+    - himem
+    - staging
+    - docker-build
 
 .publish:
   image: google/cloud-sdk:300.0.0-alpine
@@ -33,6 +37,7 @@ variables:
 
 # staging
 make-win-deb-staging:
+  # base image is defined here https://gitlab.com/wartek-id/sds/sds/-/tree/main/docker/arkas-builder-base
   image: asia.gcr.io/belajar-id-networks/sds/arkas-builder-base:aa457e041ed32e3cf46bb1aaa4e4e077fee8744b
   extends: .make
   stage: build-staging
@@ -40,9 +45,10 @@ make-win-deb-staging:
     - mv ./.env.staging ./.env && rm ./.env.production
     - npm install yarn
     - yarn install
-    - yarn make-win32
-    - yarn make
-    - apt install -y tree && tree out/make/
+    - yarn make-win32 && rm -rf out/Arkas-win32-x64
+    - yarn make && rm -rf out/Arkas-linux-x64
+    - 'echo "==> total size: $(du -sh .)"'
+    - apt install -y tree && tree out
   environment:
     name: staging
   allow_failure: false
