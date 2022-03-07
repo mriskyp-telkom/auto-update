@@ -31,6 +31,7 @@ const KonfirmasiPaguView: FC = () => {
 
   const onSubmit = async (data: KonfirmasiKertasKerjaData) => {
     console.log(data)
+    setConfirmKertasKerja(false)
     navigate('/anggaran/menyusun')
   }
 
