@@ -52,6 +52,8 @@ const FormDetailKertasKerjaView: FC = () => {
   const navigate = useNavigate()
   const { mode } = useParams()
 
+  const [openModalDelete, setOpenModalDelete] = useState(false)
+  const [openModalSuccess, setOpenModalSuccess] = useState(false)
   const [openModalConfirmCancel, setOpenModalConfirmCancel] = useState(false)
   const [urutanBulan, setUrutanBulan] = useState(0)
   const [formDisable, setFormDisable] = useState(initialFormDisable)
@@ -146,6 +148,15 @@ const FormDetailKertasKerjaView: FC = () => {
     }
   }
 
+  const handleDelete = () => {
+    setOpenModalDelete(false)
+    setOpenModalSuccess(true)
+    setTimeout(() => {
+      setOpenModalSuccess(false)
+      closeModal()
+    }, 3000)
+  }
+
   const handleTambahBulan = () => {
     if (urutanBulan === DATA_BULAN.length - 1) {
       return
@@ -224,12 +235,14 @@ const FormDetailKertasKerjaView: FC = () => {
     <div>
       <FormDialogComponent
         width={960}
-        maxHeight={600}
+        maxHeight={550}
         icon={mode !== 'update' && 'add'}
         title="Isi Detail Anggaran Kegiatan"
         isOpen={true}
+        isDelete={mode === 'update'}
         btnSubmitText={mode === 'update' ? 'Perbarui' : 'Masukkan ke Anggaran'}
         btnCancelText={mode === 'update' && 'Tutup'}
+        onDelete={() => setOpenModalDelete(true)}
         onCancel={handleCancel}
         onSubmit={handleSubmit(onSubmit)}
       >
@@ -382,6 +395,27 @@ const FormDetailKertasKerjaView: FC = () => {
         btnActionText="Kembali Mengisi"
         onCancel={onConfirmCancel}
         onSubmit={() => setOpenModalConfirmCancel(false)}
+        layer={2}
+      />
+      <AlertDialogComponent
+        type="failed"
+        icon="delete"
+        title="Hapus Kegiatan?"
+        desc="Setelah Anda hapus, kegiatan ini tidak bisa dikembalikan."
+        isOpen={openModalDelete}
+        btnCancelText="Batal"
+        btnActionText="Ya, Hapus"
+        onCancel={() => setOpenModalDelete(false)}
+        onSubmit={handleDelete}
+        layer={2}
+      />
+      <AlertDialogComponent
+        type="success"
+        icon="done"
+        title="Anggaran Kegiatan Diperbarui!"
+        isOpen={openModalSuccess}
+        hideBtnCancel={true}
+        hideBtnAction={true}
         layer={2}
       />
     </div>
