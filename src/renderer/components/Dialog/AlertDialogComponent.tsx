@@ -18,13 +18,14 @@ interface AlertDialogProps {
   type: 'success' | 'warning' | 'failed' | 'info'
   icon: string
   title: string
-  desc: string
+  desc?: string
   isOpen: boolean
   hideBtnCancel?: boolean
+  hideBtnAction?: boolean
   btnCancelText?: string
-  btnActionText: string
+  btnActionText?: string
   onCancel?: () => void
-  onSubmit: () => void
+  onSubmit?: () => void
   layer?: number
 }
 
@@ -93,16 +94,18 @@ const AlertDialogComponent: FC<AlertDialogProps> = (
                 {props.btnCancelText}
               </DialogCancel>
             )}
-            <DialogAction
-              as={Button}
-              color="black"
-              size="sm"
-              variant="solid"
-              className="px-4 py-2"
-              onClick={props.onSubmit}
-            >
-              {props.btnActionText}
-            </DialogAction>
+            {!props.hideBtnAction && (
+              <DialogAction
+                as={Button}
+                color="black"
+                size="sm"
+                variant="solid"
+                className="px-4 py-2"
+                onClick={props.onSubmit}
+              >
+                {props.btnActionText}
+              </DialogAction>
+            )}
           </div>
         </div>
       </DialogContent>

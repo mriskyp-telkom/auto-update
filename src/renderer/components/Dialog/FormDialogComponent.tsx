@@ -25,6 +25,8 @@ interface FormDialogProps {
   btnSubmitText?: string
   btnCancelText?: string
   icon?: string
+  isDelete?: boolean
+  onDelete?: () => void
   onCancel: () => void
   onSubmit: () => void
 }
@@ -37,11 +39,36 @@ const FormDialogComponent: FC<FormDialogProps> = (props: FormDialogProps) => {
         <form onSubmit={props.onSubmit}>
           <DialogTitle
             as="div"
-            className="bg-gray-0 rounded-t-lg px-9 py-5 text-gray-900"
+            className="flex justify-between items-center bg-gray-0 rounded-t-lg px-9 pt-7 pb-5 text-gray-900"
             style={{ boxShadow: '0px 2px 2px rgba(37, 40, 43, 0.12)' }}
           >
-            <div className="font-semibold text-xl pt-2">{props.title}</div>
-            <div className="font-normal text-base pt-3">{props.subtitle}</div>
+            <span>
+              <div className="font-semibold text-xl">{props.title}</div>
+              {props.subtitle !== '' && (
+                <div className="font-normal text-base pt-3">
+                  {props.subtitle}
+                </div>
+              )}
+            </span>
+            {props.isDelete && (
+              <span className="flex items-center text-blue-700">
+                <Icon
+                  color="default"
+                  fontSize="default"
+                  className="mr-2"
+                  style={{ color: '#0b5fef' }}
+                  onClick={props.onDelete}
+                >
+                  delete
+                </Icon>
+                <span
+                  className="cursor-pointer font-semibold text-large"
+                  onClick={props.onDelete}
+                >
+                  Hapus Semua
+                </span>
+              </span>
+            )}
           </DialogTitle>
           <DialogDescription
             as="div"
@@ -97,6 +124,11 @@ const FormDialogComponent: FC<FormDialogProps> = (props: FormDialogProps) => {
       </DialogContent>
     </Dialog>
   )
+}
+
+FormDialogComponent.defaultProps = {
+  subtitle: '',
+  isDelete: false,
 }
 
 export default FormDialogComponent
