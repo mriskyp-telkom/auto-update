@@ -7,6 +7,7 @@ import FormDialogComponent from 'renderer/components/Dialog/FormDialogComponent'
 import InputWithInfoComponent from 'renderer/components/Form/InputWithInfoComponent'
 import InputSearchComponent from 'renderer/components/Form/InputSearchComponent'
 import InputComponent from 'renderer/components/Form/InputComponent'
+import SelectComponent from 'renderer/components/Form/SelectComponent'
 
 import { Icon } from '@wartek-id/icon'
 
@@ -90,7 +91,7 @@ const FormDetailKertasKerjaView: FC = () => {
     },
   })
 
-  const { fields, append } = useFieldArray({
+  const { fields, append, update, remove } = useFieldArray({
     control,
     name: 'anggaran_bulan',
   })
@@ -171,44 +172,77 @@ const FormDetailKertasKerjaView: FC = () => {
     field: AnggaranBulanData
   }) => {
     const { field } = props
+
+    const handleSelect = (value: string) => {
+      update(props.index, {
+        ...field,
+        bulan: value,
+      })
+    }
+
+    const handleDeleteMonth = () => {
+      remove(props.index)
+    }
+
     return (
-      <div
-        key={field.bulan}
-        className="border rounded border-solid border-gray-500 py-3 px-4 text-base"
-      >
-        <div className="flex justify-between shadow pb-[6px] ">
-          <span className="capitalize-first">{field.bulan}</span>
-          <span>Rp 0</span>
+      <div className="flex relative">
+        <div
+          key={field.bulan}
+          className="w-full border rounded border-solid border-gray-500 py-3 px-4 text-base"
+        >
+          <div className="flex justify-between shadow pb-[6px] ">
+            <span>
+              <SelectComponent
+                name={`anggaran_bulan.${props.index}.bulan`}
+                options={DATA_BULAN}
+                selected={field.bulan}
+                register={register}
+                handleSelect={handleSelect}
+              />
+            </span>
+            <span>Rp 0</span>
+          </div>
+          <div className="flex mt-[14px]">
+            <span className="flex-none w-[97px] mr-6">
+              <InputComponent
+                className="text-base"
+                type="text"
+                name={`anggaran_bulan.${props.index}.jumlah`}
+                placeholder="Jumlah"
+                errors={errors}
+                register={register}
+                required={true}
+                isDisabled={formDisable.harga_per_month}
+              />
+            </span>
+            <span className="flex-grow">
+              <InputSearchComponent
+                width={255}
+                name={`anggaran_bulan.${props.index}.satuan`}
+                placeholder="Satuan"
+                errors={errors}
+                register={register}
+                onClick={handleClick}
+                required={true}
+                headers={headerSatuan}
+                headerShow={false}
+                dataOptions={optionsSatuan}
+                isDisabled={formDisable.harga_per_month}
+              />
+            </span>
+          </div>
         </div>
-        <div className="flex mt-[14px]">
-          <span className="flex-none w-[97px] mr-6">
-            <InputComponent
-              className="text-base"
-              type="text"
-              name={`anggaran_bulan.${props.index}.jumlah`}
-              placeholder="Jumlah"
-              errors={errors}
-              register={register}
-              required={true}
-              isDisabled={formDisable.harga_per_month}
-            />
-          </span>
-          <span className="flex-grow">
-            <InputSearchComponent
-              width={255}
-              name={`anggaran_bulan.${props.index}.satuan`}
-              placeholder="Satuan"
-              errors={errors}
-              register={register}
-              onClick={handleClick}
-              required={true}
-              headers={headerSatuan}
-              headerShow={false}
-              dataOptions={optionsSatuan}
-              isDisabled={formDisable.harga_per_month}
-            />
-          </span>
-        </div>
+        {props.index > 0 && (
+          <Icon
+            as="i"
+            color="default"
+            fontSize="default"
+            className="absolute -top-2 -right-3"
+            onClick={handleDeleteMonth}
+          >
+            remove_circle
+          </Icon>
+        )}
       </div>
     )
   }

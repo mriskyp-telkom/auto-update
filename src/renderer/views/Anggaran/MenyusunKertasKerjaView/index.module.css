@@ -1,12 +1,9 @@
-table.tableKertasKerja thead tr {
-  box-shadow: inset 0px -1px 0px #c9cbcf;
-}
-
 table.tableKertasKerja thead th {
   padding-top: 1.5rem;
   padding-bottom: 1rem;
   padding-left: 10px;
   padding-right: 10px;
+  box-shadow: inset 0px -1px 0px #c9cbcf;
 }
 
 table.tableKertasKerja > thead tr,
@@ -25,7 +22,6 @@ table.tableKertasKerja > tbody {
 
 table.tableKertasKerja tbody tr {
   height: 52px;
-  box-shadow: inset 0px -1px 0px #c9cbcf;
 }
 
 table.tableKertasKerja tbody td span {

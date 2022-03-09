@@ -9,7 +9,7 @@ import SyncDialogComponent from 'renderer/components/Dialog/SyncDialogComponent'
 
 import FormKertasKerjaView from 'renderer/views/Anggaran/CreateKertasKerjaView/FormPenanggungJawabView'
 
-import TabelKertasKerjaView from './TabelKertasKerjaView'
+import TabelMenyusunKertasKerjaView from './TabelMenyusunKertasKerjaView'
 
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from '@wartek-id/tabs'
 import { Icon } from '@wartek-id/icon'
@@ -209,7 +209,7 @@ const MenyusunKertasKerjaView: FC = () => {
           <TabPanels>
             {DATA_BULAN.map((bulan) => (
               <TabPanel key={bulan}>
-                <TabelKertasKerjaView bulan={bulan} />
+                <TabelMenyusunKertasKerjaView bulan={bulan} />
               </TabPanel>
             ))}
           </TabPanels>

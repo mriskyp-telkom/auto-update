@@ -100,6 +100,7 @@ Make sure the changes are merged to `main` branch and **tagged with the expected
 - production releases: https://console.cloud.google.com/storage/browser/arkas_releases_production;tab=objects?project=arkas-production
 
 ### Build Check
+
 to try out build, you can use the Dockerfile.builder to simulate the build that is to be executed by the runner.
-```docker build --progress=plain -t arkas-builder . -f Dockerfile.builder``` 
+`docker build --progress=plain -t arkas-builder . -f Dockerfile.builder`
 commands under RUN command in Dockerfile.builder is the ones that is used as scripts in ci-pipeline.
