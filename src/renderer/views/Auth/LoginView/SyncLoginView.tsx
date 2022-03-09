@@ -155,7 +155,6 @@ const SyncLoginView: FC = () => {
       const rekeningLastUpdate = ipcRenderer.sendSync(
         'referensi:getRefRekeningLastUpdate'
       )
-      console.log('refKode?.data ', refKode?.data)
       ipcRenderer.send('referensi:addBulkRefKode', refKode?.data)
       setLastUpdateRekening(rekeningLastUpdate)
       setApi(stepAPi[5])
