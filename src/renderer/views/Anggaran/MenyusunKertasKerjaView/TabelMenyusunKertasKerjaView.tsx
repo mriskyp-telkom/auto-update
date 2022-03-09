@@ -17,7 +17,7 @@ import styles from './index.module.css'
 
 import clsx from 'clsx'
 
-interface TabelKertasKerjaProps {
+interface TabelMenyusunKertasKerjaProps {
   bulan: string
 }
 
@@ -36,8 +36,8 @@ const data = [
   },
 ]
 
-const TabelKertasKerjaView: FC<TabelKertasKerjaProps> = (
-  props: TabelKertasKerjaProps
+const TabelMenyusunKertasKerjaView: FC<TabelMenyusunKertasKerjaProps> = (
+  props: TabelMenyusunKertasKerjaProps
 ) => {
   const location = useLocation()
   const navigate = useNavigate()
@@ -143,4 +143,4 @@ const TabelKertasKerjaView: FC<TabelKertasKerjaProps> = (
   )
 }
 
-export default TabelKertasKerjaView
+export default TabelMenyusunKertasKerjaView
