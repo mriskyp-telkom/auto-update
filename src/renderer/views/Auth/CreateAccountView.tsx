@@ -1,22 +1,65 @@
 import React, { FC, useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-
-import AuthLayout from '../Layout/AuthLayout'
-
-import SyncDialogComponent from '../../components/Dialog/SyncDialogComponent'
-import InputComponent from '../../components/Form/InputComponent'
-import InputPasswordComponent from '../../components/Form/InputPasswordComponent'
-
+import AuthLayout from 'renderer/views/Layout/AuthLayout'
+import SyncDialogComponent from 'renderer/components/Dialog/SyncDialogComponent'
+import InputComponent from 'renderer/components/Form/InputComponent'
+import InputPasswordComponent from 'renderer/components/Form/InputPasswordComponent'
 import { Button } from '@wartek-id/button'
+import { FormResetAccountData } from 'renderer/types/LoginType'
+import { useAPIInfoConnection } from 'renderer/apis/utils'
+import { useAPIRegistration } from 'renderer/apis/registration'
+import { AuthStates, useAuthStore } from 'renderer/stores/auth'
+import AlertFailedSyncData from 'renderer/views/AlertFailedSyncData'
+import { AppStates, useAppStore } from 'renderer/stores/app'
+import AlertNoConnection from 'renderer/views/AlertNoConnection'
+import AlertLostConnection from 'renderer/views/AlertLostConnection'
+import { APP_CONFIG } from 'renderer/constants/appConfig'
+import { useAPIGetToken } from 'renderer/apis/token'
+import { useAPIGetSekolah } from 'renderer/apis/sekolah'
+import {
+  useAPIGetReferensi,
+  useAPIGetReferensiWilayah,
+} from 'renderer/apis/referensi'
+const ipcRenderer = window.require('electron').ipcRenderer
 
-import { FormResetAccountData } from '../../types/LoginType'
+const stepAPi = [
+  'infoConnection',
+  'registration',
+  'getToken',
+  'sekolah',
+  'wilayah',
+  'referensiKode',
+  'referensiRekening',
+  'referensiBarang',
+]
 
 const CreateAccountView: FC = () => {
   const navigate = useNavigate()
   const { mode } = useParams()
-
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [tahunAktif, setTahunAktif] = useState('')
+  const [kodeWilayah, setKodeWilayah] = useState('')
+  const [api, setApi] = useState('')
   const [isSync, setIsSync] = useState(false)
+  const [hddVol, setHddVol] = useState('')
+  const [lastUpdateKode, setLastUpdateKode] = useState('')
+  const [lastUpdateRekening, setLastUpdateRekening] = useState('')
+  const [lastUpdateBarang, setLastUpdateBarang] = useState('')
+
+  const npsn = useAuthStore((state: AuthStates) => state.npsn)
+  const koreg = useAuthStore((state: AuthStates) => state.koreg)
+  const setAlertNoConnection = useAppStore(
+    (state: AppStates) => state.setAlertNoConnection
+  )
+  const setAlertLostConnection = useAppStore(
+    (state: AppStates) => state.setAlertLostConnection
+  )
+  const setAlertFailedSyncData = useAppStore(
+    (state: AppStates) => state.setAlertFailedSyncData
+  )
+  const setToken = useAppStore((state: AppStates) => state.setToken)
 
   const {
     register,
@@ -28,15 +71,210 @@ const CreateAccountView: FC = () => {
     mode: 'onChange',
   })
 
-  const onSubmit = async (data: FormResetAccountData) => {
-    console.log(data)
-    if (mode === 'new' && data.email === 'yasmin@gmail.com') {
-      setError('email', {
-        type: 'manual',
-        message: 'Email sudah terdaftar',
-      })
-      return
+  const {
+    data: infoConnection,
+    isError: isInfoConnError,
+    remove: removeInfoConnection,
+  } = useAPIInfoConnection({
+    retry: 0,
+    enabled: api === stepAPi[0],
+  })
+  const { data: registration, isError: isRegistrationError } =
+    useAPIRegistration(
+      {
+        username: email,
+        password,
+        npsn,
+        koreg,
+        hdd_vol: hddVol,
+      },
+      {
+        retry: 0,
+        enabled: api === stepAPi[1],
+      }
+    )
+  const { data: dataToken, isError: isTokenError } = useAPIGetToken(
+    {
+      username: `${npsn}${tahunAktif}`,
+      password: koreg,
+    },
+    {
+      retry: 0,
+      enabled:
+        api === stepAPi[2] && npsn !== '' && tahunAktif !== '' && koreg !== '',
     }
+  )
+
+  const { data: sekolah, isError: isSekolahError } = useAPIGetSekolah({
+    retry: 0,
+    enabled: api === stepAPi[3],
+  })
+
+  const { data: wilayah, isError: isWilayahError } = useAPIGetReferensiWilayah(
+    {
+      kodeWilayah,
+    },
+    {
+      retry: 0,
+      enabled: api === stepAPi[4],
+    }
+  )
+
+  const { data: kode, isError: isGetRefKodeError } = useAPIGetReferensi(
+    { referensi: 'kode', lastUpdate: lastUpdateKode },
+    { enabled: api === stepAPi[4] && lastUpdateKode !== '', retry: 0 }
+  )
+  const { data: rekening, isError: isGetRefRekeningError } = useAPIGetReferensi(
+    { referensi: 'rekening', lastUpdate: lastUpdateRekening },
+    { enabled: api === stepAPi[5] && lastUpdateRekening !== '' }
+  )
+  const { data: barang, isError: isGetRefBarangError } = useAPIGetReferensi(
+    { referensi: 'barang', lastUpdate: lastUpdateBarang },
+    { enabled: api === stepAPi[6] && lastUpdateBarang !== '' }
+  )
+
+  const goToDashboard = () => {
+    ipcRenderer.sendSync('token:createSession', email)
+    setIsSync(false)
+    removeInfoConnection()
+    navigate('/dashboard')
+  }
+
+  const failedSyncData = () => {
+    setIsSync(false)
+    setApi('')
+    setAlertFailedSyncData(true)
+  }
+
+  useEffect(() => {
+    const ipcHddVol = ipcRenderer.sendSync(
+      'config:getConfig',
+      APP_CONFIG.hddVol
+    )
+    const barangLastUpdate = ipcRenderer.sendSync(
+      'referensi:getRefBarangLastUpdate'
+    )
+    const rekeningLastUpdate = ipcRenderer.sendSync(
+      'referensi:getRefRekeningLastUpdate'
+    )
+    const kodeLastUpdate = ipcRenderer.sendSync(
+      'referensi:getRefKodeLastUpdate'
+    )
+    setLastUpdateBarang(barangLastUpdate)
+    setLastUpdateKode(kodeLastUpdate)
+    setLastUpdateRekening(rekeningLastUpdate)
+    setHddVol(ipcHddVol)
+  }, [])
+
+  useEffect(() => {
+    if (infoConnection !== undefined) {
+      if (infoConnection?.data === 1) {
+        setApi(stepAPi[1])
+      } else {
+        setIsSync(false)
+        setApi('')
+        setAlertFailedSyncData(true)
+      }
+    }
+  }, [infoConnection])
+
+  useEffect(() => {
+    if (registration !== undefined) {
+      if (registration?.data.status_code == 1) {
+        setTahunAktif(registration?.data?.tahun_aktif)
+        setApi(stepAPi[2])
+      } else {
+        failedSyncData()
+      }
+    }
+  }, [registration])
+
+  useEffect(() => {
+    if (dataToken !== undefined) {
+      setToken(dataToken?.data.access_token)
+      setApi(stepAPi[3])
+    }
+  }, [dataToken])
+
+  useEffect(() => {
+    if (sekolah !== undefined) {
+      const data = {
+        registrasi: registration?.data,
+        sekolah: sekolah?.data,
+      }
+      data.sekolah.kode_registrasi = koreg
+      data.registrasi.password = password
+      data.registrasi.email = email
+      setKodeWilayah(sekolah?.data?.kode_wilayah)
+      const ipcRegistration = ipcRenderer.sendSync('user:registration', data)
+
+      if (ipcRegistration === 1) {
+        setApi(stepAPi[4])
+      } else {
+        failedSyncData()
+      }
+    }
+  }, [sekolah])
+
+  useEffect(() => {
+    if (wilayah !== undefined) {
+      ipcRenderer.sendSync('referensi:addWilayah', wilayah?.data)
+      setApi(stepAPi[5])
+    }
+  }, [wilayah])
+
+  useEffect(() => {
+    if (kode !== undefined) {
+      ipcRenderer.send('referensi:addBulkRefKode', kode?.data)
+      setApi(stepAPi[6])
+    }
+  }, [kode])
+
+  useEffect(() => {
+    if (rekening !== undefined) {
+      ipcRenderer.send('referensi:addBulkRefRekening', rekening?.data)
+      setApi(stepAPi[7])
+    }
+  }, [rekening])
+
+  useEffect(() => {
+    if (barang !== undefined) {
+      ipcRenderer.send('referensi:addBulkRefBarang', barang?.data)
+      goToDashboard()
+    }
+  }, [barang])
+
+  useEffect(() => {
+    if (
+      isInfoConnError ||
+      isRegistrationError ||
+      isTokenError ||
+      isSekolahError
+    ) {
+      failedSyncData()
+    }
+  }, [isInfoConnError, isRegistrationError, isTokenError, isSekolahError])
+
+  useEffect(() => {
+    if (
+      isWilayahError ||
+      isGetRefBarangError ||
+      isGetRefRekeningError ||
+      isGetRefKodeError
+    ) {
+      goToDashboard()
+    }
+  }, [
+    isWilayahError,
+    isGetRefBarangError,
+    isGetRefRekeningError,
+    isGetRefKodeError,
+  ])
+
+  const onSubmit = async (data: FormResetAccountData) => {
+    setAlertNoConnection(false)
+    setAlertLostConnection(false)
+    setAlertFailedSyncData(false)
 
     if (data.password !== data.password_confirmation) {
       setError('password_confirmation', {
@@ -45,12 +283,14 @@ const CreateAccountView: FC = () => {
       })
       return
     }
-
+    if (!navigator.onLine) {
+      setAlertNoConnection(true)
+      return
+    }
+    setEmail(data.email)
+    setPassword(data.password)
+    setApi(stepAPi[0])
     setIsSync(true)
-    setTimeout(() => {
-      setIsSync(false)
-      navigate('/dashboard')
-    }, 3000)
   }
 
   useEffect(() => {
@@ -71,7 +311,7 @@ const CreateAccountView: FC = () => {
             errors={errors}
             register={register}
             required={true}
-            isDisabled={mode === 'reset' ? true : false}
+            isDisabled={mode === 'reset'}
           />
         </div>
         <div className="pt-5">
@@ -115,6 +355,18 @@ const CreateAccountView: FC = () => {
         percentage={50}
         isOpen={isSync}
         setIsOpen={setIsSync}
+      />
+      <AlertNoConnection
+        onSubmit={handleSubmit(onSubmit)}
+        onCancel={() => setAlertNoConnection(false)}
+      />
+      <AlertLostConnection
+        onSubmit={handleSubmit(onSubmit)}
+        onCancel={() => setAlertLostConnection(false)}
+      />
+      <AlertFailedSyncData
+        onSubmit={handleSubmit(onSubmit)}
+        onCancel={() => setAlertFailedSyncData(false)}
       />
     </AuthLayout>
   )

@@ -5,7 +5,7 @@ export const GetSekolah = async (): Promise<MstSekolah> => {
   return await getRepository(MstSekolah).findOne()
 }
 
-export const addSekolah = async (
+export const AddSekolah = async (
   sekolah: MstSekolah
 ): Promise<InsertResult> => {
   return await getRepository(MstSekolah).insert({

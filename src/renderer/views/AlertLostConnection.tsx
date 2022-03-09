@@ -2,24 +2,24 @@ import React, { FC } from 'react'
 import AlertDialogComponent from 'renderer/components/Dialog/AlertDialogComponent'
 import { AppStates, useAppStore } from 'renderer/stores/app'
 
-interface AlertNoConnectionProps {
+interface AlertLostConnectionProps {
   onSubmit: () => void
   onCancel: () => void
 }
 
-const AlertNoConnection: FC<AlertNoConnectionProps> = (
-  props: AlertNoConnectionProps
+const AlertLostConnection: FC<AlertLostConnectionProps> = (
+  props: AlertLostConnectionProps
 ) => {
-  const alertNoConnection = useAppStore(
-    (state: AppStates) => state.alertNoConnection
+  const alertLostConnection = useAppStore(
+    (state: AppStates) => state.alertLostConnection
   )
   return (
     <AlertDialogComponent
       type="info"
       icon="wifi_off"
-      title="Tidak Ada Koneksi Internet"
-      desc="Koneksikan perangkat Anda lalu sinkronisasi ulang."
-      isOpen={alertNoConnection}
+      title="Koneksi Internet Terputus"
+      desc="Periksa kembali koneksi internet Anda lalu sinkronisasi ulang."
+      isOpen={alertLostConnection}
       hideBtnCancel={false}
       btnCancelText="Kembali"
       btnActionText="Sinkronisasi Ulang"
@@ -29,4 +29,4 @@ const AlertNoConnection: FC<AlertNoConnectionProps> = (
   )
 }
 
-export default AlertNoConnection
+export default AlertLostConnection
