@@ -1,3 +1,59 @@
+table.tableKertasKerja {
+  width: 100%;
+  table-layout: fixed;
+}
+
+table.tableKertasKerja thead th {
+  padding: 2rem 1rem 1rem;
+  font-weight: 400;
+}
+
+table.tableKertasKerja > thead tr,
+table.tableKertasKerja > tbody tr {
+  box-shadow: inset 0px -1px 0px #c9cbcf;
+}
+
+table.tableKertasKerja tbody tr {
+  height: 52px;
+}
+
+table.tableKertasKerja tbody td {
+  padding: 1rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+table.tableKertasKerja thead th.code,
+table.tableKertasKerja tbody td.code {
+  width: 120px;
+}
+
+table.tableKertasKerja thead th.expand,
+table.tableKertasKerja tbody td.expand {
+  width: 56px;
+}
+
+table.tableKertasKerja thead th.total,
+table.tableKertasKerja tbody td.total {
+  width: 206px;
+}
+
+table.tableKertasKerja thead th.price,
+table.tableKertasKerja tbody td.price {
+  width: 150px;
+}
+
+table.tableKertasKerja thead th.amount,
+table.tableKertasKerja tbody td.amount {
+  width: 60px;
+}
+
+table.borderTable td {
+  border-left: 2px solid #f5f5f5;
+  width: 300px;
+}
+
 .pointKertasKerja ul {
   list-style: disc inside;
 }
