@@ -3,8 +3,6 @@ import { Route, Routes, useLocation } from 'react-router-dom'
 
 import { QueryClient, QueryClientProvider } from 'react-query'
 
-import DashboardView from 'renderer/views/DashboardView'
-import AboutView from 'renderer/views/AboutView'
 import NotFoundView from 'renderer/views/NotFoundView'
 
 import StatusAccountView from 'renderer/views/Auth/StatusAccountView'
@@ -50,7 +48,7 @@ const App: FC = () => {
         setFirstPage(<StatusAccountView />)
         break
       case 5:
-        setFirstPage(<DashboardView />)
+        setFirstPage(<DashboardAnggaranView />)
         break
       default:
         setFirstPage(<RegistrationView />)
@@ -72,13 +70,11 @@ const App: FC = () => {
             <Route path="menyusun" element={<MenyusunKertasKerjaView />} />
             <Route path="mengulas" element={<MengulasKertasKerjaView />} />
           </Route>
-          <Route path="/about" element={<AboutView />} />
-          <Route path="/dashboard" element={<DashboardView />} />
         </Routes>
         {state?.backgroundLocation && (
           <Routes>
             <Route
-              path="/form/kertas-kerja/:mode"
+              path="form/kertas-kerja/:mode"
               element={<FormDetailKertasKerjaView />}
             />
           </Routes>
