@@ -19,7 +19,7 @@ variables:
     policy: pull-push
   artifacts:
     paths:
-      - out/make
+      - out
   only:
     - tags
   tags:
@@ -30,7 +30,7 @@ variables:
   image: google/cloud-sdk:300.0.0-alpine
   script:
     - gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS
-    - gsutil -m cp -r -Z out/make gs://${BUCKET}/arkas-$CI_COMMIT_TAG
+    - gsutil -m cp -r -Z out gs://${BUCKET}/arkas-$CI_COMMIT_TAG
   only:
     - tags
 
