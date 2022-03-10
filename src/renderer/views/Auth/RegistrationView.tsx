@@ -51,7 +51,11 @@ const RegistrationView: FC = () => {
     (state: AppStates) => state.setAlertFailedSyncData
   )
 
-  const { data: checkActivationResult, isError } = useAPICheckActivation(
+  const {
+    data: checkActivationResult,
+    isError,
+    remove: removeCheckActivation,
+  } = useAPICheckActivation(
     {
       npsn,
       koreg,
@@ -100,20 +104,22 @@ const RegistrationView: FC = () => {
       if (result === 1) {
         setApi(stepAPi[1])
       } else {
+        removeInfoConnection()
         setIsSync(false)
         setApi('')
         setAlertFailedSyncData(true)
       }
     }
-  })
+  }, [infoConnection])
 
   useEffect(() => {
     if (checkActivationResult !== undefined) {
       setIsSync(false)
       const result = Number(checkActivationResult?.data)
+      removeInfoConnection()
+      removeCheckActivation()
       if (result === 1) {
-        removeInfoConnection()
-        if (koregInvalid === '0') {
+        if (koregInvalid === '0' || koregInvalid === '') {
           navigate('/create-account/new')
         } else {
           navigate('/login')
@@ -128,10 +134,6 @@ const RegistrationView: FC = () => {
             message: 'Kode aktivasi salah',
           })
         } else {
-          setError('npsn', {
-            type: 'manual',
-            message: 'NPSN Anda sudah terdaftar di perangkat lain',
-          })
           setOpenModalInfo(true)
         }
       }

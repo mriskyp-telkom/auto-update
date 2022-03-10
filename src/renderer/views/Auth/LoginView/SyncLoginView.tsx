@@ -67,7 +67,11 @@ const SyncLoginView: FC = () => {
     }
   )
 
-  const { data: dataHDDVol, isError: isCheckHddVolError } = useAPICheckHDDVol(
+  const {
+    data: dataHDDVol,
+    isError: isCheckHddVolError,
+    remove: removeCheckHddVol,
+  } = useAPICheckHDDVol(
     {
       hdd_vol: hddVol,
       hdd_vol_old: hddVolOld,
@@ -129,10 +133,12 @@ const SyncLoginView: FC = () => {
     if (dataHDDVol !== undefined) {
       if (Number(dataHDDVol.data) === 1) {
         ipcRenderer.send('config:setConfig', APP_CONFIG.hddVolOld, hddVol)
+        ipcRenderer.send('config:setConfig', APP_CONFIG.koregInvalid, '0')
         setApi(stepAPi[3])
       } else {
         removeInfoConnection()
         removeToken()
+        removeCheckHddVol()
         setSyncLogin(false)
         ipcRenderer.send('config:setConfig', APP_CONFIG.koregInvalid, '1')
         setMultipleDevice(true)
