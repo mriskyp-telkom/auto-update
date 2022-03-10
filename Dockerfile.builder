@@ -9,8 +9,8 @@ RUN export GITLAB_AUTH_TOKEN=UCQKEftDUDBxCwshfJCn &&\
     mv ./.env.staging ./.env && rm ./.env.production &&\
     npm install yarn &&\
     yarn install &&\
-    yarn make-win32 && rm -rf out/Arkas-win32-x64 &&\
-    yarn make && rm -rf out/Arkas-linux-x64
+    yarn package-win32 && rm -rf out/Arkas-win32-x64 &&\
+    yarn package && rm -rf out/Arkas-linux-x64
     
 RUN echo "==> total size: $(du -sh .)" &&\
     apt install -y tree && tree out
