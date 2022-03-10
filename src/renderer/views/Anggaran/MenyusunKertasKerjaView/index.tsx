@@ -218,7 +218,7 @@ const MenyusunKertasKerjaView: FC = () => {
       <AlertDialogComponent
         type="warning"
         icon="file_copy"
-        title="Salin dari Kertas Kerja sebelumnya? "
+        title="Salin dari Kertas Kerja sebelumnya?"
         desc="Anda dapat menyalin isi Kertas Kerja pada tahun anggaran sebelumnya ke lembar ini atau membuat Kertas Kerja baru."
         isOpen={openModalInit}
         btnCancelText="Buat Baru"

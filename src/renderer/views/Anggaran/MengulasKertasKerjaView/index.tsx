@@ -1,11 +1,18 @@
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { Tooltip } from '@wartek-id/tooltip'
 
 import AmountCardComponent from 'renderer/components/Card/AmountCardComponent'
+import DropdownComponent from 'renderer/components/DropdownComponent'
+import SyncDialogComponent from 'renderer/components/Dialog/SyncDialogComponent'
+import AlertDialogComponent from 'renderer/components/Dialog/AlertDialogComponent'
+
+import TabelMengulasKertasKerjaView from './TabelMengulasKertasKerjaView'
+
 import { Icon } from '@wartek-id/icon'
 import { Button } from '@wartek-id/button'
+import { Tabs, TabList, Tab, TabPanels, TabPanel } from '@wartek-id/tabs'
 
 import styles from './index.module.css'
 
@@ -14,13 +21,24 @@ import clsx from 'clsx'
 const MengulasKertasKerjaView: FC = () => {
   const navigate = useNavigate()
 
+  const [isSync, setIsSync] = useState(false)
+  const [openModalAjukan, setOpenModalAjukan] = useState(false)
+
   const handleBackToBeranda = () => {
     navigate('/anggaran')
   }
 
+  const handleAjukanPengesahan = () => {
+    setOpenModalAjukan(false)
+    setIsSync(true)
+    setTimeout(() => {
+      setIsSync(false)
+    }, 3000)
+  }
+
   return (
     <div>
-      <div className="flex justify-between pt-10 px-10 bg-gray-0">
+      <div className="flex justify-between pt-10 pb-4 px-10 bg-gray-0">
         <span>
           <div className="flex items-center text-[12px] font-semibold text-blue-700 mb-[12px]">
             <Icon
@@ -147,7 +165,12 @@ const MengulasKertasKerjaView: FC = () => {
               </Icon>
               Cetak
             </Button>
-            <Button color="blue" size="md" variant="solid">
+            <Button
+              color="blue"
+              size="md"
+              variant="solid"
+              onClick={() => setOpenModalAjukan(true)}
+            >
               Ajukan Pengesahan
             </Button>
           </div>
@@ -156,7 +179,59 @@ const MengulasKertasKerjaView: FC = () => {
           </div>
         </span>
       </div>
-      <div className="bg-white px-10 h-full"></div>
+      <div className="bg-white px-10 py-5 h-full">
+        <div className="flex justify-between">
+          <span>
+            <DropdownComponent />
+          </span>
+          <AmountCardComponent
+            type="disabled"
+            width={320}
+            label="Anggaran Tahap 1"
+            amount={100000000}
+          />
+        </div>
+        <div>
+          <Tabs className="w-full">
+            <div className="shadow pt-[14px]">
+              <TabList style={{ marginLeft: 0 }}>
+                <Tab className="capitalize-first">Periode Salur Tahap 1</Tab>
+                <Tab className="capitalize-first">Periode Salur Tahap 2</Tab>
+                <Tab className="capitalize-first">Periode Salur Tahap 3</Tab>
+              </TabList>
+            </div>
+            <TabPanels>
+              <TabPanel>
+                <TabelMengulasKertasKerjaView />
+              </TabPanel>
+              <TabPanel>
+                <div>test</div>
+              </TabPanel>
+              <TabPanel>
+                <div>test</div>
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </div>
+      </div>
+      <AlertDialogComponent
+        type="warning"
+        icon="send"
+        title="Ajukan pengesahan Kertas Kerja?"
+        desc="Kertas Kerja Anda akan dikirim ke dinas setempat dan diperiksa kesesuaiannya dengan peraturan yang berlaku. Setelah pengajuan dikirim, Kertas Kerja tidak bisa diedit."
+        isOpen={openModalAjukan}
+        btnCancelText="Batal"
+        btnActionText="Kirim Pengajuan"
+        onCancel={() => setOpenModalAjukan(false)}
+        onSubmit={handleAjukanPengesahan}
+      />
+      <SyncDialogComponent
+        title="Mengirim Kertas Kerja..."
+        subtitle="Pastikan Anda terkoneksi ke internet yang lancar."
+        percentage={50}
+        isOpen={isSync}
+        setIsOpen={setIsSync}
+      />
     </div>
   )
 }
