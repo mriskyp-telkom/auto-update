@@ -7,7 +7,6 @@
   "scripts": {
     "start": "cross-env BUILD=false electron-forge start",
     "package": "cross-env BUILD=true electron-forge package",
-    "package-win32": "cross-env BUILD=true electron-forge package --platform win32",
     "make": "cross-env BUILD=true electron-forge make",
     "make-win32": "cross-env BUILD=true electron-forge make --platform win32",
     "publish": "electron-forge publish",
