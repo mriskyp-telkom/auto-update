@@ -1,31 +1,40 @@
-export const STATUS_KERTAS_KERJA = [
+export const STATUS_KERTAS_KERJA = {
+  waiting_approval: 'waiting_approval',
+  not_approved: 'not_approved',
+  draft: 'draft',
+  not_created: 'not_created',
+  approved: 'approved',
+  disabled: 'disabled',
+}
+
+export const LABEL_STATUS_KERTAS_KERJA = [
   {
-    status: 'waiting',
+    status: STATUS_KERTAS_KERJA.waiting_approval,
     type: 'warning',
     label: 'Menunggu Pengesahan',
   },
   {
-    status: 'not_approve',
+    status: STATUS_KERTAS_KERJA.not_approved,
     type: 'critical',
-    label: 'Tidak Disetujui',
+    label: 'Perlu Revisi',
   },
   {
-    status: 'draft',
+    status: STATUS_KERTAS_KERJA.draft,
     type: 'informational',
     label: 'Draf',
   },
   {
-    status: 'not_created',
+    status: STATUS_KERTAS_KERJA.not_created,
     type: 'neutral',
     label: 'Belum Dibuat',
   },
   {
-    status: 'approved',
+    status: STATUS_KERTAS_KERJA.approved,
     type: 'success',
     label: 'Sudah Disahkan',
   },
   {
-    status: 'disabled',
+    status: STATUS_KERTAS_KERJA.disabled,
     type: 'disabled',
     label: 'Non Aktif - Lewat Batas',
   },

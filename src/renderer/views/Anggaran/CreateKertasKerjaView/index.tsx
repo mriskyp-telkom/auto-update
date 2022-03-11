@@ -29,7 +29,13 @@ const CreateKertasKerjaView: FC = () => {
 
   return (
     <div>
-      <Button color="black" size="md" variant="solid" onClick={onClickCreate}>
+      <Button
+        className="mt-3"
+        color="black"
+        size="md"
+        variant="solid"
+        onClick={onClickCreate}
+      >
         <Icon
           as="i"
           color="default"
