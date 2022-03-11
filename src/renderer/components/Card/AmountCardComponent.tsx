@@ -4,7 +4,7 @@ import { numberUtils } from '@wartek-id/fe-toolbox'
 import clsx from 'clsx'
 
 interface AmountCardProps {
-  type: 'default' | 'disabled'
+  type: 'default' | 'disabled' | 'warning'
   label?: string
   amount: number
   width?: number
@@ -17,6 +17,10 @@ const AmountCardComponent: FC<AmountCardProps> = (props: AmountCardProps) => {
   if (props.type === 'disabled') {
     borderColor = 'border-gray-500'
     amountColor = 'text-gray-600'
+  }
+  if (props.type === 'warning') {
+    borderColor = 'border-[#d93640]'
+    amountColor = 'text-red-600'
   }
 
   return (

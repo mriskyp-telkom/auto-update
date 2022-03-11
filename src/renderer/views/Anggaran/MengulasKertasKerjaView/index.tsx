@@ -1,28 +1,46 @@
 import React, { FC, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 import { Tooltip } from '@wartek-id/tooltip'
 
 import AmountCardComponent from 'renderer/components/Card/AmountCardComponent'
 import DropdownComponent from 'renderer/components/DropdownComponent'
-import SyncDialogComponent from 'renderer/components/Dialog/SyncDialogComponent'
 import AlertDialogComponent from 'renderer/components/Dialog/AlertDialogComponent'
 
 import TabelMengulasKertasKerjaView from './TabelMengulasKertasKerjaView'
+import PanduanMengulasKKView from 'renderer/views/Anggaran/Panduan/PanduanMengulasKKView'
+import PanduanCekStatusKKView from 'renderer/views/Anggaran/Panduan/PanduanCekStatusKKView'
 
 import { Icon } from '@wartek-id/icon'
 import { Button } from '@wartek-id/button'
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from '@wartek-id/tabs'
 
-import styles from './index.module.css'
+import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
 
-import clsx from 'clsx'
+import {
+  RESPONSE_PENGESAHAN,
+  ALERT_MENGULAS,
+} from 'renderer/constants/anggaran'
+
+import { AlertType } from 'renderer/types/ComponentType'
 
 const MengulasKertasKerjaView: FC = () => {
+  const location = useLocation()
   const navigate = useNavigate()
 
-  const [isSync, setIsSync] = useState(false)
   const [openModalAjukan, setOpenModalAjukan] = useState(false)
+
+  const alertMengulas = useAnggaranStore(
+    (state: AnggaranStates) => state.alertMengulas
+  )
+
+  const setAlertMengulas = useAnggaranStore(
+    (state: AnggaranStates) => state.setAlertMengulas
+  )
+
+  const responseMengulas = useAnggaranStore(
+    (state: AnggaranStates) => state.responseMengulas
+  )
 
   const handleBackToBeranda = () => {
     navigate('/anggaran')
@@ -30,10 +48,18 @@ const MengulasKertasKerjaView: FC = () => {
 
   const handleAjukanPengesahan = () => {
     setOpenModalAjukan(false)
-    setIsSync(true)
-    setTimeout(() => {
-      setIsSync(false)
-    }, 3000)
+    navigate('/sync/anggaran/mengulas', {
+      state: { backgroundLocation: location },
+    })
+  }
+
+  const getPanduan = () => {
+    if (responseMengulas === null) {
+      return <PanduanMengulasKKView />
+    }
+    if (responseMengulas === RESPONSE_PENGESAHAN.success) {
+      return <PanduanCekStatusKKView />
+    }
   }
 
   return (
@@ -92,42 +118,7 @@ const MengulasKertasKerjaView: FC = () => {
           </div>
         </span>
         <span>
-          <div
-            className={clsx(styles.pointKertasKerja, 'bg-gray-300 rounded p-6')}
-          >
-            <div className="mb-2">
-              <Icon
-                as="i"
-                color="default"
-                fontSize="small"
-                style={{ fontSize: '14px' }}
-                className="mr-[10px]"
-              >
-                info
-              </Icon>
-              Panduan
-            </div>
-            <ul className="list font-normal text-base text-gray-900 ml-7">
-              <li>
-                <span>
-                  Di halaman ini Anda bisa memeriksa kembali anggaran belanja
-                  sekolah yang telah dibuat.
-                </span>
-              </li>
-              <li>
-                <span>
-                  Jika ada yang ingin diganti, klik tombol <b>“Edit”</b> untuk
-                  melakukan edit.
-                </span>
-              </li>
-              <li>
-                <span>
-                  Jika sudah sesuai, klik tombol <b>“Ajukan Pengesahan”</b>
-                  untuk mengajukan pengesahan.
-                </span>
-              </li>
-            </ul>
-          </div>
+          {getPanduan()}
           <div className="flex justify-end pt-5 pb-3">
             <Button color="white" size="md" variant="solid" className="mr-3">
               <Icon
@@ -141,18 +132,20 @@ const MengulasKertasKerjaView: FC = () => {
               </Icon>
               Cari
             </Button>
-            <Button color="white" size="md" variant="solid" className="mr-3">
-              <Icon
-                as="i"
-                color="default"
-                fontSize="small"
-                className="mr-1"
-                style={{ fontSize: '18px', color: '#45474a' }}
-              >
-                edit
-              </Icon>
-              Edit
-            </Button>
+            {responseMengulas === null && (
+              <Button color="white" size="md" variant="solid" className="mr-3">
+                <Icon
+                  as="i"
+                  color="default"
+                  fontSize="small"
+                  className="mr-1"
+                  style={{ fontSize: '18px', color: '#45474a' }}
+                >
+                  edit
+                </Icon>
+                Edit
+              </Button>
+            )}
             <Button color="white" size="md" variant="solid" className="mr-3">
               <Icon
                 as="i"
@@ -165,18 +158,22 @@ const MengulasKertasKerjaView: FC = () => {
               </Icon>
               Cetak
             </Button>
-            <Button
-              color="blue"
-              size="md"
-              variant="solid"
-              onClick={() => setOpenModalAjukan(true)}
-            >
-              Ajukan Pengesahan
-            </Button>
+            {responseMengulas === null && (
+              <Button
+                color="blue"
+                size="md"
+                variant="solid"
+                onClick={() => setOpenModalAjukan(true)}
+              >
+                Ajukan Pengesahan
+              </Button>
+            )}
           </div>
-          <div className="w-full flex text-center justify-end font-normal text-tiny text-blue-700 pb-4">
-            <b>“Ajukan Pengesahan”</b> membutuhkan koneksi internet
-          </div>
+          {responseMengulas === null && (
+            <div className="w-full flex text-center justify-end font-normal text-tiny text-blue-700 pb-4">
+              <b>“Ajukan Pengesahan”</b> membutuhkan koneksi internet
+            </div>
+          )}
         </span>
       </div>
       <div className="bg-white px-10 py-5 h-full">
@@ -225,13 +222,20 @@ const MengulasKertasKerjaView: FC = () => {
         onCancel={() => setOpenModalAjukan(false)}
         onSubmit={handleAjukanPengesahan}
       />
-      <SyncDialogComponent
-        title="Mengirim Kertas Kerja..."
-        subtitle="Pastikan Anda terkoneksi ke internet yang lancar."
-        percentage={50}
-        isOpen={isSync}
-        setIsOpen={setIsSync}
-      />
+      {responseMengulas !== null && (
+        <AlertDialogComponent
+          type={ALERT_MENGULAS[responseMengulas].type as AlertType}
+          icon={ALERT_MENGULAS[responseMengulas].icon}
+          title={ALERT_MENGULAS[responseMengulas].title}
+          desc={ALERT_MENGULAS[responseMengulas].desc}
+          isOpen={alertMengulas}
+          hideBtnCancel={responseMengulas !== RESPONSE_PENGESAHAN.success}
+          btnCancelText={ALERT_MENGULAS[responseMengulas].btnCancelText}
+          btnActionText={ALERT_MENGULAS[responseMengulas].btnActionText}
+          onCancel={() => setAlertMengulas(false)}
+          onSubmit={() => setAlertMengulas(false)}
+        />
+      )}
     </div>
   )
 }

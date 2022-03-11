@@ -48,3 +48,8 @@ export interface CardDashboardType {
   type: string
   tanggal_pengesahan: string
 }
+
+export type ResponseMengulas =
+  | 'success'
+  | 'error_sisa_dana'
+  | 'error_data_sentral'

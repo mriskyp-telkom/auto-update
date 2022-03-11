@@ -32,15 +32,6 @@ table.tableKertasKerja tbody td span {
   white-space: nowrap;
 }
 
-.pointKertasKerja ul {
-  list-style: disc inside;
-}
-
-.pointKertasKerja ul li span {
-  position: relative;
-  left: -6px;
-}
-
 .borderDashed {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23808489' stroke-width='1' stroke-dasharray='8 8' stroke-dashoffset='5' linecap='square'/%3e%3c/svg%3e");
 }
