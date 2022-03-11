@@ -38,3 +38,13 @@ export interface FormIsiKertasKerjaData {
   harga_satuan: string
   anggaran_bulan: AnggaranBulanData[]
 }
+
+export interface CardDashboardType {
+  id_anggaran: number
+  tahun: string
+  status: string
+  tenggat_waktu: string
+  status_updated_at: string
+  type: string
+  tanggal_pengesahan: string
+}
