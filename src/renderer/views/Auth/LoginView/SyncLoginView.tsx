@@ -103,7 +103,7 @@ const SyncLoginView: FC = () => {
   const redirectToDashboard = () => {
     ipcRenderer.sendSync('token:createSession', email)
     setSyncLogin(false)
-    navigate('/dashboard')
+    navigate('/anggaran')
   }
   useEffect(() => {
     if (infoConnection !== undefined) {
@@ -181,9 +181,7 @@ const SyncLoginView: FC = () => {
   useEffect(() => {
     if (refBarang !== undefined) {
       ipcRenderer.send('referensi:addBulkRefBarang', refBarang?.data)
-      ipcRenderer.sendSync('token:createSession', email)
-      setSyncLogin(false)
-      navigate('/dashboard')
+      redirectToDashboard()
     }
   }, [refBarang])
 

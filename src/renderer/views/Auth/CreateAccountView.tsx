@@ -137,7 +137,7 @@ const CreateAccountView: FC = () => {
     ipcRenderer.sendSync('token:createSession', email)
     setIsSync(false)
     removeInfoConnection()
-    navigate('/dashboard')
+    navigate('/anggaran')
   }
 
   const failedSyncData = () => {
