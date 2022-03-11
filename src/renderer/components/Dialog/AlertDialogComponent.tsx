@@ -12,10 +12,12 @@ import {
 import { Button } from '@wartek-id/button'
 import { Icon } from '@wartek-id/icon'
 
+import { AlertType } from 'renderer/types/ComponentType'
+
 import clsx from 'clsx'
 
 interface AlertDialogProps {
-  type: 'success' | 'warning' | 'failed' | 'info'
+  type: AlertType
   icon: string
   title: string
   desc?: string

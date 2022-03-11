@@ -10,6 +10,7 @@ import filter from 'lodash/filter'
 import { FormIsiKertasKerjaData } from 'renderer/types/AnggaranType'
 
 import { headerKertasKerja } from 'renderer/constants/table'
+import { RESPONSE_PENGESAHAN } from 'renderer/constants/anggaran'
 
 import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
 
@@ -42,6 +43,10 @@ const TabelMenyusunKertasKerjaView: FC<TabelMenyusunKertasKerjaProps> = (
   const location = useLocation()
   const navigate = useNavigate()
 
+  const responseMengulas = useAnggaranStore(
+    (state: AnggaranStates) => state.responseMengulas
+  )
+
   const setTempDetailKertasKerja = useAnggaranStore(
     (state: AnggaranStates) => state.setTempDetailKertasKerja
   )
@@ -49,7 +54,7 @@ const TabelMenyusunKertasKerjaView: FC<TabelMenyusunKertasKerjaProps> = (
   const handleClickRow = (event: any, row: FormIsiKertasKerjaData) => {
     if (!event.target.id.includes('headlessui-popover-button')) {
       setTempDetailKertasKerja(row)
-      navigate(`/form/kertas-kerja/update`, {
+      navigate('/form/kertas-kerja/update', {
         state: { backgroundLocation: location },
       })
     }
@@ -93,7 +98,15 @@ const TabelMenyusunKertasKerjaView: FC<TabelMenyusunKertasKerjaProps> = (
           const total_harga =
             parseInt(row.harga_satuan.replace(/[^,\d]/g, '')) * harga[0].jumlah
           return (
-            <tr key={indexRow} onClick={(e) => handleClickRow(e, row)}>
+            <tr
+              key={indexRow}
+              onClick={(e) => handleClickRow(e, row)}
+              className={
+                responseMengulas === RESPONSE_PENGESAHAN.error_data_sentral
+                  ? 'text-red-600'
+                  : ''
+              }
+            >
               {headerKertasKerja.map((col) => {
                 if (col.key === 'no') {
                   return (

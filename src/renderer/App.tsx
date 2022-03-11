@@ -13,6 +13,7 @@ import RegistrationView from 'renderer/views/Auth/RegistrationView'
 import DashboardAnggaranView from 'renderer/views/Anggaran/DashboardAnggaranView'
 import MenyusunKertasKerjaView from 'renderer/views/Anggaran/MenyusunKertasKerjaView'
 import MengulasKertasKerjaView from 'renderer/views/Anggaran/MengulasKertasKerjaView'
+import SyncMengulasKertasKerjaView from 'renderer/views/Anggaran/MengulasKertasKerjaView/SyncMengulasKertasKerjaView'
 
 import FormDetailKertasKerjaView from 'renderer/views/Anggaran/FormDetailKertasKerjaView'
 
@@ -67,7 +68,10 @@ const App: FC = () => {
           <Route path="/create-account/:mode" element={<CreateAccountView />} />
           <Route path="anggaran">
             <Route index={true} element={<DashboardAnggaranView />} />
-            <Route path="menyusun" element={<MenyusunKertasKerjaView />} />
+            <Route
+              path="menyusun/:mode"
+              element={<MenyusunKertasKerjaView />}
+            />
             <Route path="mengulas" element={<MengulasKertasKerjaView />} />
           </Route>
         </Routes>
@@ -76,6 +80,10 @@ const App: FC = () => {
             <Route
               path="form/kertas-kerja/:mode"
               element={<FormDetailKertasKerjaView />}
+            />
+            <Route
+              path="/sync/anggaran/mengulas"
+              element={<SyncMengulasKertasKerjaView />}
             />
           </Routes>
         )}

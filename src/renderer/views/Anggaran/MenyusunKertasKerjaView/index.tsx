@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import { Tooltip } from '@wartek-id/tooltip'
 
@@ -8,6 +8,9 @@ import AlertDialogComponent from 'renderer/components/Dialog/AlertDialogComponen
 import SyncDialogComponent from 'renderer/components/Dialog/SyncDialogComponent'
 
 import FormKertasKerjaView from 'renderer/views/Anggaran/CreateKertasKerjaView/FormPenanggungJawabView'
+import PanduanMenyusunKKView from 'renderer/views/Anggaran/Panduan/PanduanMenyusunKKView'
+import PanduanErrorDataSentralKKView from 'renderer/views/Anggaran/Panduan/PanduanErrorDataSentralKKView'
+import PanduanErrorSisaDanaKKView from 'renderer/views/Anggaran/Panduan/PanduanErrorSisaDanaKKView'
 
 import TabelMenyusunKertasKerjaView from './TabelMenyusunKertasKerjaView'
 
@@ -18,17 +21,32 @@ import { Button } from '@wartek-id/button'
 import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
 
 import { DATA_BULAN } from 'renderer/constants/general'
+import {
+  RESPONSE_PENGESAHAN,
+  ALERT_MENGULAS,
+} from 'renderer/constants/anggaran'
 
-import styles from './index.module.css'
-
-import clsx from 'clsx'
+import { AlertType } from 'renderer/types/ComponentType'
 
 const MenyusunKertasKerjaView: FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
+  const { mode } = useParams()
 
   const [isSync, setIsSync] = useState(false)
   const [openModalInit, setOpenModalInit] = useState(false)
+
+  const alertMengulas = useAnggaranStore(
+    (state: AnggaranStates) => state.alertMengulas
+  )
+
+  const setAlertMengulas = useAnggaranStore(
+    (state: AnggaranStates) => state.setAlertMengulas
+  )
+
+  const responseMengulas = useAnggaranStore(
+    (state: AnggaranStates) => state.responseMengulas
+  )
 
   const setCreateKertasKerja = useAnggaranStore(
     (state: AnggaranStates) => state.setCreateKertasKerja
@@ -46,13 +64,27 @@ const MenyusunKertasKerjaView: FC = () => {
     navigate('/anggaran')
   }
 
+  const getPanduan = () => {
+    if (responseMengulas === null) {
+      return <PanduanMenyusunKKView />
+    }
+    if (responseMengulas === RESPONSE_PENGESAHAN.error_sisa_dana) {
+      return <PanduanErrorSisaDanaKKView />
+    }
+    if (responseMengulas === RESPONSE_PENGESAHAN.error_data_sentral) {
+      return <PanduanErrorDataSentralKKView />
+    }
+  }
+
   useEffect(() => {
-    setOpenModalInit(true)
+    if (mode === 'create') {
+      setOpenModalInit(true)
+    }
   }, [])
 
   return (
     <div>
-      <div className="flex justify-between pt-10 px-10 bg-gray-0">
+      <div className="flex justify-between pt-10 pb-5 px-10 bg-gray-0">
         <span>
           <div className="flex items-center text-[12px] font-semibold text-blue-700 mb-[12px]">
             <Icon
@@ -104,44 +136,8 @@ const MenyusunKertasKerjaView: FC = () => {
           />
         </span>
         <span>
-          <div
-            className={clsx(styles.pointKertasKerja, 'bg-gray-300 rounded p-6')}
-          >
-            <div className="mb-2">
-              <Icon
-                as="i"
-                color="default"
-                fontSize="small"
-                style={{ fontSize: '14px' }}
-                className="mr-[10px]"
-              >
-                info
-              </Icon>
-              Panduan
-            </div>
-            <ul className="list font-normal text-base text-gray-900 ml-7">
-              <li>
-                <span>
-                  Anda harus menghabiskan seluruh anggaran untuk bisa mengajukan
-                  pengesahan.
-                </span>
-              </li>
-              <li>
-                <span>
-                  Pastikan Anda membuat anggaran berdasarkan juknis yang
-                  berlaku.
-                  <a>Lihat Juknis</a>
-                </span>
-              </li>
-              <li>
-                <span>
-                  Dalam membuat rencana anggaran sebaiknya juga memperhatikan
-                  prioritas kegiatan daerah. <a>Lihat Prioritas Daerah</a>
-                </span>
-              </li>
-            </ul>
-          </div>
-          <div className="flex justify-end pt-5 pb-6">
+          {getPanduan()}
+          <div className="flex justify-end pt-5 pb-1">
             <Link
               to="/form/kertas-kerja/create"
               state={{ backgroundLocation: location }}
@@ -154,7 +150,12 @@ const MenyusunKertasKerjaView: FC = () => {
               </Button>
             </Link>
             <Link to="/anggaran/mengulas">
-              <Button color="black" size="md" variant="solid">
+              <Button
+                color="black"
+                size="md"
+                variant="solid"
+                disabled={responseMengulas === null ? false : true}
+              >
                 Selesai
               </Button>
             </Link>
@@ -188,7 +189,11 @@ const MenyusunKertasKerjaView: FC = () => {
                 class="mr-3"
               />
               <AmountCardComponent
-                type="default"
+                type={
+                  responseMengulas === RESPONSE_PENGESAHAN.error_sisa_dana
+                    ? 'warning'
+                    : 'default'
+                }
                 width={287}
                 label="Sisa Dana"
                 amount={300000000}
@@ -226,6 +231,20 @@ const MenyusunKertasKerjaView: FC = () => {
         onCancel={() => setOpenModalInit(false)}
         onSubmit={handleSalinKertasKerja}
       />
+      {responseMengulas !== null && (
+        <AlertDialogComponent
+          type={ALERT_MENGULAS[responseMengulas].type as AlertType}
+          icon={ALERT_MENGULAS[responseMengulas].icon}
+          title={ALERT_MENGULAS[responseMengulas].title}
+          desc={ALERT_MENGULAS[responseMengulas].desc}
+          isOpen={alertMengulas}
+          hideBtnCancel={responseMengulas !== RESPONSE_PENGESAHAN.success}
+          btnCancelText={ALERT_MENGULAS[responseMengulas].btnCancelText}
+          btnActionText={ALERT_MENGULAS[responseMengulas].btnActionText}
+          onCancel={() => setAlertMengulas(false)}
+          onSubmit={() => setAlertMengulas(false)}
+        />
+      )}
       <SyncDialogComponent
         title="Menyalin Kertas Kerja..."
         subtitle="Mohon tunggu sebentar."
