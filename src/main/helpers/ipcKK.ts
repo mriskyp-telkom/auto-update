@@ -35,7 +35,7 @@ module.exports = {
   }),
 
   addRapbs: ipcMain.on('kk:addRapbs', async (e, data) => {
-    const idRapbs = CommonUtils.uuid()
+    const idRapbs = CommonUtils.encodeUUID(CommonUtils.uuid())
     const dataRapbs = new Rapbs()
     dataRapbs.idRapbs = idRapbs
     dataRapbs.idAnggaran = data.idAnggaran
@@ -99,7 +99,7 @@ module.exports = {
   }),
 
   addRapbsPeriode: ipcMain.on('kk:addRapbsPeriode', async (e, data) => {
-    const idRapbsPeriode = CommonUtils.uuid()
+    const idRapbsPeriode = CommonUtils.encodeUUID(CommonUtils.uuid())
     const dataRapbsPeriode = new RapbsPeriode()
     dataRapbsPeriode.idRapbsPeriode = idRapbsPeriode
     dataRapbsPeriode.idRapbs = data.idRapbs
