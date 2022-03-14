@@ -40,3 +40,12 @@ body {
   background: #d9dbdd;
   border-radius: 8px;
 }
+
+.scrollBarHor::-webkit-scrollbar {
+  height: 8px;
+}
+
+.scrollBarHor::-webkit-scrollbar-thumb {
+  background: #d9dbdd;
+  border-radius: 8px;
+}
