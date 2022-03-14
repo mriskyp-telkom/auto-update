@@ -15,7 +15,10 @@ import { Icon } from '@wartek-id/icon'
 import { Tooltip } from '@wartek-id/tooltip'
 import { Button } from '@wartek-id/button'
 
-import { formatDateToString } from 'renderer/utils/date-formatting'
+import {
+  formatDateToString,
+  formatDateTimeStatus,
+} from 'renderer/utils/date-formatting'
 
 interface CardDashboardAnggaranProps {
   data: CardDashboardType
@@ -30,15 +33,20 @@ const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (
   const isNotCreated = data.status === STATUS_KERTAS_KERJA.not_created
   const isDraft = data.status === STATUS_KERTAS_KERJA.draft
   const isWaitingAproval = data.status === STATUS_KERTAS_KERJA.waiting_approval
+  const isDisabled = data.status === STATUS_KERTAS_KERJA.disabled
+  const isApproved = data.status === STATUS_KERTAS_KERJA.approved
 
   const enableBtnDelete = isDraft || isNotApproved
+  const enableVerDate =
+    isApproved && (data.type === 'perubahan' || data.type === 'pergeseran')
+  const enable3Icons = !isNotCreated && !isDisabled
 
   const handleDelete = () => {
     console.log('delete')
   }
 
   return (
-    <div className="bg-gray-5 w-[900px] rounded-[10px] py-4 px-7 mb-5 h-[116px]">
+    <div className="grid bg-gray-5 w-[900px] rounded-[10px] py-4 px-7 mb-5 h-[116px]">
       <div className="flex justify-between">
         <span>
           <div className="flex">
@@ -55,7 +63,7 @@ const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (
               {isNotCreated && (
                 <div className="text-tiny text-red-600">
                   Tenggat:
-                  {formatDateToString(new Date(data.tenggat_waktu), 'DD/MM/YY')}
+                  {formatDateToString(new Date(data.tenggat_waktu))}
                 </div>
               )}
               {isNotApproved && (
@@ -65,16 +73,14 @@ const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (
               )}
               {isWaitingAproval && (
                 <div className="text-tiny text-blue-700">
-                  Status diperbarui pada 14.50
+                  Status diperbarui pada{' '}
+                  {formatDateTimeStatus(new Date(data.status_updated_at))}
                 </div>
               )}
-              {(data.type === 'perubahan' || data.type === 'pergeseran') && (
+              {enableVerDate && (
                 <div className="text-tiny text-gray-900">
                   Ver. {data.type === 'perubahan' ? 'Perubahan' : 'Pergeseran'}{' '}
-                  {formatDateToString(
-                    new Date(data.tanggal_pengesahan),
-                    'DD/MM/YY'
-                  )}
+                  {formatDateToString(new Date(data.tanggal_pengesahan))}
                 </div>
               )}
             </span>
@@ -92,7 +98,7 @@ const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (
           </div>
         </span>
         <span>
-          {!isNotCreated && (
+          {enable3Icons && (
             <>
               <div className="flex">
                 {isWaitingAproval && (
@@ -194,6 +200,12 @@ const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (
           )}
         </span>
       </div>
+      {isDisabled && (
+        <div className="text-gray-500 text-tiny place-self-end">
+          Kertas kerja tidak dapat dibuat karena melewati tenggat{' '}
+          {formatDateToString(new Date(data.tenggat_waktu))}
+        </div>
+      )}
     </div>
   )
 }
