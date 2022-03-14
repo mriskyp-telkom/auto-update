@@ -1,6 +1,11 @@
 import { ipcMain } from 'electron'
 import { Anggaran } from 'main/repositories/Anggaran'
-import { AddAnggaran, GetAnggaran, GetPagu } from 'main/services/Anggaran'
+import {
+  AddAnggaran,
+  DelAnggaran,
+  GetAnggaran,
+  GetPagu,
+} from 'main/services/Anggaran'
 import { GetConfig } from 'main/services/Config'
 import CommonUtils from '../utils/CommonUtils'
 
@@ -89,12 +94,14 @@ module.exports = {
         harga_satuan: 
         pengguna_id:
         id_penjab:
+        tahun: 
     */
     const idAnggaran = CommonUtils.uuid()
     const dataAnggaran = new Anggaran()
     dataAnggaran.idAnggaran = idAnggaran
     dataAnggaran.idRefSumberDana = data.id_ref_sumber_dana
     dataAnggaran.sekolahId = await GetConfig('sekolah_id')
+    dataAnggaran.tahunAnggaran = data.tahun
     dataAnggaran.volume = data.volume
     dataAnggaran.hargaSatuan = data.harga_satuan
     dataAnggaran.jumlah = data.volume * data.harga_satuan
@@ -109,6 +116,10 @@ module.exports = {
     dataAnggaran.idPenjab = data.id_penjab
     await AddAnggaran(dataAnggaran)
     e.returnValue = idAnggaran
+  }),
+
+  delAnggaran: ipcMain.on('anggaran:deleteAnggaran', async (e, idAnggaran) => {
+    e.returnValue = await DelAnggaran(idAnggaran)
   }),
 
   getPagu: ipcMain.on('anggaran:getPagu', async (e, idAnggaran) => {

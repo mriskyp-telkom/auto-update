@@ -2,6 +2,7 @@ import { ipcMain } from 'electron'
 import {
   getLastUpdate,
   addBulkRefAcuanBarang,
+  getRefBarangRekening,
 } from 'main/services/RefAcuanBarang'
 import CommonUtils from 'main/utils/CommonUtils'
 
@@ -46,6 +47,13 @@ module.exports = {
         }
       }
       e.returnValue = true
+    }
+  ),
+
+  getRefBarangByRekening: ipcMain.on(
+    'referensi:getRefBarangByRekening',
+    async (e, kodeRekening) => {
+      e.returnValue = await getRefBarangRekening(kodeRekening)
     }
   ),
 }

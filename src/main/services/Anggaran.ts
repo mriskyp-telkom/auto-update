@@ -60,3 +60,14 @@ export const GetPagu = async (idAnggaran: string): Promise<any> => {
 export const AddAnggaran = async (anggaran: Anggaran): Promise<any> => {
   return await getRepository(Anggaran).insert(anggaran)
 }
+
+export const DelAnggaran = async (idAnggaran: string): Promise<any> => {
+  return await createQueryBuilder()
+    .update(Anggaran)
+    .set({
+      softDelete: 1,
+      lastUpdate: new Date(),
+    })
+    .where('id_anggaran = :idAnggaran', { idAnggaran })
+    .execute()
+}

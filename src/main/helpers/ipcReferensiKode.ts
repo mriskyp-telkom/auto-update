@@ -1,5 +1,9 @@
 import { ipcMain } from 'electron'
-import { addBulkRefKode, getLastUpdate } from 'main/services/RefKode'
+import {
+  addBulkRefKode,
+  getLastUpdate,
+  getRefKode,
+} from 'main/services/RefKode'
 import CommonUtils from 'main/utils/CommonUtils'
 
 module.exports = {
@@ -41,5 +45,9 @@ module.exports = {
       }
     }
     e.returnValue = true
+  }),
+
+  getRefKode: ipcMain.on('referensi:getRefKode', async (e) => {
+    e.returnValue = await getRefKode()
   }),
 }
