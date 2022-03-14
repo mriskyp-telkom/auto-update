@@ -1,4 +1,5 @@
-import { createQueryBuilder } from 'typeorm'
+import { Rapbs } from 'main/repositories/Rapbs'
+import { createQueryBuilder, getRepository } from 'typeorm'
 import { Anggaran } from '../repositories/Anggaran'
 import { RefSumberDana } from '../repositories/RefSumberDana'
 
@@ -38,4 +39,24 @@ export const GetAnggaran = async (
     .orderBy('a.tahun_anggaran', 'DESC')
     .getRawMany()
   return data
+}
+
+export const GetPagu = async (idAnggaran: string): Promise<any> => {
+  const data = await createQueryBuilder(Anggaran, 'a')
+    .select([
+      'max(a.jumlah) as pagu',
+      'sum(ifnull(r.jumlah,0)) as total',
+      'max(a.jumlah)-sum(ifnull(r.jumlah,0)) as sisa',
+    ])
+    .leftJoin(Rapbs, 'r', 'a.id_anggaran = r.id_anggaran and r.soft_delete=0')
+    .where('a.soft_delete = 0  ' + ' AND a.id_anggaran = :idAnggaran ', {
+      idAnggaran,
+    })
+    .groupBy('a.id_anggaran')
+    .getRawMany()
+  return data
+}
+
+export const AddAnggaran = async (anggaran: Anggaran): Promise<any> => {
+  return await getRepository(Anggaran).insert(anggaran)
 }

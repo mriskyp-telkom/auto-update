@@ -1,5 +1,6 @@
 import { ipcMain } from 'electron'
-import { GetAnggaran } from 'main/services/Anggaran'
+import { Anggaran } from 'main/repositories/Anggaran'
+import { AddAnggaran, GetAnggaran, GetPagu } from 'main/services/Anggaran'
 import { GetConfig } from 'main/services/Config'
 import CommonUtils from '../utils/CommonUtils'
 
@@ -78,5 +79,47 @@ module.exports = {
       listAnggaran.push(anggaran)
     }
     e.returnValue = listAnggaran
+  }),
+
+  addAnggaran: ipcMain.on('anggaran:addAnggaran', async (e, data) => {
+    /*
+      data:
+        id_ref_sumber_dana
+        volume: default = 1
+        harga_satuan: 
+        pengguna_id:
+        id_penjab:
+    */
+    const idAnggaran = CommonUtils.uuid()
+    const dataAnggaran = new Anggaran()
+    dataAnggaran.idAnggaran = idAnggaran
+    dataAnggaran.idRefSumberDana = data.id_ref_sumber_dana
+    dataAnggaran.sekolahId = await GetConfig('sekolah_id')
+    dataAnggaran.volume = data.volume
+    dataAnggaran.hargaSatuan = data.harga_satuan
+    dataAnggaran.jumlah = data.volume * data.harga_satuan
+    dataAnggaran.sisaAnggaran = 0
+    dataAnggaran.isApprove = 0
+    dataAnggaran.isRevisi = 0
+    dataAnggaran.isAktif = 1
+    dataAnggaran.softDelete = 0
+    dataAnggaran.createDate = new Date(data.create_date)
+    dataAnggaran.lastUpdate = new Date()
+    dataAnggaran.updaterId = data.pengguna_id
+    dataAnggaran.idPenjab = data.id_penjab
+    await AddAnggaran(dataAnggaran)
+    e.returnValue = idAnggaran
+  }),
+
+  getPagu: ipcMain.on('anggaran:getPagu', async (e, idAnggaran) => {
+    /*
+      return :
+      {
+        pagu: number,
+        total: number,
+        sisa: number
+      }
+    */
+    e.returnValue = await GetPagu(idAnggaran)
   }),
 }
