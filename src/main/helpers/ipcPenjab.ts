@@ -5,6 +5,7 @@ import {
   findSekolahPenjabId,
   updateSekolahPenjab,
 } from 'main/services/SekolahPenjab'
+import CommonUtils from 'main/utils/CommonUtils'
 
 module.exports = {
   addPenjab: ipcMain.on('penjab:addPenjab', async (e, data) => {
@@ -23,8 +24,11 @@ module.exports = {
     dataPenjab.telpBendahara = data.telepon_bendahara
     dataPenjab.komite = data.komite
     dataPenjab.nipKomite = data.nip_komite
+    dataPenjab.createDate = new Date(data.create_date)
+    dataPenjab.lastUpdate = new Date()
+    const idPenjab =
+      (await findSekolahPenjabId(dataPenjab)) ?? CommonUtils.uuid()
     await addSekolahPenjab(dataPenjab)
-    const idPenjab = await findSekolahPenjabId(dataPenjab)
     e.returnValue = idPenjab
   }),
 
