@@ -91,12 +91,12 @@ module.exports = {
       data:
         id_ref_sumber_dana
         volume: default = 1
-        harga_satuan: 
+        harga_satuan:
         pengguna_id:
         id_penjab:
-        tahun: 
+        tahun:
     */
-    const idAnggaran = CommonUtils.uuid()
+    const idAnggaran = CommonUtils.encodeUUID(CommonUtils.uuid())
     const dataAnggaran = new Anggaran()
     dataAnggaran.idAnggaran = idAnggaran
     dataAnggaran.idRefSumberDana = data.id_ref_sumber_dana

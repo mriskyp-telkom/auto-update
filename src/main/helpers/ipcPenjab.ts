@@ -27,7 +27,8 @@ module.exports = {
     dataPenjab.createDate = new Date(data.create_date)
     dataPenjab.lastUpdate = new Date()
     const idPenjab =
-      (await findSekolahPenjabId(dataPenjab)) ?? CommonUtils.uuid()
+      (await findSekolahPenjabId(dataPenjab)) ??
+      CommonUtils.encodeUUID(CommonUtils.uuid())
     await addSekolahPenjab(dataPenjab)
     e.returnValue = idPenjab
   }),
