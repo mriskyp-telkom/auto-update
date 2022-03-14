@@ -8,8 +8,7 @@ table.tableKertasKerja thead th {
   font-weight: 400;
 }
 
-table.tableKertasKerja > thead tr,
-table.tableKertasKerja > tbody tr {
+.line {
   box-shadow: inset 0px -1px 0px #c9cbcf;
 }
 
@@ -24,32 +23,35 @@ table.tableKertasKerja tbody td {
   white-space: nowrap;
 }
 
-table.tableKertasKerja thead th.code,
-table.tableKertasKerja tbody td.code {
+.code {
   width: 120px;
 }
 
-table.tableKertasKerja thead th.expand,
-table.tableKertasKerja tbody td.expand {
+.expand {
   width: 56px;
 }
 
-table.tableKertasKerja thead th.total,
-table.tableKertasKerja tbody td.total {
-  width: 206px;
+.total {
+  width: 206px !important;
 }
 
-table.tableKertasKerja thead th.price,
-table.tableKertasKerja tbody td.price {
-  width: 150px;
+.price {
+  width: 150px !important;
 }
 
-table.tableKertasKerja thead th.amount,
-table.tableKertasKerja tbody td.amount {
+.amount {
   width: 60px;
 }
 
-table.borderTable td {
-  border-left: 2px solid #f5f5f5;
+table.scrollTable td {
+  border-right: 2px solid #f5f5f5;
   width: 300px;
+  height: 52px;
+}
+
+table.scrollTable td:first-child {
+  position: fixed;
+  background-color: white;
+  width: 600px;
+  left: 2.5rem;
 }
