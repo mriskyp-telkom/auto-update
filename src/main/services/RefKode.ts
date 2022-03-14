@@ -13,3 +13,9 @@ export const getLastUpdate = async (): Promise<Date> => {
     .getOne()
   return data != null ? data.lastUpdate : null
 }
+
+export const getRefKode = async (): Promise<any> => {
+  return await createQueryBuilder(RefKode, 'rk')
+    .where('rk.expired_date is null')
+    .getRawMany()
+}
