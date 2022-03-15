@@ -47,7 +47,6 @@
         {
           "name": "@electron-forge/maker-dmg",
           "config": {
-            "background": "./public/assets/logo-arkas.png",
             "format": "ULFO"
           }
         }
@@ -112,7 +111,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.5.0",
-    "@wartek-id/avatar": "^1.1.2",
+    "@wartek-id/avatar": "^1.1.4",
     "@wartek-id/badge": "^1.0.0",
     "@wartek-id/button": "^1.1.1",
     "@wartek-id/design-tokens": "^1.4.1",
