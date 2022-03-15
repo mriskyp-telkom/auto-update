@@ -35,7 +35,11 @@ module.exports = {
   }),
 
   isUserLoggedIn: ipcMain.on('token:isUserLoggedIn', async (e) => {
-    const token = await GetConfig('sessionId')
-    e.returnValue = token !== null && token !== undefined
+    try {
+      const token = await GetConfig('sessionId')
+      e.returnValue = token !== null && token !== undefined && token !== ''
+    } catch (e) {
+      e.returnValue = false
+    }
   }),
 }

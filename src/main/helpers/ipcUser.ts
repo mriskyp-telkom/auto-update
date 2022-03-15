@@ -13,7 +13,7 @@ import {
   AddUserRole,
 } from 'main/services/User'
 import CommonUtils from 'main/utils/CommonUtils'
-import { SetConfig } from 'main/services/Config'
+import { SetConfig, DeleteConfig } from 'main/services/Config'
 import { MstSekolah } from 'main/repositories/MstSekolah'
 import { AddSekolah } from 'main/services/Sekolah'
 
@@ -134,6 +134,15 @@ module.exports = {
       e.returnValue = 1
     } catch (err) {
       e.returnValue = 0
+    }
+  }),
+
+  userLogout: ipcMain.on('user:logout', async (e) => {
+    try {
+      await DeleteConfig('sessionId')
+      e.returnValue = true
+    } catch (err) {
+      e.returnValue = false
     }
   }),
 }

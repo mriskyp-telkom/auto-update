@@ -1,9 +1,12 @@
 import React, { FC } from 'react'
 import { Link } from 'react-router-dom'
 
+import MenuProfileComponent from './MenuProfileComponent'
+
 import {
   HeaderBar,
   HeaderBarLeftAction,
+  HeaderBarRightAction,
   HeaderBarTitle,
 } from '@wartek-id/header-bar'
 
@@ -13,11 +16,14 @@ const LogoArkas: FC = () => {
 
 const HeaderComponent: FC = () => {
   return (
-    <HeaderBar className="max-w-none">
+    <HeaderBar className="max-w-none w-full">
       <Link to="/">
         <HeaderBarLeftAction icon={<LogoArkas />} />
       </Link>
       <HeaderBarTitle>ARKAS</HeaderBarTitle>
+      <HeaderBarRightAction>
+        <MenuProfileComponent />
+      </HeaderBarRightAction>
     </HeaderBar>
   )
 }

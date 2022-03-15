@@ -1,5 +1,5 @@
-import React, { FC, useEffect, useState } from 'react'
-import { Route, Routes, useLocation } from 'react-router-dom'
+import React, { FC, useEffect } from 'react'
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 
 import { QueryClient, QueryClientProvider } from 'react-query'
 
@@ -7,6 +7,7 @@ import NotFoundView from 'renderer/views/NotFoundView'
 
 import StatusAccountView from 'renderer/views/Auth/StatusAccountView'
 import LoginView from 'renderer/views/Auth/LoginView'
+import LogoutView from 'renderer/views/Auth/LogoutView'
 import CreateAccountView from 'renderer/views/Auth/CreateAccountView'
 import RegistrationView from 'renderer/views/Auth/RegistrationView'
 
@@ -28,31 +29,32 @@ const queryClient = new QueryClient({
 })
 
 const App: FC = () => {
-  const [firstPage, setFirstPage] = useState(null)
-
+  const navigate = useNavigate()
   const location = useLocation()
+
   const state = location.state as { backgroundLocation?: Location }
 
   useEffect(() => {
     const result = ipcRenderer.sendSync('user:checkLogin')
+
     switch (result) {
       case 1:
-        setFirstPage(<RegistrationView />)
+        navigate('/registration')
         break
       case 2:
-        setFirstPage(<LoginView />)
+        navigate('/login')
         break
       case 3:
-        setFirstPage(<RegistrationView />)
+        navigate('/registration')
         break
       case 4:
-        setFirstPage(<StatusAccountView />)
+        navigate('/account-status')
         break
       case 5:
-        setFirstPage(<DashboardAnggaranView />)
+        navigate('/anggaran')
         break
       default:
-        setFirstPage(<RegistrationView />)
+        navigate('/registration')
     }
   }, [])
 
@@ -61,30 +63,37 @@ const App: FC = () => {
       <div className="App">
         <Routes location={state?.backgroundLocation || location}>
           <Route path="*" element={<NotFoundView />} />
-          <Route path="/" element={firstPage} />
-          <Route path="/login" element={<LoginView />} />
-          <Route path="/registration" element={<RegistrationView />} />
-          <Route path="/account-status" element={<StatusAccountView />} />
-          <Route path="/create-account/:mode" element={<CreateAccountView />} />
-          <Route path="anggaran">
-            <Route index={true} element={<DashboardAnggaranView />} />
+          <Route path="/">
+            <Route path="login" element={<LoginView />} />
+            <Route path="registration" element={<RegistrationView />} />
+            <Route path="account-status" element={<StatusAccountView />} />
             <Route
-              path="menyusun/:mode"
-              element={<MenyusunKertasKerjaView />}
+              path="create-account/:mode"
+              element={<CreateAccountView />}
             />
-            <Route path="mengulas" element={<MengulasKertasKerjaView />} />
+            <Route path="anggaran">
+              <Route index={true} element={<DashboardAnggaranView />} />
+              <Route
+                path="menyusun/:mode"
+                element={<MenyusunKertasKerjaView />}
+              />
+              <Route path="mengulas" element={<MengulasKertasKerjaView />} />
+            </Route>
           </Route>
         </Routes>
         {state?.backgroundLocation && (
           <Routes>
-            <Route
-              path="form/kertas-kerja/:mode"
-              element={<FormDetailKertasKerjaView />}
-            />
-            <Route
-              path="/sync/anggaran/mengulas"
-              element={<SyncMengulasKertasKerjaView />}
-            />
+            <Route path="/">
+              <Route
+                path="form/kertas-kerja/:mode"
+                element={<FormDetailKertasKerjaView />}
+              />
+              <Route
+                path="sync/anggaran/mengulas"
+                element={<SyncMengulasKertasKerjaView />}
+              />
+              <Route path="logout" element={<LogoutView />} />
+            </Route>
           </Routes>
         )}
       </div>
