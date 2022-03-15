@@ -1,3 +1,4 @@
+export const FORMAT_TANGGAL = 'D MMM YYYY'
 export const DATA_BULAN = [
   'januari',
   'februari',

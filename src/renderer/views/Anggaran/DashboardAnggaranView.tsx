@@ -33,8 +33,8 @@ const DashboardAnggaranView: FC = () => {
           </div>
           <TabPanels>
             <TabPanel className="mt-6 mb-[2px] grid justify-items-center">
-              {bosReguler.map((item: CardDashboardType) => {
-                return <CardDashboardAnggaranView data={item} />
+              {bosReguler.map((item: CardDashboardType, index: number) => {
+                return <CardDashboardAnggaranView key={index} data={item} />
               })}
             </TabPanel>
             <TabPanel>Guru Mengajar adalah ...</TabPanel>
