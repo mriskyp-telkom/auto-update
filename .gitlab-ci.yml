@@ -48,6 +48,7 @@ make-win-deb-staging:
     - yarn make && rm -rf out/Arkas-linux-x64
     - 'echo "==> total size: $(du -sh .)"'
     - apt install -y tree && tree out
+    - node -v
   environment:
     name: staging
   allow_failure: false
