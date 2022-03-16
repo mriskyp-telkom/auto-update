@@ -119,6 +119,7 @@ const RegistrationView: FC = () => {
       removeInfoConnection()
       removeCheckActivation()
       if (result === 1) {
+        ipcRenderer.sendSync('config:setConfig', APP_CONFIG.hddVolOld, hddVol)
         if (koregInvalid === '0' || koregInvalid === '') {
           navigate('/create-account/new')
         } else {
