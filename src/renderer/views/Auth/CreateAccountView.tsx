@@ -52,7 +52,6 @@ const CreateAccountView: FC = () => {
   const { mode } = useParams()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [tahunAktif, setTahunAktif] = useState('')
   const [kodeWilayah, setKodeWilayah] = useState('')
   const [api, setApi] = useState('')
   const [isSync, setIsSync] = useState(false)
@@ -63,6 +62,8 @@ const CreateAccountView: FC = () => {
 
   const npsn = useAuthStore((state: AuthStates) => state.npsn)
   const koreg = useAuthStore((state: AuthStates) => state.koreg)
+  const tahunAktif = useAuthStore((state: AuthStates) => state.tahunAktif)
+  const setTahunAktif = useAuthStore((state: AuthStates) => state.setTahunAktif)
   const setAlertNoConnection = useAppStore(
     (state: AppStates) => state.setAlertNoConnection
   )
@@ -93,21 +94,28 @@ const CreateAccountView: FC = () => {
     retry: 0,
     enabled: api === stepAPi[0],
   })
-  const { data: registration, isError: isRegistrationError } =
-    useAPIRegistration(
-      {
-        username: email,
-        password,
-        npsn,
-        koreg,
-        hdd_vol: hddVol,
-      },
-      {
-        retry: 0,
-        enabled: api === stepAPi[1],
-      }
-    )
-  const { data: dataToken, isError: isTokenError } = useAPIGetToken(
+  const {
+    data: registration,
+    isError: isRegistrationError,
+    remove: removeRegistration,
+  } = useAPIRegistration(
+    {
+      username: email,
+      password,
+      npsn,
+      koreg,
+      hdd_vol: hddVol,
+    },
+    {
+      retry: 0,
+      enabled: api === stepAPi[1],
+    }
+  )
+  const {
+    data: dataToken,
+    isError: isTokenError,
+    remove: removeToken,
+  } = useAPIGetToken(
     {
       username: `${npsn}${tahunAktif}`,
       password: koreg,
@@ -119,12 +127,20 @@ const CreateAccountView: FC = () => {
     }
   )
 
-  const { data: sekolah, isError: isSekolahError } = useAPIGetSekolah({
+  const {
+    data: sekolah,
+    isError: isSekolahError,
+    remove: removeSekolah,
+  } = useAPIGetSekolah({
     retry: 0,
     enabled: api === stepAPi[3],
   })
 
-  const { data: wilayah, isError: isWilayahError } = useAPIGetReferensiWilayah(
+  const {
+    data: wilayah,
+    isError: isWilayahError,
+    remove: removeWilayah,
+  } = useAPIGetReferensiWilayah(
     {
       kodeWilayah,
     },
@@ -134,23 +150,45 @@ const CreateAccountView: FC = () => {
     }
   )
 
-  const { data: kode, isError: isGetRefKodeError } = useAPIGetReferensi(
+  const {
+    data: kode,
+    isError: isGetRefKodeError,
+    remove: removeRefKode,
+  } = useAPIGetReferensi(
     { referensi: 'kode', lastUpdate: lastUpdateKode },
     { enabled: api === stepAPi[4] && lastUpdateKode !== '', retry: 0 }
   )
-  const { data: rekening, isError: isGetRefRekeningError } = useAPIGetReferensi(
+  const {
+    data: rekening,
+    isError: isGetRefRekeningError,
+    remove: removeRefRekening,
+  } = useAPIGetReferensi(
     { referensi: 'rekening', lastUpdate: lastUpdateRekening },
     { enabled: api === stepAPi[5] && lastUpdateRekening !== '' }
   )
-  const { data: barang, isError: isGetRefBarangError } = useAPIGetReferensi(
+  const {
+    data: barang,
+    isError: isGetRefBarangError,
+    remove: removeRefBarang,
+  } = useAPIGetReferensi(
     { referensi: 'barang', lastUpdate: lastUpdateBarang },
     { enabled: api === stepAPi[6] && lastUpdateBarang !== '' }
   )
 
+  const removeCacheData = () => {
+    removeInfoConnection()
+    removeRegistration()
+    removeToken()
+    removeSekolah()
+    removeWilayah()
+    removeRefKode()
+    removeRefRekening()
+    removeRefBarang()
+  }
   const goToDashboard = () => {
     ipcRenderer.sendSync('token:createSession', email)
     setIsSync(false)
-    removeInfoConnection()
+    removeCacheData()
     sendEventRegistrasi2(getValues('email'), 'sukses')
     navigate('/anggaran')
   }
@@ -158,6 +196,7 @@ const CreateAccountView: FC = () => {
   const failedSyncData = () => {
     setIsSync(false)
     setApi('')
+    removeCacheData()
     setAlertFailedSyncData(true)
   }
 
@@ -186,6 +225,7 @@ const CreateAccountView: FC = () => {
       if (infoConnection?.data === 1) {
         setApi(stepAPi[1])
       } else {
+        removeCacheData()
         setIsSync(false)
         setApi('')
         setAlertFailedSyncData(true)

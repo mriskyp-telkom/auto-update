@@ -72,3 +72,14 @@ export const ALERT_MENGULAS = {
     btnActionText: 'Revisi Kertas Kerja',
   },
 }
+
+export const ID_SUMBER_DANA = {
+  BOS_REGULER: 1,
+  BOS_DAERAH: 3,
+  LAINNYA: 5,
+  BOS_AFIRMASI: 11,
+  BOS_KINERJA: 12,
+  SILPA_BOS_REGULER: 33,
+  SILPA_BOS_AFIRMASI: 34,
+  SILPA_BOS_KINERJA: 35,
+}

@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 
@@ -13,6 +13,9 @@ import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
 const KonfirmasiPaguView: FC = () => {
   const navigate = useNavigate()
 
+  const [amount, setAmount] = useState(0)
+
+  const [allowEdit, setAllowEdit] = useState(false)
   const confirmKertasKerja = useAnggaranStore(
     (state: AnggaranStates) => state.confirmKertasKerja
   )
@@ -20,6 +23,8 @@ const KonfirmasiPaguView: FC = () => {
     (state: AnggaranStates) => state.setConfirmKertasKerja
   )
 
+  const paguTemp = useAnggaranStore((state: AnggaranStates) => state.paguTemp)
+  const setPagu = useAnggaranStore((state: AnggaranStates) => state.setPagu)
   const {
     register,
     handleSubmit,
@@ -29,8 +34,15 @@ const KonfirmasiPaguView: FC = () => {
     mode: 'onChange',
   })
 
-  const onSubmit = async (data: KonfirmasiKertasKerjaData) => {
-    console.log(data)
+  const onSubmit = async () => {
+    setPagu({
+      sekolah_id: paguTemp.sekolah_id,
+      sumber_dana_id: paguTemp.sumber_dana_id,
+      allow_edit: paguTemp.allow_edit,
+      volume: paguTemp.volume,
+      harga_satuan: paguTemp.harga_satuan,
+      jumlah: amount,
+    })
     setConfirmKertasKerja(false)
     navigate('/anggaran/menyusun/create')
   }
@@ -40,10 +52,14 @@ const KonfirmasiPaguView: FC = () => {
   }
 
   useEffect(() => {
-    setValue('nominal', `Rp ${numberUtils.delimit(300000000, '.')}`, {
-      shouldValidate: true,
-    })
-  }, [setValue])
+    if (paguTemp != null) {
+      setValue('nominal', `Rp ${numberUtils.delimit(paguTemp.jumlah, '.')}`, {
+        shouldValidate: true,
+      })
+      setAllowEdit(paguTemp.allow_edit)
+      setAmount(paguTemp.jumlah)
+    }
+  }, [setValue, paguTemp])
 
   return (
     <FormDialogComponent
@@ -69,11 +85,13 @@ const KonfirmasiPaguView: FC = () => {
             registerOption={{
               onChange: (e) => {
                 const numb = e.target.value.replace(/[^,\d]/g, '').toString()
+                setAmount(numb)
                 if (numb !== null) {
                   setValue('nominal', `Rp ${numberUtils.delimit(numb, '.')}`)
                 }
               },
             }}
+            isDisabled={!allowEdit}
           />
           <div className="pt-1 text-[12px] text-gray-600">
             (jumlah murid) x (nominal BOS per daerah)

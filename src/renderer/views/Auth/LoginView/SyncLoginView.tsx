@@ -85,26 +85,52 @@ const SyncLoginView: FC = () => {
     }
   )
 
-  const { data: configAll, isError: isGetConfigError } = useAPIGetConfigAll({
+  const {
+    data: configAll,
+    isError: isGetConfigError,
+    remove: removeConfigAll,
+  } = useAPIGetConfigAll({
     enabled: api === stepAPi[3],
     retry: 0,
   })
 
-  const { data: refKode, isError: isGetRefKodeError } = useAPIGetReferensi(
+  const {
+    data: refKode,
+    isError: isGetRefKodeError,
+    remove: removeRefKode,
+  } = useAPIGetReferensi(
     { referensi: 'kode', lastUpdate: lastUpdateKode },
     { enabled: api === stepAPi[4] && lastUpdateKode !== '', retry: 0 }
   )
-  const { data: refRekening, isError: isGetRefRekeningError } =
-    useAPIGetReferensi(
-      { referensi: 'rekening', lastUpdate: lastUpdateRekening },
-      { enabled: api === stepAPi[5] && lastUpdateRekening !== '' }
-    )
-  const { data: refBarang, isError: isGetRefBarangError } = useAPIGetReferensi(
+  const {
+    data: refRekening,
+    isError: isGetRefRekeningError,
+    remove: removeRefRekening,
+  } = useAPIGetReferensi(
+    { referensi: 'rekening', lastUpdate: lastUpdateRekening },
+    { enabled: api === stepAPi[5] && lastUpdateRekening !== '' }
+  )
+  const {
+    data: refBarang,
+    isError: isGetRefBarangError,
+    remove: removeRefBarang,
+  } = useAPIGetReferensi(
     { referensi: 'barang', lastUpdate: lastUpdateBarang },
     { enabled: api === stepAPi[6] && lastUpdateBarang !== '' }
   )
+
+  const removeCacheData = () => {
+    removeInfoConnection()
+    removeToken()
+    removeCheckHddVol()
+    removeConfigAll()
+    removeRefKode()
+    removeRefRekening()
+    removeRefBarang()
+  }
   const redirectToDashboard = () => {
     ipcRenderer.sendSync('token:createSession', email)
+    removeCacheData()
     setSyncLogin(false)
     sendEventLogin(email, 'sukses')
     navigate('/anggaran')
@@ -140,9 +166,7 @@ const SyncLoginView: FC = () => {
         ipcRenderer.send('config:setConfig', APP_CONFIG.koregInvalid, '0')
         setApi(stepAPi[3])
       } else {
-        removeInfoConnection()
-        removeToken()
-        removeCheckHddVol()
+        removeCacheData()
         setSyncLogin(false)
         ipcRenderer.send('config:setConfig', APP_CONFIG.koregInvalid, '1')
         setMultipleDevice(true)

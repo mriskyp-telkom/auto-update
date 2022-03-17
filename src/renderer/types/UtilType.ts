@@ -18,3 +18,8 @@ export interface ParamCheckActivation {
   koreg: string
   hdd_vol: string
 }
+
+export interface ParamConfigPagu {
+  idSumberData: number
+  isRevisi: number
+}

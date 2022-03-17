@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import InputComponent from 'renderer/components/Form/InputComponent'
@@ -28,6 +28,12 @@ const FormPenanggungJawabView: FC<FormPenanggungJawabProps> = (
   const setConfirmKertasKerja = useAnggaranStore(
     (state: AnggaranStates) => state.setConfirmKertasKerja
   )
+  const penanggungJawabTemp = useAnggaranStore(
+    (state: AnggaranStates) => state.penanggungJawabTemp
+  )
+  const setPenanggungJawab = useAnggaranStore(
+    (state: AnggaranStates) => state.setPenanggungJawab
+  )
 
   const {
     register,
@@ -38,10 +44,47 @@ const FormPenanggungJawabView: FC<FormPenanggungJawabProps> = (
     mode: 'onChange',
   })
 
-  const onSubmit = async (data: FormCreateKertasKerjaData) => {
-    console.log(data)
-    setCreateKertasKerja(false)
+  useEffect(() => {
+    if (penanggungJawabTemp != null) {
+      setValue('nama_kepala_sekolah', penanggungJawabTemp.kepsek, {
+        shouldValidate: true,
+      })
+      setValue('nama_bendahara', penanggungJawabTemp.bendahara, {
+        shouldValidate: true,
+      })
+      setValue('nama_komite', penanggungJawabTemp.komite, {
+        shouldValidate: true,
+      })
+      setValue('nip_kepala_sekolah', penanggungJawabTemp.nip_kepsek, {
+        shouldValidate: true,
+      })
+      setValue('nip_bendahara', penanggungJawabTemp.nip_bendahara, {
+        shouldValidate: true,
+      })
+      setValue('email_komite', penanggungJawabTemp.email_komite, {
+        shouldValidate: true,
+      })
+    }
+  }, [setValue, penanggungJawabTemp])
 
+  const onSubmit = async (data: FormCreateKertasKerjaData) => {
+    setCreateKertasKerja(false)
+    const penjab = {
+      sekolah_id: penanggungJawabTemp.sekolah_id,
+      kepsek: data.nama_kepala_sekolah,
+      bendahara: data.nama_bendahara,
+      komite: data.nama_komite,
+      nip_kepsek: data.nip_kepala_sekolah,
+      nip_bendahara: data.nip_bendahara,
+      nip_komite: penanggungJawabTemp.nip_komite,
+      email_kepsek: penanggungJawabTemp.email_kepsek,
+      email_bendahara: penanggungJawabTemp.email_bendahara,
+      email_komite: data.email_komite,
+      telepon_kepsek: penanggungJawabTemp.telepon_kepsek,
+      telepon_bendahara: penanggungJawabTemp.telepon_bendahara,
+    }
+
+    setPenanggungJawab(penjab)
     if (props.mode === 'create') {
       setConfirmKertasKerja(true)
     }

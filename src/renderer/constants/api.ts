@@ -16,3 +16,7 @@ export const API_CHECK_ACTIVATION = (
 ) => `/api/utils/check_activation/${npsn}/${koreg}/${hdd_vol}`
 export const API_REGISTRATION = '/api/user/registration'
 export const API_GET_SEKOLAH = '/api/sekolah'
+export const API_GET_CONFIG_PAGU = (idSumberDana: number, isRevisi: number) =>
+  `/api/config/pagu/${idSumberDana}/${isRevisi}`
+export const API_GET_PTK_LAST = (lastUpdate: string) =>
+  `/api/sekolah/ptk_last/${lastUpdate}`

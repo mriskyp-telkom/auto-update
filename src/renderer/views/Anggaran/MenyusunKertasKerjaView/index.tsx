@@ -27,6 +27,8 @@ import {
 } from 'renderer/constants/anggaran'
 
 import { AlertType } from 'renderer/types/ComponentType'
+import { APP_CONFIG } from '../../../constants/appConfig'
+const ipcRenderer = window.require('electron').ipcRenderer
 
 const MenyusunKertasKerjaView: FC = () => {
   const navigate = useNavigate()
@@ -35,6 +37,11 @@ const MenyusunKertasKerjaView: FC = () => {
 
   const [isSync, setIsSync] = useState(false)
   const [openModalInit, setOpenModalInit] = useState(false)
+  const [jumlahPagu, setJumlahPagu] = useState(0)
+  const [total, setTotal] = useState(0)
+  const [sisa, setSisa] = useState(0)
+
+  const [tahunAktif, setTahunAktif] = useState('')
 
   const alertMengulas = useAnggaranStore(
     (state: AnggaranStates) => state.alertMengulas
@@ -52,12 +59,58 @@ const MenyusunKertasKerjaView: FC = () => {
     (state: AnggaranStates) => state.setCreateKertasKerja
   )
 
+  const penanggungJawab = useAnggaranStore(
+    (state: AnggaranStates) => state.penanggungJawab
+  )
+
+  const pagu = useAnggaranStore((state: AnggaranStates) => state.pagu)
+
   const handleSalinKertasKerja = () => {
     setOpenModalInit(false)
     setIsSync(true)
     setTimeout(() => {
       setIsSync(false)
     }, 3000)
+  }
+
+  const handleBuatBaru = () => {
+    setOpenModalInit(false)
+    setIsSync(true)
+    const penggunaId = ipcRenderer.sendSync('user:getPenggunaId')
+    const penjab = {
+      sekolah_id: penanggungJawab.sekolah_id,
+      kepsek: penanggungJawab.kepsek,
+      nip_kepsek: penanggungJawab.nip_kepsek,
+      email_kepsek: penanggungJawab.email_kepsek,
+      telepon_kepsek: penanggungJawab.telepon_kepsek,
+      bendahara: penanggungJawab.bendahara,
+      nip_bendahara: penanggungJawab.nip_bendahara,
+      email_bendahara: penanggungJawab.email_bendahara,
+      telepon_bendahara: penanggungJawab.telepon_bendahara,
+      komite: penanggungJawab.komite,
+      nip_komite: penanggungJawab.nip_komite,
+      updater_id: penggunaId,
+      create_date: new Date(),
+    }
+    const penjabId = ipcRenderer.sendSync('penjab:addPenjab', penjab)
+    const dataAnggaran = {
+      id_ref_sumber_dana: pagu.sumber_dana_id,
+      volume: pagu.volume,
+      harga_satuan: pagu.harga_satuan,
+      pengguna_id: penggunaId,
+      id_penjab: penjabId,
+      tahun: tahunAktif,
+      create_date: new Date(),
+    }
+    const idAnggaran = ipcRenderer.sendSync(
+      'anggaran:addAnggaran',
+      dataAnggaran
+    )
+    const getPagu = ipcRenderer.sendSync('anggaran:getPagu', idAnggaran)
+    setJumlahPagu(getPagu.pagu)
+    setTotal(getPagu.total)
+    setSisa(getPagu.sisa)
+    setIsSync(false)
   }
 
   const handleBackToBeranda = () => {
@@ -77,8 +130,25 @@ const MenyusunKertasKerjaView: FC = () => {
   }
 
   useEffect(() => {
+    const tahunAktif = ipcRenderer.sendSync(
+      'config:getConfig',
+      APP_CONFIG.tahunAktif
+    )
+    setTahunAktif(tahunAktif)
     if (mode === 'create') {
-      setOpenModalInit(true)
+      const data = {
+        sumber_dana: pagu.sumber_dana_id,
+        tahun: tahunAktif,
+      }
+      const tahunAnggaranBefore = ipcRenderer.sendSync(
+        'anggaran:checkBefore',
+        data
+      )
+      if (tahunAnggaranBefore !== '') {
+        setOpenModalInit(true)
+      } else {
+        handleBuatBaru()
+      }
     }
   }, [])
 
@@ -125,14 +195,14 @@ const MenyusunKertasKerjaView: FC = () => {
               strategy="fixed"
               trigger="hover"
             >
-              <span className="hidden">BOS reguler 2021</span>
+              <span className="hidden">BOS reguler {tahunAktif}</span>
             </Tooltip>
           </div>
           <AmountCardComponent
             type="disabled"
             width={377}
             label="Total Penerimaan BOS Reguler"
-            amount={300000000}
+            amount={jumlahPagu}
           />
         </span>
         <span>
@@ -154,7 +224,7 @@ const MenyusunKertasKerjaView: FC = () => {
                 color="black"
                 size="md"
                 variant="solid"
-                disabled={responseMengulas === null ? false : true}
+                disabled={responseMengulas !== null}
               >
                 Selesai
               </Button>
@@ -185,7 +255,7 @@ const MenyusunKertasKerjaView: FC = () => {
                 type="default"
                 width={287}
                 label="Total Anggaran"
-                amount={0}
+                amount={total}
                 class="mr-3"
               />
               <AmountCardComponent
@@ -196,7 +266,7 @@ const MenyusunKertasKerjaView: FC = () => {
                 }
                 width={287}
                 label="Sisa Dana"
-                amount={300000000}
+                amount={sisa}
               />
             </div>
           </span>
@@ -228,7 +298,7 @@ const MenyusunKertasKerjaView: FC = () => {
         isOpen={openModalInit}
         btnCancelText="Buat Baru"
         btnActionText="Salin Kertas Kerja"
-        onCancel={() => setOpenModalInit(false)}
+        onCancel={handleBuatBaru}
         onSubmit={handleSalinKertasKerja}
       />
       {responseMengulas !== null && (

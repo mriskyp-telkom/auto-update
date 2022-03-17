@@ -1,9 +1,10 @@
-import { InstansiPengguna } from '../repositories/InstansiPengguna'
-import { Pengguna } from '../repositories/Pengguna'
-import { UserRole } from '../repositories/UserRole'
+import { InstansiPengguna } from 'main/repositories/InstansiPengguna'
+import { Pengguna } from 'main/repositories/Pengguna'
+import { UserRole } from 'main/repositories/UserRole'
 import { createQueryBuilder, getRepository, InsertResult } from 'typeorm'
-import CommonUtils from '../utils/CommonUtils'
-import { GetConfig } from './Config'
+import CommonUtils from 'main/utils/CommonUtils'
+import { GetConfig } from 'main/services/Config'
+import { Token } from 'main/repositories/Token'
 
 export const CheckUser = async (username: string): Promise<boolean> => {
   const getUser = await createQueryBuilder(UserRole, 'ur')
@@ -67,6 +68,27 @@ export const GetUserRole = async (username: string): Promise<UserRole> => {
     .where('p.email = :email', { email: username })
     .getOne()
   return getUser
+}
+
+export const GetPenggunaByEmail = async (email: string): Promise<Pengguna> => {
+  const getPengguna = await createQueryBuilder(Pengguna, 'p')
+    .where('p.email = :email', { email })
+    .getOne()
+  return getPengguna
+}
+
+export const GetPenggunaByToken = async (token: string): Promise<Pengguna> => {
+  const getPengguna = await createQueryBuilder(Pengguna, 'p')
+    .innerJoin(InstansiPengguna, 'ip', 'ip.pengguna_id = p.pengguna_id')
+    .innerJoin(
+      UserRole,
+      'ur',
+      'ur.instansi_pengguna_id = ip.instansi_pengguna_id'
+    )
+    .innerJoin(Token, 't', 't.userrole_id = ur.userrole_id')
+    .where('t.token_id = :token', { token })
+    .getOne()
+  return getPengguna
 }
 
 export const AddPengguna = async (
