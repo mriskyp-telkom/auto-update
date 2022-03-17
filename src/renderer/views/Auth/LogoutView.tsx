@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import AlertDialogComponent from 'renderer/components/Dialog/AlertDialogComponent'
@@ -10,6 +10,13 @@ import { sendEventLogout } from 'renderer/utils/analytic/auth-util'
 const LogoutView: FC = () => {
   const navigate = useNavigate()
 
+  const [emailPengguna, setEmailPengguna] = useState('')
+
+  useEffect(() => {
+    const dataPengguna = syncToIPCMain('pengguna:getPengguna')
+    setEmailPengguna(dataPengguna?.email)
+  }, [])
+
   const closeModal = () => {
     navigate(-1)
   }
@@ -19,7 +26,6 @@ const LogoutView: FC = () => {
     let next_route = ''
 
     const logout = syncToIPCMain('user:logout')
-    const email = 'email'
 
     if (logout) {
       next_route = '/login'
@@ -30,7 +36,7 @@ const LogoutView: FC = () => {
     }
 
     if (response_status !== '') {
-      sendEventLogout(email, response_status)
+      sendEventLogout(emailPengguna, response_status)
     }
     if (next_route !== '') {
       navigate(next_route)

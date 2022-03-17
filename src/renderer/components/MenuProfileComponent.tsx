@@ -16,23 +16,28 @@ const MenuProfileComponent: FC = () => {
   const location = useLocation()
 
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false)
+  const [namaSekolah, setNamaSekolah] = useState('')
   const [selectedValue, setSelectedValue] = useState(menus[0])
 
   useEffect(() => {
     setIsUserLoggedIn(syncToIPCMain('token:isUserLoggedIn'))
+    const dataSekolah = syncToIPCMain('sekolah:getSekolah')
+    setNamaSekolah(dataSekolah?.nama)
   }, [])
 
   return (
     isUserLoggedIn && (
       <span className="flex items-center">
-        <span>
-          <Avatar
-            src=""
-            alt="Some Alt"
-            size="lg"
-            shape="circle"
-            className="mr-3"
-          />
+        <Avatar
+          src=""
+          alt="Some Alt"
+          size="lg"
+          shape="circle"
+          className="mr-2 bg-blue-900 text-white text-tiny font-semibold"
+          name={namaSekolah.replace(new RegExp('SD | SMP', 'gi'), '')}
+        />
+        <span className="mr-3 text-large text-gray-900 font-semibold">
+          {namaSekolah}
         </span>
         <span className="mt-2">
           <Listbox value={selectedValue} onChange={setSelectedValue}>
