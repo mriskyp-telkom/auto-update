@@ -1,26 +1,39 @@
 import React, { FC, useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
+
 import AuthLayout from 'renderer/views/Layout/AuthLayout'
+
 import SyncDialogComponent from 'renderer/components/Dialog/SyncDialogComponent'
 import InputComponent from 'renderer/components/Form/InputComponent'
 import InputPasswordComponent from 'renderer/components/Form/InputPasswordComponent'
-import { Button } from '@wartek-id/button'
-import { FormResetAccountData } from 'renderer/types/LoginType'
-import { useAPIInfoConnection } from 'renderer/apis/utils'
-import { useAPIRegistration } from 'renderer/apis/registration'
-import { AuthStates, useAuthStore } from 'renderer/stores/auth'
+
 import AlertFailedSyncData from 'renderer/views/AlertFailedSyncData'
-import { AppStates, useAppStore } from 'renderer/stores/app'
 import AlertNoConnection from 'renderer/views/AlertNoConnection'
 import AlertLostConnection from 'renderer/views/AlertLostConnection'
+
+import { Button } from '@wartek-id/button'
+
+import { FormResetAccountData } from 'renderer/types/LoginType'
+
+import { AuthStates, useAuthStore } from 'renderer/stores/auth'
+import { AppStates, useAppStore } from 'renderer/stores/app'
+
 import { APP_CONFIG } from 'renderer/constants/appConfig'
+
+import { useAPIInfoConnection } from 'renderer/apis/utils'
+import { useAPIRegistration } from 'renderer/apis/registration'
 import { useAPIGetToken } from 'renderer/apis/token'
 import { useAPIGetSekolah } from 'renderer/apis/sekolah'
 import {
   useAPIGetReferensi,
   useAPIGetReferensiWilayah,
 } from 'renderer/apis/referensi'
+
+import { sendEventRegistrasi2 } from 'renderer/utils/analytic/auth-util'
+
+import filter from 'lodash/filter'
+
 const ipcRenderer = window.require('electron').ipcRenderer
 
 const stepAPi = [
@@ -66,6 +79,7 @@ const CreateAccountView: FC = () => {
     handleSubmit,
     setValue,
     setError,
+    getValues,
     formState: { errors, isValid, submitCount },
   } = useForm<FormResetAccountData>({
     mode: 'onChange',
@@ -137,6 +151,7 @@ const CreateAccountView: FC = () => {
     ipcRenderer.sendSync('token:createSession', email)
     setIsSync(false)
     removeInfoConnection()
+    sendEventRegistrasi2(getValues('email'), 'sukses')
     navigate('/anggaran')
   }
 
@@ -281,6 +296,7 @@ const CreateAccountView: FC = () => {
         type: 'manual',
         message: 'Password tidak sesuai',
       })
+      sendEventRegistrasi2(getValues('email'), 'password_tidak_sesuai')
       return
     }
     if (!navigator.onLine) {
@@ -293,6 +309,13 @@ const CreateAccountView: FC = () => {
     setIsSync(true)
   }
 
+  const onError = (error: any) => {
+    const isError = filter(error, ['type', 'required']).length > 0
+    if (isError) {
+      sendEventRegistrasi2(getValues('email'), 'kolom_kosong')
+    }
+  }
+
   useEffect(() => {
     if (mode === 'reset') {
       setValue('email', 'yasmin@gmail.com', { shouldValidate: true })
@@ -301,7 +324,7 @@ const CreateAccountView: FC = () => {
 
   return (
     <AuthLayout>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit, onError)}>
         <div>
           <div className="text-base pb-1 font-normal text-gray-900">Email</div>
           <InputComponent

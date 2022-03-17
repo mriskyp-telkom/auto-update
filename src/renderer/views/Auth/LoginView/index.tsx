@@ -1,4 +1,5 @@
 import React, { FC } from 'react'
+import { useNavigate } from 'react-router'
 import { useForm } from 'react-hook-form'
 
 import AuthLayout from 'renderer/views/Layout/AuthLayout'
@@ -6,19 +7,21 @@ import ResetAccountLinkView from 'renderer/views/Auth/ResetAccountLinkView'
 
 import InputComponent from 'renderer/components/Form/InputComponent'
 import InputPasswordComponent from 'renderer/components/Form/InputPasswordComponent'
+import AlertDialogComponent from 'renderer/components/Dialog/AlertDialogComponent'
 
 import SyncLoginView from './SyncLoginView'
 
 import { Button } from '@wartek-id/button'
 
-import sendEvent from 'renderer/configs/analytics'
-
 import { FormLoginData } from 'renderer/types/LoginType'
 
 import { AuthStates, useAuthStore } from 'renderer/stores/auth'
+
 import { APP_CONFIG } from 'renderer/constants/appConfig'
-import AlertDialogComponent from 'renderer/components/Dialog/AlertDialogComponent'
-import { useNavigate } from 'react-router'
+
+import { sendEventLogin } from 'renderer/utils/analytic/auth-util'
+
+import filter from 'lodash/filter'
 
 const ipcRenderer = window.require('electron').ipcRenderer
 
@@ -40,18 +43,14 @@ const LoginView: FC = () => {
     register,
     handleSubmit,
     setError,
+    getValues,
     formState: { errors, isValid, submitCount },
   } = useForm<FormLoginData>({
     mode: 'onChange',
   })
 
   const onSubmit = async (data: FormLoginData) => {
-    sendEvent({
-      category: 'Login',
-      action: 'CLICK_LOGIN',
-      customDimension1: data.email,
-    })
-
+    let response_status = ''
     const ipcCheckUserName = ipcRenderer.sendSync(
       'user:checkUsername',
       data.email
@@ -62,6 +61,7 @@ const LoginView: FC = () => {
         type: 'manual',
         message: 'Email tidak terdaftar',
       })
+      response_status = 'email_tidak_terdaftar'
       return
     }
 
@@ -76,6 +76,7 @@ const LoginView: FC = () => {
         type: 'manual',
         message: 'Password salah',
       })
+      response_status = 'password_salah'
       return
     }
 
@@ -84,20 +85,34 @@ const LoginView: FC = () => {
       'config:getConfig',
       APP_CONFIG.tahunAktif
     )
+
+    if (response_status !== '') {
+      sendEventLogin(getValues('email'), response_status)
+    }
+
     setEmail(data.email)
     setNpsn(sekolah.npsn)
     setTahunAktif(tahunAktif)
     setKoreg(sekolah.kodeRegistrasi)
     setSyncLogin(true)
   }
+
+  const onError = (error: any) => {
+    const isError = filter(error, ['type', 'required']).length > 0
+    if (isError) {
+      sendEventLogin(getValues('email'), 'kolom_kosong')
+    }
+  }
+
   const onSubmitConfirm = () => {
     setMultipleDevice(false)
+    sendEventLogin(getValues('email'), 'multidevice_error')
     navigate('/registration')
   }
 
   return (
     <AuthLayout>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit, onError)}>
         <div>
           <div className="text-base pb-1 font-normal text-gray-900">Email</div>
           <InputComponent

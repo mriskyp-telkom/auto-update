@@ -5,6 +5,8 @@ import AlertDialogComponent from 'renderer/components/Dialog/AlertDialogComponen
 
 import syncToIPCMain from 'renderer/configs/ipc'
 
+import { sendEventLogout } from 'renderer/utils/analytic/auth-util'
+
 const LogoutView: FC = () => {
   const navigate = useNavigate()
 
@@ -13,11 +15,25 @@ const LogoutView: FC = () => {
   }
 
   const handleLogout = () => {
+    let response_status = ''
+    let next_route = ''
+
     const logout = syncToIPCMain('user:logout')
+    const email = 'email'
+
     if (logout) {
-      navigate('/login')
+      next_route = '/login'
+      response_status = 'sukses'
     } else {
       closeModal()
+      response_status = 'gagal'
+    }
+
+    if (response_status !== '') {
+      sendEventLogout(email, response_status)
+    }
+    if (next_route !== '') {
+      navigate(next_route)
     }
   }
 
