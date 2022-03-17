@@ -53,8 +53,40 @@ export const GetPagu = async (idAnggaran: string): Promise<any> => {
       idAnggaran,
     })
     .groupBy('a.id_anggaran')
-    .getRawMany()
+    .getRawOne()
   return data
+}
+
+export const GetAnggaranBefore = async (
+  sumberDana: number,
+  tahun: number
+): Promise<string> => {
+  const getIsRevisiMax =
+    (await createQueryBuilder(Anggaran, 'a')
+      .select('MAX(a.is_revisi)', 'is_revisi')
+      .where(
+        'a.soft_delete = 0 AND a.tahun_anggaran =:tahun AND a.id_ref_sumber_dana = :sumberDana',
+        {
+          tahun: tahun - 1,
+          sumberDana: sumberDana,
+        }
+      )
+      .getRawOne()) ?? -1
+  if (getIsRevisiMax > -1) {
+    const getIdAnggaran = await createQueryBuilder(Anggaran, 'a')
+      .select('a.id_anggaran as id_anggaran')
+      .where(
+        'a.soft_delete = 0 AND a.tahun_anggaran =:tahun AND a.is_revisi =:isRevisi AND a.id_ref_sumber_dana =:sumberDana ',
+        {
+          tahun: tahun - 1,
+          isRevisi: getIsRevisiMax.is_revisi,
+          sumberDana: sumberDana,
+        }
+      )
+      .getRawOne()
+    return getIdAnggaran.id_anggaran ?? ''
+  }
+  return ''
 }
 
 export const AddAnggaran = async (anggaran: Anggaran): Promise<any> => {

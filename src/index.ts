@@ -89,6 +89,8 @@ app.on('ready', async () => {
         require('./main/helpers/ipcReferensiWilayah')
         require('./main/helpers/ipcAnggaran')
         require('./main/helpers/ipcKK')
+        require('./main/helpers/ipcPtk')
+        require('./main/helpers/ipcPenjab')
 
         setTimeout(function () {
           splashWindow.close()

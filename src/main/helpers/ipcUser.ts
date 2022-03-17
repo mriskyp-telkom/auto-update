@@ -11,9 +11,10 @@ import {
   CheckLogin,
   AddPengguna,
   AddUserRole,
+  GetPenggunaByToken,
 } from 'main/services/User'
 import CommonUtils from 'main/utils/CommonUtils'
-import { SetConfig, DeleteConfig } from 'main/services/Config'
+import { SetConfig, DeleteConfig, GetConfig } from 'main/services/Config'
 import { MstSekolah } from 'main/repositories/MstSekolah'
 import { AddSekolah } from 'main/services/Sekolah'
 
@@ -134,6 +135,22 @@ module.exports = {
       e.returnValue = 1
     } catch (err) {
       e.returnValue = 0
+    }
+  }),
+
+  getPengguna: ipcMain.on('user:getPenggunaId', async (e) => {
+    try {
+      let penggunaId = await GetConfig('pengguna_id')
+      if (penggunaId === '') {
+        const sessionId = await GetConfig('sessionId')
+        const tokenId = CommonUtils.decodeUUID(sessionId)
+        const pengguna = await GetPenggunaByToken(tokenId)
+        penggunaId = pengguna.penggunaId
+        await SetConfig('pengguna_id', penggunaId)
+      }
+      e.returnValue = penggunaId
+    } catch (err) {
+      e.returnValue = null
     }
   }),
 

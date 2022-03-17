@@ -4,17 +4,18 @@ import {
   AddAnggaran,
   DelAnggaran,
   GetAnggaran,
+  GetAnggaranBefore,
   GetPagu,
 } from 'main/services/Anggaran'
 import { GetConfig } from 'main/services/Config'
 import CommonUtils from '../utils/CommonUtils'
 
 module.exports = {
-  getAnggaran: ipcMain.on('anggaran:getAnggaran', async (e) => {
+  getAnggaran: ipcMain.on('anggaran:getAnggaran', async (e, idSumberDana) => {
     const configTahunAktif = await GetConfig('tahun_aktif')
     const tahunAktif = parseInt(configTahunAktif)
     const listTahun = Array.from({ length: 3 }, (_, i) => tahunAktif - i)
-    const dataAnggaran = await GetAnggaran(1, listTahun)
+    const dataAnggaran = await GetAnggaran(idSumberDana, listTahun)
     const listAnggaran = []
 
     for (let tahun = tahunAktif; tahun > tahunAktif - 3; tahun--) {
@@ -27,6 +28,7 @@ module.exports = {
         status_updated_at: '',
         type: '',
         tanggal_pengesahan: '',
+        id_sumber_dana: idSumberDana,
       }
       if (data != null) {
         anggaran.id_anggaran = data.id_anggaran
@@ -116,6 +118,20 @@ module.exports = {
     dataAnggaran.idPenjab = data.id_penjab
     await AddAnggaran(dataAnggaran)
     e.returnValue = idAnggaran
+  }),
+
+  checkBefore: ipcMain.on('anggaran:checkBefore', async (e, data) => {
+    /*
+      ==== PARAM ====
+      data : 
+      {
+        data.sumber_dana: number (1,3,5,11,12,33,34,35)
+        data.tahun: number
+      }
+      ==== RETRUN ====
+      return : string (idAnggaran year befeore)
+    */
+    e.returnValue = await GetAnggaranBefore(data.sumber_dana, data.tahun)
   }),
 
   delAnggaran: ipcMain.on('anggaran:deleteAnggaran', async (e, idAnggaran) => {

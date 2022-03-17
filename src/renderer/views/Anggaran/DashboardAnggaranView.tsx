@@ -7,13 +7,17 @@ import CardDashboardAnggaranView from './CardDashboardAnggaranView'
 import { CardDashboardType } from 'renderer/types/AnggaranType'
 
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from '@wartek-id/tabs'
+import { ID_SUMBER_DANA } from 'renderer/constants/anggaran'
 
 const ipcRenderer = window.require('electron').ipcRenderer
 
 const DashboardAnggaranView: FC = () => {
   const [bosReguler, setBosReguler] = useState([])
   useEffect(() => {
-    const anggaranBOSReguler = ipcRenderer.sendSync('anggaran:getAnggaran', 1)
+    const anggaranBOSReguler = ipcRenderer.sendSync(
+      'anggaran:getAnggaran',
+      ID_SUMBER_DANA.BOS_REGULER
+    )
     setBosReguler(anggaranBOSReguler)
   }, [])
 

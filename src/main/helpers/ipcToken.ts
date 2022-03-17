@@ -1,6 +1,6 @@
 import { ipcMain } from 'electron'
 import { CreateToken, ExpiryToken } from 'main/services/Token'
-import { GetUserRole } from 'main/services/User'
+import { GetPenggunaByEmail, GetUserRole } from 'main/services/User'
 import { SetConfig, GetConfig, DeleteConfig } from 'main/services/Config'
 import { Token } from 'main/repositories/Token'
 import CommonUtils from 'main/utils/CommonUtils'
@@ -8,6 +8,7 @@ import CommonUtils from 'main/utils/CommonUtils'
 module.exports = {
   createSession: ipcMain.on('token:createSession', async (e, username) => {
     const user = await GetUserRole(username)
+    const pengguna = await GetPenggunaByEmail(username)
     const uuid = CommonUtils.uuid()
     const token = new Token()
     token.tokenId = CommonUtils.encodeUUID(uuid)
@@ -19,6 +20,7 @@ module.exports = {
     token.lastUpdate = new Date()
     await CreateToken(token)
     SetConfig('sessionId', uuid).catch()
+    SetConfig('pengguna_id', pengguna.penggunaId).catch()
     e.returnValue = uuid
   }),
 

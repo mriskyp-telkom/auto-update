@@ -47,9 +47,34 @@ export interface CardDashboardType {
   status_updated_at: string
   type: string
   tanggal_pengesahan: string
+  id_sumber_dana: number
 }
 
 export type ResponseMengulas =
   | 'success'
   | 'error_sisa_dana'
   | 'error_data_sentral'
+
+export interface FormPenanggungJawab {
+  sekolah_id: string
+  kepsek: string
+  bendahara: string
+  komite: string
+  nip_kepsek: string
+  nip_bendahara: string
+  nip_komite: string
+  email_kepsek: string
+  email_bendahara: string
+  email_komite: string
+  telepon_kepsek: string
+  telepon_bendahara: string
+}
+
+export interface FormPagu {
+  sekolah_id: string
+  sumber_dana_id: number
+  allow_edit: boolean
+  volume: number
+  harga_satuan: number
+  jumlah: number
+}

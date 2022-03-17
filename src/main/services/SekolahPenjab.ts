@@ -15,18 +15,22 @@ export const addSekolahPenjab = async (
 export const findSekolahPenjabId = async (
   sekolahPenjab: SekolahPenjab
 ): Promise<string> => {
-  return (
-    (
-      await getRepository(SekolahPenjab).findOne({
-        ks: sekolahPenjab.ks,
-        nipKs: sekolahPenjab.nipKs,
-        bendahara: sekolahPenjab.bendahara,
-        nipBendahara: sekolahPenjab.nipBendahara,
-        komite: sekolahPenjab.komite,
-        nipKomite: sekolahPenjab.nipKomite,
-      })
-    )?.idPenjab ?? ''
-  )
+  try {
+    return (
+      (
+        await getRepository(SekolahPenjab).findOne({
+          ks: sekolahPenjab.ks,
+          nipKs: sekolahPenjab.nipKs,
+          bendahara: sekolahPenjab.bendahara,
+          nipBendahara: sekolahPenjab.nipBendahara,
+          komite: sekolahPenjab.komite,
+          nipKomite: sekolahPenjab.nipKomite,
+        })
+      )?.idPenjab ?? null
+    )
+  } catch (e) {
+    console.log('ERROR ', e)
+  }
 }
 
 export const updateSekolahPenjab = async (

@@ -191,7 +191,7 @@ const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (
           {isNotCreated && (
             <>
               <div className="flex justify-end">
-                <CreateKertasKerjaView />
+                <CreateKertasKerjaView idSumberDana={data.id_sumber_dana} />
               </div>
               <div className="text-blue-700 text-[12px] text-right pt-4">
                 <b>“Buat Kertas Kerja”</b> membutuhkan koneksi internet
