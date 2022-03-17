@@ -21,7 +21,7 @@ const HeaderComponent: FC = () => {
         <HeaderBarLeftAction icon={<LogoArkas />} />
       </Link>
       <HeaderBarTitle>ARKAS</HeaderBarTitle>
-      <HeaderBarRightAction>
+      <HeaderBarRightAction className="flex-grow justify-end">
         <MenuProfileComponent />
       </HeaderBarRightAction>
     </HeaderBar>
