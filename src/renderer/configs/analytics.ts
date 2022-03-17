@@ -5,7 +5,10 @@ interface analyticProps {
   action: string
   label?: string
   value?: string
-  customDimension1: string
+  user_email?: string
+  npsn?: string
+  stage?: string
+  return_status?: string
 }
 
 const analytics = new Analytics('UA-187846839-1')
@@ -16,7 +19,10 @@ const sendEvent = (props: analyticProps): void => {
     ea: props.action,
     el: props.label,
     ev: props.value,
-    cd1: props.customDimension1,
+    cd1: props.user_email,
+    cd2: props.npsn,
+    cd3: props.stage,
+    cd4: props.return_status,
   })
 }
 

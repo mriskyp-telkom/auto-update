@@ -10,7 +10,10 @@ import { useAPIGetToken } from 'renderer/apis/token'
 import { useAPICheckHDDVol, useAPIInfoConnection } from 'renderer/apis/utils'
 import { useAPIGetConfigAll } from 'renderer/apis/config'
 import { useAPIGetReferensi } from 'renderer/apis/referensi'
+
 import { APP_CONFIG } from 'renderer/constants/appConfig'
+
+import { sendEventLogin } from 'renderer/utils/analytic/auth-util'
 
 const stepAPi = [
   'infoConnection',
@@ -103,6 +106,7 @@ const SyncLoginView: FC = () => {
   const redirectToDashboard = () => {
     ipcRenderer.sendSync('token:createSession', email)
     setSyncLogin(false)
+    sendEventLogin(email, 'sukses')
     navigate('/anggaran')
   }
   useEffect(() => {

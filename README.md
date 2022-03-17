@@ -30,10 +30,19 @@ electron desktop app
 
 ## Setup
 
+### Prerequisite
+
+#### MAC OS
+
+- nodejs v16.6.1 (recommendation)
+
+#### Windows
+
+- nodejs v16.13.1 (recommendation)
+
 ### Required
 
 - yarn
-- nodejs
 - sqlite3
 
 ### Run/Build

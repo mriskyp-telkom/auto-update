@@ -2,29 +2,36 @@ import React, { FC, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 
-import AuthLayout from '../Layout/AuthLayout'
+import AuthLayout from 'renderer/views/Layout/AuthLayout'
 
 import AlertDialogComponent from 'renderer/components/Dialog/AlertDialogComponent'
 import SyncDialogComponent from 'renderer/components/Dialog/SyncDialogComponent'
 import InputComponent from 'renderer/components/Form/InputComponent'
+
+import AlertLostConnection from 'renderer/views/AlertLostConnection'
+import AlertNoConnection from 'renderer/views//AlertNoConnection'
+import AlertFailedSyncData from 'renderer/views/AlertFailedSyncData'
 
 import { Button } from '@wartek-id/button'
 import { Tooltip } from '@wartek-id/tooltip'
 import { Icon } from '@wartek-id/icon'
 
 import { onlyNumberRegex } from 'renderer/constants/regex'
+import { APP_CONFIG } from 'renderer/constants/appConfig'
+
+import { sendEventRegistrasi1 } from 'renderer/utils/analytic/auth-util'
 
 import { FormRegisterData } from 'renderer/types/LoginType'
+
 import {
   useAPICheckActivation,
   useAPIInfoConnection,
 } from 'renderer/apis/utils'
+
 import { AuthStates, useAuthStore } from 'renderer/stores/auth'
-import { APP_CONFIG } from 'renderer/constants/appConfig'
 import { AppStates, useAppStore } from 'renderer/stores/app'
-import AlertLostConnection from 'renderer/views/AlertLostConnection'
-import AlertNoConnection from 'renderer/views//AlertNoConnection'
-import AlertFailedSyncData from 'renderer/views/AlertFailedSyncData'
+
+import filter from 'lodash/filter'
 
 const ipcRenderer = window.require('electron').ipcRenderer
 const stepAPi = ['infoConnection', 'checkActivation']
@@ -80,6 +87,7 @@ const RegistrationView: FC = () => {
     register,
     handleSubmit,
     setError,
+    getValues,
     formState: { errors, isValid, submitCount },
   } = useForm<FormRegisterData>({
     mode: 'onChange',
@@ -113,6 +121,9 @@ const RegistrationView: FC = () => {
   }, [infoConnection])
 
   useEffect(() => {
+    let response_status = ''
+    let next_route = ''
+
     if (checkActivationResult !== undefined) {
       setIsSync(false)
       const result = Number(checkActivationResult?.data)
@@ -120,23 +131,39 @@ const RegistrationView: FC = () => {
       removeCheckActivation()
       if (result === 1) {
         ipcRenderer.sendSync('config:setConfig', APP_CONFIG.hddVolOld, hddVol)
+        response_status = 'sukses'
         if (koregInvalid === '0' || koregInvalid === '') {
-          navigate('/create-account/new')
+          next_route = '/create-account/new'
         } else {
-          navigate('/login')
+          next_route = '/login'
         }
       } else {
         setNpsn('')
         setKoreg('')
         setApi('')
         if (result === 2) {
+          response_status = 'kode_aktivasi_salah'
           setError('activation_code', {
             type: 'manual',
             message: 'Kode aktivasi salah',
           })
-        } else {
+        } else if (result === 3) {
+          response_status = 'multidevice_error'
           setOpenModalInfo(true)
+        } else {
+          response_status = 'npsn_tidak_terdaftar'
+          setError('npsn', {
+            type: 'manual',
+            message:
+              'NPSN tidak terdaftar di Dapodik. Silakan periksa kembali.',
+          })
         }
+      }
+      if (response_status !== '') {
+        sendEventRegistrasi1(getValues('npsn'), response_status)
+      }
+      if (next_route !== '') {
+        navigate(next_route)
       }
     }
   }, [checkActivationResult])
@@ -162,9 +189,16 @@ const RegistrationView: FC = () => {
     setApi(stepAPi[0])
   }
 
+  const onError = (error: any) => {
+    const isError = filter(error, ['type', 'required']).length > 0
+    if (isError) {
+      sendEventRegistrasi1(getValues('npsn'), 'kolom_kosong')
+    }
+  }
+
   return (
     <AuthLayout>
-      <form ref={ref} onSubmit={handleSubmit(onSubmit)}>
+      <form ref={ref} onSubmit={handleSubmit(onSubmit, onError)}>
         <div>
           <div className="text-base pb-1 font-normal text-gray-900">NPSN</div>
           <InputComponent
