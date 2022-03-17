@@ -2,8 +2,9 @@ import { ipcMain } from 'electron'
 import {
   addBulkRefKode,
   getLastUpdate,
-  getRefKode,
+  getRefKodeList,
 } from 'main/services/RefKode'
+import { getBentukPendidikan } from 'main/services/Sekolah'
 import CommonUtils from 'main/utils/CommonUtils'
 
 module.exports = {
@@ -48,6 +49,7 @@ module.exports = {
   }),
 
   getRefKode: ipcMain.on('referensi:getRefKode', async (e) => {
-    e.returnValue = await getRefKode()
+    const getBentuk = await getBentukPendidikan()
+    e.returnValue = await getRefKodeList(getBentuk)
   }),
 }

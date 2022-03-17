@@ -2,7 +2,7 @@ import { ipcMain } from 'electron'
 import {
   addBulkRefRekening,
   getLastUpdate,
-  getRefRekening,
+  getRefRekeningList,
 } from 'main/services/RefRekening'
 import CommonUtils from 'main/utils/CommonUtils'
 
@@ -58,6 +58,6 @@ module.exports = {
   ),
 
   getRefRekening: ipcMain.on('referensi:getRefRekening', async (e) => {
-    e.returnValue = await getRefRekening()
+    e.returnValue = await getRefRekeningList()
   }),
 }

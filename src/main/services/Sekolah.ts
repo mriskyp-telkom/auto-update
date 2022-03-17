@@ -10,3 +10,7 @@ export const AddSekolah = async (
 ): Promise<InsertResult> => {
   return await getRepository(MstSekolah).upsert(sekolah, ['sekolahId'])
 }
+
+export const getBentukPendidikan = async (): Promise<number> => {
+  return (await getRepository(MstSekolah).findOne())?.bentukPendidikanId ?? 0
+}

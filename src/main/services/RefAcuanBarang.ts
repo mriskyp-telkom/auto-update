@@ -23,12 +23,26 @@ export const getRefBarangRekening = async (
   let data
   if (kodeRekening.substring(0, 3) == '5.1') {
     data = await createQueryBuilder(RefAcuanBarang, 'rab')
+      .select([
+        'rab.id_barang as id_barang',
+        'rab.nama_barang',
+        'rab.satuan',
+        'rab.batas_bawah',
+        'rab.batas_atas',
+      ])
       .where('rab.expired_date is null and kode_rekening = :kodeRekening', {
         kodeRekening,
       })
       .getRawMany()
   } else if (kodeRekening.substring(0, 3) == '5.2') {
     data = await createQueryBuilder(RefAcuanBarang, 'rab')
+      .select([
+        'rab.id_barang as id_barang',
+        'rab.nama_barang',
+        'rab.satuan',
+        'rab.batas_bawah',
+        'rab.batas_atas',
+      ])
       .where('rab.expired_date is null and kode_rekening is null')
       .getRawMany()
   }
