@@ -1,15 +1,29 @@
+@media (min-height: 780px) {
+  .heightTableTahun {
+    height: 330px;
+  }
+  .heightTableTahap {
+    height: 300px;
+  }
+}
+
+@media (min-height: 850px) {
+  .heightTableTahun {
+    height: 450px;
+  }
+  .heightTableTahap {
+    height: 420px;
+  }
+}
+
 table.tableKertasKerja {
   width: 100%;
   table-layout: fixed;
 }
 
 table.tableKertasKerja thead th {
-  padding: 2rem 1rem 1rem;
+  padding: 1rem;
   font-weight: 400;
-}
-
-.line {
-  box-shadow: inset 0px -1px 0px #c9cbcf;
 }
 
 table.tableKertasKerja tbody tr {
@@ -21,6 +35,10 @@ table.tableKertasKerja tbody td {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.line {
+  box-shadow: inset 0px -1px 0px #c9cbcf;
 }
 
 .code {
@@ -39,19 +57,18 @@ table.tableKertasKerja tbody td {
   width: 150px !important;
 }
 
+.priceMonth {
+  width: 120px !important;
+}
+
 .amount {
   width: 60px;
 }
 
-table.scrollTable td {
+table.borderRight td {
   border-right: 2px solid #f5f5f5;
-  width: 300px;
-  height: 52px;
 }
 
-table.scrollTable td:first-child {
-  position: fixed;
-  background-color: white;
+table.tableRekeningBelanja td:first-child {
   width: 600px;
-  left: 2.5rem;
 }

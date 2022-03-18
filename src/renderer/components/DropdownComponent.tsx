@@ -5,16 +5,27 @@ import { Icon } from '@wartek-id/icon'
 
 import clsx from 'clsx'
 
-const listAll = [
-  { id: 1, key: 'tahap', label: 'Lihat per tahapan' },
-  { id: 2, key: 'tahun', label: 'Lihat per tahun' },
-]
+interface DropdownOptions {
+  id: number
+  key: string
+  label: string
+}
 
-const DropdownComponent: FC = () => {
-  const [selectedValue, setSelectedValue] = useState(listAll[0])
+interface DropdownProps {
+  options: Array<DropdownOptions>
+  handleChange: (value: string) => void
+}
+
+const DropdownComponent: FC<DropdownProps> = (props: DropdownProps) => {
+  const [selectedValue, setSelectedValue] = useState(props.options[0])
+
+  const handleChange = (value: DropdownOptions) => {
+    props.handleChange(value.key)
+    setSelectedValue(value)
+  }
 
   return (
-    <Listbox value={selectedValue} onChange={setSelectedValue}>
+    <Listbox value={selectedValue} onChange={handleChange}>
       <Listbox.Button
         className={clsx(
           'w-[224px]',
@@ -39,10 +50,10 @@ const DropdownComponent: FC = () => {
         )}
         style={{ boxShadow: '0px 8px 20px rgba(37, 40, 43, 0.2)' }}
       >
-        {listAll.map((list) => (
+        {props.options.map((option) => (
           <Listbox.Option
-            key={list.id}
-            value={list}
+            key={option.id}
+            value={option}
             className={({ selected }) =>
               clsx(
                 'px-3 py-3 hover:bg-gray-5 cursor-pointer',
@@ -50,7 +61,7 @@ const DropdownComponent: FC = () => {
               )
             }
           >
-            {list.label}
+            {option.label}
           </Listbox.Option>
         ))}
       </Listbox.Options>

@@ -2,6 +2,8 @@ import React, { FC, useRef } from 'react'
 
 import { Icon } from '@wartek-id/icon'
 
+import { MODE_MENGULAS } from 'renderer/constants/anggaran'
+
 import { amountFormatting } from 'renderer/utils/number-formatting'
 
 import styles from './index.module.css'
@@ -92,13 +94,26 @@ const data = [
   },
 ]
 
-const TabelMengulasKertasKerjaView: FC = () => {
+interface TabelMengulasKertasKerjaProps {
+  mode: string
+}
+
+const TabelMengulasKertasKerjaView: FC<TabelMengulasKertasKerjaProps> = (
+  props: TabelMengulasKertasKerjaProps
+) => {
   return (
-    <div className="w-full">
+    <div
+      className={clsx(
+        props.mode === MODE_MENGULAS.tahun
+          ? styles.heightTableTahun
+          : styles.heightTableTahap,
+        'w-full overflow-y-scroll scrollBar'
+      )}
+    >
       <table
         className={clsx(
           styles.tableKertasKerja,
-          'w-full text-left text-base cursor-pointer'
+          'w-full text-left text-base cursor-pointer z-10'
         )}
       >
         <thead>
@@ -160,81 +175,115 @@ const KegiatanRowTable = (props: any) => {
     <table
       className={clsx(styles.tableKertasKerja, 'w-full text-left text-base')}
     >
-      <tr className={styles.line}>
-        <td className={styles.code}>{data.kode}</td>
-        <td>{data.label}</td>
-        <td className={styles.price}>{amountFormatting(data.total)}</td>
-        <td className={styles.expand}></td>
-      </tr>
-      {data.rekening_belanja &&
-        data.rekening_belanja.length > 0 &&
-        data.rekening_belanja.map((item: any, index: number) => (
-          <RekeningBelanjaRowTable key={index} data={item} />
-        ))}
+      <tbody>
+        <tr className={styles.line}>
+          <td className={styles.code}>{data.kode}</td>
+          <td>{data.label}</td>
+          <td className={styles.price}>{amountFormatting(data.total)}</td>
+          <td className={styles.expand}></td>
+        </tr>
+        <tr className={styles.line}>
+          <table className={clsx(styles.tableRekeningBelanja, 'w-full')}>
+            <tbody>
+              <tr>
+                <td
+                  className="block"
+                  style={{ padding: 'unset', paddingBottom: '8px' }}
+                >
+                  {data.rekening_belanja &&
+                    data.rekening_belanja.length > 0 &&
+                    data.rekening_belanja.map((item: any, index: number) => (
+                      <RekeningBelanjaRowTable
+                        key={index}
+                        data={item}
+                        isHeader={true}
+                      />
+                    ))}
+                </td>
+                <td style={{ padding: 'unset' }}>
+                  <div
+                    className="overflow-x-scroll scrollBarHor"
+                    style={{ width: '750px' }}
+                  >
+                    {data.rekening_belanja &&
+                      data.rekening_belanja.length > 0 &&
+                      data.rekening_belanja.map((item: any, index: number) => (
+                        <RekeningBelanjaRowTable
+                          key={index}
+                          data={item}
+                          isHeader={false}
+                        />
+                      ))}
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </tr>
+      </tbody>
     </table>
   )
 }
 
 const RekeningBelanjaRowTable = (props: any) => {
   const { data } = props
-  console.log(data)
   return (
-    <tr className={styles.line}>
-      <td colSpan={4} style={{ padding: 'unset' }}>
-        <div
-          className="scrollBarHor"
-          style={{
-            overflowX: 'scroll',
-            marginLeft: '600px',
-            borderLeft: '2px solid #f5f5f5',
-          }}
-        >
-          <table className={styles.scrollTable}>
-            <tr className={styles.line}>
-              <td className={styles.line} style={{ borderRight: 'unset' }}></td>
-              {bulanTahapSatu.map((bulan) => (
-                <td colSpan={2} className="text-center capitalize-first">
-                  {bulan}
-                </td>
-              ))}
-              <td
-                className={clsx(styles.price, 'text-center')}
-                style={{ borderRight: 'unset' }}
-              ></td>
-            </tr>
-            <tr className={styles.line}>
-              <td className={styles.line} style={{ borderRight: 'unset' }}>
-                <div className="flex">
-                  <span className={styles.code}>{data.kode}</span>
-                  <span>{data.label}</span>
-                </div>
+    <table className={clsx(styles.borderRight, 'w-full')}>
+      {props.isHeader && (
+        <>
+          <tr className={styles.line}>
+            <td className={styles.line}></td>
+          </tr>
+          <tr className={styles.line}>
+            <td className={styles.line}>
+              <div className="flex">
+                <span className={styles.code}>{data.kode}</span>
+                <span>{data.label}</span>
+              </div>
+            </td>
+          </tr>
+        </>
+      )}
+      {!props.isHeader && (
+        <>
+          <tr className={styles.line}>
+            {bulanTahapSatu.map((bulan) => (
+              <td colSpan={2} className="text-center capitalize-first">
+                {bulan}
               </td>
-              {bulanTahapSatu.map((bulan) => (
-                <td colSpan={2} className="text-center capitalize-first">
-                  {amountFormatting(data.bulan[bulan].total)}
-                </td>
-              ))}
-              <td
-                className={clsx(styles.total, 'block text-center')}
-                style={{ borderRight: 'unset' }}
-              >
-                {amountFormatting(data.total)}
+            ))}
+            <td
+              className={clsx(styles.price, 'text-center')}
+              style={{ borderRight: 'unset' }}
+            ></td>
+          </tr>
+          <tr className={styles.line}>
+            {bulanTahapSatu.map((bulan) => (
+              <td colSpan={2} className="text-center capitalize-first">
+                {amountFormatting(data.bulan[bulan].total)}
               </td>
-            </tr>
-            {data.uraian &&
-              data.uraian.length > 0 &&
-              data.uraian.map((item: any, index: number) => (
-                <UraianRowTable
-                  key={index}
-                  index={index}
-                  data={item}
-                  length={data.uraian.length}
-                />
-              ))}
-          </table>
-        </div>
-      </td>
-    </tr>
+            ))}
+            <td
+              className={clsx(styles.total, 'block')}
+              style={{ borderRight: 'unset' }}
+            >
+              {amountFormatting(data.total)}
+            </td>
+          </tr>
+        </>
+      )}
+      {data.uraian &&
+        data.uraian.length > 0 &&
+        data.uraian.map((item: any, index: number) => (
+          <UraianRowTable
+            key={index}
+            index={index}
+            data={item}
+            length={data.uraian.length}
+            isHeader={props.isHeader}
+          />
+        ))}
+    </table>
   )
 }
 
@@ -244,32 +293,51 @@ const UraianRowTable = (props: any) => {
   const classLine = props.index !== props.length - 1 && styles.line
 
   return (
-    <tr className={classLine}>
-      <td className={classLine} style={{ borderRight: 'unset' }}>
-        <div className="flex text-center">
-          <span className={styles.code}></span>
-          <span className="flex-1 text-left truncate">{data.label}</span>
-          <span className="flex-none" style={{ width: '50px' }}>
-            {data.jumlah}
-          </span>
-          <span className={styles.price}>{amountFormatting(data.total)}</span>
-        </div>
-      </td>
-      {bulanTahapSatu.map((bulan) => (
-        <>
-          <td className="text-center">{data.bulan[bulan].jumlah}</td>
-          <td className={clsx(styles.price, 'block text-center')}>
-            {amountFormatting(data.bulan[bulan].total)}
+    <>
+      {props.isHeader && (
+        <tr className={classLine}>
+          <td className={classLine}>
+            <div className="flex text-center">
+              <span
+                className={styles.code}
+                style={{ paddingRight: '32px' }}
+              ></span>
+              <span
+                className="flex-1 text-left truncate"
+                style={{ paddingRight: '32px' }}
+              >
+                {data.label}
+              </span>
+              <span className={clsx(styles.amount, 'flex-none')}>
+                {data.jumlah}
+              </span>
+              <span
+                className={clsx(styles.price, 'text-left')}
+                style={{ paddingLeft: '32px' }}
+              >
+                {amountFormatting(data.total)}
+              </span>
+            </div>
           </td>
-        </>
-      ))}
-      <td
-        className={clsx(styles.total, 'text-center')}
-        style={{ borderRight: 'unset' }}
-      >
-        {amountFormatting(data.total)}
-      </td>
-    </tr>
+        </tr>
+      )}
+      {!props.isHeader && (
+        <tr className={classLine}>
+          {bulanTahapSatu.map((bulan) => (
+            <>
+              <td className="text-center">{data.bulan[bulan].jumlah}</td>
+              <td className={clsx(styles.priceMonth, 'block text-center')}>
+                {amountFormatting(data.bulan[bulan].total)}
+              </td>
+            </>
+          ))}
+          <td className={styles.total} style={{ borderRight: 'unset' }}>
+            {amountFormatting(data.total)}
+          </td>
+        </tr>
+      )}
+    </>
   )
 }
+
 export default TabelMengulasKertasKerjaView

@@ -83,3 +83,13 @@ export const ID_SUMBER_DANA = {
   SILPA_BOS_AFIRMASI: 34,
   SILPA_BOS_KINERJA: 35,
 }
+
+export const MODE_MENGULAS = {
+  tahap: 'tahap',
+  tahun: 'tahun',
+}
+
+export const LABEL_MODE_MENGULAS = [
+  { id: 1, key: MODE_MENGULAS.tahap, label: 'Lihat per tahapan' },
+  { id: 2, key: MODE_MENGULAS.tahun, label: 'Lihat per tahun' },
+]
