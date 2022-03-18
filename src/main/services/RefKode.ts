@@ -25,6 +25,7 @@ export const getRefKodeList = async (
 ): Promise<any> => {
   return createQueryBuilder(RefKode, 'rk3')
     .select([
+      'rk3.id_ref_kode',
       'rk3.id_kode as id_kode',
       'rk1.uraian_kode as program',
       'rk2.uraian_kode as komponen',
