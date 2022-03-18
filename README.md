@@ -14,12 +14,13 @@ electron desktop app
 - [x] installation build & script which includes sqlite3 db creation (if not exists)
 - [ ] local db migration (for table structure and/or initial data)
 - [ ] version auto update mechanism
-- [ ] unit test
+- [x] unit test
 
 ### Features
 
-- [ ] Login
-- [ ] Registrasi
+- [x] Login
+- [x] Registrasi
+- [x] Logout
 - [ ] Aktivasi Kertas Kerja
 - [ ] Pengisian Kertas Kerja
 - [ ] Pengajuan Pengesahan Kertas Kerja
@@ -44,6 +45,16 @@ electron desktop app
 
 - yarn
 - sqlite3
+
+### Install prerequisite
+
+1. Install the latest LTS version of node `v16+` with <a href="https://github.com/nvm-sh/nvm">nvm</a> to make it easier to manage multiple node version.
+
+1. Install yarn with 
+
+```bash
+npm install -g yarn
+```
 
 ### Run/Build
 
@@ -76,6 +87,15 @@ yarn postinstall
 ```bash
 yarn start
 ```
+
+### Test
+
+6. Run test
+
+```bash
+yarn test
+```
+
 
 ## Shortcut Open Dev Tools
 

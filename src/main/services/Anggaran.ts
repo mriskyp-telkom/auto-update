@@ -1,4 +1,4 @@
-import { Rapbs } from 'main/repositories/Rapbs'
+import { Rapbs } from '../repositories/Rapbs'
 import { createQueryBuilder, getRepository } from 'typeorm'
 import { Anggaran } from '../repositories/Anggaran'
 import { RefSumberDana } from '../repositories/RefSumberDana'
