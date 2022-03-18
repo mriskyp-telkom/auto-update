@@ -20,6 +20,8 @@ import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
 import {
   RESPONSE_PENGESAHAN,
   ALERT_MENGULAS,
+  MODE_MENGULAS,
+  LABEL_MODE_MENGULAS,
 } from 'renderer/constants/anggaran'
 
 import { AlertType } from 'renderer/types/ComponentType'
@@ -29,6 +31,7 @@ const MengulasKertasKerjaView: FC = () => {
   const navigate = useNavigate()
 
   const [openModalAjukan, setOpenModalAjukan] = useState(false)
+  const [modeMengulas, setModeMengulas] = useState(MODE_MENGULAS.tahap)
 
   const alertMengulas = useAnggaranStore(
     (state: AnggaranStates) => state.alertMengulas
@@ -60,6 +63,10 @@ const MengulasKertasKerjaView: FC = () => {
     if (responseMengulas === RESPONSE_PENGESAHAN.success) {
       return <PanduanCekStatusKKView />
     }
+  }
+
+  const handleChangeMode = (value: string) => {
+    setModeMengulas(value)
   }
 
   return (
@@ -179,7 +186,10 @@ const MengulasKertasKerjaView: FC = () => {
       <div className="bg-white px-10 py-5 h-full">
         <div className="flex justify-between">
           <span>
-            <DropdownComponent />
+            <DropdownComponent
+              options={LABEL_MODE_MENGULAS}
+              handleChange={handleChangeMode}
+            />
           </span>
           <AmountCardComponent
             type="disabled"
@@ -188,28 +198,35 @@ const MengulasKertasKerjaView: FC = () => {
             amount={100000000}
           />
         </div>
-        <div>
-          <Tabs className="w-full">
-            <div className="shadow pt-[14px]">
-              <TabList style={{ marginLeft: 0 }}>
-                <Tab className="capitalize-first">Periode Salur Tahap 1</Tab>
-                <Tab className="capitalize-first">Periode Salur Tahap 2</Tab>
-                <Tab className="capitalize-first">Periode Salur Tahap 3</Tab>
-              </TabList>
+        <>
+          {modeMengulas === MODE_MENGULAS.tahap && (
+            <Tabs className="w-full">
+              <div className="shadow pt-[14px]">
+                <TabList style={{ marginLeft: 0 }}>
+                  <Tab className="capitalize-first">Periode Salur Tahap 1</Tab>
+                  <Tab className="capitalize-first">Periode Salur Tahap 2</Tab>
+                  <Tab className="capitalize-first">Periode Salur Tahap 3</Tab>
+                </TabList>
+              </div>
+              <TabPanels>
+                <TabPanel className="pt-8">
+                  <TabelMengulasKertasKerjaView mode={modeMengulas} />
+                </TabPanel>
+                <TabPanel>
+                  <div>test</div>
+                </TabPanel>
+                <TabPanel>
+                  <div>test</div>
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
+          )}
+          {modeMengulas === MODE_MENGULAS.tahun && (
+            <div className="pt-8">
+              <TabelMengulasKertasKerjaView mode={modeMengulas} />
             </div>
-            <TabPanels>
-              <TabPanel>
-                <TabelMengulasKertasKerjaView />
-              </TabPanel>
-              <TabPanel>
-                <div>test</div>
-              </TabPanel>
-              <TabPanel>
-                <div>test</div>
-              </TabPanel>
-            </TabPanels>
-          </Tabs>
-        </div>
+          )}
+        </>
       </div>
       <AlertDialogComponent
         type="warning"
