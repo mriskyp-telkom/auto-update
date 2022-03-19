@@ -1,7 +1,13 @@
-import { Rapbs } from '../repositories/Rapbs'
 import { createQueryBuilder, getRepository } from 'typeorm'
-import { Anggaran } from '../repositories/Anggaran'
-import { RefSumberDana } from '../repositories/RefSumberDana'
+import { Rapbs } from 'main/repositories/Rapbs'
+import { RapbsPeriode } from 'main/repositories/RapbsPeriode'
+import { Anggaran } from 'main/repositories/Anggaran'
+import { RefSumberDana } from 'main/repositories/RefSumberDana'
+import { RefRekening } from 'main/repositories/RefRekening'
+import { RefKode } from 'main/repositories/RefKode'
+import { RefAcuanBarang } from 'main/repositories/RefAcuanBarang'
+import { getBentukPendidikan } from 'main/services/Sekolah'
+import CommonUtils from '../utils/CommonUtils'
 
 export const GetAnggaran = async (
   idSumberDana: number,
@@ -102,4 +108,76 @@ export const DelAnggaran = async (idAnggaran: string): Promise<any> => {
     })
     .where('id_anggaran = :idAnggaran', { idAnggaran })
     .execute()
+}
+
+export const CopyAnggaran = async (
+  idAnggaranSource: string,
+  idAnggaranNew: string
+): Promise<boolean> => {
+  let idRapbs: string
+  let refRek
+  let refKode
+  let refBarang
+  let getRapbsPeriode
+  const getBentuk = await getBentukPendidikan()
+  const getRapbsSource = await createQueryBuilder(Rapbs, 'r')
+    .where('r.soft_delete=0' + ' AND r.id_anggaran=:idAnggaran', {
+      idAnggaran: idAnggaranSource,
+    })
+    .getRawMany()
+  try {
+    getRapbsSource?.forEach(async (el) => {
+      refRek = await createQueryBuilder(RefRekening)
+        .where('expired_date is null and kode_rekening=:kodeRekening', {
+          kodeRekening: el.kode_rekening,
+        })
+        .getCount()
+
+      refKode = await createQueryBuilder(RefKode)
+        .where(
+          'expired_date is null ' +
+            'and bentuk_pendidikan_id=:bentukPendidikan ' +
+            'and id_ref_kode=:idRefKode',
+          {
+            bentukPendidikan: getBentuk,
+            idRefKode: el.id_ref_kode,
+          }
+        )
+        .getCount()
+
+      refBarang =
+        el.id_barang ?? '' == ''
+          ? await createQueryBuilder(RefAcuanBarang)
+              .where('expired_date is null and id_barang=:idBarang', {
+                idBarang: el.id_barang,
+              })
+              .getCount()
+          : 1
+
+      if (refKode > 0 && refRek > 0 && refBarang > 0) {
+        idRapbs = CommonUtils.encodeUUID(CommonUtils.uuid())
+        el.id_anggaran = idAnggaranNew
+        el.id_rapbs = idRapbs
+        el.create_date = new Date()
+        el.last_update = new Date()
+        await getRepository(Rapbs).insert(el)
+
+        getRapbsPeriode = await createQueryBuilder(RapbsPeriode)
+          .where('soft_delete=0 and id_rapbs=:idRapbs', { idRapbs: idRapbs })
+          .getRawMany()
+
+        getRapbsPeriode?.forEach(async (eld) => {
+          eld.id_rapbs_periode = CommonUtils.encodeUUID(CommonUtils.uuid())
+          eld.id_rapbs = idRapbs
+          eld.create_date = new Date()
+          eld.last_update = new Date()
+
+          await getRepository(RapbsPeriode).insert(eld)
+        })
+      }
+    })
+    return true
+  } catch {
+    return false
+  }
 }

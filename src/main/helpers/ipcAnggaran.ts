@@ -6,6 +6,7 @@ import {
   GetAnggaran,
   GetAnggaranBefore,
   GetPagu,
+  CopyAnggaran,
 } from 'main/services/Anggaran'
 import { GetConfig } from 'main/services/Config'
 import CommonUtils from '../utils/CommonUtils'
@@ -148,5 +149,43 @@ module.exports = {
       }
     */
     e.returnValue = await GetPagu(idAnggaran)
+  }),
+
+  copyAnggaran: ipcMain.on('anggaran:copyAnggaran', async (e, data) => {
+    /*
+      data:
+        id_ref_sumber_dana
+        volume: default = 1
+        harga_satuan:
+        pengguna_id:
+        id_penjab:
+        tahun:
+        id_anggaran_before: 
+    */
+    if (data.id_anggaran_before !== '') {
+      const idAnggaran = CommonUtils.encodeUUID(CommonUtils.uuid())
+      const dataAnggaran = new Anggaran()
+      dataAnggaran.idAnggaran = idAnggaran
+      dataAnggaran.idRefSumberDana = data.id_ref_sumber_dana
+      dataAnggaran.sekolahId = await GetConfig('sekolah_id')
+      dataAnggaran.tahunAnggaran = data.tahun
+      dataAnggaran.volume = data.volume
+      dataAnggaran.hargaSatuan = data.harga_satuan
+      dataAnggaran.jumlah = data.volume * data.harga_satuan
+      dataAnggaran.sisaAnggaran = 0
+      dataAnggaran.isApprove = 0
+      dataAnggaran.isRevisi = 0
+      dataAnggaran.isAktif = 1
+      dataAnggaran.softDelete = 0
+      dataAnggaran.createDate = new Date(data.create_date)
+      dataAnggaran.lastUpdate = new Date()
+      dataAnggaran.updaterId = data.pengguna_id
+      dataAnggaran.idPenjab = data.id_penjab
+      await AddAnggaran(dataAnggaran)
+      const retCopy = await CopyAnggaran(data.id_anggaran_before, idAnggaran)
+      e.returnValue = retCopy ? idAnggaran : ''
+    } else {
+      e.returnValue = ''
+    }
   }),
 }
