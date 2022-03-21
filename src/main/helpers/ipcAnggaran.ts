@@ -9,8 +9,8 @@ import {
   CopyAnggaran,
 } from 'main/services/Anggaran'
 import { GetConfig } from 'main/services/Config'
-import CommonUtils from '../utils/CommonUtils'
-import { STATUS_KERTAS_KERJA } from '../../global/constants'
+import CommonUtils from 'main/utils/CommonUtils'
+import { STATUS_KERTAS_KERJA } from 'global/constants'
 
 module.exports = {
   getAnggaran: ipcMain.on('anggaran:getAnggaran', async (e, idSumberDana) => {

@@ -1,11 +1,11 @@
 import { createConnection, getConnection, getRepository } from 'typeorm'
-import { Anggaran } from '../../src/main/repositories/Anggaran'
-import { MstSekolah } from '../../src/main/repositories/MstSekolah'
-import { AppConfig } from '../../src/main/repositories/AppConfig'
-import { RefSumberDana } from '../../src/main/repositories/RefSumberDana'
-import CommonUtils from '../../src/main/utils/CommonUtils'
-import { GetConfig } from '../../src/main/services/Config'
-import { AddAnggaran, GetAnggaran } from '../../src/main/services/Anggaran'
+import { Anggaran } from 'main/repositories/Anggaran'
+import { MstSekolah } from 'main/repositories/MstSekolah'
+import { AppConfig } from 'main/repositories/AppConfig'
+import { RefSumberDana } from 'main/repositories/RefSumberDana'
+import CommonUtils from 'main/utils/CommonUtils'
+import { GetConfig } from 'main/services/Config'
+import { AddAnggaran, GetAnggaran } from 'main/services/Anggaran'
 
 beforeEach(() => {
   return createConnection({

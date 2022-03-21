@@ -16,8 +16,9 @@
     "paths": {
       "*": ["node_modules/*"],
       "main/*": ["src/main/*"],
-      "renderer/*": ["src/renderer/*"]
+      "renderer/*": ["src/renderer/*"],
+      "global/*": ["src/global/*"]
     }
   },
-  "include": ["src/**/**/*"]
+  "include": ["src/**/**/*", "tests"]
 }

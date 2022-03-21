@@ -1,4 +1,4 @@
-import { STATUS_KERTAS_KERJA } from '../../global/constants'
+import { STATUS_KERTAS_KERJA } from 'global/constants'
 
 export const LABEL_STATUS_KERTAS_KERJA = [
   {
