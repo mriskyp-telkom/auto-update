@@ -68,16 +68,18 @@ export const GetAnggaranBefore = async (
   tahun: number
 ): Promise<string> => {
   const getIsRevisiMax =
-    (await createQueryBuilder(Anggaran, 'a')
-      .select('MAX(a.is_revisi)', 'is_revisi')
-      .where(
-        'a.soft_delete = 0 AND a.tahun_anggaran =:tahun AND a.id_ref_sumber_dana = :sumberDana',
-        {
-          tahun: tahun - 1,
-          sumberDana: sumberDana,
-        }
-      )
-      .getRawOne()) ?? -1
+    (
+      await createQueryBuilder(Anggaran, 'a')
+        .select('MAX(a.is_revisi)', 'is_revisi')
+        .where(
+          'a.soft_delete = 0 AND a.tahun_anggaran =:tahun AND a.id_ref_sumber_dana = :sumberDana',
+          {
+            tahun: tahun - 1,
+            sumberDana: sumberDana,
+          }
+        )
+        .getRawOne()
+    )?.is_revisi ?? -1
   if (getIsRevisiMax > -1) {
     const getIdAnggaran = await createQueryBuilder(Anggaran, 'a')
       .select('a.id_anggaran as id_anggaran')
@@ -85,7 +87,7 @@ export const GetAnggaranBefore = async (
         'a.soft_delete = 0 AND a.tahun_anggaran =:tahun AND a.is_revisi =:isRevisi AND a.id_ref_sumber_dana =:sumberDana ',
         {
           tahun: tahun - 1,
-          isRevisi: getIsRevisiMax.is_revisi,
+          isRevisi: getIsRevisiMax,
           sumberDana: sumberDana,
         }
       )
