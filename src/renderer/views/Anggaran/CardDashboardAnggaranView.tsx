@@ -6,10 +6,7 @@ import CreateKertasKerjaView from './CreateKertasKerjaView'
 
 import { CardDashboardType } from 'renderer/types/AnggaranType'
 
-import {
-  STATUS_KERTAS_KERJA,
-  LABEL_STATUS_KERTAS_KERJA,
-} from 'renderer/constants/anggaran'
+import { LABEL_STATUS_KERTAS_KERJA } from 'renderer/constants/anggaran'
 
 import { Icon } from '@wartek-id/icon'
 import { Tooltip } from '@wartek-id/tooltip'
@@ -19,6 +16,7 @@ import {
   formatDateToString,
   formatDateTimeStatus,
 } from 'renderer/utils/date-formatting'
+import { STATUS_KERTAS_KERJA } from '../../../global/constants'
 
 interface CardDashboardAnggaranProps {
   data: CardDashboardType
