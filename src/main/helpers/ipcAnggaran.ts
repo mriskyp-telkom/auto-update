@@ -10,6 +10,7 @@ import {
 } from 'main/services/Anggaran'
 import { GetConfig } from 'main/services/Config'
 import CommonUtils from '../utils/CommonUtils'
+import { STATUS_KERTAS_KERJA } from '../../global/constants'
 
 module.exports = {
   getAnggaran: ipcMain.on('anggaran:getAnggaran', async (e, idSumberDana) => {
@@ -52,20 +53,20 @@ module.exports = {
           data.tanggal_pengesahan == null &&
           (data.alasan_penolakan == null || data.alasan_penolakan == '')
         ) {
-          anggaran.status = 'draft'
+          anggaran.status = STATUS_KERTAS_KERJA.draft
         } else if (
           data.tanggal_pengajuan != null &&
           data.tanggal_pengesahan == null &&
           (data.alasan_penolakan == null || data.alasan_penolakan == '')
         ) {
-          anggaran.status = 'waiting'
+          anggaran.status = STATUS_KERTAS_KERJA.waiting_approval
         } else if (
           data.tanggal_pengesahan != null &&
           (data.alasan_penolakan == null || data.alasan_penolakan == '')
         ) {
           const countPerubahan = Math.floor(data.is_revisi / 100)
           const pergeseran = data.is_revisi % 100
-          anggaran.status = 'approved'
+          anggaran.status = STATUS_KERTAS_KERJA.approved
           if (countPerubahan >= 1) {
             anggaran.type = 'Perubahan'
           }
@@ -76,12 +77,12 @@ module.exports = {
           data.alasan_penolakan != null &&
           data.alasan_penolakan !== ''
         ) {
-          data.status = 'not_approved'
+          data.status = STATUS_KERTAS_KERJA.not_approved
         }
       } else {
-        anggaran.status = 'not_created'
+        anggaran.status = STATUS_KERTAS_KERJA.not_created
         if (tahun < tahunAktif) {
-          anggaran.status = 'disabled'
+          anggaran.status = STATUS_KERTAS_KERJA.disabled
         }
       }
       listAnggaran.push(anggaran)
@@ -124,7 +125,7 @@ module.exports = {
   checkBefore: ipcMain.on('anggaran:checkBefore', async (e, data) => {
     /*
       ==== PARAM ====
-      data : 
+      data :
       {
         data.sumber_dana: number (1,3,5,11,12,33,34,35)
         data.tahun: number
@@ -160,7 +161,7 @@ module.exports = {
         pengguna_id:
         id_penjab:
         tahun:
-        id_anggaran_before: 
+        id_anggaran_before:
     */
     if (data.id_anggaran_before !== '') {
       const idAnggaran = CommonUtils.encodeUUID(CommonUtils.uuid())

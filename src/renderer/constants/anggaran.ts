@@ -1,11 +1,4 @@
-export const STATUS_KERTAS_KERJA = {
-  waiting_approval: 'waiting_approval',
-  not_approved: 'not_approved',
-  draft: 'draft',
-  not_created: 'not_created',
-  approved: 'approved',
-  disabled: 'disabled',
-}
+import { STATUS_KERTAS_KERJA } from '../../global/constants'
 
 export const LABEL_STATUS_KERTAS_KERJA = [
   {
