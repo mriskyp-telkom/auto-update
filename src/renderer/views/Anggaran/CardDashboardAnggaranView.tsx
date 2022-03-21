@@ -16,7 +16,7 @@ import {
   formatDateToString,
   formatDateTimeStatus,
 } from 'renderer/utils/date-formatting'
-import { STATUS_KERTAS_KERJA } from '../../../global/constants'
+import { STATUS_KERTAS_KERJA } from 'global/constants'
 
 interface CardDashboardAnggaranProps {
   data: CardDashboardType

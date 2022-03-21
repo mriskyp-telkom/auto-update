@@ -23,6 +23,7 @@ module.exports = {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css'],
     alias: {
       renderer: path.resolve(__dirname, './src/renderer'),
+      global: path.resolve(__dirname, './src/global'),
     },
   },
 }

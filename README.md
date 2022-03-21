@@ -50,7 +50,7 @@ electron desktop app
 
 1. Install the latest LTS version of node `v16+` with <a href="https://github.com/nvm-sh/nvm">nvm</a> to make it easier to manage multiple node version.
 
-1. Install yarn with 
+1. Install yarn with
 
 ```bash
 npm install -g yarn
@@ -95,7 +95,6 @@ yarn start
 ```bash
 yarn test
 ```
-
 
 ## Shortcut Open Dev Tools
 
