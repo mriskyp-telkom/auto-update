@@ -42,6 +42,8 @@ const MenyusunKertasKerjaView: FC = () => {
   const [sisa, setSisa] = useState(0)
 
   const [tahunAktif, setTahunAktif] = useState('')
+  const [idAnggaranBefore, setIdAnggaranBefore] = useState(null)
+  const [penggunaId, setPenggunaId] = useState('')
 
   const alertMengulas = useAnggaranStore(
     (state: AnggaranStates) => state.alertMengulas
@@ -65,18 +67,7 @@ const MenyusunKertasKerjaView: FC = () => {
 
   const pagu = useAnggaranStore((state: AnggaranStates) => state.pagu)
 
-  const handleSalinKertasKerja = () => {
-    setOpenModalInit(false)
-    setIsSync(true)
-    setTimeout(() => {
-      setIsSync(false)
-    }, 3000)
-  }
-
-  const handleBuatBaru = () => {
-    setOpenModalInit(false)
-    setIsSync(true)
-    const penggunaId = ipcRenderer.sendSync('user:getPenggunaId')
+  const savePenjab = () => {
     const penjab = {
       sekolah_id: penanggungJawab.sekolah_id,
       kepsek: penanggungJawab.kepsek,
@@ -92,7 +83,37 @@ const MenyusunKertasKerjaView: FC = () => {
       updater_id: penggunaId,
       create_date: new Date(),
     }
-    const penjabId = ipcRenderer.sendSync('penjab:addPenjab', penjab)
+    return ipcRenderer.sendSync('penjab:addPenjab', penjab)
+  }
+
+  const setPagu = (idAnggaran: string) => {
+    const getPagu = ipcRenderer.sendSync('anggaran:getPagu', idAnggaran)
+    setJumlahPagu(getPagu.pagu)
+    setTotal(getPagu.total)
+    setSisa(getPagu.sisa)
+  }
+  const handleSalinKertasKerja = () => {
+    setOpenModalInit(false)
+    setIsSync(true)
+    const penjabId = savePenjab()
+    const data = {
+      id_ref_sumber_dana: pagu.sumber_dana_id,
+      volume: pagu.volume,
+      harga_satuan: pagu.harga_satuan,
+      pengguna_id: penggunaId,
+      id_penjab: penjabId,
+      tahun: tahunAktif,
+      id_anggaran_before: idAnggaranBefore,
+    }
+    const idAnggaran = ipcRenderer.sendSync('anggaran:copyAnggaran', data)
+    setPagu(idAnggaran)
+    setIsSync(false)
+  }
+
+  const handleBuatBaru = () => {
+    setOpenModalInit(false)
+    setIsSync(true)
+    const penjabId = savePenjab()
     const dataAnggaran = {
       id_ref_sumber_dana: pagu.sumber_dana_id,
       volume: pagu.volume,
@@ -106,10 +127,7 @@ const MenyusunKertasKerjaView: FC = () => {
       'anggaran:addAnggaran',
       dataAnggaran
     )
-    const getPagu = ipcRenderer.sendSync('anggaran:getPagu', idAnggaran)
-    setJumlahPagu(getPagu.pagu)
-    setTotal(getPagu.total)
-    setSisa(getPagu.sisa)
+    setPagu(idAnggaran)
     setIsSync(false)
   }
 
@@ -134,28 +152,29 @@ const MenyusunKertasKerjaView: FC = () => {
       'config:getConfig',
       APP_CONFIG.tahunAktif
     )
+    const penggunaId = ipcRenderer.sendSync('user:getPenggunaId')
+    const data = {
+      sumber_dana: pagu.sumber_dana_id,
+      tahun: tahunAktif,
+    }
+
+    const idAnggaranBefore = ipcRenderer.sendSync('anggaran:checkBefore', data)
     setTahunAktif(tahunAktif)
+    setIdAnggaranBefore(idAnggaranBefore)
+    setPenggunaId(penggunaId)
   }, [])
 
   useEffect(() => {
-    if (tahunAktif !== '') {
+    if (tahunAktif !== '' && penggunaId !== '' && idAnggaranBefore !== null) {
       if (mode === 'create') {
-        const data = {
-          sumber_dana: pagu.sumber_dana_id,
-          tahun: tahunAktif,
-        }
-        const tahunAnggaranBefore = ipcRenderer.sendSync(
-          'anggaran:checkBefore',
-          data
-        )
-        if (tahunAnggaranBefore !== '') {
+        if (idAnggaranBefore !== '') {
           setOpenModalInit(true)
         } else {
           handleBuatBaru()
         }
       }
     }
-  }, [tahunAktif])
+  }, [tahunAktif, idAnggaranBefore, penggunaId])
 
   return (
     <div>
