@@ -135,22 +135,27 @@ const MenyusunKertasKerjaView: FC = () => {
       APP_CONFIG.tahunAktif
     )
     setTahunAktif(tahunAktif)
-    if (mode === 'create') {
-      const data = {
-        sumber_dana: pagu.sumber_dana_id,
-        tahun: tahunAktif,
-      }
-      const tahunAnggaranBefore = ipcRenderer.sendSync(
-        'anggaran:checkBefore',
-        data
-      )
-      if (tahunAnggaranBefore !== '') {
-        setOpenModalInit(true)
-      } else {
-        handleBuatBaru()
+  }, [])
+
+  useEffect(() => {
+    if (tahunAktif !== '') {
+      if (mode === 'create') {
+        const data = {
+          sumber_dana: pagu.sumber_dana_id,
+          tahun: tahunAktif,
+        }
+        const tahunAnggaranBefore = ipcRenderer.sendSync(
+          'anggaran:checkBefore',
+          data
+        )
+        if (tahunAnggaranBefore !== '') {
+          setOpenModalInit(true)
+        } else {
+          handleBuatBaru()
+        }
       }
     }
-  }, [])
+  }, [tahunAktif])
 
   return (
     <div>
@@ -235,7 +240,7 @@ const MenyusunKertasKerjaView: FC = () => {
       <div className="bg-white px-10 h-full">
         <div className="flex justify-between">
           <span className="font-semibold text-[28px] pt-6 pb-[60px]">
-            Periode Anggaran 2021
+            Periode Anggaran {tahunAktif}
           </span>
           <span className="pt-4 pb-3">
             <div className="w-full flex text-center justify-end font-normal text-tiny text-blue-700 pb-[28px]">
