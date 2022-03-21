@@ -230,7 +230,7 @@ const RekeningBelanjaRowTable = (props: any) => {
   return (
     <table className={clsx(styles.borderRight, 'w-full')}>
       {props.isHeader && (
-        <>
+        <tbody>
           <tr className={styles.line}>
             <td className={styles.line}></td>
           </tr>
@@ -242,13 +242,17 @@ const RekeningBelanjaRowTable = (props: any) => {
               </div>
             </td>
           </tr>
-        </>
+        </tbody>
       )}
       {!props.isHeader && (
-        <>
+        <tbody>
           <tr className={styles.line}>
-            {bulanTahapSatu.map((bulan) => (
-              <td colSpan={2} className="text-center capitalize-first">
+            {bulanTahapSatu.map((bulan, index) => (
+              <td
+                key={index}
+                colSpan={2}
+                className="text-center capitalize-first"
+              >
                 {bulan}
               </td>
             ))}
@@ -258,8 +262,12 @@ const RekeningBelanjaRowTable = (props: any) => {
             ></td>
           </tr>
           <tr className={styles.line}>
-            {bulanTahapSatu.map((bulan) => (
-              <td colSpan={2} className="text-center capitalize-first">
+            {bulanTahapSatu.map((bulan, index) => (
+              <td
+                key={index}
+                colSpan={2}
+                className="text-center capitalize-first"
+              >
                 {amountFormatting(data.bulan[bulan].total)}
               </td>
             ))}
@@ -270,7 +278,7 @@ const RekeningBelanjaRowTable = (props: any) => {
               {amountFormatting(data.total)}
             </td>
           </tr>
-        </>
+        </tbody>
       )}
       {data.uraian &&
         data.uraian.length > 0 &&
@@ -290,10 +298,10 @@ const RekeningBelanjaRowTable = (props: any) => {
 const UraianRowTable = (props: any) => {
   const { data } = props
 
-  const classLine = props.index !== props.length - 1 && styles.line
+  const classLine = props.index !== props.length - 1 ? styles.line : ''
 
   return (
-    <>
+    <tbody>
       {props.isHeader && (
         <tr className={classLine}>
           <td className={classLine}>
@@ -336,7 +344,7 @@ const UraianRowTable = (props: any) => {
           </td>
         </tr>
       )}
-    </>
+    </tbody>
   )
 }
 

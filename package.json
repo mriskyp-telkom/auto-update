@@ -114,6 +114,7 @@
     "typescript": "^4.0.2"
   },
   "dependencies": {
+    "@electron/remote": "^2.0.8",
     "@headlessui/react": "^1.5.0",
     "@wartek-id/avatar": "^1.1.4",
     "@wartek-id/badge": "^1.0.0",
@@ -130,6 +131,7 @@
     "axios": "^0.26.0",
     "better-sqlite3": "^7.5.0",
     "better-sqlite3-multiple-ciphers": "^7.5.0",
+    "electron-find": "^1.0.7",
     "electron-ga-uuid": "^1.0.2",
     "electron-squirrel-startup": "^1.0.0",
     "loadash": "^1.0.0",

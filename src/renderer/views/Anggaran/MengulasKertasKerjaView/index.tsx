@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 
 import { Tooltip } from '@wartek-id/tooltip'
@@ -25,6 +25,8 @@ import {
 } from 'renderer/constants/anggaran'
 
 import { AlertType } from 'renderer/types/ComponentType'
+
+import { initializeFindText, openFindText } from 'renderer/configs/findtext'
 
 const MengulasKertasKerjaView: FC = () => {
   const location = useLocation()
@@ -68,6 +70,14 @@ const MengulasKertasKerjaView: FC = () => {
   const handleChangeMode = (value: string) => {
     setModeMengulas(value)
   }
+
+  const handleCari = () => {
+    openFindText()
+  }
+
+  useEffect(() => {
+    initializeFindText('tabelMengulas')
+  }, [])
 
   return (
     <div>
@@ -127,7 +137,13 @@ const MengulasKertasKerjaView: FC = () => {
         <span>
           {getPanduan()}
           <div className="flex justify-end pt-5 pb-3">
-            <Button color="white" size="md" variant="solid" className="mr-3">
+            <Button
+              color="white"
+              size="md"
+              variant="solid"
+              className="mr-3"
+              onClick={handleCari}
+            >
               <Icon
                 as="i"
                 color="default"
@@ -198,7 +214,7 @@ const MengulasKertasKerjaView: FC = () => {
             amount={100000000}
           />
         </div>
-        <>
+        <div id="tabelMengulas">
           {modeMengulas === MODE_MENGULAS.tahap && (
             <Tabs className="w-full">
               <div className="shadow pt-[14px]">
@@ -226,7 +242,7 @@ const MengulasKertasKerjaView: FC = () => {
               <TabelMengulasKertasKerjaView mode={modeMengulas} />
             </div>
           )}
-        </>
+        </div>
       </div>
       <AlertDialogComponent
         type="warning"
