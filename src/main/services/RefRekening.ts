@@ -27,6 +27,8 @@ export const getRefRekeningList = async (): Promise<any> => {
   return await createQueryBuilder(RefRekening, 'rr')
     .select([
       'rr.kode_rekening as kode_rekening',
+      "case when substr(rr.kode_rekening,1,3) = '5.1.' then 'Operasional' else 'Modal' end as jenis_rekening",
+      'rr.rekening',
       "case when b.jumlah is not null or substr(rr.kode_rekening,1,3) = '5.2' then 1 else 0 end as is_list_barang",
     ])
     .leftJoin(
