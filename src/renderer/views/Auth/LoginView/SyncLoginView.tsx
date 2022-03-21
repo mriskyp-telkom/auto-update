@@ -149,10 +149,13 @@ const SyncLoginView: FC = () => {
     if (dataToken !== undefined) {
       setToken(dataToken?.data.access_token)
       const hddVol = ipcRenderer.sendSync('config:getConfig', APP_CONFIG.hddVol)
-      const hddVolOld = ipcRenderer.sendSync(
+      let hddVolOld = ipcRenderer.sendSync(
         'config:getConfig',
         APP_CONFIG.hddVolOld
       )
+      if (hddVolOld === '') {
+        hddVolOld = hddVol
+      }
       setHddVol(hddVol)
       setHddVolOld(hddVolOld)
       setApi(stepAPi[2])
