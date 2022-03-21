@@ -235,9 +235,16 @@ const CreateAccountView: FC = () => {
 
   useEffect(() => {
     if (registration !== undefined) {
-      if (registration?.data.status_code == 1) {
+      if (registration?.data.status_code === 1) {
         setTahunAktif(registration?.data?.tahun_aktif)
         setApi(stepAPi[2])
+      } else if (registration?.data.status_code === 2) {
+        setError('email', {
+          type: 'manual',
+          message: 'Email sudah terdaftar. Silakan gunakan email lain.',
+        })
+        sendEventRegistrasi2(getValues('email'), 'email_terdaftar')
+        failedSyncData()
       } else {
         failedSyncData()
       }
