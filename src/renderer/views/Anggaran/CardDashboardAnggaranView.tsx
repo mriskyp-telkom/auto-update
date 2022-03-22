@@ -1,4 +1,5 @@
 import React, { FC } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import BadgeComponent, { BadgeType } from 'renderer/components/BadgeComponent'
 
@@ -25,6 +26,8 @@ interface CardDashboardAnggaranProps {
 const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (
   props: CardDashboardAnggaranProps
 ) => {
+  const navigate = useNavigate()
+
   const { data } = props
 
   const isNotApproved = data.status === STATUS_KERTAS_KERJA.not_approved
@@ -41,6 +44,10 @@ const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (
 
   const handleDelete = () => {
     console.log('delete')
+  }
+
+  const handleOpen = () => {
+    navigate(`/anggaran/menyusun/update/${data.id_anggaran}`)
   }
 
   return (
@@ -60,8 +67,7 @@ const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (
               </div>
               {isNotCreated && (
                 <div className="text-tiny text-red-600">
-                  Tenggat:
-                  {formatDateToString(new Date(data.tenggat_waktu))}
+                  Tenggat: {formatDateToString(new Date(data.tenggat_waktu))}
                 </div>
               )}
               {isNotApproved && (
@@ -128,10 +134,11 @@ const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (
                       trigger="hover"
                     >
                       <Icon
-                        as="i"
+                        as="button"
                         color="default"
                         fontSize="small"
                         style={{ fontSize: '22px', color: '#45474a' }}
+                        onClick={handleOpen}
                       >
                         open_in_new
                       </Icon>

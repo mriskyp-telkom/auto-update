@@ -40,7 +40,7 @@ export interface FormIsiKertasKerjaData {
 }
 
 export interface CardDashboardType {
-  id_anggaran: number
+  id_anggaran: string
   tahun: string
   status: string
   tenggat_waktu: string

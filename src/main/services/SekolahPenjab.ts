@@ -4,7 +4,14 @@ import {
   InsertResult,
   UpdateResult,
 } from 'typeorm'
-import { SekolahPenjab } from '../repositories/SekolahPenjab'
+import { SekolahPenjab } from 'main/repositories/SekolahPenjab'
+
+export const GetSekolahPenjabById = async (idPenjab: string): Promise<any> => {
+  const data = await getRepository(SekolahPenjab).findOne({
+    idPenjab: idPenjab,
+  })
+  return data
+}
 
 export const addSekolahPenjab = async (
   sekolahPenjab: SekolahPenjab
