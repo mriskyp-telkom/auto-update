@@ -19,43 +19,43 @@ export const headerKegiatan = [
 
 export const optionsKegiatan = [
   {
-    id: 1,
+    id: 'g1lYXh25aUy_awBckPpYWA',
     kode: '03.02.01',
     program: 'Pengembangan Standar Proses',
     kegiatan: 'Pelaksanaan Pendaftaran Peserta Didik Baru (PPDB)',
   },
   {
-    id: 2,
+    id: 'g1lYXh25aUy_awBckPpYWB',
     kode: '02.02.01',
     program: 'Pengembangan Standar Isi',
     kegiatan: 'Penyusunan Kompetensi Ketuntasan Minimum',
   },
   {
-    id: 3,
+    id: 'g1lYXh25aUy_awBckPpYWC',
     kode: '01.02.01',
     program: 'Pengembangan Kompetensi Lulusan Pengajar/Guru',
     kegiatan: 'Pelaksanaan Uji Coba UASBN Tk.kecamatan',
   },
   {
-    id: 4,
+    id: 'g1lYXh25aUy_awBckPpYWD',
     kode: '01.03.01',
     program: 'Pengembangan Kompetensi Lulusan Pengajar/Guru',
     kegiatan: 'Pemantapan Persiapan Ujian/Try Out',
   },
   {
-    id: 5,
+    id: 'g1lYXh25aUy_awBckPpYWE',
     kode: '01.04.01',
     program: 'Pengembangan Kompetensi Lulusan Pengajar/Guru',
     kegiatan: 'Pelaksanaan Ujian Nasional',
   },
   {
-    id: 6,
+    id: 'g1lYXh25aUy_awBckPpYWF',
     kode: '03.02.02',
     program: 'Pengembangan Standar Proses',
     kegiatan: 'Pelaksanaan Ujian Sekolah Berstandar Nasional',
   },
   {
-    id: 7,
+    id: 'g1lYXh25aUy_awBckPpYWG',
     kode: '03.02.03',
     program: 'Pengembangan Standar Proses',
     kegiatan: 'Pemugaran Sarana Prasarana',
