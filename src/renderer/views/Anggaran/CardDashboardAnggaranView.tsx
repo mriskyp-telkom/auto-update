@@ -38,6 +38,8 @@ const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (
   const isApproved = data.status === STATUS_KERTAS_KERJA.approved
 
   const enableBtnDelete = isDraft || isNotApproved
+  const isDisplayTenggat = isNotCreated || isDraft
+
   const enableVerDate =
     isApproved && (data.type === 'perubahan' || data.type === 'pergeseran')
   const enable3Icons = !isNotCreated && !isDisabled
@@ -65,7 +67,7 @@ const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (
               <div className="text-[20px]">
                 Kertas Kerja BOS Reguler {data.tahun}
               </div>
-              {isNotCreated && (
+              {isDisplayTenggat && (
                 <div className="text-tiny text-red-600">
                   Tenggat: {formatDateToString(new Date(data.tenggat_waktu))}
                 </div>
