@@ -43,7 +43,7 @@ export const ALERT_MENGULAS = {
   [RESPONSE_PENGESAHAN.success]: {
     type: 'success',
     icon: 'done',
-    title: 'Kertas Kerja Terkirim!',
+    title: 'RKAS Terkirim!',
     desc: 'Dinas memerlukan 7-14 hari kerja untuk memeriksa dan melakukan pengesahan. Silakan cek status terbaru secara berkala.',
     btnCancelText: 'Tutup',
     btnActionText: 'Cek Status',
@@ -51,18 +51,18 @@ export const ALERT_MENGULAS = {
   [RESPONSE_PENGESAHAN.error_sisa_dana]: {
     type: 'failed',
     icon: 'close',
-    title: 'Kertas Kerja belum memenuhi syarat',
-    desc: 'Anda masih memiliki sisa dana yang belum dihabiskan. Silakan revisi Kertas Kerja Anda dan ajukan pengesahan kembali.',
+    title: 'RKAS belum memenuhi syarat',
+    desc: 'Anda masih memiliki sisa dana yang belum dihabiskan. Silakan revisi RKAS Anda dan ajukan pengesahan kembali.',
     btnCancelText: '',
-    btnActionText: 'Revisi Kertas Kerja',
+    btnActionText: 'Revisi RKAS',
   },
   [RESPONSE_PENGESAHAN.error_data_sentral]: {
     type: 'failed',
     icon: 'close',
-    title: 'Maaf, Kertas Kerja perlu disesuaikan',
+    title: 'Maaf, RKAS perlu disesuaikan',
     desc: 'Ada perubahan di data referensi barang/jasa yang mempengaruhi anggaran Anda. Mohon sesuaikan berdasarkan panduan dan ajukan pengesahan kembali.',
     btnCancelText: '',
-    btnActionText: 'Revisi Kertas Kerja',
+    btnActionText: 'Revisi RKAS',
   },
 }
 

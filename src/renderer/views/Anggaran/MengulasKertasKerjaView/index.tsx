@@ -99,7 +99,7 @@ const MengulasKertasKerjaView: FC = () => {
             </span>
           </div>
           <div className="flex items-center text-[22px] font-semibold">
-            Mengulas Kertas Kerja
+            Mengulas RKAS
           </div>
           <div
             className="text-base font-semibold text-gray-600 mb-[57px]"
@@ -247,8 +247,8 @@ const MengulasKertasKerjaView: FC = () => {
       <AlertDialogComponent
         type="warning"
         icon="send"
-        title="Ajukan pengesahan Kertas Kerja?"
-        desc="Kertas Kerja Anda akan dikirim ke dinas setempat dan diperiksa kesesuaiannya dengan peraturan yang berlaku. Setelah pengajuan dikirim, Kertas Kerja tidak bisa diedit."
+        title="Ajukan pengesahan RKAS?"
+        desc="RKAS Anda akan dikirim ke dinas setempat dan diperiksa kesesuaiannya dengan peraturan yang berlaku. Setelah pengajuan dikirim, RKAS tidak bisa diedit."
         isOpen={openModalAjukan}
         btnCancelText="Batal"
         btnActionText="Kirim Pengajuan"

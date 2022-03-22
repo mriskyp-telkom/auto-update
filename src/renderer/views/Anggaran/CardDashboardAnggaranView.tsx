@@ -64,9 +64,7 @@ const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (
               />
             </span>
             <span className="mr-7">
-              <div className="text-[20px]">
-                Kertas Kerja BOS Reguler {data.tahun}
-              </div>
+              <div className="text-[20px]">RKAS BOS Reguler {data.tahun}</div>
               {isDisplayTenggat && (
                 <div className="text-tiny text-red-600">
                   Tenggat: {formatDateToString(new Date(data.tenggat_waktu))}
@@ -74,7 +72,7 @@ const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (
               )}
               {isNotApproved && (
                 <div className="text-tiny text-red-600">
-                  Anda perlu segera melakukan revisi Kertas Kerja
+                  Anda perlu segera melakukan revisi RKAS
                 </div>
               )}
               {isWaitingAproval && (
@@ -148,7 +146,7 @@ const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (
                   </div>
                   <div className="ml-6">
                     <Tooltip
-                      content="Silakan hubungi dinas setempat untuk menghapus Kertas Kerja yang sudah disahkan."
+                      content="Silakan hubungi dinas setempat untuk menghapus RKAS yang sudah disahkan."
                       placement="bottom"
                       strategy="fixed"
                       trigger="hover"
@@ -201,7 +199,7 @@ const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (
                 <CreateKertasKerjaView idSumberDana={data.id_sumber_dana} />
               </div>
               <div className="text-blue-700 text-[12px] text-right pt-4">
-                <b>“Buat Kertas Kerja”</b> membutuhkan koneksi internet
+                <b>“Buat RKAS”</b> membutuhkan koneksi internet
               </div>
             </>
           )}
@@ -209,7 +207,7 @@ const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (
       </div>
       {isDisabled && (
         <div className="text-gray-500 text-tiny place-self-end">
-          Kertas kerja tidak dapat dibuat karena melewati tenggat{' '}
+          RKAS tidak dapat dibuat karena melewati tenggat{' '}
           {formatDateToString(new Date(data.tenggat_waktu))}
         </div>
       )}

@@ -352,7 +352,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
       if (dataPagu?.data?.sumber_dana_id === ID_SUMBER_DANA.BOS_REGULER) {
         if (dataPagu?.data?.volume <= 0) {
           setAlertDesc(
-            'Anda tidak bisa membuat Kertas Kerja dari sumber dana BOS Reguler karena belum ada pencatatan penerimaan dana dari BOSSalur. Silakan hubungi dinas setempat jika ada kesalahan.'
+            'Anda tidak bisa membuat RKAS dari sumber dana BOS Reguler karena belum ada pencatatan penerimaan dana dari BOSSalur. Silakan hubungi dinas setempat jika ada kesalahan.'
           )
           setOpenModalFailed(true)
         } else {
@@ -427,7 +427,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
         >
           add
         </Icon>
-        Buat Kertas Kerja
+        Buat RKAS
       </Button>
       <AlertDialogComponent
         type="failed"

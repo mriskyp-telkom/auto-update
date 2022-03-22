@@ -18,13 +18,13 @@ const PanduanErrorSisaDanaKKView: FC = () => {
           >
             cancel
           </Icon>
-          Kertas Kerja Belum Memenuhi Syarat
+          RKAS Belum Memenuhi Syarat
         </div>
         <ul className="list font-normal text-base text-gray-900 ml-7">
           <li>
             <span>
-              Anda belum dapat mengajukan pengesahan karena Kertas Kerja Anda
-              masih memiliki sisa dana.
+              Anda belum dapat mengajukan pengesahan karena RKAS Anda masih
+              memiliki sisa dana.
             </span>
           </li>
           <li>
