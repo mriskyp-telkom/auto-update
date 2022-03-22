@@ -229,7 +229,7 @@ const MenyusunKertasKerjaView: FC = () => {
             </span>
           </div>
           <div className="flex items-center text-[22px] font-semibold">
-            Menyusun Kertas Kerja
+            Menyusun RKAS
             <Icon
               as="button"
               color="default"
@@ -350,11 +350,11 @@ const MenyusunKertasKerjaView: FC = () => {
       <AlertDialogComponent
         type="warning"
         icon="file_copy"
-        title="Salin dari Kertas Kerja sebelumnya?"
-        desc="Anda dapat menyalin isi Kertas Kerja pada tahun anggaran sebelumnya ke lembar ini atau membuat Kertas Kerja baru."
+        title="Salin dari RKAS sebelumnya?"
+        desc="Anda dapat menyalin isi RKAS pada tahun anggaran sebelumnya ke lembar ini atau membuat RKAS baru."
         isOpen={openModalInit}
         btnCancelText="Buat Baru"
-        btnActionText="Salin Kertas Kerja"
+        btnActionText="Salin RKAS"
         onCancel={handleBuatBaru}
         onSubmit={handleSalinKertasKerja}
       />
@@ -373,7 +373,7 @@ const MenyusunKertasKerjaView: FC = () => {
         />
       )}
       <SyncDialogComponent
-        title="Menyalin Kertas Kerja..."
+        title="Menyalin RKAS..."
         subtitle="Mohon tunggu sebentar."
         percentage={50}
         isOpen={isSync}

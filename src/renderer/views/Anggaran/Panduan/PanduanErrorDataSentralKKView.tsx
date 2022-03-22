@@ -18,7 +18,7 @@ const PanduanErrorDataSentralKKView: FC = () => {
           >
             cancel
           </Icon>
-          Kertas Kerja Butuh Disesuaikan
+          RKAS Butuh Disesuaikan
         </div>
         <ul className="list font-normal text-base text-gray-900 ml-7">
           <li>

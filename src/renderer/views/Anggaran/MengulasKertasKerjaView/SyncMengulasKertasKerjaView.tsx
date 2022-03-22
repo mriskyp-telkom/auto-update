@@ -44,7 +44,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
 
   return (
     <SyncDialogComponent
-      title="Mengirim Kertas Kerja..."
+      title="Mengirim RKAS..."
       subtitle="Pastikan Anda terkoneksi ke internet yang lancar."
       percentage={50}
       isOpen={true}
