@@ -4,13 +4,16 @@ import {
   AddAnggaran,
   DelAnggaran,
   GetAnggaran,
+  GetAnggaranById,
   GetAnggaranBefore,
   GetPagu,
   CopyAnggaran,
 } from 'main/services/Anggaran'
 import { GetConfig } from 'main/services/Config'
 import CommonUtils from 'main/utils/CommonUtils'
+
 import { STATUS_KERTAS_KERJA } from 'global/constants'
+import { IPC_ANGGARAN } from 'global/ipc'
 
 module.exports = {
   getAnggaran: ipcMain.on('anggaran:getAnggaran', async (e, idSumberDana) => {
@@ -89,6 +92,13 @@ module.exports = {
     }
     e.returnValue = listAnggaran
   }),
+
+  getAnggaranById: ipcMain.on(
+    IPC_ANGGARAN.getAnggaranById,
+    async (e, idAnggaran) => {
+      e.returnValue = await GetAnggaranById(idAnggaran)
+    }
+  ),
 
   addAnggaran: ipcMain.on('anggaran:addAnggaran', async (e, data) => {
     /*

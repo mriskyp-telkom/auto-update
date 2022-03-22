@@ -31,6 +31,9 @@ const FormPenanggungJawabView: FC<FormPenanggungJawabProps> = (
   const penanggungJawabTemp = useAnggaranStore(
     (state: AnggaranStates) => state.penanggungJawabTemp
   )
+  const penanggungJawab = useAnggaranStore(
+    (state: AnggaranStates) => state.penanggungJawab
+  )
   const setPenanggungJawab = useAnggaranStore(
     (state: AnggaranStates) => state.setPenanggungJawab
   )
@@ -45,27 +48,30 @@ const FormPenanggungJawabView: FC<FormPenanggungJawabProps> = (
   })
 
   useEffect(() => {
-    if (penanggungJawabTemp != null) {
-      setValue('nama_kepala_sekolah', penanggungJawabTemp.kepsek, {
+    const penjab =
+      props.mode === 'create' ? penanggungJawabTemp : penanggungJawab
+
+    if (penjab != null) {
+      setValue('nama_kepala_sekolah', penjab.kepsek, {
         shouldValidate: true,
       })
-      setValue('nama_bendahara', penanggungJawabTemp.bendahara, {
+      setValue('nama_bendahara', penjab.bendahara, {
         shouldValidate: true,
       })
-      setValue('nama_komite', penanggungJawabTemp.komite, {
+      setValue('nama_komite', penjab.komite, {
         shouldValidate: true,
       })
-      setValue('nip_kepala_sekolah', penanggungJawabTemp.nip_kepsek, {
+      setValue('nip_kepala_sekolah', formatNIP(penjab.nip_kepsek), {
         shouldValidate: true,
       })
-      setValue('nip_bendahara', penanggungJawabTemp.nip_bendahara, {
+      setValue('nip_bendahara', formatNIP(penjab.nip_bendahara), {
         shouldValidate: true,
       })
-      setValue('email_komite', penanggungJawabTemp.email_komite, {
+      setValue('email_komite', penjab.email_komite, {
         shouldValidate: true,
       })
     }
-  }, [setValue, penanggungJawabTemp])
+  }, [setValue, penanggungJawabTemp, penanggungJawab])
 
   const onSubmit = async (data: FormCreateKertasKerjaData) => {
     setCreateKertasKerja(false)

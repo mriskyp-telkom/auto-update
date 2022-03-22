@@ -7,7 +7,7 @@ import AmountCardComponent from 'renderer/components/Card/AmountCardComponent'
 import AlertDialogComponent from 'renderer/components/Dialog/AlertDialogComponent'
 import SyncDialogComponent from 'renderer/components/Dialog/SyncDialogComponent'
 
-import FormKertasKerjaView from 'renderer/views/Anggaran/CreateKertasKerjaView/FormPenanggungJawabView'
+import FormPenanggungJawabView from 'renderer/views/Anggaran/CreateKertasKerjaView/FormPenanggungJawabView'
 import PanduanMenyusunKKView from 'renderer/views/Anggaran/Panduan/PanduanMenyusunKKView'
 import PanduanErrorDataSentralKKView from 'renderer/views/Anggaran/Panduan/PanduanErrorDataSentralKKView'
 import PanduanErrorSisaDanaKKView from 'renderer/views/Anggaran/Panduan/PanduanErrorSisaDanaKKView'
@@ -20,20 +20,22 @@ import { Button } from '@wartek-id/button'
 
 import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
 
+import { IPC_ANGGARAN, IPC_PENJAB } from 'global/ipc'
 import { DATA_BULAN } from 'renderer/constants/general'
 import {
   RESPONSE_PENGESAHAN,
   ALERT_MENGULAS,
 } from 'renderer/constants/anggaran'
+import { APP_CONFIG } from 'renderer/constants/appConfig'
 
 import { AlertType } from 'renderer/types/ComponentType'
-import { APP_CONFIG } from '../../../constants/appConfig'
+
 const ipcRenderer = window.require('electron').ipcRenderer
 
 const MenyusunKertasKerjaView: FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
-  const { mode } = useParams()
+  const { mode, idAnggaran } = useParams()
 
   const [isSync, setIsSync] = useState(false)
   const [openModalInit, setOpenModalInit] = useState(false)
@@ -63,6 +65,10 @@ const MenyusunKertasKerjaView: FC = () => {
 
   const penanggungJawab = useAnggaranStore(
     (state: AnggaranStates) => state.penanggungJawab
+  )
+
+  const setPenanggungJawab = useAnggaranStore(
+    (state: AnggaranStates) => state.setPenanggungJawab
   )
 
   const pagu = useAnggaranStore((state: AnggaranStates) => state.pagu)
@@ -97,7 +103,7 @@ const MenyusunKertasKerjaView: FC = () => {
     setIsSync(true)
     const penjabId = savePenjab()
     const data = {
-      id_ref_sumber_dana: pagu.sumber_dana_id,
+      id_ref_sumber_dana: pagu?.sumber_dana_id,
       volume: pagu.volume,
       harga_satuan: pagu.harga_satuan,
       pengguna_id: penggunaId,
@@ -115,7 +121,7 @@ const MenyusunKertasKerjaView: FC = () => {
     setIsSync(true)
     const penjabId = savePenjab()
     const dataAnggaran = {
-      id_ref_sumber_dana: pagu.sumber_dana_id,
+      id_ref_sumber_dana: pagu?.sumber_dana_id,
       volume: pagu.volume,
       harga_satuan: pagu.harga_satuan,
       pengguna_id: penggunaId,
@@ -154,7 +160,7 @@ const MenyusunKertasKerjaView: FC = () => {
     )
     const penggunaId = ipcRenderer.sendSync('user:getPenggunaId')
     const data = {
-      sumber_dana: pagu.sumber_dana_id,
+      sumber_dana: pagu?.sumber_dana_id,
       tahun: tahunAktif,
     }
 
@@ -162,6 +168,33 @@ const MenyusunKertasKerjaView: FC = () => {
     setTahunAktif(tahunAktif)
     setIdAnggaranBefore(idAnggaranBefore)
     setPenggunaId(penggunaId)
+
+    if (mode === 'update' && idAnggaran !== undefined) {
+      const dataAnggaran = ipcRenderer.sendSync(
+        IPC_ANGGARAN.getAnggaranById,
+        idAnggaran
+      )
+      const dataPenjab = ipcRenderer.sendSync(
+        IPC_PENJAB.getPenjabById,
+        dataAnggaran.idPenjab
+      )
+
+      const penjab = {
+        sekolah_id: dataPenjab.sekolahId,
+        kepsek: dataPenjab.ks,
+        bendahara: dataPenjab.bendahara,
+        komite: dataPenjab.komite,
+        nip_kepsek: dataPenjab.nipKs,
+        nip_bendahara: dataPenjab.nipBendahara,
+        nip_komite: dataPenjab.nipKomite,
+        email_kepsek: dataPenjab.emailKs,
+        email_bendahara: dataPenjab.emailBendahara,
+        email_komite: dataPenjab.emailKomite,
+        telepon_kepsek: dataPenjab.telpKs,
+        telepon_bendahara: dataPenjab.telpBendahara,
+      }
+      setPenanggungJawab(penjab)
+    }
   }, [])
 
   useEffect(() => {
@@ -346,7 +379,7 @@ const MenyusunKertasKerjaView: FC = () => {
         isOpen={isSync}
         setIsOpen={setIsSync}
       />
-      <FormKertasKerjaView mode="update" />
+      <FormPenanggungJawabView mode="update" />
     </div>
   )
 }

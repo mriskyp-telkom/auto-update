@@ -6,7 +6,7 @@ import { Icon } from '@wartek-id/icon'
 import AlertDialogComponent from 'renderer/components/Dialog/AlertDialogComponent'
 import SyncDialogComponent from 'renderer/components/Dialog/SyncDialogComponent'
 
-import FormKertasKerjaView from './FormPenanggungJawabView'
+import FormPenanggungJawabView from './FormPenanggungJawabView'
 import { useNavigate } from 'react-router'
 
 import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
@@ -465,7 +465,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
         isOpen={isSync}
         setIsOpen={setIsSync}
       />
-      <FormKertasKerjaView mode="create" />
+      <FormPenanggungJawabView mode="create" />
     </div>
   )
 }

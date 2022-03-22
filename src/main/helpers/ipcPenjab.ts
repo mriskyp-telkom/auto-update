@@ -4,10 +4,15 @@ import {
   addSekolahPenjab,
   findSekolahPenjabId,
   updateSekolahPenjab,
+  GetSekolahPenjabById,
 } from 'main/services/SekolahPenjab'
 import CommonUtils from 'main/utils/CommonUtils'
 
 module.exports = {
+  getPenjabById: ipcMain.on('penjab:getPenjabById', async (e, idPenjab) => {
+    e.returnValue = await GetSekolahPenjabById(idPenjab)
+  }),
+
   addPenjab: ipcMain.on('penjab:addPenjab', async (e, data) => {
     try {
       const getYear = new Date().getFullYear().toString()

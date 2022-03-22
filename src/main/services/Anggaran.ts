@@ -47,6 +47,11 @@ export const GetAnggaran = async (
   return data
 }
 
+export const GetAnggaranById = async (idAnggaran: string): Promise<any> => {
+  const data = await getRepository(Anggaran).findOne({ idAnggaran: idAnggaran })
+  return data
+}
+
 export const GetPagu = async (idAnggaran: string): Promise<any> => {
   const data = await createQueryBuilder(Anggaran, 'a')
     .select([
