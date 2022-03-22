@@ -80,7 +80,9 @@ const InputSearchComponent: FC<InputSearchProps> = (
     const id = event.target.dataset.id
     const name = event.target.dataset.name
     const fieldShow = filter(props.headers, ['show', true])[0].key
-    const value = filter(props.dataOptions, ['id', parseInt(id)])[0][fieldShow]
+    const value = filter(props.dataOptions, ['id', parseInt(id) || id])[0][
+      fieldShow
+    ]
     const sendData = {
       id: id,
       name: name,
