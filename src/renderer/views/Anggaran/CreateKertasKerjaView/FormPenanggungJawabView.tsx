@@ -106,10 +106,12 @@ const FormPenanggungJawabView: FC<FormPenanggungJawabProps> = (
   }
 
   const formatNIP = (value: string) => {
-    return value
-      .replace(/\D/g, '')
-      .replace(/(\d{9})(\d)/, '$1.$2')
-      .replace(/(\d{6})(\d)/, '$1.$2')
+    return value != null
+      ? value
+          .replace(/\D/g, '')
+          .replace(/(\d{9})(\d)/, '$1.$2')
+          .replace(/(\d{6})(\d)/, '$1.$2')
+      : ''
   }
 
   return (
