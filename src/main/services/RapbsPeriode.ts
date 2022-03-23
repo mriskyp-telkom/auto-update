@@ -5,7 +5,8 @@ import {
   RekeningBelanja,
   UraianBelanja,
   Bulan,
-} from 'main/repositories/RapbsPeriodeDetail'
+  RapbsSummary,
+} from 'main/types/RapbsPeriodeDetail'
 import { getManager, createQueryBuilder, getRepository } from 'typeorm'
 
 export const GetRapbsPeriode = async (
@@ -31,6 +32,81 @@ export const DelRapbsPeriode = async (idRapbsPeriode: string): Promise<any> => {
     })
     .where('id_rapbs_periode = :idRapbsPeriode', { idRapbsPeriode })
     .execute()
+}
+
+/**
+ *
+ * @param tahap tahap penyaluran eg. 1,2,3
+ * @param idAnggaran id anggaran
+ */
+export const GetRapbsSummary = async (
+  tahap: number,
+  idAnggaran: string
+): Promise<RapbsSummary[]> => {
+  let id_periode = '1,2,3,4,81,82,83,84,85,86,87,88,89,90,91,92'
+
+  switch (tahap) {
+    case 1:
+      id_periode = '81,82,83'
+      break
+
+    case 2:
+      id_periode = '84,85,86,87,88'
+      break
+
+    case 3:
+      id_periode = '89,90,91,92'
+      break
+  }
+
+  const entityManager = getManager()
+  const result = await entityManager
+    .query(
+      `
+    SELECT a.kode as kode, a.label as label, sum(a.total) as total
+    FROM (
+          SELECT parent.id_kode AS kode,
+                parent.uraian_kode AS label,
+                0 AS total
+          FROM ref_kode parent
+                JOIN ref_kode child 
+                ON parent.id_ref_kode = child.parent_kode
+                JOIN ref_kode grandchild 
+                ON child.id_ref_kode = grandchild.parent_kode
+          WHERE parent.expired_date IS NULL AND 
+                child.expired_date IS NULL AND 
+                grandchild.expired_date IS NULL
+          GROUP BY parent.id_kode, parent.uraian_kode
+          UNION ALL
+          SELECT parent.id_kode AS kode,
+                parent.uraian_kode AS label,
+                sum(coalesce(rp.jumlah, 0) ) AS total
+          FROM ref_kode parent
+                JOIN ref_kode child 
+                ON parent.id_ref_kode = child.parent_kode
+                JOIN ref_kode grandchild 
+                ON child.id_ref_kode = grandchild.parent_kode
+                JOIN rapbs r 
+                ON r.id_ref_kode = grandchild.id_ref_kode
+                JOIN rapbs_periode rp 
+                ON rp.id_rapbs = r.id_rapbs
+          WHERE parent.expired_date IS NULL AND 
+                child.expired_date IS NULL AND 
+                grandchild.expired_date IS NULL AND 
+                r.id_anggaran = :id_anggaran AND
+                rp.id_periode in (:id_periode)
+          GROUP BY parent.id_kode, parent.uraian_kode
+        )
+        a
+    GROUP BY a.kode, a.label;
+    `,
+      [{ id_periode: id_periode, id_anggaran: idAnggaran }]
+    )
+    .catch((e) => {
+      console.log('error happen during query %s', e)
+    })
+
+  return <RapbsSummary[]>result
 }
 
 export const GetRapbsPeriodeDetail = async (

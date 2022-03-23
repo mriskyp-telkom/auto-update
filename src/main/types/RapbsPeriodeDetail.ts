@@ -34,6 +34,12 @@ export interface RapbsDetail {
   total: number
 }
 
+export interface RapbsSummary {
+  kode: string
+  label: string
+  total: number
+}
+
 export interface Kegiatan {
   kode: string
   label: string
