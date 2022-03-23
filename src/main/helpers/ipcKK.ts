@@ -12,6 +12,7 @@ import {
   DelRapbsPeriode,
   GetRapbsPeriode,
   GetRapbsPeriodeDetail,
+  GetRapbsSummary,
 } from 'main/services/RapbsPeriode'
 import CommonUtils from 'main/utils/CommonUtils'
 
@@ -150,6 +151,12 @@ module.exports = {
       e.returnValue = await DelRapbsPeriode(idRapbsPeriode)
     }
   ),
+
+  getRapbsSummary: ipcMain.on('kk:getRapbsSummary', async (e, data) => {
+    const { tahap, idAnggaran } = data
+    const result = await GetRapbsSummary(tahap, idAnggaran)
+    e.returnValue = result
+  }),
 
   getRapbsPeriodeDetail: ipcMain.on(
     'kk:anggaranDetailKegiatan',
