@@ -20,11 +20,9 @@ import {
 import { DATA_BULAN } from 'renderer/constants/general'
 import {
   headerKegiatan,
-  optionsKegiatan,
   headerRekeningBelanja,
-  optionsRekeningBelanja,
   headerUraian,
-  optionsUraian,
+  headerPtk,
   headerSatuan,
   optionsSatuan,
   headerHarga,
@@ -40,6 +38,7 @@ import styles from './index.module.css'
 import clsx from 'clsx'
 
 import mapKeys from 'lodash/mapKeys'
+import { IPC_PTK, IPC_REFERENSI } from 'global/ipc'
 
 const initialFormDisable = {
   kegiatan: false,
@@ -48,6 +47,8 @@ const initialFormDisable = {
   harga_satuan: true,
   harga_per_month: true,
 }
+
+const ipcRenderer = window.require('electron').ipcRenderer
 
 const FormDetailKertasKerjaView: FC = () => {
   const navigate = useNavigate()
@@ -58,6 +59,14 @@ const FormDetailKertasKerjaView: FC = () => {
   const [openModalConfirmCancel, setOpenModalConfirmCancel] = useState(false)
   const [urutanBulan, setUrutanBulan] = useState(0)
   const [formDisable, setFormDisable] = useState(initialFormDisable)
+
+  const [headerPopupUraian, setHeaderPopupUraian] = useState(headerUraian)
+  const [optionsKegiatan, setOptionsKegiatan] = useState([])
+  const [optionsRekening, setOptionsRekening] = useState([])
+  const [optionsUraian, setOptionsUraian] = useState([])
+
+  const [selectedKegiatan, setSelectedKegiatan] = useState(null)
+  const [selectedRekening, setSelectedRekening] = useState(null)
 
   const tempDetailKertasKerja = useAnggaranStore(
     (state: AnggaranStates) => state.tempDetailKertasKerja
@@ -114,20 +123,42 @@ const FormDetailKertasKerjaView: FC = () => {
     setUrutanBulan(0)
   }
 
+  useEffect(() => {
+    if (selectedKegiatan != null && selectedRekening != null) {
+      let uraian = null
+      if (selectedKegiatan?.flag_honor === 1) {
+        setHeaderPopupUraian(headerPtk)
+        uraian = ipcRenderer.sendSync(IPC_PTK.getPtk)
+      } else {
+        setHeaderPopupUraian(headerUraian)
+        uraian = ipcRenderer.sendSync(
+          IPC_REFERENSI.getRefBarangByRekening,
+          selectedRekening.kode
+        )
+      }
+      setOptionsUraian(uraian)
+    }
+  }, [selectedKegiatan, selectedRekening])
+
   const handleClick = (data: {
     id: number
     name: FormIsiKertasKerjaType
     value: string
   }) => {
     setValue(data.name, data.value, { shouldDirty: true, shouldValidate: true })
-
     if (data.name === 'kegiatan') {
+      const dataKegiatan = optionsKegiatan.find((k: any) => k.id === data.id)
+      setSelectedKegiatan(dataKegiatan)
       setFormDisable({
         ...formDisable,
         rekening_belanja: false,
       })
     }
     if (data.name === 'rekening_belanja') {
+      const dataRekening = optionsRekening.find(
+        (k: any) => k.id.toString() === data.id.toString()
+      )
+      setSelectedRekening(dataRekening)
       setFormDisable({
         ...formDisable,
         uraian: false,
@@ -248,6 +279,10 @@ const FormDetailKertasKerjaView: FC = () => {
   }
 
   useEffect(() => {
+    const kegiatan = ipcRenderer.sendSync(IPC_REFERENSI.getRefKode)
+    const rekening = ipcRenderer.sendSync(IPC_REFERENSI.getRefRekening)
+    setOptionsKegiatan(kegiatan)
+    setOptionsRekening(rekening)
     if (mode === 'update' && tempDetailKertasKerja === null) {
       closeModal()
     }
@@ -311,7 +346,7 @@ const FormDetailKertasKerjaView: FC = () => {
               required={true}
               isDisabled={formDisable.rekening_belanja}
               headers={headerRekeningBelanja}
-              dataOptions={optionsRekeningBelanja}
+              dataOptions={optionsRekening}
             />
           </div>
           <div className="p-4 rounded border border-solid	border-gray-300 text-base">
@@ -329,7 +364,7 @@ const FormDetailKertasKerjaView: FC = () => {
                   onClick={handleClick}
                   required={true}
                   isDisabled={formDisable.uraian}
-                  headers={headerUraian}
+                  headers={headerPopupUraian}
                   dataOptions={optionsUraian}
                 />
               </span>

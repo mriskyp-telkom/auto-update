@@ -24,8 +24,9 @@ export const getRefBarangRekening = async (
   if (kodeRekening.substring(0, 3) == '5.1') {
     data = await createQueryBuilder(RefAcuanBarang, 'rab')
       .select([
-        'rab.id_barang as id_barang',
-        'rab.nama_barang',
+        "CAST(REPLACE(rab.id_barang,'.','') AS int) AS id",
+        'rab.id_barang as kode',
+        'rab.nama_barang as uraian',
         'rab.satuan',
         'rab.batas_bawah',
         'rab.batas_atas',
@@ -37,8 +38,9 @@ export const getRefBarangRekening = async (
   } else if (kodeRekening.substring(0, 3) == '5.2') {
     data = await createQueryBuilder(RefAcuanBarang, 'rab')
       .select([
-        'rab.id_barang as id_barang',
-        'rab.nama_barang',
+        "CAST(REPLACE(rab.id_barang,'.','') AS int) AS id ",
+        'rab.id_barang as kode',
+        'rab.nama_barang AS uraian',
         'rab.satuan',
         'rab.batas_bawah',
         'rab.batas_atas',
@@ -47,4 +49,12 @@ export const getRefBarangRekening = async (
       .getRawMany()
   }
   return data
+}
+
+export const GetListSatuanBarang = async (): Promise<any> => {
+  return await createQueryBuilder(RefAcuanBarang, 'rab')
+    .select(['rab.satuan'])
+    .where('rab.satuan is not null')
+    .groupBy('rab.satuan')
+    .getRawMany()
 }

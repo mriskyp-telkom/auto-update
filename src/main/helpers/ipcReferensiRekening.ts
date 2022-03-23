@@ -5,6 +5,7 @@ import {
   getRefRekeningList,
 } from 'main/services/RefRekening'
 import CommonUtils from 'main/utils/CommonUtils'
+import { IPC_REFERENSI } from 'global/ipc'
 
 module.exports = {
   getRefRekeningLastUpdate: ipcMain.on(
@@ -57,7 +58,7 @@ module.exports = {
     }
   ),
 
-  getRefRekening: ipcMain.on('referensi:getRefRekening', async (e) => {
+  getRefRekening: ipcMain.on(IPC_REFERENSI.getRefRekening, async (e) => {
     e.returnValue = await getRefRekeningList()
   }),
 }

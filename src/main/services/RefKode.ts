@@ -25,8 +25,8 @@ export const getRefKodeList = async (
 ): Promise<any> => {
   return createQueryBuilder(RefKode, 'rk3')
     .select([
-      'rk3.id_ref_kode',
-      'rk3.id_kode as id_kode',
+      'rk3.id_ref_kode as id',
+      'rk3.id_kode as kode',
       'rk1.uraian_kode as program',
       'rk2.uraian_kode as komponen',
       'rk3.uraian_kode as kegiatan',
@@ -35,9 +35,9 @@ export const getRefKodeList = async (
     .innerJoin(RefKode, 'rk2', 'rk3.parent_kode = rk2.id_ref_kode')
     .innerJoin(RefKode, 'rk1', 'rk2.parent_kode = rk1.id_ref_kode')
     .where(
-      'rk3.expired_date is null' +
-        'AND rk2.expired_date is null' +
-        'AND rk1.expired_date is null' +
+      'rk3.expired_date is null ' +
+        'AND rk2.expired_date is null ' +
+        'AND rk1.expired_date is null ' +
         'AND rk3.bentuk_pendidikan_id =:bentukPendidikan',
       { bentukPendidikan: bentukPendidikan }
     )

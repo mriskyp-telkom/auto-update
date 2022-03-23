@@ -12,6 +12,20 @@ export const headerUraian = [
   },
 ]
 
+export const headerPtk = [
+  {
+    key: 'kode',
+    label: 'NUPTK',
+    width: '20%',
+  },
+  {
+    key: 'uraian',
+    label: 'Nama',
+    width: '80%',
+    show: true,
+  },
+]
+
 export const optionsUraian = [
   {
     id: 1,
