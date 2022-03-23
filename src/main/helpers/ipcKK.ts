@@ -11,6 +11,7 @@ import {
   AddRapbsPeriode,
   DelRapbsPeriode,
   GetRapbsPeriode,
+  GetRapbsPeriodeDetail,
 } from 'main/services/RapbsPeriode'
 import CommonUtils from 'main/utils/CommonUtils'
 
@@ -146,6 +147,17 @@ module.exports = {
     'kk:deleteRapbsPeriode',
     async (e, idRapbsPeriode) => {
       e.returnValue = await DelRapbsPeriode(idRapbsPeriode)
+    }
+  ),
+
+  getRapbsPeriodeDetail: ipcMain.on(
+    'kk:anggaranDetailKegiatan',
+    async (e, id_tahap, parent_id, id_anggaran) => {
+      e.returnValue = await GetRapbsPeriodeDetail(
+        id_tahap,
+        parent_id,
+        id_anggaran
+      )
     }
   ),
 }
