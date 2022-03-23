@@ -44,7 +44,7 @@ module.exports = {
     }
   }),
 
-  setPenjab: ipcMain.on('penjab:updatePenjab', async (e, data) => {
+  updatePenjab: ipcMain.on('penjab:updatePenjab', async (e, data) => {
     const dataPenjab = new SekolahPenjab()
     dataPenjab.ks = data.kepsek
     dataPenjab.nipKs = data.nip_kepsek
@@ -52,9 +52,7 @@ module.exports = {
     dataPenjab.nipBendahara = data.nip_bendahara
     dataPenjab.komite = data.komite
     dataPenjab.nipKomite = data.nip_komite
-
-    const idPenjab = await findSekolahPenjabId(dataPenjab)
-    dataPenjab.idPenjab = idPenjab
+    dataPenjab.idPenjab = data.id_penjab
 
     try {
       await updateSekolahPenjab(dataPenjab)

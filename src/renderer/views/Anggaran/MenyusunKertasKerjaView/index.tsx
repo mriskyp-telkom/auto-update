@@ -25,6 +25,7 @@ import { DATA_BULAN } from 'renderer/constants/general'
 import {
   RESPONSE_PENGESAHAN,
   ALERT_MENGULAS,
+  MODE_CREATE_KERTAS_KERJA,
 } from 'renderer/constants/anggaran'
 import { APP_CONFIG } from 'renderer/constants/appConfig'
 
@@ -98,41 +99,45 @@ const MenyusunKertasKerjaView: FC = () => {
     setTotal(getPagu.total)
     setSisa(getPagu.sisa)
   }
-  const handleSalinKertasKerja = () => {
-    setOpenModalInit(false)
-    setIsSync(true)
-    const penjabId = savePenjab()
-    const data = {
-      id_ref_sumber_dana: pagu?.sumber_dana_id,
-      volume: pagu.volume,
-      harga_satuan: pagu.harga_satuan,
-      pengguna_id: penggunaId,
-      id_penjab: penjabId,
-      tahun: tahunAktif,
-      id_anggaran_before: idAnggaranBefore,
-    }
-    const idAnggaran = ipcRenderer.sendSync('anggaran:copyAnggaran', data)
-    setPagu(idAnggaran)
-    setIsSync(false)
-  }
 
-  const handleBuatBaru = () => {
+  const handleCreateKertasKerja = (mode: string) => {
     setOpenModalInit(false)
     setIsSync(true)
+
     const penjabId = savePenjab()
-    const dataAnggaran = {
+    const penjab = {
+      ...penanggungJawab,
+      id_penjab: penjabId,
+    }
+    setPenanggungJawab(penjab)
+
+    let idAnggaran = ''
+    let dataAnggaran: any = {
       id_ref_sumber_dana: pagu?.sumber_dana_id,
       volume: pagu.volume,
       harga_satuan: pagu.harga_satuan,
       pengguna_id: penggunaId,
       id_penjab: penjabId,
       tahun: tahunAktif,
-      create_date: new Date(),
     }
-    const idAnggaran = ipcRenderer.sendSync(
-      'anggaran:addAnggaran',
-      dataAnggaran
-    )
+
+    if (mode === MODE_CREATE_KERTAS_KERJA.new) {
+      dataAnggaran = {
+        ...dataAnggaran,
+        create_date: new Date(),
+      }
+      console.log(dataAnggaran)
+      idAnggaran = ipcRenderer.sendSync('anggaran:addAnggaran', dataAnggaran)
+    }
+
+    if (mode === MODE_CREATE_KERTAS_KERJA.salin) {
+      dataAnggaran = {
+        ...dataAnggaran,
+        id_anggaran_before: idAnggaranBefore,
+      }
+      idAnggaran = ipcRenderer.sendSync('anggaran:copyAnggaran', dataAnggaran)
+    }
+
     setPagu(idAnggaran)
     setIsSync(false)
   }
@@ -180,6 +185,7 @@ const MenyusunKertasKerjaView: FC = () => {
       )
 
       const penjab = {
+        id_penjab: dataAnggaran.idPenjab,
         sekolah_id: dataPenjab.sekolahId,
         kepsek: dataPenjab.ks,
         bendahara: dataPenjab.bendahara,
@@ -203,7 +209,7 @@ const MenyusunKertasKerjaView: FC = () => {
         if (idAnggaranBefore !== '') {
           setOpenModalInit(true)
         } else {
-          handleBuatBaru()
+          handleCreateKertasKerja(MODE_CREATE_KERTAS_KERJA.new)
         }
       }
     }
@@ -355,8 +361,8 @@ const MenyusunKertasKerjaView: FC = () => {
         isOpen={openModalInit}
         btnCancelText="Buat Baru"
         btnActionText="Salin RKAS"
-        onCancel={handleBuatBaru}
-        onSubmit={handleSalinKertasKerja}
+        onCancel={() => handleCreateKertasKerja(MODE_CREATE_KERTAS_KERJA.new)}
+        onSubmit={() => handleCreateKertasKerja(MODE_CREATE_KERTAS_KERJA.salin)}
       />
       {responseMengulas !== null && (
         <AlertDialogComponent

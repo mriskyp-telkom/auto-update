@@ -56,6 +56,7 @@ export type ResponseMengulas =
   | 'error_data_sentral'
 
 export interface FormPenanggungJawab {
+  id_penjab: string
   sekolah_id: string
   kepsek: string
   bendahara: string

@@ -11,9 +11,12 @@ import { FormCreateKertasKerjaData } from 'renderer/types/AnggaranType'
 
 import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
 
+import syncToIPCMain from 'renderer/configs/ipc'
+
 interface FormPenanggungJawabProps {
   mode: 'create' | 'update'
 }
+
 const FormPenanggungJawabView: FC<FormPenanggungJawabProps> = (
   props: FormPenanggungJawabProps
 ) => {
@@ -74,25 +77,36 @@ const FormPenanggungJawabView: FC<FormPenanggungJawabProps> = (
   }, [setValue, penanggungJawabTemp, penanggungJawab])
 
   const onSubmit = async (data: FormCreateKertasKerjaData) => {
-    setCreateKertasKerja(false)
-    const penjab = {
-      sekolah_id: penanggungJawabTemp.sekolah_id,
+    const penjab =
+      props.mode === 'create' ? penanggungJawabTemp : penanggungJawab
+
+    const idPenjab = props.mode === 'create' ? null : penanggungJawab.id_penjab
+
+    const dataPenjab = {
+      id_penjab: idPenjab,
+      sekolah_id: penjab.sekolah_id,
       kepsek: data.nama_kepala_sekolah,
       bendahara: data.nama_bendahara,
       komite: data.nama_komite,
       nip_kepsek: data.nip_kepala_sekolah,
       nip_bendahara: data.nip_bendahara,
-      nip_komite: penanggungJawabTemp.nip_komite,
-      email_kepsek: penanggungJawabTemp.email_kepsek,
-      email_bendahara: penanggungJawabTemp.email_bendahara,
+      nip_komite: penjab.nip_komite,
+      email_kepsek: penjab.email_kepsek,
+      email_bendahara: penjab.email_bendahara,
       email_komite: data.email_komite,
-      telepon_kepsek: penanggungJawabTemp.telepon_kepsek,
-      telepon_bendahara: penanggungJawabTemp.telepon_bendahara,
+      telepon_kepsek: penjab.telepon_kepsek,
+      telepon_bendahara: penjab.telepon_bendahara,
     }
 
-    setPenanggungJawab(penjab)
+    setPenanggungJawab(dataPenjab)
+    setCreateKertasKerja(false)
+
     if (props.mode === 'create') {
       setConfirmKertasKerja(true)
+    }
+
+    if (props.mode === 'update') {
+      syncToIPCMain('penjab:updatePenjab', dataPenjab)
     }
   }
 

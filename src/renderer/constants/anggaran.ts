@@ -86,3 +86,8 @@ export const LABEL_MODE_MENGULAS = [
   { id: 1, key: MODE_MENGULAS.tahap, label: 'Lihat per tahapan' },
   { id: 2, key: MODE_MENGULAS.tahun, label: 'Lihat per tahun' },
 ]
+
+export const MODE_CREATE_KERTAS_KERJA = {
+  new: 'new',
+  salin: 'salin',
+}
