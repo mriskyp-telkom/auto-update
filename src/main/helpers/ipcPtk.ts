@@ -1,6 +1,8 @@
 import { ipcMain } from 'electron'
-import { AddBulkPtk, GetLastUpdate } from 'main/services/Ptk'
+import { AddBulkPtk, GetLastUpdate, GetPtk } from 'main/services/Ptk'
 import CommonUtils from 'main/utils/CommonUtils'
+import { IPC_PTK } from 'global/ipc'
+import { GetConfig } from 'main/services/Config'
 
 module.exports = {
   getPtkLastUpdate: ipcMain.on('ptk:getPtkLastUpdate', async (e) => {
@@ -37,5 +39,10 @@ module.exports = {
       }
     }
     e.returnValue = true
+  }),
+
+  getPtk: ipcMain.on(IPC_PTK.getPtk, async (e) => {
+    const tahunAktif = await GetConfig('tahun_aktif')
+    e.returnValue = await GetPtk(parseInt(tahunAktif))
   }),
 }

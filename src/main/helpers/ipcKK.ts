@@ -104,6 +104,7 @@ module.exports = {
     const dataRapbsPeriode = new RapbsPeriode()
     dataRapbsPeriode.idRapbsPeriode = idRapbsPeriode
     dataRapbsPeriode.idRapbs = data.idRapbs
+    dataRapbsPeriode.idPeriode = data.idPeriode
     dataRapbsPeriode.volume = data.volume
     dataRapbsPeriode.satuan = data.satuan
     dataRapbsPeriode.hargaSatuan = data.hargaSatuan

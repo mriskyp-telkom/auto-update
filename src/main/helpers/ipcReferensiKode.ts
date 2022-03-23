@@ -6,6 +6,7 @@ import {
 } from 'main/services/RefKode'
 import { getBentukPendidikan } from 'main/services/Sekolah'
 import CommonUtils from 'main/utils/CommonUtils'
+import { IPC_REFERENSI } from 'global/ipc'
 
 module.exports = {
   getRefKodeLastUpdate: ipcMain.on(
@@ -48,7 +49,7 @@ module.exports = {
     e.returnValue = true
   }),
 
-  getRefKode: ipcMain.on('referensi:getRefKode', async (e) => {
+  getRefKode: ipcMain.on(IPC_REFERENSI.getRefKode, async (e) => {
     const getBentuk = await getBentukPendidikan()
     e.returnValue = await getRefKodeList(getBentuk)
   }),

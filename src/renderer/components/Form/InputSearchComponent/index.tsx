@@ -60,10 +60,10 @@ const InputSearchComponent: FC<InputSearchProps> = (
   }
 
   const makeBold = (item: string) => {
-    const begin = item.toLowerCase().indexOf(query.toLowerCase())
+    const begin = item?.toLowerCase().indexOf(query.toLowerCase())
     const end = query.length
     const tempItem = item
-    const textReplace = tempItem.substr(begin, end)
+    const textReplace = tempItem?.substr(begin, end)
     if (begin > -1) {
       return item.replace(textReplace, '<b>' + textReplace + '</b>')
     }
@@ -99,6 +99,10 @@ const InputSearchComponent: FC<InputSearchProps> = (
     }
   })
 
+  useEffect(() => {
+    setData(props.dataOptions)
+  }, [props.dataOptions])
+
   return (
     <div ref={ref}>
       <InputGroup>
@@ -132,7 +136,7 @@ const InputSearchComponent: FC<InputSearchProps> = (
         <table
           className={clsx(
             styles.searchTable,
-            'text-left absolute z-10 bg-white'
+            'grid text-left absolute z-10 bg-white'
           )}
           style={{ width: `${props.width - 8}px` }}
         >

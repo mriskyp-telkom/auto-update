@@ -5,6 +5,7 @@ import {
   getRefBarangRekening,
 } from 'main/services/RefAcuanBarang'
 import CommonUtils from 'main/utils/CommonUtils'
+import { IPC_REFERENSI } from 'global/ipc'
 
 module.exports = {
   getRefBarangLastUpdate: ipcMain.on(
@@ -51,7 +52,7 @@ module.exports = {
   ),
 
   getRefBarangByRekening: ipcMain.on(
-    'referensi:getRefBarangByRekening',
+    IPC_REFERENSI.getRefBarangByRekening,
     async (e, kodeRekening) => {
       e.returnValue = await getRefBarangRekening(kodeRekening)
     }
