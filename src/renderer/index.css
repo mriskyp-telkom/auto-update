@@ -49,3 +49,23 @@ body {
   background: #d9dbdd;
   border-radius: 8px;
 }
+
+/*
+  These class for electron-find
+  Please don't use same class with these below
+} */
+
+.find-box {
+  position: unset !important;
+  border: 1px solid #808489;
+  box-shadow: unset !important;
+  border-radius: 4px;
+}
+
+.find-case {
+  display: none !important;
+}
+
+/*
+  End
+} */
