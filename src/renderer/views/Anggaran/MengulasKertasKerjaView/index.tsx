@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 
 import { Tooltip } from '@wartek-id/tooltip'
@@ -6,6 +6,7 @@ import { Tooltip } from '@wartek-id/tooltip'
 import AmountCardComponent from 'renderer/components/Card/AmountCardComponent'
 import DropdownComponent from 'renderer/components/DropdownComponent'
 import AlertDialogComponent from 'renderer/components/Dialog/AlertDialogComponent'
+import ButtonCariComponent from 'renderer/components/ButtonCariComponent'
 
 import TabelMengulasKertasKerjaView from './TabelMengulasKertasKerjaView'
 import PanduanMengulasKKView from 'renderer/views/Anggaran/Panduan/PanduanMengulasKKView'
@@ -25,8 +26,6 @@ import {
 } from 'renderer/constants/anggaran'
 
 import { AlertType } from 'renderer/types/ComponentType'
-
-import { initializeFindText, openFindText } from 'renderer/configs/findtext'
 
 const MengulasKertasKerjaView: FC = () => {
   const location = useLocation()
@@ -70,14 +69,6 @@ const MengulasKertasKerjaView: FC = () => {
   const handleChangeMode = (value: string) => {
     setModeMengulas(value)
   }
-
-  const handleCari = () => {
-    openFindText()
-  }
-
-  useEffect(() => {
-    initializeFindText('tabelMengulas')
-  }, [])
 
   return (
     <div>
@@ -137,24 +128,7 @@ const MengulasKertasKerjaView: FC = () => {
         <span>
           {getPanduan()}
           <div className="flex justify-end pt-5 pb-3">
-            <Button
-              color="white"
-              size="md"
-              variant="solid"
-              className="mr-3"
-              onClick={handleCari}
-            >
-              <Icon
-                as="i"
-                color="default"
-                fontSize="small"
-                className="mr-1"
-                style={{ fontSize: '18px', color: '#45474a' }}
-              >
-                search
-              </Icon>
-              Cari
-            </Button>
+            <ButtonCariComponent />
             {responseMengulas === null && (
               <Button color="white" size="md" variant="solid" className="mr-3">
                 <Icon
