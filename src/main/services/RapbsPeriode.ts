@@ -111,7 +111,7 @@ export const GetRapbsSummary = async (
 
 export const GetRapbsPeriodeDetail = async (
   id_tahap: number,
-  parent_id: string,
+  id_kode: string,
   id_anggaran: string
 ): Promise<Kegiatan[]> => {
   const entityManager = getManager()
@@ -170,7 +170,7 @@ export const GetRapbsPeriodeDetail = async (
         when :id_tahap=2 then rp.id_periode in (84,85,86,87,88)
         when :id_tahap=3 then rp.id_periode in (89,90,91,92)
       end          
-      and rk1.id_ref_kode = :parent_id
+      and rk1.id_kode = :id_kode
       and r.soft_delete=0  
       and rp.soft_delete=0
     group by 
@@ -236,7 +236,7 @@ export const GetRapbsPeriodeDetail = async (
         when :id_tahap=2 then rp.id_periode in (84,85,86,87,88)
         when :id_tahap=3 then rp.id_periode in (89,90,91,92)
       end          
-      and rk1.id_ref_kode = :parent_id
+      and rk1.id_kode = :id_kode
       and r.soft_delete=0  
       and rp.soft_delete=0
     group by 
@@ -300,14 +300,14 @@ export const GetRapbsPeriodeDetail = async (
         when :id_tahap=2 then rp.id_periode in (84,85,86,87,88)
         when :id_tahap=3 then rp.id_periode in (89,90,91,92)
       end            
-      and rk1.id_ref_kode = :parent_id
+      and rk1.id_kode = :id_kode
       and r.soft_delete=0  
       and rp.soft_delete=0
     group by 
       r.id_rapbs,rk3.id_kode,r.kode_rekening,r.uraian_text,r.urutan
     order by urut, level;
     `,
-      [{ id_tahap: id_tahap, id_anggaran: id_anggaran, parent_id: parent_id }]
+      [{ id_tahap: id_tahap, id_anggaran: id_anggaran, id_kode: id_kode }]
     )
     .catch((e) => {
       console.log('error happen during query %s', e)

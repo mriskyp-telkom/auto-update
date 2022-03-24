@@ -160,10 +160,10 @@ module.exports = {
 
   getRapbsPeriodeDetail: ipcMain.on(
     'kk:anggaranDetailKegiatan',
-    async (e, id_tahap, parent_id, id_anggaran) => {
+    async (e, id_tahap, id_kode, id_anggaran) => {
       e.returnValue = await GetRapbsPeriodeDetail(
         id_tahap,
-        parent_id,
+        id_kode,
         id_anggaran
       )
     }
