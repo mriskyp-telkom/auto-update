@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation, useParams } from 'react-router-dom'
 
 import { Tooltip } from '@wartek-id/tooltip'
 
@@ -30,6 +30,7 @@ import { AlertType } from 'renderer/types/ComponentType'
 const MengulasKertasKerjaView: FC = () => {
   const location = useLocation()
   const navigate = useNavigate()
+  const { idAnggaran } = useParams()
 
   const [openModalAjukan, setOpenModalAjukan] = useState(false)
   const [modeMengulas, setModeMengulas] = useState(MODE_MENGULAS.tahap)
@@ -200,20 +201,35 @@ const MengulasKertasKerjaView: FC = () => {
               </div>
               <TabPanels>
                 <TabPanel className="pt-8">
-                  <TabelMengulasKertasKerjaView mode={modeMengulas} />
+                  <TabelMengulasKertasKerjaView
+                    mode={modeMengulas}
+                    tahap={1}
+                    idAnggaran={idAnggaran}
+                  />
                 </TabPanel>
-                <TabPanel>
-                  <div>test</div>
+                <TabPanel className="pt-8">
+                  <TabelMengulasKertasKerjaView
+                    mode={modeMengulas}
+                    tahap={2}
+                    idAnggaran={idAnggaran}
+                  />
                 </TabPanel>
-                <TabPanel>
-                  <div>test</div>
+                <TabPanel className="pt-8">
+                  <TabelMengulasKertasKerjaView
+                    mode={modeMengulas}
+                    tahap={3}
+                    idAnggaran={idAnggaran}
+                  />
                 </TabPanel>
               </TabPanels>
             </Tabs>
           )}
           {modeMengulas === MODE_MENGULAS.tahun && (
             <div className="pt-8">
-              <TabelMengulasKertasKerjaView mode={modeMengulas} />
+              <TabelMengulasKertasKerjaView
+                mode={modeMengulas}
+                idAnggaran={idAnggaran}
+              />
             </div>
           )}
         </div>

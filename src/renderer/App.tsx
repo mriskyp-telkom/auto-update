@@ -81,7 +81,12 @@ const App: FC = () => {
                   />
                 </Route>
               </Route>
-              <Route path="mengulas" element={<MengulasKertasKerjaView />} />
+              <Route path="mengulas">
+                <Route
+                  path=":idAnggaran"
+                  element={<MengulasKertasKerjaView />}
+                />
+              </Route>
             </Route>
           </Route>
         </Routes>
