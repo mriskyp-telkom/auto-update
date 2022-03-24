@@ -1,4 +1,4 @@
-import React, { FC, useRef } from 'react'
+import React, { FC, useEffect, useRef, useState } from 'react'
 
 import { Icon } from '@wartek-id/icon'
 
@@ -9,98 +9,32 @@ import { amountFormatting } from 'renderer/utils/number-formatting'
 import styles from './index.module.css'
 
 import clsx from 'clsx'
+import { IPC_KK } from 'global/ipc'
 
 const bulanTahapSatu = ['januari', 'februari', 'maret']
 
-const data = [
-  {
-    program_kegiatan: {
-      kode: '01',
-      label: 'Pengembangan Standar Kompetensi Lulusan',
-      total: 80000,
-      kegiatan: [
-        {
-          kode: '01.02.03',
-          label: 'Pelaksanaan Pendaftaran Peserta Didik Baru',
-          total: 40000,
-          rekening_belanja: [
-            {
-              kode: '5.1.2.21.002',
-              label: 'Belanja Makanan dan Minuman pada Fasilitas Umum',
-              total: 40000,
-              bulan: {
-                januari: {
-                  total: 200,
-                },
-                februari: {
-                  total: 200,
-                },
-                maret: {
-                  total: 200,
-                },
-              },
-              uraian: [
-                {
-                  label: 'Makan makan ppdp bos',
-                  jumlah: 150,
-                  total: 2000,
-                  bulan: {
-                    januari: {
-                      jumlah: 2,
-                      total: 200,
-                    },
-                    februari: {
-                      jumlah: 2,
-                      total: 200,
-                    },
-                    maret: {
-                      jumlah: 2,
-                      total: 200,
-                    },
-                  },
-                },
-                {
-                  label: 'Nasi kotak biasa',
-                  jumlah: 100,
-                  total: 1500000,
-                  bulan: {
-                    januari: {
-                      jumlah: 25,
-                      total: 500000,
-                    },
-                    februari: {
-                      jumlah: 25,
-                      total: 500000,
-                    },
-                    maret: {
-                      jumlah: 25,
-                      total: 500000,
-                    },
-                  },
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-  },
-  {
-    program_kegiatan: {
-      kode: '02',
-      label: 'Pengembangan Standar Kompetensi Lulusan',
-      total: 800000,
-    },
-  },
-]
+const ipcRenderer = window.require('electron').ipcRenderer
 
 interface TabelMengulasKertasKerjaProps {
   mode: string
+  tahap?: number
+  idAnggaran: string
 }
 
 const TabelMengulasKertasKerjaView: FC<TabelMengulasKertasKerjaProps> = (
   props: TabelMengulasKertasKerjaProps
 ) => {
+  const { tahap, idAnggaran } = props
+
+  const [data, setData] = useState([])
+  useEffect(() => {
+    const data = {
+      tahap,
+      idAnggaran,
+    }
+    const rapbsSummary = ipcRenderer.sendSync(IPC_KK.getRapbsSummary, data)
+    setData(rapbsSummary)
+  }, [])
   return (
     <div
       className={clsx(
@@ -125,7 +59,12 @@ const TabelMengulasKertasKerjaView: FC<TabelMengulasKertasKerjaProps> = (
           </tr>
         </thead>
         {data.map((item, index) => (
-          <ProgramKegiatanRowTable data={item} key={index} />
+          <ProgramKegiatanRowTable
+            data={item}
+            key={index}
+            tahap={tahap}
+            idAnggaran={idAnggaran}
+          />
         ))}
       </table>
     </div>
@@ -136,6 +75,7 @@ const ProgramKegiatanRowTable = (props: any) => {
   const ref = useRef(null)
 
   const { data } = props
+  const [detail] = useState([])
 
   const handleClickRow = () => {
     ref.current.children[1].hidden = !ref.current.children[1].hidden
@@ -144,11 +84,9 @@ const ProgramKegiatanRowTable = (props: any) => {
   return (
     <tbody ref={ref}>
       <tr className={styles.line} onClick={handleClickRow}>
-        <td className={styles.code}>{data.program_kegiatan.kode}</td>
-        <td>{data.program_kegiatan.label}</td>
-        <td className={styles.price}>
-          {amountFormatting(data.program_kegiatan.total)}
-        </td>
+        <td className={styles.code}>{data.kode}</td>
+        <td>{data.label}</td>
+        <td className={styles.price}>{amountFormatting(data.total)}</td>
         <td className={styles.expand}>
           <Icon as="i" color="default" fontSize="default">
             expand_more
@@ -157,9 +95,9 @@ const ProgramKegiatanRowTable = (props: any) => {
       </tr>
       <tr hidden={true}>
         <td colSpan={4} style={{ padding: 'unset' }}>
-          {data.program_kegiatan.kegiatan &&
-            data.program_kegiatan.kegiatan.length > 0 &&
-            data.program_kegiatan.kegiatan.map((item: any, index: number) => (
+          {detail &&
+            detail.length > 0 &&
+            detail.map((item: any, index: number) => (
               <KegiatanRowTable key={index} data={item} />
             ))}
         </td>

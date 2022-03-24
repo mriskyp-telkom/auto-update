@@ -47,6 +47,7 @@ const MenyusunKertasKerjaView: FC = () => {
   const [tahunAktif, setTahunAktif] = useState('')
   const [idAnggaranBefore, setIdAnggaranBefore] = useState(null)
   const [penggunaId, setPenggunaId] = useState('')
+  const [idAnggaranBaru, setIdAnggaranBaru] = useState(null)
 
   const alertMengulas = useAnggaranStore(
     (state: AnggaranStates) => state.alertMengulas
@@ -139,6 +140,7 @@ const MenyusunKertasKerjaView: FC = () => {
     }
 
     setPagu(idAnggaran)
+    setIdAnggaranBaru(idAnggaran)
     setIsSync(false)
   }
 
@@ -200,6 +202,7 @@ const MenyusunKertasKerjaView: FC = () => {
         telepon_bendahara: dataPenjab.telpBendahara,
       }
       setPenanggungJawab(penjab)
+      setIdAnggaranBaru(idAnggaran)
     }
   }, [])
 
@@ -282,7 +285,7 @@ const MenyusunKertasKerjaView: FC = () => {
                 Tambah Kegiatan
               </Button>
             </Link>
-            <Link to="/anggaran/mengulas">
+            <Link to={`/anggaran/mengulas/${idAnggaranBaru}`}>
               <Button
                 color="black"
                 size="md"

@@ -15,6 +15,7 @@ import {
   GetRapbsSummary,
 } from 'main/services/RapbsPeriode'
 import CommonUtils from 'main/utils/CommonUtils'
+import { IPC_KK } from 'global/ipc'
 
 module.exports = {
   /*
@@ -152,14 +153,14 @@ module.exports = {
     }
   ),
 
-  getRapbsSummary: ipcMain.on('kk:getRapbsSummary', async (e, data) => {
+  getRapbsSummary: ipcMain.on(IPC_KK.getRapbsSummary, async (e, data) => {
     const { tahap, idAnggaran } = data
     const result = await GetRapbsSummary(tahap, idAnggaran)
     e.returnValue = result
   }),
 
   getRapbsPeriodeDetail: ipcMain.on(
-    'kk:anggaranDetailKegiatan',
+    IPC_KK.anggaranDetailKegiatan,
     async (e, id_tahap, id_kode, id_anggaran) => {
       e.returnValue = await GetRapbsPeriodeDetail(
         id_tahap,
