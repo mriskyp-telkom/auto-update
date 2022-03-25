@@ -41,7 +41,7 @@ make-win-deb-staging:
   extends: .make
   stage: build-staging
   script:
-    - node -v && npm install -g npm@8.5.4 && npm -v
+    - node -v && npm install -g npm@8.1.2 && npm -v
     - mv ./.env.staging ./.env && rm ./.env.production
     - npm install yarn --legacy-peer-deps
     - yarn install
