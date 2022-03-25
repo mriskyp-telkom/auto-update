@@ -1,5 +1,5 @@
 # base image is defined here https://gitlab.com/wartek-id/sds/sds/-/tree/main/docker/arkas-builder-base
-FROM asia.gcr.io/belajar-id-networks/sds/arkas-builder-base:2d7d5d233ff3701b995449f739f08c52bc4e71f8
+FROM asia.gcr.io/belajar-id-networks/sds/arkas-builder-base:ceb6e72989847c1e838e07ede484101b543e0ea2
 WORKDIR /arkas_release
 
 COPY . /arkas_release/
