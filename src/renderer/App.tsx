@@ -74,9 +74,9 @@ const App: FC = () => {
             <Route path="anggaran">
               <Route index={true} element={<DashboardAnggaranView />} />
               <Route path="menyusun">
-                <Route path=":mode" element={<MenyusunKertasKerjaView />}>
+                <Route path=":q_mode" element={<MenyusunKertasKerjaView />}>
                   <Route
-                    path=":idAnggaran"
+                    path=":q_id_anggaran"
                     element={<MenyusunKertasKerjaView />}
                   />
                 </Route>

@@ -14,7 +14,7 @@ export const headerHarga = [
 export const optionsHarga = [
   {
     id: 1,
-    batas_bawah: 'Rp 20.000',
-    batas_atas: 'Rp 100.000',
+    batas_bawah: 30000,
+    batas_atas: 100000,
   },
 ]

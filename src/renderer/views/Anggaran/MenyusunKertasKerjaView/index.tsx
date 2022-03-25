@@ -31,12 +31,14 @@ import { APP_CONFIG } from 'renderer/constants/appConfig'
 
 import { AlertType } from 'renderer/types/ComponentType'
 
+import { encode } from 'uuid-base64-ts'
+
 const ipcRenderer = window.require('electron').ipcRenderer
 
 const MenyusunKertasKerjaView: FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
-  const { mode, idAnggaran } = useParams()
+  const { q_mode, q_id_anggaran } = useParams()
 
   const [isSync, setIsSync] = useState(false)
   const [openModalInit, setOpenModalInit] = useState(false)
@@ -176,10 +178,10 @@ const MenyusunKertasKerjaView: FC = () => {
     setIdAnggaranBefore(idAnggaranBefore)
     setPenggunaId(penggunaId)
 
-    if (mode === 'update' && idAnggaran !== undefined) {
+    if (q_mode === 'update' && q_id_anggaran !== undefined) {
       const dataAnggaran = ipcRenderer.sendSync(
         IPC_ANGGARAN.getAnggaranById,
-        idAnggaran
+        encode(q_id_anggaran)
       )
       const dataPenjab = ipcRenderer.sendSync(
         IPC_PENJAB.getPenjabById,
@@ -208,7 +210,7 @@ const MenyusunKertasKerjaView: FC = () => {
 
   useEffect(() => {
     if (tahunAktif !== '' && penggunaId !== '' && idAnggaranBefore !== null) {
-      if (mode === 'create') {
+      if (q_mode === 'create') {
         if (idAnggaranBefore !== '') {
           setOpenModalInit(true)
         } else {

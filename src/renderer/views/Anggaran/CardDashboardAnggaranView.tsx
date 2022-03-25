@@ -19,6 +19,8 @@ import {
 } from 'renderer/utils/date-formatting'
 import { STATUS_KERTAS_KERJA } from 'global/constants'
 
+import { decode } from 'uuid-base64-ts'
+
 interface CardDashboardAnggaranProps {
   data: CardDashboardType
 }
@@ -49,7 +51,8 @@ const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (
   }
 
   const handleOpen = () => {
-    navigate(`/anggaran/menyusun/update/${data.id_anggaran}`)
+    const link = `/anggaran/menyusun/update/${decode(data.id_anggaran)}`
+    navigate(link)
   }
 
   return (
@@ -67,7 +70,8 @@ const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (
               <div className="text-[20px]">RKAS BOS Reguler {data.tahun}</div>
               {isDisplayTenggat && (
                 <div className="text-tiny text-red-600">
-                  Tenggat: {formatDateToString(new Date(data.tenggat_waktu))}
+                  Tenggat pengajuan pengesahan:{' '}
+                  {formatDateToString(new Date(data.tenggat_waktu))}
                 </div>
               )}
               {isNotApproved && (

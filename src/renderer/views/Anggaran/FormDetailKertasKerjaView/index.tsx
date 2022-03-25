@@ -50,6 +50,54 @@ const initialFormDisable = {
 
 const ipcRenderer = window.require('electron').ipcRenderer
 
+const InputUraian = (props: any) => {
+  return props.dataOptions.length === 0 ? (
+    <InputComponent {...props} type="text" />
+  ) : (
+    <InputSearchComponent {...props} />
+  )
+}
+
+const InputHargaSatuan = (props: any) => {
+  const batas_bawah = props.dataOptions[0].batas_bawah
+  const batas_atas = props.dataOptions[0].batas_atas
+
+  let validate: any = {
+    positive: (value: string) => {
+      if (value.replace(/[^,\d]/g, '').toString().length < 2) {
+        return 'Harga satuan minimal 2 digit angka'
+      }
+    },
+  }
+
+  if (props.dataOptions.length > 0) {
+    validate = {
+      ...validate,
+      lessThanTen: (value: string) => {
+        if (parseInt(value.replace(/[^,\d]/g, '')) < batas_bawah) {
+          return 'Harga kurang dari batas bawah SSH'
+        }
+      },
+      moreThan: (value: string) => {
+        if (parseInt(value.replace(/[^,\d]/g, '')) > batas_atas) {
+          return 'Harga melebihi batas atas SSH'
+        }
+      },
+    }
+  }
+
+  const registerOption = {
+    ...props.registerOption,
+    validate: validate,
+  }
+
+  return props.dataOptions.length === 0 ? (
+    <InputComponent {...props} type="text" registerOption={registerOption} />
+  ) : (
+    <InputWithInfoComponent {...props} registerOption={registerOption} />
+  )
+}
+
 const FormDetailKertasKerjaView: FC = () => {
   const navigate = useNavigate()
   const { mode } = useParams()
@@ -78,13 +126,14 @@ const FormDetailKertasKerjaView: FC = () => {
 
   const {
     register,
+    unregister,
     handleSubmit,
     setValue,
     control,
     reset,
     formState: { errors, isDirty },
   } = useForm<FormIsiKertasKerjaData>({
-    mode: 'onChange',
+    mode: 'onSubmit',
     defaultValues: {
       kegiatan: '',
       rekening_belanja: '',
@@ -123,28 +172,16 @@ const FormDetailKertasKerjaView: FC = () => {
     setUrutanBulan(0)
   }
 
-  useEffect(() => {
-    if (selectedKegiatan != null && selectedRekening != null) {
-      let uraian = null
-      if (selectedKegiatan?.flag_honor === 1) {
-        setHeaderPopupUraian(headerPtk)
-        uraian = ipcRenderer.sendSync(IPC_PTK.getPtk)
-      } else {
-        setHeaderPopupUraian(headerUraian)
-        uraian = ipcRenderer.sendSync(
-          IPC_REFERENSI.getRefBarangByRekening,
-          selectedRekening.kode
-        )
-      }
-      setOptionsUraian(uraian)
-    }
-  }, [selectedKegiatan, selectedRekening])
-
   const handleClick = (data: {
-    id: number
+    id: string | number
     name: FormIsiKertasKerjaType
     value: string
   }) => {
+    if (data.id.toString() === '' || data.value === '') {
+      setValue(data.name, '', { shouldDirty: true })
+      return
+    }
+
     setValue(data.name, data.value, { shouldDirty: true, shouldValidate: true })
     if (data.name === 'kegiatan') {
       const dataKegiatan = optionsKegiatan.find((k: any) => k.id === data.id)
@@ -279,6 +316,24 @@ const FormDetailKertasKerjaView: FC = () => {
   }
 
   useEffect(() => {
+    if (selectedKegiatan != null && selectedRekening != null) {
+      let uraian = null
+      if (selectedKegiatan?.flag_honor === 1) {
+        setHeaderPopupUraian(headerPtk)
+        uraian = ipcRenderer.sendSync(IPC_PTK.getPtk)
+      } else {
+        setHeaderPopupUraian(headerUraian)
+        uraian = ipcRenderer.sendSync(
+          IPC_REFERENSI.getRefBarangByRekening,
+          selectedRekening.kode
+        )
+      }
+      setOptionsUraian(uraian)
+      unregister('uraian')
+    }
+  }, [selectedKegiatan, selectedRekening])
+
+  useEffect(() => {
     const kegiatan = ipcRenderer.sendSync(IPC_REFERENSI.getRefKode)
     const rekening = ipcRenderer.sendSync(IPC_REFERENSI.getRefRekening)
     setOptionsKegiatan(kegiatan)
@@ -355,7 +410,7 @@ const FormDetailKertasKerjaView: FC = () => {
                 <div className="text-base pb-1 font-normal text-gray-900">
                   Uraian
                 </div>
-                <InputSearchComponent
+                <InputUraian
                   width={543}
                   name="uraian"
                   placeholder="Apa detail barang atau jasanya? (mis. papan tulis, honor narasumber)"
@@ -366,13 +421,23 @@ const FormDetailKertasKerjaView: FC = () => {
                   isDisabled={formDisable.uraian}
                   headers={headerPopupUraian}
                   dataOptions={optionsUraian}
+                  registerOption={{
+                    onChange: (e: any) => {
+                      if (e.target.value !== '') {
+                        setFormDisable({
+                          ...formDisable,
+                          harga_satuan: false,
+                        })
+                      }
+                    },
+                  }}
                 />
               </span>
               <span className="flex-none w-[289px]">
                 <div className="text-base pb-1 font-normal text-gray-900">
                   Harga Satuan yang Dianggarkan
                 </div>
-                <InputWithInfoComponent
+                <InputHargaSatuan
                   width={289}
                   name="harga_satuan"
                   placeholder="Berapa perkiraan harganya?"
@@ -383,26 +448,7 @@ const FormDetailKertasKerjaView: FC = () => {
                   headers={headerHarga}
                   dataOptions={optionsHarga}
                   registerOption={{
-                    validate: {
-                      positive: (value) => {
-                        if (
-                          value.replace(/[^,\d]/g, '').toString().length < 2
-                        ) {
-                          return 'Harga satuan minimal 2 digit angka'
-                        }
-                      },
-                      lessThanTen: (value) => {
-                        if (parseInt(value.replace(/[^,\d]/g, '')) < 20000) {
-                          return 'Harga kurang dari batas bawah SSH'
-                        }
-                      },
-                      moreThan: (value) => {
-                        if (parseInt(value.replace(/[^,\d]/g, '')) > 100000) {
-                          return 'Harga melebihi batas atas SSH'
-                        }
-                      },
-                    },
-                    onChange: (e) => {
+                    onChange: (e: any) => {
                       const numb = e.target.value
                         .replace(/[^,\d]/g, '')
                         .toString()

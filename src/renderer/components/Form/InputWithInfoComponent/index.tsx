@@ -3,6 +3,8 @@ import { FieldErrors, RegisterOptions } from 'react-hook-form'
 
 import { Input } from '@wartek-id/input'
 
+import { amountFormatting } from 'renderer/utils/number-formatting'
+
 import styles from './index.module.css'
 
 import clsx from 'clsx'
@@ -97,7 +99,7 @@ const InputWithInfoComponent: FC<InputWithInfoProps> = (
               <tr key={indexData} style={{ display: 'flex' }}>
                 {props.headers?.map((header: any) => (
                   <td key={header.key} style={{ width: header.width }}>
-                    {data[header.key]}
+                    {amountFormatting(data[header.key])}
                   </td>
                 ))}
               </tr>
