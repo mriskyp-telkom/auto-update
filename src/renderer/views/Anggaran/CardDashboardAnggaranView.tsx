@@ -19,8 +19,6 @@ import {
 } from 'renderer/utils/date-formatting'
 import { STATUS_KERTAS_KERJA } from 'global/constants'
 
-import { decode } from 'uuid-base64-ts'
-
 interface CardDashboardAnggaranProps {
   data: CardDashboardType
 }
@@ -51,7 +49,9 @@ const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (
   }
 
   const handleOpen = () => {
-    const link = `/anggaran/menyusun/update/${decode(data.id_anggaran)}`
+    const link = `/anggaran/menyusun/update/${encodeURIComponent(
+      data.id_anggaran
+    )}`
     navigate(link)
   }
 

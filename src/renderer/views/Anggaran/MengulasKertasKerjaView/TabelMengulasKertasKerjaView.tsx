@@ -11,8 +11,6 @@ import styles from './index.module.css'
 import clsx from 'clsx'
 import { IPC_KK } from 'global/ipc'
 
-const bulanTahapSatu = ['januari', 'februari', 'maret']
-
 const ipcRenderer = window.require('electron').ipcRenderer
 
 interface TabelMengulasKertasKerjaProps {
@@ -75,10 +73,19 @@ const ProgramKegiatanRowTable = (props: any) => {
   const ref = useRef(null)
 
   const { data } = props
-  const [detail] = useState([])
-
+  const [detail, setDetail] = useState([])
+  const isHaveDetail = data.total != null && data.total > 0
   const handleClickRow = () => {
-    ref.current.children[1].hidden = !ref.current.children[1].hidden
+    const rapbsDetail = ipcRenderer.sendSync(
+      IPC_KK.anggaranDetailKegiatan,
+      props.tahap,
+      data.kode,
+      props.idAnggaran
+    )
+    setDetail(rapbsDetail)
+    if (rapbsDetail != null && rapbsDetail.length > 0) {
+      ref.current.children[1].hidden = !ref.current.children[1].hidden
+    }
   }
 
   return (
@@ -88,9 +95,11 @@ const ProgramKegiatanRowTable = (props: any) => {
         <td>{data.label}</td>
         <td className={styles.price}>{amountFormatting(data.total)}</td>
         <td className={styles.expand}>
-          <Icon as="i" color="default" fontSize="default">
-            expand_more
-          </Icon>
+          {isHaveDetail && (
+            <Icon as="i" color="default" fontSize="default">
+              expand_more
+            </Icon>
+          )}
         </td>
       </tr>
       <tr hidden={true}>
@@ -185,13 +194,13 @@ const RekeningBelanjaRowTable = (props: any) => {
       {!props.isHeader && (
         <tbody>
           <tr className={styles.line}>
-            {bulanTahapSatu.map((bulan, index) => (
+            {data.bulan.map((bulan: any, index: number) => (
               <td
                 key={index}
                 colSpan={2}
                 className="text-center capitalize-first"
               >
-                {bulan}
+                {bulan.nama}
               </td>
             ))}
             <td
@@ -200,13 +209,13 @@ const RekeningBelanjaRowTable = (props: any) => {
             ></td>
           </tr>
           <tr className={styles.line}>
-            {bulanTahapSatu.map((bulan, index) => (
+            {data.bulan.map((bulan: any, index: number) => (
               <td
                 key={index}
                 colSpan={2}
                 className="text-center capitalize-first"
               >
-                {amountFormatting(data.bulan[bulan].total)}
+                {amountFormatting(bulan.total)}
               </td>
             ))}
             <td
@@ -261,7 +270,7 @@ const UraianRowTable = (props: any) => {
                 className={clsx(styles.price, 'text-left')}
                 style={{ paddingLeft: '32px' }}
               >
-                {amountFormatting(data.total)}
+                {amountFormatting(data.harga_satuan)}
               </span>
             </div>
           </td>
@@ -269,11 +278,11 @@ const UraianRowTable = (props: any) => {
       )}
       {!props.isHeader && (
         <tr className={classLine}>
-          {bulanTahapSatu.map((bulan) => (
+          {data.bulan.map((bulan: any) => (
             <>
-              <td className="text-center">{data.bulan[bulan].jumlah}</td>
+              <td className="text-center">{bulan.jumlah}</td>
               <td className={clsx(styles.priceMonth, 'block text-center')}>
-                {amountFormatting(data.bulan[bulan].total)}
+                {amountFormatting(bulan.total)}
               </td>
             </>
           ))}

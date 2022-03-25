@@ -30,8 +30,8 @@ import { AlertType } from 'renderer/types/ComponentType'
 const MengulasKertasKerjaView: FC = () => {
   const location = useLocation()
   const navigate = useNavigate()
-  const { idAnggaran } = useParams()
-
+  const { q_id_anggaran } = useParams()
+  const idAnggaran = decodeURIComponent(q_id_anggaran)
   const [openModalAjukan, setOpenModalAjukan] = useState(false)
   const [modeMengulas, setModeMengulas] = useState(MODE_MENGULAS.tahap)
 

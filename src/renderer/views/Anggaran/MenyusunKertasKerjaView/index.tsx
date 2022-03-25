@@ -31,8 +31,6 @@ import { APP_CONFIG } from 'renderer/constants/appConfig'
 
 import { AlertType } from 'renderer/types/ComponentType'
 
-import { encode } from 'uuid-base64-ts'
-
 const ipcRenderer = window.require('electron').ipcRenderer
 
 const MenyusunKertasKerjaView: FC = () => {
@@ -49,7 +47,7 @@ const MenyusunKertasKerjaView: FC = () => {
   const [tahunAktif, setTahunAktif] = useState('')
   const [idAnggaranBefore, setIdAnggaranBefore] = useState(null)
   const [penggunaId, setPenggunaId] = useState('')
-  const [idAnggaranBaru, setIdAnggaranBaru] = useState(null)
+  const [idAnggaran, setIdAnggaran] = useState(null)
 
   const alertMengulas = useAnggaranStore(
     (state: AnggaranStates) => state.alertMengulas
@@ -142,7 +140,7 @@ const MenyusunKertasKerjaView: FC = () => {
     }
 
     setPagu(idAnggaran)
-    setIdAnggaranBaru(idAnggaran)
+    setIdAnggaran(idAnggaran)
     setIsSync(false)
   }
 
@@ -179,9 +177,10 @@ const MenyusunKertasKerjaView: FC = () => {
     setPenggunaId(penggunaId)
 
     if (q_mode === 'update' && q_id_anggaran !== undefined) {
+      const id_anggaran = decodeURIComponent(q_id_anggaran)
       const dataAnggaran = ipcRenderer.sendSync(
         IPC_ANGGARAN.getAnggaranById,
-        encode(q_id_anggaran)
+        id_anggaran
       )
       const dataPenjab = ipcRenderer.sendSync(
         IPC_PENJAB.getPenjabById,
@@ -204,7 +203,8 @@ const MenyusunKertasKerjaView: FC = () => {
         telepon_bendahara: dataPenjab.telpBendahara,
       }
       setPenanggungJawab(penjab)
-      setIdAnggaranBaru(encode(q_id_anggaran))
+      setIdAnggaran(id_anggaran)
+      setPagu(id_anggaran)
     }
   }, [])
 
@@ -287,7 +287,7 @@ const MenyusunKertasKerjaView: FC = () => {
                 Tambah Kegiatan
               </Button>
             </Link>
-            <Link to={`/anggaran/mengulas/${idAnggaranBaru}`}>
+            <Link to={`/anggaran/mengulas/${encodeURIComponent(idAnggaran)}`}>
               <Button
                 color="black"
                 size="md"

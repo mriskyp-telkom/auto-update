@@ -84,6 +84,7 @@ export const GetRapbsSummary = async (
                   WHEN :tahap=1 THEN rp.id_periode IN (81,82,83)
                   WHEN :tahap=2 THEN rp.id_periode IN (84,85,86,87,88)
                   WHEN :tahap=3 THEN rp.id_periode IN (89,90,91,92)
+                END
           GROUP BY parent.id_kode, parent.uraian_kode
         )
         a
