@@ -7,9 +7,9 @@
   "scripts": {
     "start": "cross-env BUILD=false electron-forge start",
     "package": "cross-env BUILD=true electron-forge package",
-    "make": "cross-env BUILD=true electron-forge make && yarn makewin",
+    "make": "cross-env BUILD=true electron-forge make",
     "makewin": "ts-node installer-win\\installer-win.ts",
-    "make-win32": "cross-env BUILD=true electron-forge make --platform win32",
+    "make-win32": "cross-env BUILD=true electron-forge make --platform win32 && yarn makewin",
     "publish": "electron-forge publish",
     "lint:script": "eslint . --ext ts,tsx,js --fix --max-warnings=0",
     "postinstall": "husky install",
