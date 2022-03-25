@@ -204,7 +204,7 @@ const MenyusunKertasKerjaView: FC = () => {
         telepon_bendahara: dataPenjab.telpBendahara,
       }
       setPenanggungJawab(penjab)
-      setIdAnggaranBaru(idAnggaran)
+      setIdAnggaranBaru(encode(q_id_anggaran))
     }
   }, [])
 

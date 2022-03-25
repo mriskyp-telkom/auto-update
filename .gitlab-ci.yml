@@ -37,18 +37,18 @@ variables:
 # staging
 make-win-deb-staging:
   # base image is defined here https://gitlab.com/wartek-id/sds/sds/-/tree/main/docker/arkas-builder-base
-  image: asia.gcr.io/belajar-id-networks/sds/arkas-builder-base:aa457e041ed32e3cf46bb1aaa4e4e077fee8744b
+  image: asia.gcr.io/belajar-id-networks/sds/arkas-builder-base:ceb6e72989847c1e838e07ede484101b543e0ea2
   extends: .make
   stage: build-staging
   script:
+    - node -v && npm install -g npm@8.1.2 && npm -v
     - mv ./.env.staging ./.env && rm ./.env.production
-    - npm install yarn
+    - npm install yarn --legacy-peer-deps
     - yarn install
     - yarn make-win32 && rm -rf out/Arkas-win32-x64
     - yarn make && rm -rf out/Arkas-linux-x64
     - 'echo "==> total size: $(du -sh .)"'
     - apt install -y tree && tree out
-    - node -v
   environment:
     name: staging
   allow_failure: false
