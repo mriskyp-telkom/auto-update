@@ -11,7 +11,7 @@ import {
   AddRapbsPeriode,
   DelRapbsPeriode,
   GetRapbsPeriode,
-  GetRapbsPeriodeDetail,
+  GetDetailKegiatan,
   GetRapbsSummary,
 } from 'main/services/RapbsPeriode'
 import CommonUtils from 'main/utils/CommonUtils'
@@ -162,11 +162,7 @@ module.exports = {
   getRapbsPeriodeDetail: ipcMain.on(
     IPC_KK.anggaranDetailKegiatan,
     async (e, id_tahap, id_kode, id_anggaran) => {
-      e.returnValue = await GetRapbsPeriodeDetail(
-        id_tahap,
-        id_kode,
-        id_anggaran
-      )
+      e.returnValue = await GetDetailKegiatan(id_tahap, id_kode, id_anggaran)
     }
   ),
 }

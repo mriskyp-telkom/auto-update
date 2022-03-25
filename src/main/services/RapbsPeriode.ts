@@ -5,6 +5,7 @@ import {
   RekeningBelanja,
   UraianBelanja,
   Bulan,
+  BulanDetail,
   RapbsSummary,
 } from 'main/types/RapbsPeriodeDetail'
 import { getManager, createQueryBuilder, getRepository } from 'typeorm'
@@ -97,7 +98,7 @@ export const GetRapbsSummary = async (
   return <RapbsSummary[]>result
 }
 
-export const GetRapbsPeriodeDetail = async (
+export const GetDetailKegiatan = async (
   id_tahap: number,
   id_kode: string,
   id_anggaran: string
@@ -319,6 +320,49 @@ export const GetRapbsPeriodeDetail = async (
       mapKegiatan[row.level_1_id] = k
     }
 
+    const belanja_bulanan: Bulan = {
+      januari: {
+        nama: 'januari',
+        jumlah: row.volume_januari,
+        total: row.januari,
+      },
+      februari: {
+        nama: 'februari',
+        jumlah: row.volume_februari,
+        total: row.februari,
+      },
+      maret: { nama: 'maret', jumlah: row.volume_maret, total: row.maret },
+      april: { nama: 'april', jumlah: row.volume_april, total: row.april },
+      mei: { nama: 'mei', jumlah: row.volume_mei, total: row.mei },
+      juni: { nama: 'juni', jumlah: row.volume_juni, total: row.juni },
+      juli: { nama: 'juli', jumlah: row.volume_juli, total: row.juli },
+      agustus: {
+        nama: 'agustus',
+        jumlah: row.volume_agustus,
+        total: row.agustus,
+      },
+      september: {
+        nama: 'september',
+        jumlah: row.volume_september,
+        total: row.september,
+      },
+      oktober: {
+        nama: 'oktober',
+        jumlah: row.volume_oktober,
+        total: row.oktober,
+      },
+      november: {
+        nama: 'november',
+        jumlah: row.volume_november,
+        total: row.november,
+      },
+      desember: {
+        nama: 'desember',
+        jumlah: row.volume_desember,
+        total: row.desember,
+      },
+    }
+
     if (row.level == 2) {
       const rb = {} as RekeningBelanja
       rb.parent_id = row.level_1_id
@@ -326,6 +370,7 @@ export const GetRapbsPeriodeDetail = async (
       rb.label = row.uraian
       rb.total = row.total
       rb.uraian = []
+      rb.bulan = populateMonthlyDetails(id_tahap, belanja_bulanan)
 
       mapRekeningBelanja[row.level_1_id + row.kode] = rb
     }
@@ -334,25 +379,10 @@ export const GetRapbsPeriodeDetail = async (
       const uraian = mapRekeningBelanja[row.level_1_id + row.kode].uraian
       const belanja = {} as UraianBelanja
       belanja.label = row.uraian
-      belanja.volume = row.volume
+      belanja.jumlah = row.volume
+      belanja.total = row.total
       belanja.harga_satuan = row.harga_satuan
-
-      const belanja_bulanan: Bulan = {
-        januari: { volume: row.volume_januari, total: row.januari },
-        februari: { volume: row.volume_februari, total: row.februari },
-        maret: { volume: row.volume_maret, total: row.maret },
-        april: { volume: row.volume_april, total: row.april },
-        mei: { volume: row.volume_mei, total: row.mei },
-        juni: { volume: row.volume_juni, total: row.juni },
-        juli: { volume: row.volume_juli, total: row.juli },
-        agustus: { volume: row.volume_agustus, total: row.agustus },
-        september: { volume: row.volume_september, total: row.september },
-        oktober: { volume: row.volume_oktober, total: row.oktober },
-        november: { volume: row.volume_november, total: row.november },
-        desember: { volume: row.volume_desember, total: row.desember },
-      }
-
-      belanja.bulan = belanja_bulanan
+      belanja.bulan = populateMonthlyDetails(id_tahap, belanja_bulanan)
 
       uraian.push(belanja)
       mapRekeningBelanja[row.level_1_id + row.kode].uraian = uraian
@@ -371,4 +401,103 @@ export const GetRapbsPeriodeDetail = async (
   })
 
   return kegiatan
+}
+
+function populateMonthlyDetails(periode: number, bulan: Bulan): BulanDetail[] {
+  switch (periode) {
+    case 1:
+      return [
+        {
+          nama: 'januari',
+          jumlah: bulan.januari.jumlah,
+          total: bulan.januari.total,
+        },
+        {
+          nama: 'februari',
+          jumlah: bulan.februari.jumlah,
+          total: bulan.februari.total,
+        },
+        { nama: 'maret', jumlah: bulan.maret.jumlah, total: bulan.maret.total },
+      ]
+    case 2:
+      return [
+        { nama: 'april', jumlah: bulan.april.jumlah, total: bulan.april.total },
+        { nama: 'mei', jumlah: bulan.mei.jumlah, total: bulan.mei.total },
+        { nama: 'juni', jumlah: bulan.juni.jumlah, total: bulan.juni.total },
+        { nama: 'juli', jumlah: bulan.juli.jumlah, total: bulan.juli.total },
+        {
+          nama: 'agustus',
+          jumlah: bulan.agustus.jumlah,
+          total: bulan.agustus.total,
+        },
+      ]
+    case 3:
+      return [
+        {
+          nama: 'september',
+          jumlah: bulan.september.jumlah,
+          total: bulan.september.total,
+        },
+        {
+          nama: 'oktober',
+          jumlah: bulan.oktober.jumlah,
+          total: bulan.oktober.total,
+        },
+        {
+          nama: 'november',
+          jumlah: bulan.november.jumlah,
+          total: bulan.november.total,
+        },
+        {
+          nama: 'desember',
+          jumlah: bulan.desember.jumlah,
+          total: bulan.desember.total,
+        },
+      ]
+    case 0:
+      return [
+        {
+          nama: 'januari',
+          jumlah: bulan.januari.jumlah,
+          total: bulan.januari.total,
+        },
+        {
+          nama: 'februari',
+          jumlah: bulan.februari.jumlah,
+          total: bulan.februari.total,
+        },
+        { nama: 'maret', jumlah: bulan.maret.jumlah, total: bulan.maret.total },
+        { nama: 'april', jumlah: bulan.april.jumlah, total: bulan.april.total },
+        { nama: 'mei', jumlah: bulan.mei.jumlah, total: bulan.mei.total },
+        { nama: 'juni', jumlah: bulan.juni.jumlah, total: bulan.juni.total },
+        { nama: 'juli', jumlah: bulan.juli.jumlah, total: bulan.juli.total },
+        {
+          nama: 'agustus',
+          jumlah: bulan.agustus.jumlah,
+          total: bulan.agustus.total,
+        },
+        {
+          nama: 'september',
+          jumlah: bulan.september.jumlah,
+          total: bulan.september.total,
+        },
+        {
+          nama: 'oktober',
+          jumlah: bulan.oktober.jumlah,
+          total: bulan.oktober.total,
+        },
+        {
+          nama: 'november',
+          jumlah: bulan.november.jumlah,
+          total: bulan.november.total,
+        },
+        {
+          nama: 'desember',
+          jumlah: bulan.desember.jumlah,
+          total: bulan.desember.total,
+        },
+      ]
+    default:
+      return []
+  }
 }

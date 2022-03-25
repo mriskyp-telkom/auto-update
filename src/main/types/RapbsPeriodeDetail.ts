@@ -52,14 +52,16 @@ export interface RekeningBelanja {
   kode: string
   label: string
   total: number
+  bulan: BulanDetail[]
   uraian: UraianBelanja[]
 }
 
 export interface UraianBelanja {
   label: string
-  volume: number
+  jumlah: number
+  total: number
   harga_satuan: number
-  bulan: Bulan
+  bulan: BulanDetail[]
 }
 
 export interface Bulan {
@@ -78,6 +80,7 @@ export interface Bulan {
 }
 
 export interface BulanDetail {
-  volume: number
+  nama: string
+  jumlah: number
   total: number
 }
