@@ -31,7 +31,7 @@ const InputSearchComponent: FC<InputSearchProps> = (
 
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
-  const [data, setData] = useState(props.dataOptions)
+  const [data, setData] = useState([])
 
   const { required, name, placeholder, isDisabled, errors, register } = props
 
@@ -72,7 +72,7 @@ const InputSearchComponent: FC<InputSearchProps> = (
 
   const handleClickOutside = (event: MouseEvent) => {
     if (open && ref.current && !ref.current.contains(event.target)) {
-      setOpen(false)
+      handleSendData('', name, '')
     }
   }
 
@@ -83,6 +83,11 @@ const InputSearchComponent: FC<InputSearchProps> = (
     const value = filter(props.dataOptions, ['id', parseInt(id) || id])[0][
       fieldShow
     ]
+    handleSendData(id, name, value)
+  }
+
+  const handleSendData = (id: string | number, name: string, value: string) => {
+    setQuery(value)
     const sendData = {
       id: id,
       name: name,
@@ -101,10 +106,10 @@ const InputSearchComponent: FC<InputSearchProps> = (
 
   useEffect(() => {
     setData(props.dataOptions)
-  }, [props.dataOptions])
+  }, [])
 
   return (
-    <div ref={ref}>
+    <div ref={ref} className="relative">
       <InputGroup>
         <InputLeftAddon>
           <Icon as="i" color="default" fontSize="default">
