@@ -43,22 +43,6 @@ export const GetRapbsSummary = async (
   tahap: number,
   idAnggaran: string
 ): Promise<RapbsSummary[]> => {
-  let id_periode = '1,2,3,4,81,82,83,84,85,86,87,88,89,90,91,92'
-
-  switch (tahap) {
-    case 1:
-      id_periode = '81,82,83'
-      break
-
-    case 2:
-      id_periode = '84,85,86,87,88'
-      break
-
-    case 3:
-      id_periode = '89,90,91,92'
-      break
-  }
-
   const entityManager = getManager()
   const result = await entityManager
     .query(
@@ -94,13 +78,17 @@ export const GetRapbsSummary = async (
                 child.expired_date IS NULL AND 
                 grandchild.expired_date IS NULL AND 
                 r.id_anggaran = :id_anggaran AND
-                rp.id_periode in (:id_periode)
+                CASE 
+                  WHEN :tahap=0 THEN rp.id_periode IN (1,2,3,4,81,82,83,84,85,86,87,88,89,90,91,92)
+                  WHEN :tahap=1 THEN rp.id_periode IN (81,82,83)
+                  WHEN :tahap=2 THEN rp.id_periode IN (84,85,86,87,88)
+                  WHEN :tahap=3 THEN rp.id_periode IN (89,90,91,92)
           GROUP BY parent.id_kode, parent.uraian_kode
         )
         a
     GROUP BY a.kode, a.label;
     `,
-      [{ id_periode: id_periode, id_anggaran: idAnggaran }]
+      [{ tahap: tahap, id_anggaran: idAnggaran }]
     )
     .catch((e) => {
       console.log('error happen during query %s', e)
