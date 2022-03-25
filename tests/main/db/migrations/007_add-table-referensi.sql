@@ -1,0 +1,42 @@
+CREATE TABLE [ref_kode] (
+  [id_ref_kode] varchar(22) NOT NULL, 
+  [id_kode] varchar(12) NOT NULL, 
+  [parent_kode] varchar(22), 
+  [uraian_kode] varchar(200) NOT NULL, 
+  [is_bos_pusat] numeric(1,0) NOT NULL, 
+  [is_bos_prop] numeric(1,0) NOT NULL, 
+  [is_bos_kab] numeric(1,0) NOT NULL, 
+  [is_komite] numeric(1,0) NOT NULL, 
+  [is_lainnnya] numeric(1,0) NOT NULL, 
+  [id_level_kode] numeric(2,0) NOT NULL, 
+  [bentuk_pendidikan_id] numeric(2) NOT NULL, 
+  [create_date] datetime NOT NULL, 
+  [last_update] datetime NOT NULL, 
+  [expired_date] datetime, 
+
+  CONSTRAINT [] PRIMARY KEY ([id_ref_kode]));
+
+CREATE TABLE [ref_rekening] (
+  [kode_rekening] varchar(20) NOT NULL, 
+  [rekening] varchar(200) NOT NULL, 
+  [neraca] varchar(200), 
+  [blokid] numeric(2,0) NOT NULL DEFAULT 0, 
+  [batas_atas] numeric, 
+  [batas_bawah] numeric, 
+  [validasi_type] char(1), 
+  [is_ppn] numeric(1) DEFAULT 0, 
+  [is_pph21] numeric(1) DEFAULT 0, 
+  [is_pph22] numeric(1) DEFAULT 0, 
+  [is_pph23] numeric(1) DEFAULT 0, 
+  [is_pph4] numeric(1) DEFAULT 0, 
+  [is_sspd] numeric(1) DEFAULT 0, 
+  [bhp] char(5), 
+  [is_custom_pajak_1] numeric(1), 
+  [is_honor] numeric(1), 
+  [is_buku] numeric(1), 
+  [is_custom_satuan] numeric(1), 
+  [create_date] datetime NOT NULL, 
+  [last_update] datetime NOT NULL, 
+  [expired_date] datetime, 
+
+  CONSTRAINT [sqlite_autoindex_ref_rekening_1] PRIMARY KEY ([kode_rekening]));

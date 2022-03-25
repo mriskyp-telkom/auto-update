@@ -6,21 +6,28 @@ import { RefSumberDana } from 'main/repositories/RefSumberDana'
 import CommonUtils from 'main/utils/CommonUtils'
 import { GetConfig } from 'main/services/Config'
 import { AddAnggaran, GetAnggaran } from 'main/services/Anggaran'
+import { cfg, Migrate } from '../migration'
 
-beforeEach(() => {
-  return createConnection({
+beforeAll(async () => {
+  process.env.NODE_ENV = 'testing'
+})
+
+beforeEach(async () => {
+  const db = await createConnection({
     type: 'better-sqlite3',
     database: ':memory:',
     dropSchema: true,
     entities: [Anggaran, MstSekolah, AppConfig, RefSumberDana],
-    synchronize: true,
-    logging: false,
+    synchronize: false,
+    logging: true,
   })
+
+  await Migrate(db, cfg)
 })
 
 afterEach(() => {
   const conn = getConnection()
-  return conn.close()
+  conn.close()
 })
 
 test('AddAnggaran and GetAnggaran', async () => {

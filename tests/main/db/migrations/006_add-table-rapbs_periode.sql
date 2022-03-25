@@ -1,0 +1,22 @@
+CREATE TABLE rapbs_periode (
+   id_rapbs_periode     varchar(22)                 not null,
+   id_rapbs             varchar(22)                 not null,
+   id_periode           numeric(2,0)         not null,
+   volume               numeric(6,0)         not null,
+   satuan               varchar(30)          not null,
+   harga_satuan         numeric                not null,
+   jumlah               numeric                not null,
+   v1                   numeric(4,0)         null,
+   s1                   varchar(30)          null,
+   v2                   numeric(4,0)         null,
+   s2                   varchar(30)          null,
+   v3                   numeric(4,0)         null,
+   s3                   varchar(30)          null,
+   v4                   numeric(4,0)         null,
+   s4                   varchar(30)          null,
+   soft_delete          numeric(1,0)         not null default 0,
+   create_date          datetime             not null,
+   last_update          datetime             not null,
+   updater_id           varchar(22)                 null,
+   constraint PK_RAPBS_PERIODE primary key (id_rapbs_periode)
+);
