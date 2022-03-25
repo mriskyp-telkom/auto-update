@@ -25,7 +25,14 @@ export async function getAppDataPath(): Promise<string> {
 
 export async function getAppData(): Promise<string> {
   const appPath = __dirname
-  return !process.env.NODE_ENV || process.env.NODE_ENV === 'production'
-    ? await getAppDataPath() // Live Mode
-    : path.join(appPath, 'AppData') // Dev Mode
+  const envPath =
+    !process.env.NODE_ENV || process.env.NODE_ENV === 'production'
+      ? await getAppDataPath() // Live Mode
+      : path.join(appPath, 'AppData') // Dev Mode
+
+  if (process.env.NODE_ENV === 'testing') {
+    return path.join(await getAppDataPath(), 'Testing')
+  }
+
+  return envPath
 }
