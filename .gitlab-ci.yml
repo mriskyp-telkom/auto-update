@@ -19,7 +19,7 @@ variables:
     policy: pull-push
   artifacts:
     paths:
-      - out/make
+      - out
   only:
     - tags
   tags:
@@ -30,14 +30,14 @@ variables:
   image: google/cloud-sdk:300.0.0-alpine
   script:
     - gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS
-    - gsutil -m cp -r -Z out/make gs://${BUCKET}/arkas-$CI_COMMIT_TAG
+    - gsutil -m cp -r -Z out gs://${BUCKET}/arkas-$CI_COMMIT_TAG
   only:
     - tags
 
 # staging
 make-win-deb-staging:
   # base image is defined here https://gitlab.com/wartek-id/sds/sds/-/tree/main/docker/arkas-builder-base
-  image: asia.gcr.io/belajar-id-networks/sds/arkas-builder-base:aa457e041ed32e3cf46bb1aaa4e4e077fee8744b
+  image: asia.gcr.io/belajar-id-networks/sds/arkas-builder-base:2d7d5d233ff3701b995449f739f08c52bc4e71f8
   extends: .make
   stage: build-staging
   script:
