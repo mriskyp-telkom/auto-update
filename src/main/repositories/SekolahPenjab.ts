@@ -46,7 +46,7 @@ export class SekolahPenjab extends BaseEntity {
   @Column('varchar', { name: 'komite', nullable: true, length: 50 })
   komite: string | null
 
-  @Column('varchar', { name: 'nip_komite', nullable: true, length: 20 })
+  @Column('varchar', { name: 'nip_komite', nullable: true, length: 100 })
   nipKomite: string | null
 
   @Column('numeric', {
