@@ -8,6 +8,7 @@ import {
   GetAnggaranBefore,
   GetPagu,
   CopyAnggaran,
+  GetTotalAnggaran,
 } from 'main/services/Anggaran'
 import { GetConfig } from 'main/services/Config'
 import CommonUtils from 'main/utils/CommonUtils'
@@ -199,4 +200,11 @@ module.exports = {
       e.returnValue = ''
     }
   }),
+
+  getTotalAnggaran: ipcMain.on(
+    IPC_ANGGARAN.getTotalAnggaran,
+    async (e, id_tahap: number, id_anggaran: string) => {
+      e.returnValue = await GetTotalAnggaran(id_tahap, id_anggaran)
+    }
+  ),
 }
