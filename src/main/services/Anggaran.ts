@@ -1,4 +1,4 @@
-import { createQueryBuilder, getRepository } from 'typeorm'
+import { createQueryBuilder, getManager, getRepository } from 'typeorm'
 import { Rapbs } from 'main/repositories/Rapbs'
 import { RapbsPeriode } from 'main/repositories/RapbsPeriode'
 import { Anggaran } from 'main/repositories/Anggaran'
@@ -7,7 +7,8 @@ import { RefRekening } from 'main/repositories/RefRekening'
 import { RefKode } from 'main/repositories/RefKode'
 import { RefAcuanBarang } from 'main/repositories/RefAcuanBarang'
 import { getBentukPendidikan } from 'main/services/Sekolah'
-import CommonUtils from '../utils/CommonUtils'
+import CommonUtils from 'main/utils/CommonUtils'
+import { AnggaranTotal } from 'main/types/Anggaran'
 
 export const GetAnggaran = async (
   idSumberDana: number,
@@ -187,4 +188,49 @@ export const CopyAnggaran = async (
   } catch {
     return false
   }
+}
+
+/**
+ * Return total and id anggaran
+ * @param {number} id_tahap tahap penyaluran eg. 1,2,3
+ * @param {string} id_anggaran id anggaran
+ * @return {Object} contains total and id_anggaran
+ */
+export const GetTotalAnggaran = async (
+  id_tahap: number,
+  id_anggaran: string
+): Promise<AnggaranTotal> => {
+  const query = ` SELECT  a.id_anggaran, SUM(rp.jumlah) AS total
+                  FROM anggaran a 
+                      JOIN rapbs r 
+                      ON a.id_anggaran = r.id_anggaran
+                      JOIN rapbs_periode rp 
+                      ON r.id_rapbs = rp.id_rapbs 
+                  WHERE
+                      a.soft_delete=0 
+                      AND r.soft_delete=0 
+                      AND a.id_anggaran=:id_anggaran 
+                      AND CASE 
+                            WHEN :id_tahap=0 THEN rp.id_periode IN (81,82,83,84,85,86,87,88,89,90,91,92) 
+                            WHEN :id_tahap=1 THEN rp.id_periode IN (81,82,83) 
+                            WHEN :id_tahap=2 THEN rp.id_periode IN (84,85,86,87,88) 
+                            WHEN :id_tahap=3 THEN rp.id_periode IN (89,90,91,92) 
+                            WHEN :id_tahap=21 THEN rp.id_periode IN (1) 
+                            WHEN :id_tahap=22 THEN rp.id_periode IN (2) 
+                            WHEN :id_tahap=23 THEN rp.id_periode IN (3) 
+                            WHEN :id_tahap=24 THEN rp.id_periode IN (4)
+                       END             
+                  GROUP BY a.id_anggaran`
+
+  const entityManager = getManager()
+
+  const result = await entityManager
+    .query(query, [{ id_tahap: id_tahap, id_anggaran: id_anggaran }])
+    .catch((e) => {
+      console.error('Error when fetching query:', e)
+    })
+  if (result != null) {
+    return <AnggaranTotal>result[0]
+  }
+  return {} as AnggaranTotal
 }
