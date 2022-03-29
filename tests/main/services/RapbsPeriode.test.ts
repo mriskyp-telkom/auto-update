@@ -26,7 +26,7 @@ afterEach(() => {
   conn.close()
 })
 
-test('GetDetailKegiatan Service', async () => {
+test('GetDetailKegiatan', async () => {
   const data = await GetDetailKegiatan(3, '02.', 'apQwiAb-9EWxv74iwMY6aQ')
 
   expect(data[0].rekening_belanja[0].label).toBe(
