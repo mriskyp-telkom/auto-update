@@ -59,42 +59,10 @@ const InputUraian = (props: any) => {
 }
 
 const InputHargaSatuan = (props: any) => {
-  const batas_bawah = props.dataOptions[0].batas_bawah
-  const batas_atas = props.dataOptions[0].batas_atas
-
-  let validate: any = {
-    positive: (value: string) => {
-      if (value.replace(/[^,\d]/g, '').toString().length < 2) {
-        return 'Harga satuan minimal 2 digit angka'
-      }
-    },
-  }
-
-  if (props.dataOptions.length > 0) {
-    validate = {
-      ...validate,
-      lessThanTen: (value: string) => {
-        if (parseInt(value.replace(/[^,\d]/g, '')) < batas_bawah) {
-          return 'Harga kurang dari batas bawah SSH'
-        }
-      },
-      moreThan: (value: string) => {
-        if (parseInt(value.replace(/[^,\d]/g, '')) > batas_atas) {
-          return 'Harga melebihi batas atas SSH'
-        }
-      },
-    }
-  }
-
-  const registerOption = {
-    ...props.registerOption,
-    validate: validate,
-  }
-
   return props.dataOptions.length === 0 ? (
-    <InputComponent {...props} type="text" registerOption={registerOption} />
+    <InputComponent {...props} type="text" />
   ) : (
-    <InputWithInfoComponent {...props} registerOption={registerOption} />
+    <InputWithInfoComponent {...props} />
   )
 }
 
@@ -129,6 +97,9 @@ const FormDetailKertasKerjaView: FC = () => {
     unregister,
     handleSubmit,
     setValue,
+    setError,
+    setFocus,
+    resetField,
     control,
     reset,
     formState: { errors, isDirty },
@@ -177,6 +148,8 @@ const FormDetailKertasKerjaView: FC = () => {
     name: FormIsiKertasKerjaType
     value: string
   }) => {
+    setFocus(data.name)
+
     if (data.id.toString() === '' || data.value === '') {
       setValue(data.name, '', { shouldDirty: true })
       return
@@ -423,7 +396,8 @@ const FormDetailKertasKerjaView: FC = () => {
                   dataOptions={optionsUraian}
                   registerOption={{
                     onChange: (e: any) => {
-                      if (e.target.value !== '') {
+                      const value = e.target.value
+                      if (value !== '') {
                         setFormDisable({
                           ...formDisable,
                           harga_satuan: false,
@@ -449,15 +423,48 @@ const FormDetailKertasKerjaView: FC = () => {
                   dataOptions={optionsHarga}
                   registerOption={{
                     onChange: (e: any) => {
-                      const numb = e.target.value
+                      const value = e.target.value
                         .replace(/[^,\d]/g, '')
                         .toString()
-                      if (numb !== null) {
+
+                      const batas_bawah = optionsHarga[0].batas_bawah
+                      const batas_atas = optionsHarga[0].batas_atas
+
+                      resetField('harga_satuan')
+
+                      if (value !== null) {
                         setValue(
                           'harga_satuan',
-                          `Rp ${numberUtils.delimit(numb, '.')}`
+                          `Rp ${numberUtils.delimit(value, '.')}`
                         )
                       }
+
+                      if (value.length < 2) {
+                        setError('harga_satuan', {
+                          type: 'manual',
+                          message: 'Harga satuan minimal 2 digit angka',
+                        })
+                        return
+                      }
+
+                      if (optionsHarga.length > 0) {
+                        if (parseInt(value) < batas_bawah) {
+                          setError('harga_satuan', {
+                            type: 'manual',
+                            message: 'Harga kurang dari batas bawah SSH',
+                          })
+                          return
+                        }
+
+                        if (parseInt(value) > batas_atas) {
+                          setError('harga_satuan', {
+                            type: 'manual',
+                            message: 'Harga melebihi batas atas SSH',
+                          })
+                          return
+                        }
+                      }
+
                       setFormDisable({
                         ...formDisable,
                         harga_per_month: false,

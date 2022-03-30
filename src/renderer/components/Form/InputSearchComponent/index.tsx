@@ -122,18 +122,15 @@ const InputSearchComponent: FC<InputSearchProps> = (
           id={name}
           name={name}
           onClick={() => setOpen(true)}
-          className={clsx(open ? 'border-none rounded-none' : '', 'text-base')}
+          className={clsx(
+            open
+              ? 'border-none rounded-none focus:rounded-t focus:border-solid focus:border focus:border-b-0'
+              : '',
+            'text-base'
+          )}
           isDisabled={isDisabled}
           isInvalid={open ? false : !!errors[name]}
           errorMessage={open ? '' : errors[name]?.message}
-          style={
-            open
-              ? {
-                  boxShadow: '0px 8px 20px rgba(37, 40, 43, 0.2)',
-                  borderRadius: '4px 4px 0px 0px',
-                }
-              : {}
-          }
           {...register(name, validation)}
         />
       </InputGroup>
