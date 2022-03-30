@@ -26,7 +26,6 @@ import {
   headerSatuan,
   optionsSatuan,
   headerHarga,
-  optionsHarga,
 } from 'renderer/constants/table'
 
 import { numberUtils } from '@wartek-id/fe-toolbox'
@@ -80,9 +79,11 @@ const FormDetailKertasKerjaView: FC = () => {
   const [optionsKegiatan, setOptionsKegiatan] = useState([])
   const [optionsRekening, setOptionsRekening] = useState([])
   const [optionsUraian, setOptionsUraian] = useState([])
+  const [optionsHarga, setOptionsHarga] = useState([])
 
   const [selectedKegiatan, setSelectedKegiatan] = useState(null)
   const [selectedRekening, setSelectedRekening] = useState(null)
+  const [selectedUraian, setSelectedUraian] = useState(null)
 
   const tempDetailKertasKerja = useAnggaranStore(
     (state: AnggaranStates) => state.tempDetailKertasKerja
@@ -159,9 +160,12 @@ const FormDetailKertasKerjaView: FC = () => {
     if (data.name === 'kegiatan') {
       const dataKegiatan = optionsKegiatan.find((k: any) => k.id === data.id)
       setSelectedKegiatan(dataKegiatan)
+      setValue('uraian', '')
+      setValue('harga_satuan', '')
       setFormDisable({
         ...formDisable,
         rekening_belanja: false,
+        harga_satuan: true,
       })
     }
     if (data.name === 'rekening_belanja') {
@@ -169,12 +173,20 @@ const FormDetailKertasKerjaView: FC = () => {
         (k: any) => k.id.toString() === data.id.toString()
       )
       setSelectedRekening(dataRekening)
+      setValue('uraian', '')
+      setValue('harga_satuan', '')
+      setSelectedUraian(null)
       setFormDisable({
         ...formDisable,
         uraian: false,
+        harga_satuan: true,
       })
     }
     if (data.name === 'uraian') {
+      const dataUraian = optionsUraian.find(
+        (k: any) => k.id.toString() === data.id.toString()
+      )
+      setSelectedUraian(dataUraian)
       setFormDisable({
         ...formDisable,
         harga_satuan: false,
@@ -307,6 +319,23 @@ const FormDetailKertasKerjaView: FC = () => {
   }, [selectedKegiatan, selectedRekening])
 
   useEffect(() => {
+    if (selectedUraian != null) {
+      const harga = []
+      if (
+        selectedUraian.batas_atas != null &&
+        selectedUraian.batas_bawah != null
+      ) {
+        harga.push({
+          id: 1,
+          batas_atas: selectedUraian.batas_atas,
+          batas_bawah: selectedUraian.batas_bawah,
+        })
+      }
+      setOptionsHarga(harga)
+    }
+  }, [selectedUraian])
+
+  useEffect(() => {
     const kegiatan = ipcRenderer.sendSync(IPC_REFERENSI.getRefKode)
     const rekening = ipcRenderer.sendSync(IPC_REFERENSI.getRefRekening)
     setOptionsKegiatan(kegiatan)
@@ -427,8 +456,8 @@ const FormDetailKertasKerjaView: FC = () => {
                         .replace(/[^,\d]/g, '')
                         .toString()
 
-                      const batas_bawah = optionsHarga[0].batas_bawah
-                      const batas_atas = optionsHarga[0].batas_atas
+                      const batas_bawah = optionsHarga[0]?.batas_bawah
+                      const batas_atas = optionsHarga[0]?.batas_atas
 
                       resetField('harga_satuan')
 
