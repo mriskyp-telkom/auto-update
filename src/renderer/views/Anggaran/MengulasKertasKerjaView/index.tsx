@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { useNavigate, useLocation, useParams } from 'react-router-dom'
 
 import { Tooltip } from '@wartek-id/tooltip'
@@ -25,15 +25,26 @@ import {
   LABEL_MODE_MENGULAS,
 } from 'renderer/constants/anggaran'
 
+const ipcRenderer = window.require('electron').ipcRenderer
+
 import { AlertType } from 'renderer/types/ComponentType'
+import { IPC_ANGGARAN } from 'global/ipc'
 
 const MengulasKertasKerjaView: FC = () => {
   const location = useLocation()
   const navigate = useNavigate()
+
   const { q_id_anggaran } = useParams()
   const idAnggaran = decodeURIComponent(q_id_anggaran)
   const [openModalAjukan, setOpenModalAjukan] = useState(false)
   const [modeMengulas, setModeMengulas] = useState(MODE_MENGULAS.tahap)
+  const [tahap, setTahap] = useState(1)
+  const [anggaran, setAnggaran] = useState(0)
+  const [totalAnggaran, setTotalAnggaran] = useState(0)
+  const [sisaDana, setSisaDana] = useState(0)
+  const [tahun, setTahun] = useState(null)
+
+  const isDisplayAmount = modeMengulas === MODE_MENGULAS.tahap
 
   const alertMengulas = useAnggaranStore(
     (state: AnggaranStates) => state.alertMengulas
@@ -56,6 +67,38 @@ const MengulasKertasKerjaView: FC = () => {
     navigate('/sync/anggaran/mengulas', {
       state: { backgroundLocation: location },
     })
+  }
+
+  useEffect(() => {
+    const pagu = ipcRenderer.sendSync(IPC_ANGGARAN.getPagu, idAnggaran)
+    setSisaDana(pagu?.sisa)
+    setTotalAnggaran(pagu?.total)
+    setTahun(pagu.tahun_anggaran)
+  }, [])
+
+  useEffect(() => {
+    if (modeMengulas != '') {
+      if (modeMengulas === MODE_MENGULAS.tahap) {
+        setTahap(1)
+        const anggaran = ipcRenderer.sendSync(
+          IPC_ANGGARAN.getTotalAnggaran,
+          1,
+          idAnggaran
+        )
+        setAnggaran(anggaran?.total)
+      }
+    }
+  }, [modeMengulas])
+
+  const handleChangeTabs = (index: number) => {
+    const selectedTahap = index + 1
+    setTahap(selectedTahap)
+    const anggaran = ipcRenderer.sendSync(
+      IPC_ANGGARAN.getTotalAnggaran,
+      selectedTahap,
+      idAnggaran
+    )
+    setAnggaran(anggaran?.total)
   }
 
   const getPanduan = () => {
@@ -97,14 +140,14 @@ const MengulasKertasKerjaView: FC = () => {
             className="text-base font-semibold text-gray-600 mb-[57px]"
             style={{ display: 'inline-block' }}
           >
-            Bos reguler 2021
+            Bos reguler {tahun}
             <Tooltip
-              content="BOS reguler 2021"
+              content={`BOS reguler ${tahun}`}
               placement="top"
               strategy="fixed"
               trigger="hover"
             >
-              <span className="hidden">BOS reguler 2021</span>
+              <span className="hidden">BOS reguler {tahun}</span>
             </Tooltip>
           </div>
           <div className="flex">
@@ -115,14 +158,18 @@ const MengulasKertasKerjaView: FC = () => {
               <AmountCardComponent
                 type="disabled"
                 width={210}
-                amount={300000000}
+                amount={totalAnggaran}
               />
             </span>
             <span>
               <div className="font-normal text-tiny text-gray-900 pb-1">
                 Sisa Dana
               </div>
-              <AmountCardComponent type="disabled" width={210} amount={0} />
+              <AmountCardComponent
+                type="disabled"
+                width={210}
+                amount={sisaDana}
+              />
             </span>
           </div>
         </span>
@@ -182,16 +229,18 @@ const MengulasKertasKerjaView: FC = () => {
               handleChange={handleChangeMode}
             />
           </span>
-          <AmountCardComponent
-            type="disabled"
-            width={320}
-            label="Anggaran Tahap 1"
-            amount={100000000}
-          />
+          {isDisplayAmount && (
+            <AmountCardComponent
+              type="disabled"
+              width={320}
+              label={`Anggaran Tahap ${tahap}`}
+              amount={anggaran}
+            />
+          )}
         </div>
         <div id="tabelMengulas">
           {modeMengulas === MODE_MENGULAS.tahap && (
-            <Tabs className="w-full">
+            <Tabs className="w-full" onChange={handleChangeTabs}>
               <div className="shadow pt-[14px]">
                 <TabList style={{ marginLeft: 0 }}>
                   <Tab className="capitalize-first">Periode Salur Tahap 1</Tab>
@@ -229,6 +278,7 @@ const MengulasKertasKerjaView: FC = () => {
               <TabelMengulasKertasKerjaView
                 mode={modeMengulas}
                 idAnggaran={idAnggaran}
+                tahap={0}
               />
             </div>
           )}

@@ -95,7 +95,7 @@ const MenyusunKertasKerjaView: FC = () => {
   }
 
   const setPagu = (idAnggaran: string) => {
-    const getPagu = ipcRenderer.sendSync('anggaran:getPagu', idAnggaran)
+    const getPagu = ipcRenderer.sendSync(IPC_ANGGARAN.getPagu, idAnggaran)
     setJumlahPagu(getPagu.pagu)
     setTotal(getPagu.total)
     setSisa(getPagu.sisa)

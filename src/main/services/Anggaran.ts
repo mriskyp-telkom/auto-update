@@ -56,6 +56,7 @@ export const GetAnggaranById = async (idAnggaran: string): Promise<any> => {
 export const GetPagu = async (idAnggaran: string): Promise<any> => {
   const data = await createQueryBuilder(Anggaran, 'a')
     .select([
+      'a.tahun_anggaran',
       'max(a.jumlah) as pagu',
       'sum(ifnull(r.jumlah,0)) as total',
       'max(a.jumlah)-sum(ifnull(r.jumlah,0)) as sisa',
@@ -65,6 +66,7 @@ export const GetPagu = async (idAnggaran: string): Promise<any> => {
       idAnggaran,
     })
     .groupBy('a.id_anggaran')
+    .addGroupBy('a.tahun_anggaran')
     .getRawOne()
   return data
 }

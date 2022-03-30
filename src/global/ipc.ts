@@ -3,9 +3,11 @@ export const PENJAB = 'penjab'
 export const PTK = 'ptk'
 export const REFERENSI = 'referensi'
 export const KK = 'kk'
+
 export const IPC_ANGGARAN = {
   getAnggaranById: `${ANGGARAN}:getAnggaranById`,
   getTotalAnggaran: `${ANGGARAN}:getTotalAnggaran`,
+  getPagu: `${ANGGARAN}:getPagu`,
 }
 
 export const IPC_PENJAB = {
