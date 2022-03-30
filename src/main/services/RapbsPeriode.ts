@@ -79,6 +79,8 @@ export const GetRapbsSummary = async (
                 child.expired_date IS NULL AND 
                 grandchild.expired_date IS NULL AND 
                 r.id_anggaran = :id_anggaran AND
+                r.soft_delete = 0 AND
+                rp.soft_delete = 0 AND
                 CASE 
                   WHEN :tahap=0 THEN rp.id_periode IN (1,2,3,4,81,82,83,84,85,86,87,88,89,90,91,92)
                   WHEN :tahap=1 THEN rp.id_periode IN (81,82,83)

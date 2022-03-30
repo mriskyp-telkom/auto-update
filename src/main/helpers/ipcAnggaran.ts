@@ -151,10 +151,11 @@ module.exports = {
     e.returnValue = await DelAnggaran(idAnggaran)
   }),
 
-  getPagu: ipcMain.on('anggaran:getPagu', async (e, idAnggaran) => {
+  getPagu: ipcMain.on(IPC_ANGGARAN.getPagu, async (e, idAnggaran) => {
     /*
       return :
       {
+        tahun_anggaran: number,
         pagu: number,
         total: number,
         sisa: number
