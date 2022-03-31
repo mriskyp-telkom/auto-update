@@ -1,68 +1,59 @@
-import { BaseEntity, Column, Entity } from 'typeorm'
+import {
+  getConnection,
+  getRepository,
+  InsertResult,
+  UpdateResult,
+} from 'typeorm'
+import { SekolahPenjab } from 'main/models/SekolahPenjab'
 
-@Entity('sekolah_penjab')
-export class SekolahPenjab extends BaseEntity {
-  @Column('varchar', {
-    primary: true,
-    name: 'id_penjab',
-    length: 22,
-    unique: true,
+export const GetSekolahPenjabById = async (idPenjab: string): Promise<any> => {
+  const data = await getRepository(SekolahPenjab).findOne({
+    idPenjab: idPenjab,
   })
-  idPenjab: string
+  return data
+}
 
-  @Column('varchar', { name: 'sekolah_id', length: 22 })
-  sekolahId: string
+export const addSekolahPenjab = async (
+  sekolahPenjab: SekolahPenjab
+): Promise<InsertResult> => {
+  return await getRepository(SekolahPenjab).upsert(sekolahPenjab, ['idPenjab'])
+}
 
-  @Column('date', { name: 'tanggal_mulai' })
-  tanggalMulai: string
+export const findSekolahPenjabId = async (
+  sekolahPenjab: SekolahPenjab
+): Promise<string> => {
+  try {
+    return (
+      (
+        await getRepository(SekolahPenjab).findOne({
+          ks: sekolahPenjab.ks,
+          nipKs: sekolahPenjab.nipKs,
+          bendahara: sekolahPenjab.bendahara,
+          nipBendahara: sekolahPenjab.nipBendahara,
+          komite: sekolahPenjab.komite,
+          nipKomite: sekolahPenjab.nipKomite,
+        })
+      )?.idPenjab ?? null
+    )
+  } catch (e) {
+    console.log('ERROR ', e)
+  }
+}
 
-  @Column('date', { name: 'tanggal_selesai' })
-  tanggalSelesai: string
-
-  @Column('varchar', { name: 'ks', nullable: true, length: 50 })
-  ks: string | null
-
-  @Column('varchar', { name: 'nip_ks', nullable: true, length: 20 })
-  nipKs: string | null
-
-  @Column('varchar', { name: 'email_ks', nullable: true, length: 100 })
-  emailKs: string | null
-
-  @Column('varchar', { name: 'telp_ks', nullable: true, length: 20 })
-  telpKs: string | null
-
-  @Column('varchar', { name: 'bendahara', nullable: true, length: 50 })
-  bendahara: string | null
-
-  @Column('varchar', { name: 'nip_bendahara', nullable: true, length: 20 })
-  nipBendahara: string | null
-
-  @Column('varchar', { name: 'email_bendahara', nullable: true, length: 100 })
-  emailBendahara: string | null
-
-  @Column('varchar', { name: 'telp_bendahara', nullable: true, length: 20 })
-  telpBendahara: string | null
-
-  @Column('varchar', { name: 'komite', nullable: true, length: 50 })
-  komite: string | null
-
-  @Column('varchar', { name: 'nip_komite', nullable: true, length: 100 })
-  nipKomite: string | null
-
-  @Column('numeric', {
-    name: 'soft_delete',
-    precision: 1,
-    scale: 0,
-    default: () => '0',
-  })
-  softDelete: number
-
-  @Column('datetime', { name: 'create_date' })
-  createDate: Date
-
-  @Column('datetime', { name: 'last_update' })
-  lastUpdate: Date
-
-  @Column('varchar', { name: 'updater_id', length: 22 })
-  updaterId: string
+export const updateSekolahPenjab = async (
+  sekolahPenjab: SekolahPenjab
+): Promise<UpdateResult> => {
+  return await getConnection()
+    .createQueryBuilder()
+    .update(SekolahPenjab)
+    .set({
+      ks: sekolahPenjab.ks,
+      nipKs: sekolahPenjab.nipKs,
+      bendahara: sekolahPenjab.bendahara,
+      nipBendahara: sekolahPenjab.nipBendahara,
+      komite: sekolahPenjab.komite,
+      nipKomite: sekolahPenjab.nipKomite,
+    })
+    .where({ idPenjab: sekolahPenjab.idPenjab })
+    .execute()
 }

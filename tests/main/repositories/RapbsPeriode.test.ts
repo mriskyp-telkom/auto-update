@@ -1,6 +1,6 @@
-import { Rapbs } from 'main/repositories/Rapbs'
-import { RapbsPeriode } from 'main/repositories/RapbsPeriode'
-import { GetDetailKegiatan } from 'main/services/RapbsPeriode'
+import { Rapbs } from 'main/models/Rapbs'
+import { RapbsPeriode } from 'main/models/RapbsPeriode'
+import { GetDetailKegiatan } from 'main/repositories/RapbsPeriode'
 import { createConnection, getConnection } from 'typeorm'
 import { cfg, Migrate } from '../migration'
 

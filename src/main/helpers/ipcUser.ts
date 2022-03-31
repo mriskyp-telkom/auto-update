@@ -1,10 +1,10 @@
 import { ipcMain } from 'electron'
-import { Instansi } from 'main/repositories/Instansi'
-import { InstansiPengguna } from 'main/repositories/InstansiPengguna'
-import { Pengguna } from 'main/repositories/Pengguna'
-import { UserRole } from 'main/repositories/UserRole'
-import { addInstansi } from 'main/services/Instansi'
-import { addInstansiPengguna } from 'main/services/InstansiPengguna'
+import { Instansi } from 'main/models/Instansi'
+import { InstansiPengguna } from 'main/models/InstansiPengguna'
+import { Pengguna } from 'main/models/Pengguna'
+import { UserRole } from 'main/models/UserRole'
+import { addInstansi } from 'main/repositories/Instansi'
+import { addInstansiPengguna } from 'main/repositories/InstansiPengguna'
 import {
   CheckUser,
   CheckUserPass,
@@ -12,11 +12,11 @@ import {
   AddPengguna,
   AddUserRole,
   GetPenggunaByToken,
-} from 'main/services/User'
+} from 'main/repositories/User'
 import CommonUtils from 'main/utils/CommonUtils'
-import { SetConfig, DeleteConfig, GetConfig } from 'main/services/Config'
-import { MstSekolah } from 'main/repositories/MstSekolah'
-import { AddSekolah } from 'main/services/Sekolah'
+import { SetConfig, DeleteConfig, GetConfig } from 'main/repositories/Config'
+import { MstSekolah } from 'main/models/MstSekolah'
+import { AddSekolah } from 'main/repositories/Sekolah'
 
 module.exports = {
   checkUsername: ipcMain.on('user:checkUsername', async (e, username) => {

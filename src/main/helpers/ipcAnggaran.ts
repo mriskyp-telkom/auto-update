@@ -1,5 +1,5 @@
 import { ipcMain } from 'electron'
-import { Anggaran } from 'main/repositories/Anggaran'
+import { Anggaran } from 'main/models/Anggaran'
 import {
   AddAnggaran,
   DelAnggaran,
@@ -9,8 +9,8 @@ import {
   GetPagu,
   CopyAnggaran,
   GetTotalAnggaran,
-} from 'main/services/Anggaran'
-import { GetConfig } from 'main/services/Config'
+} from 'main/repositories/Anggaran'
+import { GetConfig } from 'main/repositories/Config'
 import CommonUtils from 'main/utils/CommonUtils'
 
 import { STATUS_KERTAS_KERJA } from 'global/constants'

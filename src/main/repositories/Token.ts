@@ -1,35 +1,24 @@
-import { BaseEntity, Column, Entity, Index } from 'typeorm'
+import { getRepository, InsertResult, createQueryBuilder } from 'typeorm'
+import { Token } from 'main/models/Token'
 
-@Index('FK_TOKEN_APP_FK', ['appId'], {})
-@Index('FK_TOKEN_HISTORYJAB_FK', ['userroleId'], {})
-@Entity('token')
-export class Token extends BaseEntity {
-  @Column('varchar', {
-    primary: true,
-    name: 'token_id',
-    length: 22,
-    unique: true,
+export const CreateToken = async (token: Token): Promise<InsertResult> => {
+  return await getRepository(Token).insert({
+    tokenId: token.tokenId,
+    userroleId: token.userroleId,
+    appId: token.appId,
+    browser: token.browser,
+    createDate: token.createDate,
+    lastUpdate: token.lastUpdate,
+    expiredDate: token.expiredDate,
   })
-  tokenId: string
+}
 
-  @Column('varchar', { name: 'userrole_id', length: 22 })
-  userroleId: string
-
-  @Column('varchar', { name: 'app_id', length: 22 })
-  appId: string
-
-  @Column('varchar', { name: 'ipaddr', nullable: true, length: 30 })
-  ipaddr: string | null
-
-  @Column('varchar', { name: 'browser', nullable: true, length: 200 })
-  browser: string | null
-
-  @Column('datetime', { name: 'create_date' })
-  createDate: Date
-
-  @Column('datetime', { name: 'last_update' })
-  lastUpdate: Date
-
-  @Column('datetime', { name: 'expired_date', nullable: true })
-  expiredDate: Date | null
+export const ExpiryToken = async (tokenId: string): Promise<void> => {
+  await createQueryBuilder()
+    .update(Token)
+    .set({
+      expiryDate: Date.now(),
+    })
+    .where('tokenId = :tokenId', { tokenId })
+    .execute()
 }

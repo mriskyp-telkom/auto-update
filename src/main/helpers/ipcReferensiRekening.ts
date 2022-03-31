@@ -3,7 +3,7 @@ import {
   addBulkRefRekening,
   getLastUpdate,
   getRefRekeningList,
-} from 'main/services/RefRekening'
+} from 'main/repositories/RefRekening'
 import CommonUtils from 'main/utils/CommonUtils'
 import { IPC_REFERENSI } from 'global/ipc'
 

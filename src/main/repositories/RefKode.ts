@@ -1,57 +1,45 @@
-import { BaseEntity, Column, Entity, Index } from 'typeorm'
+import { createQueryBuilder, getRepository, InsertResult } from 'typeorm'
+import { RefKode } from '../models/RefKode'
 
-@Index('REL_JENIS_KODE_FK', ['idLevelKode'], {})
-@Index('RECURSIVE_KODE_FK', ['parentKode'], {})
-@Entity('ref_kode')
-export class RefKode extends BaseEntity {
-  @Column('varchar', {
-    primary: true,
-    name: 'id_ref_kode',
-    length: 22,
-    unique: true,
-  })
-  idRefKode: string
+export const addBulkRefKode = async (
+  bulkRefKode: RefKode[]
+): Promise<InsertResult> => {
+  return await getRepository(RefKode).upsert(bulkRefKode, ['idRefKode'])
+}
 
-  @Column('varchar', { name: 'id_kode', length: 12 })
-  idKode: string
+export const getLastUpdate = async (): Promise<Date> => {
+  const data = await createQueryBuilder(RefKode, 'rk')
+    .orderBy('rk.last_update', 'DESC')
+    .getOne()
+  return data != null ? data.lastUpdate : null
+}
 
-  @Column('varchar', { name: 'parent_kode', nullable: true, length: 22 })
-  parentKode: string | null
+export const getRefKode = async (): Promise<any> => {
+  return await createQueryBuilder(RefKode, 'rk')
+    .where('rk.expired_date is null')
+    .getRawMany()
+}
 
-  @Column('varchar', { name: 'uraian_kode', length: 200 })
-  uraianKode: string
-
-  @Column('numeric', { name: 'is_bos_pusat', precision: 1, scale: 0 })
-  isBosPusat: number
-
-  @Column('numeric', { name: 'is_bos_prop', precision: 1, scale: 0 })
-  isBosProp: number
-
-  @Column('numeric', { name: 'is_bos_kab', precision: 1, scale: 0 })
-  isBosKab: number
-
-  @Column('numeric', { name: 'is_komite', precision: 1, scale: 0 })
-  isKomite: number
-
-  @Column('numeric', { name: 'is_lainnnya', precision: 1, scale: 0 })
-  isLainnnya: number
-
-  @Column('numeric', { name: 'id_level_kode', precision: 2, scale: 0 })
-  idLevelKode: number
-
-  @Column('numeric', {
-    name: 'bentuk_pendidikan_id',
-    precision: 2,
-    scale: 0,
-  })
-  bentukPendidikanId: number
-
-  @Column('datetime', { name: 'create_date' })
-  createDate: Date
-
-  @Column('datetime', { name: 'last_update' })
-  lastUpdate: Date
-
-  @Column('datetime', { name: 'expired_date', nullable: true })
-  expiredDate: Date | null
+export const getRefKodeList = async (
+  bentukPendidikan: number
+): Promise<any> => {
+  return createQueryBuilder(RefKode, 'rk3')
+    .select([
+      'rk3.id_ref_kode as id',
+      'rk3.id_kode as kode',
+      'rk1.uraian_kode as program',
+      'rk2.uraian_kode as komponen',
+      'rk3.uraian_kode as kegiatan',
+      "case when substr(rk2.id_kode,4,2) = '12' then 1 else 0 end as flag_honor",
+    ])
+    .innerJoin(RefKode, 'rk2', 'rk3.parent_kode = rk2.id_ref_kode')
+    .innerJoin(RefKode, 'rk1', 'rk2.parent_kode = rk1.id_ref_kode')
+    .where(
+      'rk3.expired_date is null ' +
+        'AND rk2.expired_date is null ' +
+        'AND rk1.expired_date is null ' +
+        'AND rk3.bentuk_pendidikan_id =:bentukPendidikan',
+      { bentukPendidikan: bentukPendidikan }
+    )
+    .getRawMany()
 }

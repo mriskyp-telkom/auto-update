@@ -1,54 +1,60 @@
-import { BaseEntity, Column, Entity } from 'typeorm'
+import { createQueryBuilder, getRepository, InsertResult } from 'typeorm'
+import { RefAcuanBarang } from '../models/RefAcuanBarang'
 
-@Entity('ref_acuan_barang')
-export class RefAcuanBarang extends BaseEntity {
-  @Column('varchar', {
-    primary: true,
-    name: 'id_barang',
-    length: 40,
-    unique: true,
-  })
-  idBarang: string
+export const addBulkRefAcuanBarang = async (
+  bulkRefAcuanBarang: RefAcuanBarang[]
+): Promise<InsertResult> => {
+  return await getRepository(RefAcuanBarang).upsert(bulkRefAcuanBarang, [
+    'idBarang',
+  ])
+}
 
-  @Column('varchar', { name: 'kode_rekening', nullable: true, length: 20 })
-  kodeRekening: string | null
+export const getLastUpdate = async (): Promise<Date> => {
+  const data = await createQueryBuilder(RefAcuanBarang, 'rab')
+    .orderBy('rab.last_update', 'DESC')
+    .getOne()
+  return data != null ? data.lastUpdate : null
+}
 
-  @Column('varchar', { name: 'nama_barang', length: 255 })
-  namaBarang: string
+export const getRefBarangRekening = async (
+  kodeRekening: string
+): Promise<any> => {
+  // Parsing kode rekening 5.1 or 5.2
+  let data
+  if (kodeRekening.substring(0, 3) == '5.1') {
+    data = await createQueryBuilder(RefAcuanBarang, 'rab')
+      .select([
+        "CAST(REPLACE(rab.id_barang,'.','') AS int) AS id",
+        'rab.id_barang as kode',
+        'rab.nama_barang as uraian',
+        'rab.satuan',
+        'rab.batas_bawah',
+        'rab.batas_atas',
+      ])
+      .where('rab.expired_date is null and kode_rekening = :kodeRekening', {
+        kodeRekening,
+      })
+      .getRawMany()
+  } else if (kodeRekening.substring(0, 3) == '5.2') {
+    data = await createQueryBuilder(RefAcuanBarang, 'rab')
+      .select([
+        "CAST(REPLACE(rab.id_barang,'.','') AS int) AS id ",
+        'rab.id_barang as kode',
+        'rab.nama_barang AS uraian',
+        'rab.satuan',
+        'rab.batas_bawah',
+        'rab.batas_atas',
+      ])
+      .where('rab.expired_date is null and kode_rekening is null')
+      .getRawMany()
+  }
+  return data
+}
 
-  @Column('varchar', { name: 'satuan', nullable: true, length: 30 })
-  satuan: string | null
-
-  @Column('varchar', { name: 'blok_id', length: 6 })
-  blokId: string
-
-  @Column('varchar', { name: 'kode_belanja', nullable: true, length: 4 })
-  kodeBelanja: string | null
-
-  @Column('numeric', { name: 'harga_barang', nullable: true })
-  hargaBarang: NonNullable<unknown> | null
-
-  @Column('numeric', { name: 'batas_bawah', nullable: true })
-  batasBawah: NonNullable<unknown> | null
-
-  @Column('numeric', { name: 'batas_atas', nullable: true })
-  batasAtas: NonNullable<unknown> | null
-
-  @Column('varchar', { name: 'kategori_id', nullable: true, length: 20 })
-  kategoriId: string | null
-
-  @Column('varchar', { name: 'hs_code', nullable: true, length: 20 })
-  hsCode: string | null
-
-  @Column('varchar', { name: 'kbki', nullable: true, length: 20 })
-  kbki: string | null
-
-  @Column('datetime', { name: 'create_date' })
-  createDate: Date
-
-  @Column('datetime', { name: 'last_update' })
-  lastUpdate: Date
-
-  @Column('datetime', { name: 'expired_date', nullable: true })
-  expiredDate: Date | null
+export const GetListSatuanBarang = async (): Promise<any> => {
+  return await createQueryBuilder(RefAcuanBarang, 'rab')
+    .select(['rab.satuan'])
+    .where('rab.satuan is not null')
+    .groupBy('rab.satuan')
+    .getRawMany()
 }
