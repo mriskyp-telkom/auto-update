@@ -3,7 +3,7 @@ import React, { FC, useEffect, useState } from 'react'
 import { Icon } from '@wartek-id/icon'
 import { Button } from '@wartek-id/button'
 
-import { initializeFindText, openFindText } from 'renderer/configs/findtext'
+// import { initializeFindText, openFindText } from 'renderer/configs/findtext'
 
 import clsx from 'clsx'
 
@@ -11,7 +11,7 @@ const ButtonCariComponent: FC = () => {
   const [showBtnCari, setShowBtnCari] = useState(true)
 
   const handleCari = () => {
-    openFindText()
+    // openFindText()
     setShowBtnCari(false)
   }
 
@@ -22,7 +22,7 @@ const ButtonCariComponent: FC = () => {
   }
 
   useEffect(() => {
-    initializeFindText('inputCari')
+    // initializeFindText('inputCari')
   }, [])
 
   useEffect(() => {
