@@ -1,7 +1,7 @@
 import { getRepository, InsertResult } from 'typeorm'
 import { Instansi } from '../models/Instansi'
 
-export const addInstansi = async (
+export const AddInstansi = async (
   instansi: Instansi
 ): Promise<InsertResult> => {
   return await getRepository(Instansi).insert({

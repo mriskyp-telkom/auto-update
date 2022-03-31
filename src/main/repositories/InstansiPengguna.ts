@@ -1,7 +1,7 @@
 import { getRepository, InsertResult } from 'typeorm'
 import { InstansiPengguna } from '../models/InstansiPengguna'
 
-export const addInstansiPengguna = async (
+export const AddInstansiPengguna = async (
   instansiPengguna: InstansiPengguna
 ): Promise<InsertResult> => {
   return await getRepository(InstansiPengguna).insert({
