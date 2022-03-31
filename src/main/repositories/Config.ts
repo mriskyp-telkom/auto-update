@@ -1,5 +1,5 @@
 import { getRepository, InsertResult, DeleteResult } from 'typeorm'
-import { AppConfig } from '../repositories/AppConfig'
+import { AppConfig } from '../models/AppConfig'
 
 export const SetConfig = async (
   varname: string,

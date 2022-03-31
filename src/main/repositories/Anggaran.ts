@@ -1,107 +1,238 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
-import { MstSekolah } from './MstSekolah'
+import { createQueryBuilder, getManager, getRepository } from 'typeorm'
+import { Rapbs } from 'main/models/Rapbs'
+import { RapbsPeriode } from 'main/models/RapbsPeriode'
+import { Anggaran } from 'main/models/Anggaran'
+import { RefSumberDana } from 'main/models/RefSumberDana'
+import { RefRekening } from 'main/models/RefRekening'
+import { RefKode } from 'main/models/RefKode'
+import { RefAcuanBarang } from 'main/models/RefAcuanBarang'
+import { getBentukPendidikan } from 'main/repositories/Sekolah'
+import CommonUtils from 'main/utils/CommonUtils'
+import { AnggaranTotal } from 'main/types/Anggaran'
 
-@Entity('anggaran')
-export class Anggaran extends BaseEntity {
-  @Column('varchar', {
-    primary: true,
-    name: 'id_anggaran',
-    length: 22,
-    unique: true,
-  })
-  idAnggaran: string
+export const GetAnggaran = async (
+  idSumberDana: number,
+  tahunAnggaran: number[] | null
+): Promise<any> => {
+  const data = await createQueryBuilder(Anggaran, 'a')
+    .select([
+      'a.id_anggaran',
+      'r.nama_sumber_dana',
+      'a.tahun_anggaran as tahun',
+      'a.jumlah ',
+      'a.id_ref_sumber_dana',
+      'a.tanggal_pengajuan',
+      'a.tanggal_pengesahan',
+      'a.is_revisi',
+      'a.is_pengesahan',
+      'a.create_date',
+      'a.last_update',
+      'MAX(a.is_revisi) as is_revisi',
+      'a.alasan_penolakan',
+    ])
+    .innerJoin(
+      RefSumberDana,
+      'r',
+      'r.id_ref_sumber_dana = a.id_ref_sumber_dana'
+    )
+    .where(
+      'a.soft_delete = 0  ' +
+        ' AND a.is_aktif = 1' +
+        ' AND a.id_ref_sumber_dana = :idSumberDana ' +
+        ' AND a.tahun_anggaran IN (:...tahunAnggaran )',
+      { idSumberDana, tahunAnggaran }
+    )
+    .groupBy('tahun_anggaran')
+    .orderBy('a.tahun_anggaran', 'DESC')
+    .getRawMany()
+  return data
+}
 
-  @Column('numeric', { name: 'id_ref_sumber_dana', precision: 2, scale: 0 })
-  idRefSumberDana: number
+export const GetAnggaranById = async (idAnggaran: string): Promise<any> => {
+  const data = await getRepository(Anggaran).findOne({ idAnggaran: idAnggaran })
+  return data
+}
 
-  @Column('varchar', { name: 'sekolah_id', length: 22 })
-  sekolahId: string
+export const GetPagu = async (idAnggaran: string): Promise<any> => {
+  const data = await createQueryBuilder(Anggaran, 'a')
+    .select([
+      'a.tahun_anggaran',
+      'max(a.jumlah) as pagu',
+      'sum(ifnull(r.jumlah,0)) as total',
+      'max(a.jumlah)-sum(ifnull(r.jumlah,0)) as sisa',
+    ])
+    .leftJoin(Rapbs, 'r', 'a.id_anggaran = r.id_anggaran and r.soft_delete=0')
+    .where('a.soft_delete = 0  ' + ' AND a.id_anggaran = :idAnggaran ', {
+      idAnggaran,
+    })
+    .groupBy('a.id_anggaran')
+    .addGroupBy('a.tahun_anggaran')
+    .getRawOne()
+  return data
+}
 
-  @Column('numeric', { name: 'volume', nullable: true, precision: 6, scale: 0 })
-  volume: number | null
+export const GetAnggaranBefore = async (
+  sumberDana: number,
+  tahun: number
+): Promise<string> => {
+  const getIsRevisiMax =
+    (
+      await createQueryBuilder(Anggaran, 'a')
+        .select('MAX(a.is_revisi)', 'is_revisi')
+        .where(
+          'a.soft_delete = 0 AND a.tahun_anggaran =:tahun AND a.id_ref_sumber_dana = :sumberDana',
+          {
+            tahun: tahun - 1,
+            sumberDana: sumberDana,
+          }
+        )
+        .getRawOne()
+    )?.is_revisi ?? -1
+  if (getIsRevisiMax > -1) {
+    const getIdAnggaran = await createQueryBuilder(Anggaran, 'a')
+      .select('a.id_anggaran as id_anggaran')
+      .where(
+        'a.soft_delete = 0 AND a.tahun_anggaran =:tahun AND a.is_revisi =:isRevisi AND a.id_ref_sumber_dana =:sumberDana ',
+        {
+          tahun: tahun - 1,
+          isRevisi: getIsRevisiMax,
+          sumberDana: sumberDana,
+        }
+      )
+      .getRawOne()
+    return getIdAnggaran.id_anggaran ?? ''
+  }
+  return ''
+}
 
-  @Column('numeric', { name: 'harga_satuan', nullable: true })
-  hargaSatuan: NonNullable<unknown> | null
+export const AddAnggaran = async (anggaran: Anggaran): Promise<any> => {
+  return await getRepository(Anggaran).insert(anggaran)
+}
 
-  @Column('numeric', { name: 'jumlah', nullable: true })
-  jumlah: NonNullable<unknown> | null
+export const DelAnggaran = async (idAnggaran: string): Promise<any> => {
+  return await createQueryBuilder()
+    .update(Anggaran)
+    .set({
+      softDelete: 1,
+      lastUpdate: new Date(),
+    })
+    .where('id_anggaran = :idAnggaran', { idAnggaran })
+    .execute()
+}
 
-  @Column('numeric', { name: 'sisa_anggaran', nullable: true })
-  sisaAnggaran: NonNullable<unknown> | null
+export const CopyAnggaran = async (
+  idAnggaranSource: string,
+  idAnggaranNew: string
+): Promise<boolean> => {
+  let idRapbs: string
+  let refRek
+  let refKode
+  let refBarang
+  let getRapbsPeriode
+  const getBentuk = await getBentukPendidikan()
+  const getRapbsSource = await createQueryBuilder(Rapbs, 'r')
+    .where('r.soft_delete=0' + ' AND r.id_anggaran=:idAnggaran', {
+      idAnggaran: idAnggaranSource,
+    })
+    .getRawMany()
+  try {
+    getRapbsSource?.forEach(async (el) => {
+      refRek = await createQueryBuilder(RefRekening)
+        .where('expired_date is null and kode_rekening=:kodeRekening', {
+          kodeRekening: el.kode_rekening,
+        })
+        .getCount()
 
-  @Column('numeric', {
-    name: 'is_pengesahan',
-    nullable: true,
-    precision: 1,
-    scale: 0,
-    default: () => '0',
-  })
-  isPengesahan: number | null
+      refKode = await createQueryBuilder(RefKode)
+        .where(
+          'expired_date is null ' +
+            'and bentuk_pendidikan_id=:bentukPendidikan ' +
+            'and id_ref_kode=:idRefKode',
+          {
+            bentukPendidikan: getBentuk,
+            idRefKode: el.id_ref_kode,
+          }
+        )
+        .getCount()
 
-  @Column('datetime', { name: 'tanggal_pengajuan', nullable: true })
-  tanggalPengajuan: Date | null
+      refBarang =
+        el.id_barang ?? '' == ''
+          ? await createQueryBuilder(RefAcuanBarang)
+              .where('expired_date is null and id_barang=:idBarang', {
+                idBarang: el.id_barang,
+              })
+              .getCount()
+          : 1
 
-  @Column('datetime', { name: 'tanggal_pengesahan', nullable: true })
-  tanggalPengesahan: Date | null
+      if (refKode > 0 && refRek > 0 && refBarang > 0) {
+        idRapbs = CommonUtils.encodeUUID(CommonUtils.uuid())
+        el.id_anggaran = idAnggaranNew
+        el.id_rapbs = idRapbs
+        el.create_date = new Date()
+        el.last_update = new Date()
+        await getRepository(Rapbs).insert(el)
 
-  @Column('numeric', {
-    name: 'is_approve',
-    precision: 1,
-    scale: 0,
-    default: () => '0',
-  })
-  isApprove: number
+        getRapbsPeriode = await createQueryBuilder(RapbsPeriode)
+          .where('soft_delete=0 and id_rapbs=:idRapbs', { idRapbs: idRapbs })
+          .getRawMany()
 
-  @Column('numeric', {
-    name: 'is_revisi',
-    precision: 3,
-    scale: 0,
-    default: () => '0',
-  })
-  isRevisi: number
+        getRapbsPeriode?.forEach(async (eld) => {
+          eld.id_rapbs_periode = CommonUtils.encodeUUID(CommonUtils.uuid())
+          eld.id_rapbs = idRapbs
+          eld.create_date = new Date()
+          eld.last_update = new Date()
 
-  @Column('varchar', { name: 'alasan_penolakan', nullable: true, length: 4000 })
-  alasanPenolakan: string | null
+          await getRepository(RapbsPeriode).insert(eld)
+        })
+      }
+    })
+    return true
+  } catch {
+    return false
+  }
+}
 
-  @Column('numeric', {
-    name: 'is_aktif',
-    precision: 1,
-    scale: 0,
-    default: () => '0',
-  })
-  isAktif: number
+/**
+ * Return total and id anggaran
+ * @param {number} id_tahap tahap penyaluran eg. 1,2,3
+ * @param {string} id_anggaran id anggaran
+ * @return {Object} contains total and id_anggaran
+ */
+export const GetTotalAnggaran = async (
+  id_tahap: number,
+  id_anggaran: string
+): Promise<AnggaranTotal> => {
+  const query = ` SELECT  a.id_anggaran, SUM(rp.jumlah) AS total
+                  FROM anggaran a 
+                      JOIN rapbs r 
+                      ON a.id_anggaran = r.id_anggaran
+                      JOIN rapbs_periode rp 
+                      ON r.id_rapbs = rp.id_rapbs 
+                  WHERE
+                      a.soft_delete=0 
+                      AND r.soft_delete=0 
+                      AND a.id_anggaran=:id_anggaran 
+                      AND CASE 
+                            WHEN :id_tahap=0 THEN rp.id_periode IN (81,82,83,84,85,86,87,88,89,90,91,92) 
+                            WHEN :id_tahap=1 THEN rp.id_periode IN (81,82,83) 
+                            WHEN :id_tahap=2 THEN rp.id_periode IN (84,85,86,87,88) 
+                            WHEN :id_tahap=3 THEN rp.id_periode IN (89,90,91,92) 
+                            WHEN :id_tahap=21 THEN rp.id_periode IN (1) 
+                            WHEN :id_tahap=22 THEN rp.id_periode IN (2) 
+                            WHEN :id_tahap=23 THEN rp.id_periode IN (3) 
+                            WHEN :id_tahap=24 THEN rp.id_periode IN (4)
+                       END             
+                  GROUP BY a.id_anggaran`
 
-  @Column('numeric', {
-    name: 'tahun_anggaran',
-    precision: 4,
-    scale: 0,
-    default: () => '2022',
-  })
-  tahunAnggaran: number
+  const entityManager = getManager()
 
-  @Column('numeric', {
-    name: 'soft_delete',
-    precision: 1,
-    scale: 0,
-    default: () => '0',
-  })
-  softDelete: number
-
-  @Column('datetime', { name: 'create_date' })
-  createDate: Date
-
-  @Column('datetime', { name: 'last_update' })
-  lastUpdate: Date
-
-  @Column('varchar', { name: 'updater_id', nullable: true, length: 22 })
-  updaterId: string | null
-
-  @Column('varchar', { name: 'id_penjab', nullable: true, length: 22 })
-  idPenjab: string | null
-
-  @ManyToOne(() => MstSekolah, (mstsekolah) => mstsekolah.sekolahId)
-  @JoinColumn({
-    name: 'sekolah_id',
-  })
-  mstsekolah: MstSekolah
+  const result = await entityManager
+    .query(query, [{ id_tahap: id_tahap, id_anggaran: id_anggaran }])
+    .catch((e) => {
+      console.error('Error when fetching query:', e)
+    })
+  if (result != null) {
+    return <AnggaranTotal>result[0]
+  }
+  return {} as AnggaranTotal
 }

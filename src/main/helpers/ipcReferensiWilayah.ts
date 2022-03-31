@@ -1,6 +1,6 @@
 import { ipcMain } from 'electron'
-import { AddWilayah } from 'main/services/Wilayah'
-import { MstWilayah } from 'main/repositories/MstWilayah'
+import { AddWilayah } from 'main/repositories/Wilayah'
+import { MstWilayah } from 'main/models/MstWilayah'
 
 module.exports = {
   addWilayah: ipcMain.on('referensi:addWilayah', async (e, data) => {

@@ -1,10 +1,10 @@
-import { InstansiPengguna } from 'main/repositories/InstansiPengguna'
-import { Pengguna } from 'main/repositories/Pengguna'
-import { UserRole } from 'main/repositories/UserRole'
+import { InstansiPengguna } from 'main/models/InstansiPengguna'
+import { Pengguna } from 'main/models/Pengguna'
+import { UserRole } from 'main/models/UserRole'
 import { createQueryBuilder, getRepository, InsertResult } from 'typeorm'
 import CommonUtils from 'main/utils/CommonUtils'
-import { GetConfig } from 'main/services/Config'
-import { Token } from 'main/repositories/Token'
+import { GetConfig } from 'main/repositories/Config'
+import { Token } from 'main/models/Token'
 
 export const CheckUser = async (username: string): Promise<boolean> => {
   const getUser = await createQueryBuilder(UserRole, 'ur')

@@ -1,19 +1,19 @@
 import { ipcMain } from 'electron'
-import { Rapbs } from 'main/repositories/Rapbs'
-import { RapbsPeriode } from 'main/repositories/RapbsPeriode'
+import { Rapbs } from 'main/models/Rapbs'
+import { RapbsPeriode } from 'main/models/RapbsPeriode'
 import {
   AddRapbs,
   DelRapbs,
   GetRapbs,
   GetRapbsBulan,
-} from 'main/services/Rapbs'
+} from 'main/repositories/Rapbs'
 import {
   AddRapbsPeriode,
   DelRapbsPeriode,
   GetRapbsPeriode,
   GetDetailKegiatan,
   GetRapbsSummary,
-} from 'main/services/RapbsPeriode'
+} from 'main/repositories/RapbsPeriode'
 import CommonUtils from 'main/utils/CommonUtils'
 import { IPC_KK } from 'global/ipc'
 

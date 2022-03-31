@@ -1,5 +1,5 @@
 import { ipcMain } from 'electron'
-import { SetConfig, GetConfig, SetBulkConfig } from 'main/services/Config'
+import { SetConfig, GetConfig, SetBulkConfig } from 'main/repositories/Config'
 
 module.exports = {
   getConfig: ipcMain.on('config:getConfig', async (e, varname) => {
