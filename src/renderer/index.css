@@ -53,7 +53,7 @@ body {
 /*
   These class for electron-find
   Please don't use same class with these below
-} */
+*/
 
 .find-box {
   position: unset !important;
@@ -68,4 +68,16 @@ body {
 
 /*
   End
-} */
+*/
+
+/*
+  Start Reset CSS
+*/
+
+button:focus {
+  outline: unset;
+}
+
+/*
+  End
+*/
