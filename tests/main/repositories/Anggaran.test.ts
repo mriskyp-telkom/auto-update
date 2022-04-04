@@ -1,11 +1,11 @@
 import { createConnection, getConnection, getRepository } from 'typeorm'
-import { Anggaran } from 'main/repositories/Anggaran'
-import { MstSekolah } from 'main/repositories/MstSekolah'
-import { AppConfig } from 'main/repositories/AppConfig'
-import { RefSumberDana } from 'main/repositories/RefSumberDana'
+import { Anggaran } from 'main/models/Anggaran'
+import { MstSekolah } from 'main/models/MstSekolah'
+import { AppConfig } from 'main/models/AppConfig'
+import { RefSumberDana } from 'main/models/RefSumberDana'
 import CommonUtils from 'main/utils/CommonUtils'
-import { GetConfig } from 'main/services/Config'
-import { AddAnggaran, GetAnggaran } from 'main/services/Anggaran'
+import { GetConfig } from 'main/repositories/Config'
+import { AddAnggaran, GetAnggaran } from 'main/repositories/Anggaran'
 import { cfg, Migrate } from '../migration'
 
 beforeAll(async () => {

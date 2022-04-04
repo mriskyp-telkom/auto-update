@@ -1,8 +1,8 @@
 import { ipcMain } from 'electron'
-import { CreateToken, ExpiryToken } from 'main/services/Token'
-import { GetPenggunaByEmail, GetUserRole } from 'main/services/User'
-import { SetConfig, GetConfig, DeleteConfig } from 'main/services/Config'
-import { Token } from 'main/repositories/Token'
+import { CreateToken, ExpiryToken } from 'main/repositories/Token'
+import { GetPenggunaByEmail, GetUserRole } from 'main/repositories/User'
+import { SetConfig, GetConfig, DeleteConfig } from 'main/repositories/Config'
+import { Token } from 'main/models/Token'
 import CommonUtils from 'main/utils/CommonUtils'
 
 module.exports = {

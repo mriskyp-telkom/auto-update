@@ -70,7 +70,7 @@ const FormPenanggungJawabView: FC<FormPenanggungJawabProps> = (
       setValue('nip_bendahara', formatNIP(penjab.nip_bendahara), {
         shouldValidate: true,
       })
-      setValue('email_komite', penjab.email_komite, {
+      setValue('email_komite', penjab.nip_komite, {
         shouldValidate: true,
       })
     }
@@ -90,14 +90,13 @@ const FormPenanggungJawabView: FC<FormPenanggungJawabProps> = (
       komite: data.nama_komite,
       nip_kepsek: data.nip_kepala_sekolah,
       nip_bendahara: data.nip_bendahara,
-      nip_komite: penjab.nip_komite,
+      nip_komite: data.email_komite,
       email_kepsek: penjab.email_kepsek,
       email_bendahara: penjab.email_bendahara,
       email_komite: data.email_komite,
       telepon_kepsek: penjab.telepon_kepsek,
       telepon_bendahara: penjab.telepon_bendahara,
     }
-
     setPenanggungJawab(dataPenjab)
     setCreateKertasKerja(false)
 

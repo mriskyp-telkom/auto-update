@@ -3,8 +3,8 @@ import {
   addBulkRefKode,
   getLastUpdate,
   getRefKodeList,
-} from 'main/services/RefKode'
-import { getBentukPendidikan } from 'main/services/Sekolah'
+} from 'main/repositories/RefKode'
+import { getBentukPendidikan } from 'main/repositories/Sekolah'
 import CommonUtils from 'main/utils/CommonUtils'
 import { IPC_REFERENSI } from 'global/ipc'
 

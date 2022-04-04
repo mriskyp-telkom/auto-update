@@ -30,7 +30,7 @@ export async function Migrate(db: Connection, config: Config) {
 async function runQueries(db: Connection, queries: Query[]) {
   const em = db.createEntityManager()
   queries.forEach((q) => {
-    console.log('execute sql file:', q.fileName)
+    // console.log('execute sql file:', q.fileName)
     q.query.forEach(async (sql) => {
       await em.query(sql)
     })

@@ -1,11 +1,11 @@
 import { ipcMain } from 'electron'
-import { SekolahPenjab } from 'main/repositories/SekolahPenjab'
+import { SekolahPenjab } from 'main/models/SekolahPenjab'
 import {
   addSekolahPenjab,
   findSekolahPenjabId,
   updateSekolahPenjab,
   GetSekolahPenjabById,
-} from 'main/services/SekolahPenjab'
+} from 'main/repositories/SekolahPenjab'
 import CommonUtils from 'main/utils/CommonUtils'
 
 module.exports = {

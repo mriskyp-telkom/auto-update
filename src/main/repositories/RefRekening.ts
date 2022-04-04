@@ -1,133 +1,51 @@
-import { BaseEntity, Column, Entity } from 'typeorm'
+import { RefAcuanBarang } from 'main/models/RefAcuanBarang'
+import { createQueryBuilder, getRepository, InsertResult } from 'typeorm'
+import { RefRekening } from '../models/RefRekening'
 
-@Entity('ref_rekening')
-export class RefRekening extends BaseEntity {
-  @Column('varchar', {
-    primary: true,
-    name: 'kode_rekening',
-    length: 20,
-    unique: true,
-  })
-  kodeRekening: string
+export const addBulkRefRekening = async (
+  bulkRefRekening: RefRekening[]
+): Promise<InsertResult> => {
+  return await getRepository(RefRekening).upsert(bulkRefRekening, [
+    'kodeRekening',
+  ])
+}
 
-  @Column('varchar', { name: 'rekening', length: 200 })
-  rekening: string
+export const getLastUpdate = async (): Promise<Date> => {
+  const data = await createQueryBuilder(RefRekening, 'rr')
+    .orderBy('rr.last_update', 'DESC')
+    .getOne()
+  return data != null ? data.lastUpdate : null
+}
 
-  @Column('varchar', { name: 'neraca', nullable: true, length: 200 })
-  neraca: string | null
+export const getRefRekening = async (): Promise<any> => {
+  return await createQueryBuilder(RefRekening, 'rr')
+    .where('rr.expired_date is null')
+    .getRawMany()
+}
 
-  @Column('numeric', {
-    name: 'blokid',
-    precision: 2,
-    scale: 0,
-    default: () => '0',
-  })
-  blokid: number
-
-  @Column('numeric', { name: 'batas_atas', nullable: true })
-  batasAtas: NonNullable<unknown> | null
-
-  @Column('numeric', { name: 'batas_bawah', nullable: true })
-  batasBawah: NonNullable<unknown> | null
-
-  @Column('varchar', { name: 'validasi_type', nullable: true, length: 1 })
-  validasiType: NonNullable<unknown> | null
-
-  @Column('numeric', {
-    name: 'is_ppn',
-    nullable: true,
-    precision: 1,
-    scale: 0,
-    default: () => '0',
-  })
-  isPpn: number | null
-
-  @Column('numeric', {
-    name: 'is_pph21',
-    nullable: true,
-    precision: 1,
-    scale: 0,
-    default: () => '0',
-  })
-  isPph21: number | null
-
-  @Column('numeric', {
-    name: 'is_pph22',
-    nullable: true,
-    precision: 1,
-    scale: 0,
-    default: () => '0',
-  })
-  isPph22: number | null
-
-  @Column('numeric', {
-    name: 'is_pph23',
-    nullable: true,
-    precision: 1,
-    scale: 0,
-    default: () => '0',
-  })
-  isPph23: number | null
-
-  @Column('numeric', {
-    name: 'is_pph4',
-    nullable: true,
-    precision: 1,
-    scale: 0,
-    default: () => '0',
-  })
-  isPph4: number | null
-
-  @Column('numeric', {
-    name: 'is_sspd',
-    nullable: true,
-    precision: 1,
-    scale: 0,
-    default: () => '0',
-  })
-  isSspd: number | null
-
-  @Column('varchar', { name: 'bhp', nullable: true, length: 5 })
-  bhp: NonNullable<unknown> | null
-
-  @Column('numeric', {
-    name: 'is_custom_pajak_1',
-    nullable: true,
-    precision: 1,
-    scale: 0,
-  })
-  isCustomPajak_1: number | null
-
-  @Column('numeric', {
-    name: 'is_honor',
-    nullable: true,
-    precision: 1,
-    scale: 0,
-  })
-  isHonor: number | null
-
-  @Column('numeric', {
-    name: 'is_buku',
-    nullable: true,
-    precision: 1,
-    scale: 0,
-  })
-  isBuku: number | null
-
-  @Column('numeric', {
-    name: 'is_custom_satuan',
-    nullable: true,
-    precision: 1,
-    scale: 0,
-  })
-  isCustomSatuan: number | null
-
-  @Column('datetime', { name: 'create_date' })
-  createDate: Date
-
-  @Column('datetime', { name: 'last_update' })
-  lastUpdate: Date
-
-  @Column('datetime', { name: 'expired_date', nullable: true })
-  expiredDate: Date | null
+export const getRefRekeningList = async (): Promise<any> => {
+  try {
+    return await createQueryBuilder(RefRekening, 'rr')
+      .select([
+        "CAST(replace(rr.kode_rekening,'.','') AS int) as id",
+        'rr.kode_rekening as kode',
+        "case when substr(rr.kode_rekening,1,3) = '5.1.' then 'Operasional' else 'Modal' end as jenis_belanja",
+        'rr.rekening as rekening_belanja',
+        "case when b.jumlah is not null or substr(rr.kode_rekening,1,3) = '5.2' then 1 else 0 end as is_list_barang",
+      ])
+      .leftJoin(
+        (qb) =>
+          qb
+            .select(['a.kode_rekening', 'count(1) as jumlah'])
+            .from(RefAcuanBarang, 'a')
+            .where('a.expired_date is null and a.kode_rekening is not null')
+            .groupBy('a.kode_rekening'),
+        'b',
+        'rr.kode_rekening = b.kode_rekening'
+      )
+      .where('rr.expired_date is null')
+      .getRawMany()
+  } catch (e) {
+    throw new Error(e)
+  }
 }

@@ -1,5 +1,5 @@
-import { AppConfig } from 'main/repositories/AppConfig'
-import { GetConfig } from 'main/services/Config'
+import { AppConfig } from 'main/models/AppConfig'
+import { GetConfig } from 'main/repositories/Config'
 import { createConnection, getConnection } from 'typeorm'
 import { cfg, Migrate } from '../migration'
 

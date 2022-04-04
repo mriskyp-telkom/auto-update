@@ -1,5 +1,5 @@
 import { getRepository, InsertResult } from 'typeorm'
-import { MstSekolah } from '../repositories/MstSekolah'
+import { MstSekolah } from '../models/MstSekolah'
 
 export const GetSekolah = async (): Promise<MstSekolah> => {
   return await getRepository(MstSekolah).findOne()

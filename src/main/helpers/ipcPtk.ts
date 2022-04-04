@@ -1,8 +1,8 @@
 import { ipcMain } from 'electron'
-import { AddBulkPtk, GetLastUpdate, GetPtk } from 'main/services/Ptk'
+import { AddBulkPtk, GetLastUpdate, GetPtk } from 'main/repositories/Ptk'
 import CommonUtils from 'main/utils/CommonUtils'
 import { IPC_PTK } from 'global/ipc'
-import { GetConfig } from 'main/services/Config'
+import { GetConfig } from 'main/repositories/Config'
 
 module.exports = {
   getPtkLastUpdate: ipcMain.on('ptk:getPtkLastUpdate', async (e) => {

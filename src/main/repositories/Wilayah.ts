@@ -1,5 +1,5 @@
 import { getRepository, InsertResult } from 'typeorm'
-import { MstWilayah } from '../repositories/MstWilayah'
+import { MstWilayah } from '../models/MstWilayah'
 
 export const AddBulkWilayah = async (
   bulkWilayah: MstWilayah[]

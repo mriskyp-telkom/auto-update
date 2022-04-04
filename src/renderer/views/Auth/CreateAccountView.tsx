@@ -29,10 +29,9 @@ import {
   useAPIGetReferensi,
   useAPIGetReferensiWilayah,
 } from 'renderer/apis/referensi'
-
 import { sendEventRegistrasi2 } from 'renderer/utils/analytic/auth-util'
-
 import filter from 'lodash/filter'
+import { RegisterData } from 'main/types/Pengguna'
 
 const ipcRenderer = window.require('electron').ipcRenderer
 
@@ -260,13 +259,14 @@ const CreateAccountView: FC = () => {
 
   useEffect(() => {
     if (sekolah !== undefined) {
-      const data = {
+      const data: RegisterData = {
         registrasi: registration?.data,
         sekolah: sekolah?.data,
+        kode_registrasi: koreg,
+        password: password,
+        email: email,
       }
-      data.sekolah.kode_registrasi = koreg
-      data.registrasi.password = password
-      data.registrasi.email = email
+
       setKodeWilayah(sekolah?.data?.kode_wilayah)
       const ipcRegistration = ipcRenderer.sendSync('user:registration', data)
 
