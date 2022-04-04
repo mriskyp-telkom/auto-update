@@ -1,5 +1,7 @@
 import path from 'path'
 
+import fs from 'fs'
+
 export async function getAppDataPath(): Promise<string> {
   switch (process.platform) {
     case 'darwin': {
@@ -25,14 +27,34 @@ export async function getAppDataPath(): Promise<string> {
 
 export async function getAppData(): Promise<string> {
   const appPath = __dirname
+  const isManualPath = false
+
   const envPath =
     !process.env.NODE_ENV || process.env.NODE_ENV === 'production'
       ? await getAppDataPath() // Live Mode
       : path.join(appPath, 'AppData') // Dev Mode
 
-  if (process.env.NODE_ENV === 'testing') {
-    return path.join(await getAppDataPath(), 'Testing')
+  if (isManualPath) {
+    return getManualAppData()
+  } else {
+    if (process.env.NODE_ENV === 'testing') {
+      return path.join(await getAppDataPath(), 'Testing')
+    }
+  }
+  return envPath
+}
+xw
+
+export async function getManualAppData(): Promise<string> {
+  // change as your config local exists
+  const dir = '/Users/user/Downloads/dbArkas'
+
+  if (fs.existsSync(dir)) {
+    console.log('Directory exists!')
+  } else {
+    console.log('Directory not found.')
   }
 
-  return envPath
+  // return envPath
+  return dir
 }
