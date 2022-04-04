@@ -96,6 +96,31 @@ yarn start
 yarn test
 ```
 
+7. Using make file
+
+ ```bash
+make yarn-test
+```
+
+### Code Coverage
+8. Using make file 
+
+Support Mac, Linux
+For Windows, use Powershell or any 
+ ```bash
+make code-coverage
+```
+
+### Clean Yarn
+Init first for initial
+ ```bash
+make yarn-init
+```
+After that, run this
+ ```bash
+make yarn-clean
+```
+
 ## Shortcut Open Dev Tools
 
 ### MAC OS
