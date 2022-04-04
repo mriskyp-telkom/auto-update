@@ -155,6 +155,11 @@ const SyncLoginView: FC = () => {
       )
       if (hddVolOld === '') {
         hddVolOld = hddVol
+        ipcRenderer.sendSync(
+          'config:setConfig',
+          APP_CONFIG.hddVolOld,
+          hddVolOld
+        )
       }
       setHddVol(hddVol)
       setHddVolOld(hddVolOld)
