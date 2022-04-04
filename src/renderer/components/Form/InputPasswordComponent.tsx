@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react'
-import { FieldErrors, RegisterOptions } from 'react-hook-form'
+import { FieldErrors, FieldError, RegisterOptions } from 'react-hook-form'
 
 import { Input, InputGroup, InputRightAddon } from '@wartek-id/input'
 import { Icon } from '@wartek-id/icon'
@@ -8,13 +8,33 @@ interface InputPasswordProps {
   name: string
   errors: FieldErrors
   register: (arg0: string, arg1: RegisterOptions) => void
+  setError?: (name: string, error: FieldError) => void
+  handleClearError?: (name: string) => void
 }
 
 const InputPasswordComponent: FC<InputPasswordProps> = (
   props: InputPasswordProps
 ) => {
-  const { name, errors, register } = props
+  const { name, errors, register, setError } = props
   const [visibilityPassword, setVisibilityPassword] = useState(false)
+
+  const validation = {
+    required: 'Wajib diisi',
+    minLength: {
+      value: 8,
+      message: 'Minimal 8 karakter',
+    },
+    onBlur: (e: any) => {
+      if (e.target.value.length < 8) {
+        setError('password', {
+          type: 'manual',
+          message: 'Minimal 8 karakter',
+        })
+      } else {
+        props.handleClearError('password')
+      }
+    },
+  }
 
   return (
     <InputGroup>
@@ -25,13 +45,7 @@ const InputPasswordComponent: FC<InputPasswordProps> = (
         name={name}
         isInvalid={!!errors[name]}
         errorMessage={errors[name]?.message}
-        {...register(name, {
-          required: 'Wajib diisi',
-          minLength: {
-            value: 8,
-            message: 'Minimal 8 karakter',
-          },
-        })}
+        {...register(name, validation)}
       />
       <InputRightAddon>
         <Icon

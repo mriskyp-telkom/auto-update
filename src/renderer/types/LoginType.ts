@@ -1,3 +1,5 @@
+export type FormLoginType = 'email' | 'password'
+
 export interface FormLoginData {
   email: string
   password: string
