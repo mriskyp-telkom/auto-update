@@ -26,10 +26,6 @@ variables:
     - himem
     - helm
 
-.test:
-  script:
-    - npx jest --coverage
-
 .publish:
   image: google/cloud-sdk:300.0.0-alpine
   script:
