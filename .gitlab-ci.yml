@@ -28,7 +28,7 @@ variables:
 
 .test:
   script:
-    - npx jest --coverage 
+    - npx jest --coverage
 
 .publish:
   image: google/cloud-sdk:300.0.0-alpine
