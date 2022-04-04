@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import { useForm } from 'react-hook-form'
 
@@ -13,7 +13,7 @@ import SyncLoginView from './SyncLoginView'
 
 import { Button } from '@wartek-id/button'
 
-import { FormLoginData } from 'renderer/types/LoginType'
+import { FormLoginType, FormLoginData } from 'renderer/types/LoginType'
 
 import { AuthStates, useAuthStore } from 'renderer/stores/auth'
 
@@ -39,15 +39,22 @@ const LoginView: FC = () => {
   const setMultipleDevice = useAuthStore(
     (state: AuthStates) => state.setMultipleDevice
   )
+
   const {
     register,
     handleSubmit,
     setError,
+    setFocus,
     getValues,
+    clearErrors,
     formState: { errors, isValid, submitCount },
   } = useForm<FormLoginData>({
-    mode: 'onChange',
+    mode: 'onSubmit',
   })
+
+  const handleClearError = (name: FormLoginType) => {
+    clearErrors(name)
+  }
 
   const onSubmit = async (data: FormLoginData) => {
     let response_status = ''
@@ -110,6 +117,10 @@ const LoginView: FC = () => {
     navigate('/registration')
   }
 
+  useEffect(() => {
+    setFocus('email')
+  }, [])
+
   return (
     <AuthLayout>
       <form onSubmit={handleSubmit(onSubmit, onError)}>
@@ -121,6 +132,8 @@ const LoginView: FC = () => {
             placeholder="Masukkan email yang terdaftar di sekolah"
             errors={errors}
             register={register}
+            setError={setError}
+            handleClearError={handleClearError}
             required={true}
           />
         </div>
@@ -132,6 +145,8 @@ const LoginView: FC = () => {
             name="password"
             errors={errors}
             register={register}
+            setError={setError}
+            handleClearError={handleClearError}
           />
         </div>
         <ResetAccountLinkView />
