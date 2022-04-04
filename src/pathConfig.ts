@@ -43,7 +43,6 @@ export async function getAppData(): Promise<string> {
   }
   return envPath
 }
-xw
 
 export async function getManualAppData(): Promise<string> {
   // change as your config local exists
