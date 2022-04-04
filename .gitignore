@@ -90,3 +90,6 @@ out/
 
 # Output unit test 
 *.txt
+
+# vscode
+.vscode/
