@@ -46,7 +46,7 @@ export async function getAppData(): Promise<string> {
 
 export async function getManualAppData(): Promise<string> {
   // change as your config local exists
-  const dir = '/Users/user/Downloads/dbArkas'
+  const dir = '/Users/user/dbArkas'
 
   if (fs.existsSync(dir)) {
     console.log('Directory exists!')
