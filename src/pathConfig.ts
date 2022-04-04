@@ -27,7 +27,7 @@ export async function getAppDataPath(): Promise<string> {
 
 export async function getAppData(): Promise<string> {
   const appPath = __dirname
-  const isManualPath = false
+  const isManualPath = true
 
   const envPath =
     !process.env.NODE_ENV || process.env.NODE_ENV === 'production'

@@ -18,3 +18,7 @@ yarn-init:
 yarn-clean:
 	yarn autoclean --force
 	yarn install
+
+.PHONY: code-coverage
+code-coverage:
+	npx jest --coverage > code_coverage.xml
