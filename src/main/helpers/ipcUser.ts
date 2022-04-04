@@ -7,7 +7,7 @@ import {
 } from 'main/repositories/User'
 import CommonUtils from 'main/utils/CommonUtils'
 import { SetConfig, DeleteConfig, GetConfig } from 'main/repositories/Config'
-import { Register } from 'main/repositories/Pengguna'
+import { Register } from 'main/services/RegistrationService'
 
 module.exports = {
   checkUsername: ipcMain.on('user:checkUsername', async (e, username) => {
