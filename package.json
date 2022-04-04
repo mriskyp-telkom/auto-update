@@ -85,6 +85,7 @@
     "@typescript-eslint/parser": "^4.0.1",
     "@vercel/webpack-asset-relocator-loader": "1.7.0",
     "autoprefixer": "^10.4.2",
+    "check-code-coverage": "^1.10.0",
     "clsx": "^1.1.1",
     "copy-webpack-plugin": "^10.2.0",
     "cross-env": "^7.0.3",
@@ -101,11 +102,12 @@
     "postcss-loader": "^6.2.1",
     "prettier": "2.5.1",
     "style-loader": "^3.0.0",
-    "tailwindcss": "2.1.1",
+    "tailwindcss": "^2.2.19",
     "ts-jest": "^27.1.3",
     "ts-loader": "^9.2.2",
     "ts-node": "^10.7.0",
-    "typescript": "^4.0.2"
+    "typescript": "^4.0.2",
+    "unit-coverage": "^4.0.3"
   },
   "dependencies": {
     "@electron/remote": "^2.0.8",
@@ -125,6 +127,7 @@
     "axios": "^0.26.0",
     "better-sqlite3": "^7.5.0",
     "better-sqlite3-multiple-ciphers": "^7.5.0",
+    "coverage": "^0.4.1",
     "electron-find": "^1.0.7",
     "electron-ga-uuid": "^1.0.2",
     "electron-squirrel-startup": "^1.0.0",
