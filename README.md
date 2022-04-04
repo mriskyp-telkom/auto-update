@@ -96,6 +96,12 @@ yarn start
 yarn test
 ```
 
+If you want to run test in specific file do
+
+```bash
+yarn test <filename>
+```
+
 ## Shortcut Open Dev Tools
 
 ### MAC OS
