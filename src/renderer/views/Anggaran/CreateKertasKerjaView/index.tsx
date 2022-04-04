@@ -237,10 +237,18 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
       'config:getConfig',
       APP_CONFIG.hddVol
     )
-    const ipcHddVolOld = ipcRenderer.sendSync(
+    let ipcHddVolOld = ipcRenderer.sendSync(
       'config:getConfig',
       APP_CONFIG.hddVolOld
     )
+    if (ipcHddVolOld === '') {
+      ipcHddVolOld = ipcHddVol
+      ipcRenderer.sendSync(
+        'config:setConfig',
+        APP_CONFIG.hddVolOld,
+        ipcHddVolOld
+      )
+    }
     setHddVol(ipcHddVol)
     setHddVolOld(ipcHddVolOld)
     setNpsn(sekolah.npsn)
