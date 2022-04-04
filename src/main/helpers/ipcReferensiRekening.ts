@@ -46,7 +46,7 @@ module.exports = {
           isCustomSatuan: rek.is_custom_satuan,
           createDate: rek.create_date,
           lastUpdate: rek.last_update,
-          expiredDate: rek.expiredDAte,
+          expiredDate: rek.expired_date,
         })
         if ((i !== 0 && i % 200 == 0) || data.length == i + 1) {
           await addBulkRefRekening(dataRekening)
