@@ -1,4 +1,7 @@
 import moment from 'moment'
+import 'moment/locale/id'
+
+moment.locale('id')
 
 import { FORMAT_TANGGAL } from 'renderer/constants/general'
 
