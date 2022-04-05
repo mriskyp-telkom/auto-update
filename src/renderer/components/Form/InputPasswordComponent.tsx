@@ -4,6 +4,11 @@ import { FieldErrors, FieldError, RegisterOptions } from 'react-hook-form'
 import { Input, InputGroup, InputRightAddon } from '@wartek-id/input'
 import { Icon } from '@wartek-id/icon'
 
+import {
+  ERROR_REQUIRED,
+  PASSWORD_ERROR_MINLENGTH,
+} from 'renderer/constants/errorForm'
+
 interface InputPasswordProps {
   name: string
   errors: FieldErrors
@@ -19,19 +24,35 @@ const InputPasswordComponent: FC<InputPasswordProps> = (
   const [visibilityPassword, setVisibilityPassword] = useState(false)
 
   const validation = {
-    required: 'Wajib diisi',
+    required: ERROR_REQUIRED,
     minLength: {
       value: 8,
-      message: 'Minimal 8 karakter',
+      message: PASSWORD_ERROR_MINLENGTH,
     },
     onBlur: (e: any) => {
-      if (e.target.value.length < 8) {
+      const value = e.target.value
+      if (value.length > 0 && value.length < 8) {
         setError('password', {
           type: 'manual',
-          message: 'Minimal 8 karakter',
+          message: PASSWORD_ERROR_MINLENGTH,
         })
       } else {
         props.handleClearError('password')
+      }
+    },
+    onChange: (e: any) => {
+      const value = e.target.value
+      if (errors[name]?.message === ERROR_REQUIRED) {
+        if (value !== '') {
+          props.handleClearError(name)
+          return
+        }
+      }
+      if (errors[name]?.message === PASSWORD_ERROR_MINLENGTH) {
+        if (value.length > 7) {
+          props.handleClearError(name)
+          return
+        }
       }
     },
   }
