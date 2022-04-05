@@ -33,9 +33,11 @@ const LoginView: FC = () => {
   const setKoreg = useAuthStore((state: AuthStates) => state.setKoreg)
   const setEmail = useAuthStore((state: AuthStates) => state.setEmail)
   const syncLogin = useAuthStore((state: AuthStates) => state.syncLogin)
+
   const isMultipleDevice = useAuthStore(
     (state: AuthStates) => state.isMultipleDevice
   )
+
   const setMultipleDevice = useAuthStore(
     (state: AuthStates) => state.setMultipleDevice
   )
@@ -47,10 +49,27 @@ const LoginView: FC = () => {
     setFocus,
     getValues,
     clearErrors,
-    formState: { errors, isValid, submitCount },
+    formState: { errors, isDirty, submitCount },
   } = useForm<FormLoginData>({
     mode: 'onSubmit',
+    reValidateMode: 'onBlur',
+    defaultValues: {
+      email: '',
+      password: '',
+    },
   })
+
+  const btnDisabled = () => {
+    if (submitCount > 0 && !isDirty) {
+      return true
+    }
+
+    if (isDirty && (!!errors['email'] || !!errors['password'])) {
+      return true
+    }
+
+    return false
+  }
 
   const handleClearError = (name: FormLoginType) => {
     clearErrors(name)
@@ -157,7 +176,7 @@ const LoginView: FC = () => {
             size="lg"
             variant="solid"
             type="submit"
-            disabled={!isValid && submitCount > 0}
+            disabled={btnDisabled()}
           >
             Masuk
           </Button>

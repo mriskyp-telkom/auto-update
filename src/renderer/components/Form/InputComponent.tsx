@@ -3,8 +3,16 @@ import { FieldErrors, FieldError, RegisterOptions } from 'react-hook-form'
 
 import { Input } from '@wartek-id/input'
 
-import { isEmailValid } from 'renderer/utils/form-validation'
-import { emailRegex } from 'renderer/constants/regex'
+import {
+  isFormatEmailValid,
+  isEmailValid,
+} from 'renderer/utils/form-validation'
+
+import {
+  ERROR_REQUIRED,
+  EMAIL_ERROR_FORMAT,
+  EMAIL_ERROR_VALIDATION,
+} from 'renderer/constants/errorForm'
 
 interface InputProps {
   type: 'text' | 'email'
@@ -39,25 +47,55 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
   if (required) {
     validation = {
       ...validation,
-      required: 'Wajib diisi',
+      required: ERROR_REQUIRED,
     }
   }
 
   if (type === 'email') {
     validation = {
       ...validation,
-      pattern: {
-        value: emailRegex,
-        message: 'Masukkan email dengan contoh format arini@yahoo.com',
+      validate: {
+        allowChar: (v) => isEmailValid(v) || EMAIL_ERROR_VALIDATION,
+        format: (v) => isFormatEmailValid(v) || EMAIL_ERROR_FORMAT,
       },
       onBlur: (e) => {
-        if (!isEmailValid(e.target.value)) {
+        const value = e.target.value
+        if (value !== '' && !isEmailValid(value)) {
           setError('email', {
             type: 'manual',
-            message: 'Masukkan email dengan contoh format arini@yahoo.com',
+            message: EMAIL_ERROR_VALIDATION,
           })
-        } else {
-          props.handleClearError('email')
+          return
+        }
+        if (value !== '' && !isFormatEmailValid(value)) {
+          setError('email', {
+            type: 'manual',
+            message: EMAIL_ERROR_FORMAT,
+          })
+          return
+        }
+
+        props.handleClearError('email')
+      },
+      onChange: (e) => {
+        const value = e.target.value
+        if (errors[name]?.message === ERROR_REQUIRED) {
+          if (value !== '') {
+            props.handleClearError(name)
+            return
+          }
+        }
+        if (errors[name]?.message === EMAIL_ERROR_VALIDATION) {
+          if (value !== '' && isEmailValid(value)) {
+            props.handleClearError(name)
+            return
+          }
+        }
+        if (errors[name]?.message === EMAIL_ERROR_FORMAT) {
+          if (value !== '' && isFormatEmailValid(value)) {
+            props.handleClearError(name)
+            return
+          }
         }
       },
     }
