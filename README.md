@@ -100,12 +100,20 @@ If you want to run test in specific file do
 
 ````bash
 yarn test <filename>
+```
 
 7. Using make file
 
- ```bash
+```bash
 make yarn-test
 ````
+
+8. Using Instance
+   locate your path jest, locate the path of test file, and add the instance
+
+```bash
+ node '/Users/user/kodingan/arkas-desktop/node_modules/.bin/jest' '/Users/user/kodingan/arkas-desktop/tests/main/repositories/InstansiPengguna.test.ts' -t 'AddInstansiPengguna'
+```
 
 ### Code Coverage
 

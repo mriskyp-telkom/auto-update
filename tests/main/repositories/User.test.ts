@@ -37,8 +37,9 @@ beforeEach(async () => {
 })
 
 afterEach(async () => {
-  const conn = getConnection()
-  await conn.close()
+  const con = getConnection()
+
+  await con.close()
 })
 
 test('CheckUser', async () => {

@@ -22,3 +22,8 @@ yarn-clean:
 .PHONY: code-coverage
 code-coverage:
 	npx jest --coverage > code_coverage.xml
+
+.PHONY: repair-node
+repair-node:
+	rm -rf node_modules
+	npm install --force
