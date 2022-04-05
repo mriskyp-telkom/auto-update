@@ -17,7 +17,7 @@ export const ExpiryToken = async (tokenId: string): Promise<void> => {
   await createQueryBuilder()
     .update(Token)
     .set({
-      expiryDate: Date.now(),
+      expiredDate: Date.now(),
     })
     .where('tokenId = :tokenId', { tokenId })
     .execute()
