@@ -14,7 +14,10 @@ import AlertLostConnection from 'renderer/views/AlertLostConnection'
 
 import { Button } from '@wartek-id/button'
 
-import { FormResetAccountData } from 'renderer/types/LoginType'
+import {
+  FormResetAccountData,
+  FormResetAccountType,
+} from 'renderer/types/LoginType'
 
 import { AuthStates, useAuthStore } from 'renderer/stores/auth'
 import { AppStates, useAppStore } from 'renderer/stores/app'
@@ -79,10 +82,18 @@ const CreateAccountView: FC = () => {
     handleSubmit,
     setValue,
     setError,
+    setFocus,
     getValues,
+    clearErrors,
     formState: { errors, isValid, submitCount },
   } = useForm<FormResetAccountData>({
-    mode: 'onChange',
+    mode: 'onSubmit',
+    reValidateMode: 'onBlur',
+    defaultValues: {
+      email: '',
+      password: '',
+      password_confirmation: '',
+    },
   })
 
   const {
@@ -217,6 +228,7 @@ const CreateAccountView: FC = () => {
     setLastUpdateKode(kodeLastUpdate)
     setLastUpdateRekening(rekeningLastUpdate)
     setHddVol(ipcHddVol)
+    setFocus('email')
   }, [])
 
   useEffect(() => {
@@ -333,6 +345,10 @@ const CreateAccountView: FC = () => {
     isGetRefKodeError,
   ])
 
+  const handleClearError = (name: FormResetAccountType) => {
+    clearErrors(name)
+  }
+
   const onSubmit = async (data: FormResetAccountData) => {
     setAlertNoConnection(false)
     setAlertLostConnection(false)
@@ -380,6 +396,8 @@ const CreateAccountView: FC = () => {
             placeholder="Masukkan email yang terdaftar di sekolah"
             errors={errors}
             register={register}
+            setError={setError}
+            handleClearError={handleClearError}
             required={true}
             isDisabled={mode === 'reset'}
           />
@@ -392,6 +410,8 @@ const CreateAccountView: FC = () => {
             name="password"
             errors={errors}
             register={register}
+            setError={setError}
+            handleClearError={handleClearError}
           />
         </div>
         <div className="pt-5">
@@ -402,6 +422,8 @@ const CreateAccountView: FC = () => {
             name="password_confirmation"
             errors={errors}
             register={register}
+            setError={setError}
+            handleClearError={handleClearError}
           />
         </div>
         <div className="grid justify-items-end pt-[50px] pb-[20px]">
