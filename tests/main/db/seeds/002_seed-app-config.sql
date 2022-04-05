@@ -1,48 +1,50 @@
-INSERT INTO app_config (varname, varvalue) VALUES ('key', 'w2Zuy90M80u4y6PWPfnvDw');
-INSERT INTO app_config (varname, varvalue) VALUES ('sekolah_id', 'XN60oPUuEeC-vv2_lhMTXQ');
-INSERT INTO app_config (varname, varvalue) VALUES ('koreg', 'X1QP');
-INSERT INTO app_config (varname, varvalue) VALUES ('active', '1');
-INSERT INTO app_config (varname, varvalue) VALUES ('last_sync', '');
-INSERT INTO app_config (varname, varvalue) VALUES ('last_login', '');
-INSERT INTO app_config (varname, varvalue) VALUES ('skpd', '');
-INSERT INTO app_config (varname, varvalue) VALUES ('jumlah_siswa', '0');
-INSERT INTO app_config (varname, varvalue) VALUES ('tahun_anggaran', '2022');
-INSERT INTO app_config (varname, varvalue) VALUES ('id_anggaran', '');
-INSERT INTO app_config (varname, varvalue) VALUES ('status_pengesahan', '0');
-INSERT INTO app_config (varname, varvalue) VALUES ('is_pengesahan', '2');
-INSERT INTO app_config (varname, varvalue) VALUES ('tahun_aktif', '2022');
-INSERT INTO app_config (varname, varvalue) VALUES ('harga_bos_pusat', '0');
-INSERT INTO app_config (varname, varvalue) VALUES ('version_app', '3.3');
-INSERT INTO app_config (varname, varvalue) VALUES ('show_after_update', '3.3');
-INSERT INTO app_config (varname, varvalue) VALUES ('cek_bos_tambahan', '2022-03-16 16:00:00');
-INSERT INTO app_config (varname, varvalue) VALUES ('harga_bos_prop', '0');
-INSERT INTO app_config (varname, varvalue) VALUES ('harga_bos_kab', '0');
-INSERT INTO app_config (varname, varvalue) VALUES ('config_bos_pusat', '0');
-INSERT INTO app_config (varname, varvalue) VALUES ('config_bos_prop', '0');
-INSERT INTO app_config (varname, varvalue) VALUES ('config_bos_kab', '0');
-INSERT INTO app_config (varname, varvalue) VALUES ('kepala_dinas', 'Drs. ALI RIDLO, MM');
-INSERT INTO app_config (varname, varvalue) VALUES ('manager_bos', 'Drs. SUDYA MARSITA, MM');
-INSERT INTO app_config (varname, varvalue) VALUES ('nip_kepala_dinas', '196202071989031009');
-INSERT INTO app_config (varname, varvalue) VALUES ('nip_manager_bos', '196310051986031019');
-INSERT INTO app_config (varname, varvalue) VALUES ('tempat_tanda_tangan', '');
-INSERT INTO app_config (varname, varvalue) VALUES ('approval_bku', '0');
-INSERT INTO app_config (varname, varvalue) VALUES ('count_allow_perubahan', '1');
-INSERT INTO app_config (varname, varvalue) VALUES ('month_perubahan', '3');
-INSERT INTO app_config (varname, varvalue) VALUES ('allow_edit_kepsek', '0');
-INSERT INTO app_config (varname, varvalue) VALUES ('count_allow_pergeseran', '-1');
-INSERT INTO app_config (varname, varvalue) VALUES ('bos_tambahan', '');
-INSERT INTO app_config (varname, varvalue) VALUES ('allow_upsiswa', '0');
-INSERT INTO app_config (varname, varvalue) VALUES ('blok_registrasi', '0');
-INSERT INTO app_config (varname, varvalue) VALUES ('allow_create_reguler', '0');
-INSERT INTO app_config (varname, varvalue) VALUES ('allow_non_tunai_bank', '0');
-INSERT INTO app_config (varname, varvalue) VALUES ('nama_komite', 'Hariadi, S.Pd.SD.');
-INSERT INTO app_config (varname, varvalue) VALUES ('nip_komite', '');
-INSERT INTO app_config (varname, varvalue) VALUES ('hdd_vol', '92ace6c8-f3db-4291-83fb-b1c887ca0292');
-INSERT INTO app_config (varname, varvalue) VALUES ('koreg_invalid', '0');
-INSERT INTO app_config (varname, varvalue) VALUES ('patch_bku_204', '1');
-INSERT INTO app_config (varname, varvalue) VALUES ('hdd_vol_old', '66DB-4FCD');
-INSERT INTO app_config (varname, varvalue) VALUES ('patch_bku_300', '2');
-INSERT INTO app_config (varname, varvalue) VALUES ('bos_reguler_2021_awal', '301600000');
-INSERT INTO app_config (varname, varvalue) VALUES ('download_report', '0');
-INSERT INTO app_config (varname, varvalue) VALUES ('bos_reguler_2021_perubahan', '304036000');
-INSERT INTO app_config (varname, varvalue) VALUES ('bos_reguler_2022_awal', '309720000');
+INSERT INTO app_config (varname, varvalue) VALUES 
+ ('key', 'w2Zuy90M80u4y6PWPfnvDw'),
+ ('sekolah_id', 'XN60oPUuEeC-vv2_lhMTXQ'),
+ ('koreg', 'X1QP'),
+ ('active', '1'),
+ ('last_sync', ''),
+ ('last_login', ''),
+ ('skpd', ''),
+ ('jumlah_siswa', '0'),
+ ('tahun_anggaran', '2022'),
+ ('id_anggaran', ''),
+ ('status_pengesahan', '0'),
+ ('is_pengesahan', '2'),
+ ('tahun_aktif', '2022'),
+ ('harga_bos_pusat', '0'),
+ ('version_app', '3.3'),
+ ('show_after_update', '3.3'),
+ ('cek_bos_tambahan', '2022-03-16 16:00:00'),
+ ('harga_bos_prop', '0'),
+ ('harga_bos_kab', '0'),
+ ('config_bos_pusat', '0'),
+ ('config_bos_prop', '0'),
+ ('config_bos_kab', '0'),
+ ('kepala_dinas', 'Drs. ALI RIDLO, MM'),
+ ('manager_bos', 'Drs. SUDYA MARSITA, MM'),
+ ('nip_kepala_dinas', '196202071989031009'),
+ ('nip_manager_bos', '196310051986031019'),
+ ('tempat_tanda_tangan', ''),
+ ('approval_bku', '0'),
+ ('count_allow_perubahan', '1'),
+ ('month_perubahan', '3'),
+ ('allow_edit_kepsek', '0'),
+ ('count_allow_pergeseran', '-1'),
+ ('bos_tambahan', ''),
+ ('allow_upsiswa', '0'),
+ ('blok_registrasi', '0'),
+ ('allow_create_reguler', '0'),
+ ('allow_non_tunai_bank', '0'),
+ ('nama_komite', 'Hariadi, S.Pd.SD.'),
+ ('nip_komite', ''),
+ ('hdd_vol', '92ace6c8-f3db-4291-83fb-b1c887ca0292'),
+ ('koreg_invalid', '0'),
+ ('patch_bku_204', '1'),
+ ('hdd_vol_old', '66DB-4FCD'),
+ ('patch_bku_300', '2'),
+ ('bos_reguler_2021_awal', '301600000'),
+ ('download_report', '0'),
+ ('bos_reguler_2021_perubahan', '304036000'),
+ ('bos_reguler_2022_awal', '309720000'),
+ ('pengguna_id', 'pUe9yWUZHkmYezDiz7DTDA');

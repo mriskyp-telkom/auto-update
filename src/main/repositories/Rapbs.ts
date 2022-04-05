@@ -2,7 +2,7 @@ import { Rapbs } from 'main/models/Rapbs'
 import { RapbsPeriode } from 'main/models/RapbsPeriode'
 import { RefKode } from 'main/models/RefKode'
 import { RefRekening } from 'main/models/RefRekening'
-import { createQueryBuilder, getRepository } from 'typeorm'
+import { createQueryBuilder, getRepository, InsertResult } from 'typeorm'
 
 export const GetRapbsBulan = async (
   idAnggaran: string,
@@ -40,7 +40,7 @@ export const GetRapbs = async (idRapbs: string): Promise<Rapbs> => {
   return await getRepository(Rapbs).findOne({ idRapbs: idRapbs })
 }
 
-export const AddRapbs = async (rapbs: Rapbs): Promise<any> => {
+export const AddRapbs = async (rapbs: Rapbs): Promise<InsertResult> => {
   return await getRepository(Rapbs).upsert(rapbs, ['idRapbs'])
 }
 

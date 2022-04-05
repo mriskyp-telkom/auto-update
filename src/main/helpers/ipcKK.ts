@@ -16,6 +16,7 @@ import {
 } from 'main/repositories/RapbsPeriode'
 import CommonUtils from 'main/utils/CommonUtils'
 import { IPC_KK } from 'global/ipc'
+import { AddDetailKegiatan } from 'main/services/KertasKerjaService'
 
 module.exports = {
   /*
@@ -163,6 +164,12 @@ module.exports = {
     IPC_KK.anggaranDetailKegiatan,
     async (e, id_tahap, id_kode, id_anggaran) => {
       e.returnValue = await GetDetailKegiatan(id_tahap, id_kode, id_anggaran)
+    }
+  ),
+  addAnggaranDetailKegiatan: ipcMain.on(
+    IPC_KK.addAnggaranDetailKegiatan,
+    async (e, detailKegiatan) => {
+      e.returnValue = await AddDetailKegiatan(detailKegiatan)
     }
   ),
 }

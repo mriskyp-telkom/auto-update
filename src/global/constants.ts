@@ -6,3 +6,9 @@ export const STATUS_KERTAS_KERJA = {
   approved: 'approved',
   disabled: 'disabled',
 }
+
+export const CONFIG = {
+  sekolahId: 'sekolah_id',
+  penggunaId: 'pengguna_id',
+  sessionId: 'sessionId',
+}
