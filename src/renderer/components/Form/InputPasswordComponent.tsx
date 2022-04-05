@@ -32,12 +32,12 @@ const InputPasswordComponent: FC<InputPasswordProps> = (
     onBlur: (e: any) => {
       const value = e.target.value
       if (value.length > 0 && value.length < 8) {
-        setError('password', {
+        setError(name, {
           type: 'manual',
           message: PASSWORD_ERROR_MINLENGTH,
         })
       } else {
-        props.handleClearError('password')
+        props.handleClearError(name)
       }
     },
     onChange: (e: any) => {

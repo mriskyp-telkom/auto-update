@@ -16,12 +16,17 @@ import { Button } from '@wartek-id/button'
 import { Tooltip } from '@wartek-id/tooltip'
 import { Icon } from '@wartek-id/icon'
 
-import { onlyNumberRegex } from 'renderer/constants/regex'
 import { APP_CONFIG } from 'renderer/constants/appConfig'
+import {
+  ERROR_REQUIRED,
+  ERROR_NUMBER_ONLY,
+  NPSN_ERROR_LENGTH,
+} from 'renderer/constants/errorForm'
 
 import { sendEventRegistrasi1 } from 'renderer/utils/analytic/auth-util'
+import { isOnlyNumber } from 'renderer/utils/form-validation'
 
-import { FormRegisterData } from 'renderer/types/LoginType'
+import { FormRegisterType, FormRegisterData } from 'renderer/types/LoginType'
 
 import {
   useAPICheckActivation,
@@ -87,11 +92,22 @@ const RegistrationView: FC = () => {
     register,
     handleSubmit,
     setError,
+    setFocus,
     getValues,
+    clearErrors,
     formState: { errors, isValid, submitCount },
   } = useForm<FormRegisterData>({
-    mode: 'onChange',
+    mode: 'onSubmit',
+    reValidateMode: 'onBlur',
+    defaultValues: {
+      npsn: '',
+      activation_code: '',
+    },
   })
+
+  const handleClearError = (name: FormRegisterType) => {
+    clearErrors(name)
+  }
 
   useEffect(() => {
     const ipcHddVol = ipcRenderer.sendSync(
@@ -104,6 +120,7 @@ const RegistrationView: FC = () => {
     )
     setKoregInvalid(ipcKoregInvalid)
     setHddVol(ipcHddVol)
+    setFocus('npsn')
   }, [])
 
   useEffect(() => {
@@ -209,17 +226,49 @@ const RegistrationView: FC = () => {
             register={register}
             required={true}
             registerOption={{
-              pattern: {
-                value: onlyNumberRegex,
-                message: 'Isi dengan format angka',
+              validate: {
+                onlyNumber: (v) => isOnlyNumber(v) || ERROR_NUMBER_ONLY,
+                minMaxLength: (v) => v.length === 8 || NPSN_ERROR_LENGTH,
               },
-              maxLength: {
-                value: 8,
-                message: 'NPSN harus terdiri dari 8 angka',
+              onBlur: (e) => {
+                const value = e.target.value
+                if (value !== '' && !isOnlyNumber(value)) {
+                  setError('npsn', {
+                    type: 'manual',
+                    message: ERROR_NUMBER_ONLY,
+                  })
+                  return
+                }
+                if (value !== '' && value.length !== 8) {
+                  setError('npsn', {
+                    type: 'manual',
+                    message: NPSN_ERROR_LENGTH,
+                  })
+                  return
+                }
+
+                handleClearError('npsn')
               },
-              minLength: {
-                value: 8,
-                message: 'NPSN harus terdiri dari 8 angka',
+              onChange: (e) => {
+                const value = e.target.value
+                if (errors.npsn?.message === ERROR_REQUIRED) {
+                  if (value !== '') {
+                    handleClearError('npsn')
+                    return
+                  }
+                }
+                if (errors.npsn?.message === ERROR_NUMBER_ONLY) {
+                  if (value !== '' && isOnlyNumber(value)) {
+                    handleClearError('npsn')
+                    return
+                  }
+                }
+                if (errors.npsn?.message === NPSN_ERROR_LENGTH) {
+                  if (value.length === 8) {
+                    handleClearError('npsn')
+                    return
+                  }
+                }
               },
             }}
           />

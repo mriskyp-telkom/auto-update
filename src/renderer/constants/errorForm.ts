@@ -1,4 +1,5 @@
 export const ERROR_REQUIRED = 'Wajib Diisi'
+export const ERROR_NUMBER_ONLY = 'Isi dengan format angka'
 
 /* Email */
 export const EMAIL_ERROR_FORMAT =
@@ -8,3 +9,6 @@ export const EMAIL_ERROR_VALIDATION =
 
 /* Password */
 export const PASSWORD_ERROR_MINLENGTH = 'Minimal 8 karakter'
+
+/* NPSN */
+export const NPSN_ERROR_LENGTH = 'NPSN harus terdiri dari 8 angka'
