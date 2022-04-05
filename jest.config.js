@@ -5,5 +5,6 @@ module.exports = {
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   moduleNameMapper: {
     'main/(.*)': '<rootDir>/src/main/$1',
+    'global/(.*)': '<rootDir>/src/global/$1',
   },
 }

@@ -27,4 +27,5 @@ export const IPC_REFERENSI = {
 export const IPC_KK = {
   getRapbsSummary: `${KK}:getRapbsSummary`,
   anggaranDetailKegiatan: `${KK}:anggaranDetailKegiatan`,
+  addAnggaranDetailKegiatan: `${KK}:addAnggaranDetailKegiatan`,
 }

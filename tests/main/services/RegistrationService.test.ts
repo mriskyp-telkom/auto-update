@@ -43,9 +43,9 @@ beforeEach(async () => {
   await Migrate(db, cfg)
 })
 
-afterEach(() => {
+afterEach(async () => {
   const conn = getConnection()
-  conn.close()
+  await conn.close()
 })
 
 test('Register', async () => {

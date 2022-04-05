@@ -8,7 +8,12 @@ import {
   BulanDetail,
   RapbsSummary,
 } from 'main/types/RapbsPeriodeDetail'
-import { getManager, createQueryBuilder, getRepository } from 'typeorm'
+import {
+  getManager,
+  createQueryBuilder,
+  getRepository,
+  InsertResult,
+} from 'typeorm'
 
 export const GetRapbsPeriode = async (
   idRapbs: string
@@ -19,6 +24,14 @@ export const GetRapbsPeriode = async (
 export const AddRapbsPeriode = async (
   rapbsPeriode: RapbsPeriode
 ): Promise<any> => {
+  return await getRepository(RapbsPeriode).upsert(rapbsPeriode, [
+    'idRapbsPeriode',
+  ])
+}
+
+export const AddBulkRapbsPeriode = async (
+  rapbsPeriode: RapbsPeriode[]
+): Promise<InsertResult> => {
   return await getRepository(RapbsPeriode).upsert(rapbsPeriode, [
     'idRapbsPeriode',
   ])

@@ -1,0 +1,49 @@
+import { RapbsPtk } from 'main/models/RapbsPtk'
+import {
+  AddRapbsPtk,
+  DeleteRapbsPtk,
+  GetRapbsPtk,
+} from 'main/repositories/RapbsPtk'
+import { createConnection, getConnection } from 'typeorm'
+import { cfg, Migrate } from '../migration'
+
+beforeEach(async () => {
+  const db = await createConnection({
+    type: 'better-sqlite3',
+    database: ':memory:',
+    dropSchema: false,
+    entities: [RapbsPtk],
+    synchronize: false,
+    logging: true,
+  })
+
+  await Migrate(db, cfg)
+})
+
+afterEach(async () => {
+  const conn = getConnection()
+  await conn.close()
+})
+
+test('AddDeleteGetRapbsPtk', async () => {
+  const now = new Date()
+  const rapbsPtk = <RapbsPtk>{
+    idRapbs: 'sjBrnFj9LkyYR6mx5uN7Ag',
+    ptkId: 'ZhCzoPUuEeCu8uXpSNkwnA',
+    nama: 'Test PTK',
+    createDate: now,
+    lastUpdate: now,
+  }
+
+  await AddRapbsPtk(rapbsPtk)
+
+  const findRapbsPtk = await GetRapbsPtk(rapbsPtk.idRapbs, rapbsPtk.ptkId)
+  expect(findRapbsPtk.idRapbs).toBe(rapbsPtk.idRapbs)
+  expect(findRapbsPtk.ptkId).toBe(rapbsPtk.ptkId)
+  expect(findRapbsPtk.nama).toBe(rapbsPtk.nama)
+
+  await DeleteRapbsPtk(rapbsPtk.idRapbs, rapbsPtk.ptkId)
+
+  const findRapbsPtk2 = await GetRapbsPtk(rapbsPtk.idRapbs, rapbsPtk.ptkId)
+  expect(findRapbsPtk2).toBe(undefined)
+})
