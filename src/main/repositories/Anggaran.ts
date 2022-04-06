@@ -124,22 +124,23 @@ export const CopyAnggaran = async (
   idAnggaranSource: string,
   idAnggaranNew: string
 ): Promise<boolean> => {
-  let idRapbs: string
+  let idRapbsNew: string
   let refRek
   let refKode
   let refBarang
-  let getRapbsPeriode
   const getBentuk = await getBentukPendidikan()
-  const getRapbsSource = await createQueryBuilder(Rapbs, 'r')
-    .where('r.soft_delete=0' + ' AND r.id_anggaran=:idAnggaran', {
-      idAnggaran: idAnggaranSource,
-    })
-    .getRawMany()
+  const test = await getRepository(Rapbs).find({
+    softDelete: 0,
+    idAnggaran: idAnggaranSource,
+  })
+
   try {
-    getRapbsSource?.forEach(async (el) => {
+    for (let i = 0; i < test.length; i++) {
+      const el = test[i]
+
       refRek = await createQueryBuilder(RefRekening)
         .where('expired_date is null and kode_rekening=:kodeRekening', {
-          kodeRekening: el.kode_rekening,
+          kodeRekening: el.kodeRekening,
         })
         .getCount()
 
@@ -150,42 +151,45 @@ export const CopyAnggaran = async (
             'and id_ref_kode=:idRefKode',
           {
             bentukPendidikan: getBentuk,
-            idRefKode: el.id_ref_kode,
+            idRefKode: el.idRefKode,
           }
         )
         .getCount()
 
       refBarang =
-        el.id_barang ?? '' == ''
+        el.idBarang ?? '' == ''
           ? await createQueryBuilder(RefAcuanBarang)
               .where('expired_date is null and id_barang=:idBarang', {
-                idBarang: el.id_barang,
+                idBarang: el.idBarang,
               })
               .getCount()
           : 1
 
       if (refKode > 0 && refRek > 0 && refBarang > 0) {
-        idRapbs = CommonUtils.encodeUUID(CommonUtils.uuid())
-        el.id_anggaran = idAnggaranNew
-        el.id_rapbs = idRapbs
-        el.create_date = new Date()
-        el.last_update = new Date()
+        const originalIdRapbs = el.idRapbs
+        const now = new Date()
+        idRapbsNew = CommonUtils.encodeUUID(CommonUtils.uuid())
+        el.idAnggaran = idAnggaranNew
+        el.idRapbs = idRapbsNew
+        el.createDate = now
+        el.lastUpdate = now
         await getRepository(Rapbs).insert(el)
 
-        getRapbsPeriode = await createQueryBuilder(RapbsPeriode)
-          .where('soft_delete=0 and id_rapbs=:idRapbs', { idRapbs: idRapbs })
-          .getRawMany()
-
-        getRapbsPeriode?.forEach(async (eld) => {
-          eld.id_rapbs_periode = CommonUtils.encodeUUID(CommonUtils.uuid())
-          eld.id_rapbs = idRapbs
-          eld.create_date = new Date()
-          eld.last_update = new Date()
+        const getRapbsPeriode = await getRepository(RapbsPeriode).find({
+          softDelete: 0,
+          idRapbs: originalIdRapbs,
+        })
+        for (let i = 0; i < getRapbsPeriode.length; i++) {
+          const eld = getRapbsPeriode[i]
+          eld.idRapbsPeriode = CommonUtils.encodeUUID(CommonUtils.uuid())
+          eld.idRapbs = idRapbsNew
+          eld.createDate = now
+          eld.lastUpdate = now
 
           await getRepository(RapbsPeriode).insert(eld)
-        })
+        }
       }
-    })
+    }
     return true
   } catch {
     return false
