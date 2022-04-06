@@ -12,3 +12,7 @@ export const CONFIG = {
   penggunaId: 'pengguna_id',
   sessionId: 'sessionId',
 }
+
+export const ERROR = {
+  notFound: 'not found',
+}
