@@ -1,4 +1,12 @@
-export interface FormCreateKertasKerjaData {
+export type FormPenanggungJawabType =
+  | 'nama_kepala_sekolah'
+  | 'nama_bendahara'
+  | 'nama_komite'
+  | 'nip_kepala_sekolah'
+  | 'nip_bendahara'
+  | 'email_komite'
+
+export interface FormPenanggungJawabData {
   nama_kepala_sekolah: string
   nama_bendahara: string
   nama_komite: string

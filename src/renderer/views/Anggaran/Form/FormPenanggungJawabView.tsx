@@ -1,42 +1,40 @@
 import React, { FC, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useNavigate, useParams, useLocation } from 'react-router-dom'
 
 import InputComponent from 'renderer/components/Form/InputComponent'
 import AlertDialogComponent from 'renderer/components/Dialog/AlertDialogComponent'
 import FormDialogComponent from 'renderer/components/Dialog/FormDialogComponent'
 
-import KonfirmasiKertasKerjaView from './KonfirmasiPaguView'
-
-import { FormCreateKertasKerjaData } from 'renderer/types/AnggaranType'
+import {
+  FormPenanggungJawabData,
+  FormPenanggungJawabType,
+} from 'renderer/types/AnggaranType'
 
 import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
 
 import syncToIPCMain from 'renderer/configs/ipc'
 
-interface FormPenanggungJawabProps {
-  mode: 'create' | 'update'
-}
+import { IPC_ANGGARAN, IPC_PENJAB } from 'global/ipc'
 
-const FormPenanggungJawabView: FC<FormPenanggungJawabProps> = (
-  props: FormPenanggungJawabProps
-) => {
+const FormPenanggungJawabView: FC = () => {
+  const navigate = useNavigate()
+  const location = useLocation()
+  const { q_mode, q_id_anggaran } = useParams()
+
+  const id_anggaran = decodeURIComponent(q_id_anggaran)
+
   const [openModalConfirmCancel, setOpenModalConfirmCancel] = useState(false)
+  const [dataPenjab, setDataPenjab] = useState(null)
 
-  const createKertasKerja = useAnggaranStore(
-    (state: AnggaranStates) => state.createKertasKerja
-  )
-  const setCreateKertasKerja = useAnggaranStore(
-    (state: AnggaranStates) => state.setCreateKertasKerja
-  )
-  const setConfirmKertasKerja = useAnggaranStore(
-    (state: AnggaranStates) => state.setConfirmKertasKerja
-  )
-  const penanggungJawabTemp = useAnggaranStore(
-    (state: AnggaranStates) => state.penanggungJawabTemp
-  )
   const penanggungJawab = useAnggaranStore(
     (state: AnggaranStates) => state.penanggungJawab
   )
+
+  const penanggungJawabTemp = useAnggaranStore(
+    (state: AnggaranStates) => state.penanggungJawabTemp
+  )
+
   const setPenanggungJawab = useAnggaranStore(
     (state: AnggaranStates) => state.setPenanggungJawab
   )
@@ -45,15 +43,19 @@ const FormPenanggungJawabView: FC<FormPenanggungJawabProps> = (
     register,
     handleSubmit,
     setValue,
-    formState: { errors },
-  } = useForm<FormCreateKertasKerjaData>({
-    mode: 'onChange',
+    setError,
+    clearErrors,
+    formState: { errors, isDirty },
+  } = useForm<FormPenanggungJawabData>({
+    mode: 'onSubmit',
+    reValidateMode: 'onBlur',
   })
 
-  useEffect(() => {
-    const penjab =
-      props.mode === 'create' ? penanggungJawabTemp : penanggungJawab
+  const handleClearError = (name: FormPenanggungJawabType) => {
+    clearErrors(name)
+  }
 
+  const handleSetValue = (penjab: any) => {
     if (penjab != null) {
       setValue('nama_kepala_sekolah', penjab.kepsek, {
         shouldValidate: true,
@@ -74,48 +76,50 @@ const FormPenanggungJawabView: FC<FormPenanggungJawabProps> = (
         shouldValidate: true,
       })
     }
-  }, [setValue, penanggungJawabTemp, penanggungJawab])
+  }
 
-  const onSubmit = async (data: FormCreateKertasKerjaData) => {
-    const penjab =
-      props.mode === 'create' ? penanggungJawabTemp : penanggungJawab
+  const onSubmit = async (data: FormPenanggungJawabData) => {
+    const idPenjab = q_mode === 'create' ? null : dataPenjab.id_penjab
 
-    const idPenjab = props.mode === 'create' ? null : penanggungJawab.id_penjab
-
-    const dataPenjab = {
+    const penjab = {
       id_penjab: idPenjab,
-      sekolah_id: penjab.sekolah_id,
+      sekolah_id: dataPenjab.sekolah_id,
       kepsek: data.nama_kepala_sekolah,
       bendahara: data.nama_bendahara,
       komite: data.nama_komite,
       nip_kepsek: data.nip_kepala_sekolah,
       nip_bendahara: data.nip_bendahara,
       nip_komite: data.email_komite,
-      email_kepsek: penjab.email_kepsek,
-      email_bendahara: penjab.email_bendahara,
+      email_kepsek: dataPenjab.email_kepsek,
+      email_bendahara: dataPenjab.email_bendahara,
       email_komite: data.email_komite,
-      telepon_kepsek: penjab.telepon_kepsek,
-      telepon_bendahara: penjab.telepon_bendahara,
-    }
-    setPenanggungJawab(dataPenjab)
-    setCreateKertasKerja(false)
-
-    if (props.mode === 'create') {
-      setConfirmKertasKerja(true)
+      telepon_kepsek: dataPenjab.telepon_kepsek,
+      telepon_bendahara: dataPenjab.telepon_bendahara,
     }
 
-    if (props.mode === 'update') {
-      syncToIPCMain('penjab:updatePenjab', dataPenjab)
+    if (q_mode === 'create') {
+      setPenanggungJawab(penjab)
+      navigate('/form/pagu', {
+        state: location.state,
+      })
+    }
+
+    if (q_mode === 'update') {
+      syncToIPCMain('penjab:updatePenjab', penjab)
+      closeModal()
     }
   }
 
-  const onCancel = () => {
-    setOpenModalConfirmCancel(true)
+  const closeModal = () => {
+    navigate(-1)
   }
 
-  const onConfirmCancel = () => {
-    setOpenModalConfirmCancel(false)
-    setCreateKertasKerja(false)
+  const handleCancel = () => {
+    if (isDirty) {
+      setOpenModalConfirmCancel(true)
+    } else {
+      closeModal()
+    }
   }
 
   const formatNIP = (value: string) => {
@@ -127,15 +131,54 @@ const FormPenanggungJawabView: FC<FormPenanggungJawabProps> = (
       : ''
   }
 
+  useEffect(() => {
+    let penjab = {}
+
+    if (q_mode === 'create') {
+      penjab = penanggungJawab === null ? penanggungJawabTemp : penanggungJawab
+    }
+
+    if (q_mode === 'update' && q_id_anggaran !== undefined) {
+      const dataAnggaran = syncToIPCMain(
+        IPC_ANGGARAN.getAnggaranById,
+        id_anggaran
+      )
+
+      const dataPenjab = syncToIPCMain(
+        IPC_PENJAB.getPenjabById,
+        dataAnggaran.idPenjab
+      )
+
+      penjab = {
+        id_penjab: dataAnggaran.idPenjab,
+        sekolah_id: dataPenjab.sekolahId,
+        kepsek: dataPenjab.ks,
+        bendahara: dataPenjab.bendahara,
+        komite: dataPenjab.komite,
+        nip_kepsek: dataPenjab.nipKs,
+        nip_bendahara: dataPenjab.nipBendahara,
+        nip_komite: dataPenjab.nipKomite,
+        email_kepsek: dataPenjab.emailKs,
+        email_bendahara: dataPenjab.emailBendahara,
+        email_komite: dataPenjab.emailKomite,
+        telepon_kepsek: dataPenjab.telpKs,
+        telepon_bendahara: dataPenjab.telpBendahara,
+      }
+    }
+
+    handleSetValue(penjab)
+    setDataPenjab(penjab)
+  }, [])
+
   return (
     <div>
       <FormDialogComponent
         width={960}
         title="Isi Data Penanggung Jawab"
         subtitle="Data kepala sekolah dan bendahara terisi otomatis dari Dapodik."
-        btnSubmitText={props.mode === 'create' ? 'Lanjutkan' : 'Perbarui'}
-        isOpen={createKertasKerja}
-        onCancel={onCancel}
+        btnSubmitText={q_mode === 'create' ? 'Lanjutkan' : 'Perbarui'}
+        isOpen={true}
+        onCancel={handleCancel}
         onSubmit={handleSubmit(onSubmit)}
       >
         <div>
@@ -145,11 +188,13 @@ const FormPenanggungJawabView: FC<FormPenanggungJawabProps> = (
                 Nama Kepala Sekolah
               </div>
               <InputComponent
-                type="text"
+                type="alphabet"
                 name="nama_kepala_sekolah"
                 placeholder="Masukkan nama kepala sekolah"
                 errors={errors}
                 register={register}
+                setError={setError}
+                handleClearError={handleClearError}
                 required={true}
               />
             </div>
@@ -158,11 +203,13 @@ const FormPenanggungJawabView: FC<FormPenanggungJawabProps> = (
                 Nama Bendahara
               </div>
               <InputComponent
-                type="text"
+                type="alphabet"
                 name="nama_bendahara"
                 placeholder="Masukkan nama bendahara"
                 errors={errors}
                 register={register}
+                setError={setError}
+                handleClearError={handleClearError}
                 required={true}
               />
             </div>
@@ -171,11 +218,13 @@ const FormPenanggungJawabView: FC<FormPenanggungJawabProps> = (
                 Nama Komite
               </div>
               <InputComponent
-                type="text"
+                type="alphabet"
                 name="nama_komite"
                 placeholder="Masukkan nama komite"
                 errors={errors}
                 register={register}
+                setError={setError}
+                handleClearError={handleClearError}
                 required={true}
               />
             </div>
@@ -227,6 +276,8 @@ const FormPenanggungJawabView: FC<FormPenanggungJawabProps> = (
                 placeholder="Masukkan email komite"
                 errors={errors}
                 register={register}
+                setError={setError}
+                handleClearError={handleClearError}
                 required={true}
               />
             </div>
@@ -239,13 +290,12 @@ const FormPenanggungJawabView: FC<FormPenanggungJawabProps> = (
         title="Keluar dari halaman ini?"
         desc="Jika Anda keluar, data yang baru saja Anda isi akan hilang."
         isOpen={openModalConfirmCancel}
-        btnCancelText="Ya, Batalkan"
-        btnActionText="Kembali"
-        onCancel={onConfirmCancel}
+        btnCancelText="Keluar"
+        btnActionText="Kembali Isi Data"
+        onCancel={closeModal}
         onSubmit={() => setOpenModalConfirmCancel(false)}
         layer={2}
       />
-      <KonfirmasiKertasKerjaView />
     </div>
   )
 }

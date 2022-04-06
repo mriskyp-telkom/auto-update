@@ -622,7 +622,7 @@ const FormDetailKertasKerjaView: FC = () => {
         desc="Jika Anda keluar, data yang baru saja Anda isi akan hilang."
         isOpen={openModalConfirmCancel}
         btnCancelText="Keluar"
-        btnActionText="Kembali Mengisi"
+        btnActionText="Kembali Isi Kegiatan"
         onCancel={onConfirmCancel}
         onSubmit={() => setOpenModalConfirmCancel(false)}
         layer={2}
