@@ -64,7 +64,7 @@ const MengulasKertasKerjaView: FC = () => {
 
   const handleAjukanPengesahan = () => {
     setOpenModalAjukan(false)
-    navigate('/sync/anggaran/mengulas', {
+    navigate(`/sync/anggaran/mengulas/${q_id_anggaran}`, {
       state: { backgroundLocation: location },
     })
   }

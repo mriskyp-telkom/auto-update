@@ -100,7 +100,12 @@ const App: FC = () => {
               <Route
                 path="sync/anggaran/mengulas"
                 element={<SyncMengulasKertasKerjaView />}
-              />
+              >
+                <Route
+                  path=":q_id_anggaran"
+                  element={<SyncMengulasKertasKerjaView />}
+                />
+              </Route>
               <Route path="logout" element={<LogoutView />} />
             </Route>
           </Routes>
