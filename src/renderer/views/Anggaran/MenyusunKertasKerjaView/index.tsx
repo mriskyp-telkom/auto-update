@@ -353,7 +353,7 @@ const MenyusunKertasKerjaView: FC = () => {
             {DATA_BULAN.map((bulan) => (
               <TabPanel key={bulan.id}>
                 <TabelMenyusunKertasKerjaView
-                  bulan={bulan}
+                  bulan={bulan.name}
                   idAnggaran={idAnggaran}
                 />
               </TabPanel>

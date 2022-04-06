@@ -1,11 +1,13 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { Tooltip } from '@wartek-id/tooltip'
 
 import { numberUtils } from '@wartek-id/fe-toolbox'
 
-import { FormTableKertasKerjaData } from 'renderer/types/AnggaranType'
+import filter from 'lodash/filter'
+
+import { FormIsiKertasKerjaData } from 'renderer/types/AnggaranType'
 
 import { headerKertasKerja } from 'renderer/constants/table'
 import { RESPONSE_PENGESAHAN } from 'renderer/constants/anggaran'
@@ -15,25 +17,45 @@ import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
 import styles from './index.module.css'
 
 import clsx from 'clsx'
-import { IPC_KK } from 'global/ipc'
+
 interface TabelMenyusunKertasKerjaProps {
-  bulan: Bulan
+  bulan: string
   idAnggaran: string
 }
 
-interface Bulan {
-  id: number
-  name: string
-}
-
-const ipcRenderer = window.require('electron').ipcRenderer
+const data = [
+  {
+    id: 1,
+    program_kegiatan: 'Pelaksanaan Pendaftaran Peserta Didik Baru (PPDB)',
+    anggaran_bulan: [
+      { jumlah: 2, satuan: 'Botol', bulan: 'januari', id: 81 },
+      { jumlah: 1, satuan: 'Box', bulan: 'februari', id: 82 },
+    ],
+    harga_satuan: 'Rp 12.000',
+    kegiatan: 'Pelaksanaan Pendaftaran Peserta Didik Baru (PPDB)',
+    rekening_belanja: 'Pelaksanaan Pendaftaran Peserta Didik Baru (PPDB)',
+    uraian: 'Pengembangan Standar Proses',
+  },
+  {
+    id: 2,
+    program_kegiatan: ' Pendaftaran Peserta Didik Baru (PPDB)',
+    anggaran_bulan: [
+      { jumlah: 2, satuan: 'Botol', bulan: 'januari', id: 81 },
+      { jumlah: 1, satuan: 'Box', bulan: 'maret', id: 83 },
+    ],
+    harga_satuan: 'Rp 12.000',
+    kegiatan: 'Pelaksanaan Pendaftaran Peserta Didik Baru (PPDB)',
+    rekening_belanja: 'Pelaksanaan Pendaftaran Peserta Didik Baru (PPDB)',
+    uraian: 'Pengembangan Standar Proses',
+  },
+]
 
 const TabelMenyusunKertasKerjaView: FC<TabelMenyusunKertasKerjaProps> = (
   props: TabelMenyusunKertasKerjaProps
 ) => {
   const location = useLocation()
   const navigate = useNavigate()
-  const [data, setData] = useState([])
+
   const responseMengulas = useAnggaranStore(
     (state: AnggaranStates) => state.responseMengulas
   )
@@ -42,27 +64,17 @@ const TabelMenyusunKertasKerjaView: FC<TabelMenyusunKertasKerjaProps> = (
     (state: AnggaranStates) => state.setTempDetailKertasKerja
   )
 
-  const handleClickRow = (event: any, row: FormTableKertasKerjaData) => {
+  const handleClickRow = (event: any, row: FormIsiKertasKerjaData) => {
     if (!event.target.id.includes('headlessui-popover-button')) {
       setTempDetailKertasKerja(row)
       const link = `/form/kertas-kerja/update/${encodeURIComponent(
         props.idAnggaran
-      )}/${encodeURIComponent(row.id)}`
+      )}`
       navigate(link, {
         state: { backgroundLocation: location },
       })
     }
   }
-
-  useEffect(() => {
-    console.log(props.bulan)
-    const data = {
-      idAnggaran: props.idAnggaran,
-      idPeriode: props.bulan.id,
-    }
-    const dataRapbs = ipcRenderer.sendSync(IPC_KK.getRapbsBulan, data)
-    setData(dataRapbs)
-  }, [])
 
   const TDTable = (props: { text: string; width: string }) => {
     return (
@@ -81,7 +93,7 @@ const TabelMenyusunKertasKerjaView: FC<TabelMenyusunKertasKerjaProps> = (
 
   return (
     <table
-      key={props.bulan.id}
+      key={props.bulan}
       className={clsx(styles.tableKertasKerja, 'w-full text-left')}
     >
       <thead>
@@ -95,6 +107,12 @@ const TabelMenyusunKertasKerjaView: FC<TabelMenyusunKertasKerjaProps> = (
       </thead>
       <tbody>
         {data.map((row, indexRow) => {
+          const harga = filter(row.anggaran_bulan, ['bulan', props.bulan])
+          if (harga.length === 0) {
+            if (indexRow < 5) return <tr></tr>
+          }
+          const total_harga =
+            parseInt(row.harga_satuan.replace(/[^,\d]/g, '')) * harga[0].jumlah
           return (
             <tr
               key={indexRow}
@@ -114,19 +132,19 @@ const TabelMenyusunKertasKerjaView: FC<TabelMenyusunKertasKerjaProps> = (
                       width={col.width}
                     />
                   )
-                } else if (col.key === 'total' || col.key === 'harga_satuan') {
+                } else if (col.key === 'total') {
                   return (
                     <TDTable
                       key={col.key}
-                      text={`Rp ${numberUtils.delimit(row[col.key], '.')}`}
+                      text={`Rp ${numberUtils.delimit(total_harga, '.')}`}
                       width={col.width}
                     />
                   )
-                } else if (col.key === 'jumlah') {
+                } else if (col.key === 'jumlah' || col.key === 'satuan') {
                   return (
                     <TDTable
                       key={col.key}
-                      text={numberUtils.delimit(row.jumlah, '.')}
+                      text={harga[0][col.key]?.toString()}
                       width={col.width}
                     />
                   )
@@ -135,7 +153,7 @@ const TabelMenyusunKertasKerjaView: FC<TabelMenyusunKertasKerjaProps> = (
                     <TDTable
                       key={col.key}
                       text={
-                        row[col.key as keyof FormTableKertasKerjaData] as string
+                        row[col.key as keyof FormIsiKertasKerjaData] as string
                       }
                       width={col.width}
                     />

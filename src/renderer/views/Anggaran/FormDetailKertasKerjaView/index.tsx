@@ -39,6 +39,7 @@ import styles from './index.module.css'
 
 import clsx from 'clsx'
 
+import mapKeys from 'lodash/mapKeys'
 import { IPC_ANGGARAN, IPC_KK, IPC_PTK, IPC_REFERENSI } from 'global/ipc'
 
 const initialFormDisable = {
@@ -86,6 +87,10 @@ const FormDetailKertasKerjaView: FC = () => {
   const [selectedKegiatan, setSelectedKegiatan] = useState(null)
   const [selectedRekening, setSelectedRekening] = useState(null)
   const [selectedUraian, setSelectedUraian] = useState(null)
+
+  const tempDetailKertasKerja = useAnggaranStore(
+    (state: AnggaranStates) => state.tempDetailKertasKerja
+  )
 
   const setTempDetailKertasKerja = useAnggaranStore(
     (state: AnggaranStates) => state.setTempDetailKertasKerja
@@ -424,9 +429,13 @@ const FormDetailKertasKerjaView: FC = () => {
     const rekening = ipcRenderer.sendSync(IPC_REFERENSI.getRefRekening)
     setOptionsKegiatan(kegiatan)
     setOptionsRekening(rekening)
-
-    if (mode === 'update') {
-      //TODO: populate data from local db
+    if (mode === 'update' && tempDetailKertasKerja === null) {
+      closeModal()
+    }
+    if (mode === 'update' && tempDetailKertasKerja !== null) {
+      mapKeys(tempDetailKertasKerja, (value, key: FormIsiKertasKerjaType) => {
+        setValue(key, value, { shouldValidate: true })
+      })
       setFormDisable({
         kegiatan: false,
         rekening_belanja: false,
