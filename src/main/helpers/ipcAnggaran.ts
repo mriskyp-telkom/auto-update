@@ -177,6 +177,8 @@ module.exports = {
     */
     if (data.id_anggaran_before !== '') {
       const idAnggaran = CommonUtils.encodeUUID(CommonUtils.uuid())
+      const now = new Date()
+
       const dataAnggaran = new Anggaran()
       dataAnggaran.idAnggaran = idAnggaran
       dataAnggaran.idRefSumberDana = data.id_ref_sumber_dana
@@ -190,8 +192,8 @@ module.exports = {
       dataAnggaran.isRevisi = 0
       dataAnggaran.isAktif = 1
       dataAnggaran.softDelete = 0
-      dataAnggaran.createDate = new Date(data.create_date)
-      dataAnggaran.lastUpdate = new Date()
+      dataAnggaran.createDate = now
+      dataAnggaran.lastUpdate = now
       dataAnggaran.updaterId = data.pengguna_id
       dataAnggaran.idPenjab = data.id_penjab
       await AddAnggaran(dataAnggaran)
