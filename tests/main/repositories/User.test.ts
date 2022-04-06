@@ -2,8 +2,8 @@ import { Anggaran } from 'main/models/Anggaran'
 import { AppConfig } from 'main/models/AppConfig'
 import { InstansiPengguna } from 'main/models/InstansiPengguna'
 import { Instansi } from 'main/models/Instansi'
-import { MstWilayah } from 'main/models/MstWilayah'
 import { MstSekolah } from 'main/models/MstSekolah'
+import { MstWilayah } from 'main/models/MstWilayah'
 import { Pengguna } from 'main/models/Pengguna'
 import { UserRole } from 'main/models/UserRole'
 import { CheckUser, CheckUserPass } from 'main/repositories/User'
@@ -20,14 +20,14 @@ beforeEach(async () => {
     database: ':memory:',
     dropSchema: false,
     entities: [
-      Pengguna,
-      InstansiPengguna,
-      UserRole,
-      Instansi,
-      MstWilayah,
-      MstSekolah,
       Anggaran,
       AppConfig,
+      Instansi,
+      InstansiPengguna,
+      MstSekolah,
+      MstWilayah,
+      Pengguna,
+      UserRole,
     ],
     synchronize: false,
     logging: true,

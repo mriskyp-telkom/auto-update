@@ -31,6 +31,7 @@ afterEach(async () => {
 })
 
 test('AddInstansi', async () => {
+  const newDate = new Date()
   const datainstansi = new Instansi()
   datainstansi.instansiId = 'RF8ExGeBk0ewknCtEPAkWQ'
   datainstansi.insInstansiId = null
@@ -49,8 +50,8 @@ test('AddInstansi', async () => {
   datainstansi.website = ''
   datainstansi.tag = 0
   datainstansi.softDelete = 0
-  datainstansi.createDate = new Date()
-  datainstansi.lastUpdate = new Date()
+  datainstansi.createDate = newDate
+  datainstansi.lastUpdate = newDate
   datainstansi.updaterId = 'abcd'
 
   const insertResult = await AddInstansi(datainstansi)
