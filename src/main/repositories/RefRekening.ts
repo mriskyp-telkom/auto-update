@@ -29,7 +29,7 @@ export const getRefRekeningList = async (): Promise<any> => {
       .select([
         "CAST(replace(rr.kode_rekening,'.','') AS int) as id",
         'rr.kode_rekening as kode',
-        "case when substr(rr.kode_rekening,1,3) = '5.1.' then 'Operasional' else 'Modal' end as jenis_belanja",
+        "case when substr(rr.kode_rekening,1,3) = '5.1' then 'Operasional' else 'Modal' end as jenis_belanja",
         'rr.rekening as rekening_belanja',
         "case when b.jumlah is not null or substr(rr.kode_rekening,1,3) = '5.2' then 1 else 0 end as is_list_barang",
       ])

@@ -93,10 +93,14 @@ const App: FC = () => {
         {state?.backgroundLocation && (
           <Routes>
             <Route path="/">
-              <Route
-                path="form/kertas-kerja/:mode"
-                element={<FormDetailKertasKerjaView />}
-              />
+              <Route path="form/kertas-kerja">
+                <Route path=":mode" element={<FormDetailKertasKerjaView />}>
+                  <Route
+                    path=":q_id_anggaran"
+                    element={<FormDetailKertasKerjaView />}
+                  />
+                </Route>
+              </Route>
               <Route
                 path="sync/anggaran/mengulas"
                 element={<SyncMengulasKertasKerjaView />}

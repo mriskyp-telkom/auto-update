@@ -15,6 +15,9 @@ import {
   FormIsiKertasKerjaType,
   FormIsiKertasKerjaData,
   AnggaranBulanData,
+  DetailKegiatan,
+  Ptk,
+  Periode,
 } from 'renderer/types/AnggaranType'
 
 import { DATA_BULAN } from 'renderer/constants/general'
@@ -37,7 +40,7 @@ import styles from './index.module.css'
 import clsx from 'clsx'
 
 import mapKeys from 'lodash/mapKeys'
-import { IPC_PTK, IPC_REFERENSI } from 'global/ipc'
+import { IPC_ANGGARAN, IPC_KK, IPC_PTK, IPC_REFERENSI } from 'global/ipc'
 
 const initialFormDisable = {
   kegiatan: false,
@@ -67,8 +70,8 @@ const InputHargaSatuan = (props: any) => {
 
 const FormDetailKertasKerjaView: FC = () => {
   const navigate = useNavigate()
-  const { mode } = useParams()
-
+  const { mode, q_id_anggaran } = useParams()
+  const idAnggaran = decodeURIComponent(q_id_anggaran)
   const [openModalDelete, setOpenModalDelete] = useState(false)
   const [openModalSuccess, setOpenModalSuccess] = useState(false)
   const [openModalConfirmCancel, setOpenModalConfirmCancel] = useState(false)
@@ -100,6 +103,7 @@ const FormDetailKertasKerjaView: FC = () => {
     setValue,
     setError,
     setFocus,
+    getValues,
     resetField,
     control,
     reset,
@@ -113,9 +117,10 @@ const FormDetailKertasKerjaView: FC = () => {
       harga_satuan: '',
       anggaran_bulan: [
         {
+          id: DATA_BULAN[urutanBulan]?.id,
           jumlah: null,
           satuan: null,
-          bulan: DATA_BULAN[urutanBulan],
+          bulan: DATA_BULAN[urutanBulan]?.name,
         },
       ],
     },
@@ -126,14 +131,64 @@ const FormDetailKertasKerjaView: FC = () => {
     name: 'anggaran_bulan',
   })
 
+  const constructData = () => {
+    const data = {} as DetailKegiatan
+    const anggaranBulan = getValues('anggaran_bulan')
+    const anggaran = ipcRenderer.sendSync(
+      IPC_ANGGARAN.getAnggaranById,
+      idAnggaran
+    )
+    const volume = anggaranBulan.reduce((accumulator, bulan) => {
+      return accumulator + parseInt(bulan.jumlah.toString())
+    }, 0)
+    data.idAnggaran = idAnggaran
+    data.idRefTahunAnggaran = anggaran.tahunAnggaran
+    data.idRefKode = selectedKegiatan.id
+    data.kodeRekening = selectedRekening.kode
+    data.idBarang = selectedUraian?.kode
+    data.uraian =
+      selectedRekening != null ? selectedUraian.uraian : getValues('uraian')
+    data.hargaSatuan = parseInt(
+      getValues('harga_satuan')
+        .replace(/[^,\d]/g, '')
+        .toString()
+    )
+    data.volume = volume
+    data.jumlah = volume * data.hargaSatuan
+    if (selectedKegiatan?.flag_honor === 1) {
+      const ptk = {} as Ptk
+      ptk.idPtk = selectedUraian.id
+      ptk.nama = selectedUraian.uraian
+      data.ptk = ptk
+    }
+    data.satuan = anggaranBulan[0].satuan
+    data.periode = []
+    anggaranBulan.forEach((bulan) => {
+      const periode = {} as Periode
+      const jumlah = parseInt(bulan.jumlah.toString())
+      periode.hargaSatuan = data.hargaSatuan
+      periode.idPeriode = bulan.id
+      periode.volume = jumlah
+      periode.jumlah = jumlah * data.hargaSatuan
+      periode.satuan = bulan.satuan
+      data.periode.push(periode)
+    })
+    return data
+  }
+
   const closeModal = () => {
     setTempDetailKertasKerja(null)
     navigate(-1)
   }
 
-  const onSubmit = async (data: FormIsiKertasKerjaData) => {
-    console.log(data)
-    closeModal()
+  const onSubmit = async () => {
+    const body = constructData()
+    const res = ipcRenderer.sendSync(IPC_KK.addAnggaranDetailKegiatan, body)
+    if (res.error) {
+      // TODO: should display error modal
+    } else {
+      closeModal()
+    }
   }
 
   const onConfirmCancel = () => {
@@ -216,7 +271,13 @@ const FormDetailKertasKerjaView: FC = () => {
       return
     }
     const next = urutanBulan + 1
-    append({ jumlah: null, satuan: null, bulan: DATA_BULAN[next] })
+
+    append({
+      jumlah: null,
+      satuan: null,
+      bulan: DATA_BULAN[next]?.name,
+      id: DATA_BULAN[next]?.id,
+    })
     setUrutanBulan(next)
   }
 
@@ -226,16 +287,38 @@ const FormDetailKertasKerjaView: FC = () => {
   }) => {
     const { field } = props
 
+    const [totalPerMonth, setTotalPerMonth] = useState(0)
+
+    const getBulanId = (bulan: string) => {
+      return DATA_BULAN.find((bul) => bul.name === bulan)?.id
+    }
+
     const handleSelect = (value: string) => {
+      const id = getBulanId(value)
       update(props.index, {
         ...field,
         bulan: value,
+        id,
       })
     }
 
     const handleDeleteMonth = () => {
       remove(props.index)
     }
+
+    const countTotal = (jumlah: number) => {
+      const harga_satuan = parseInt(
+        getValues('harga_satuan')
+          .replace(/[^,\d]/g, '')
+          .toString()
+      )
+      setTotalPerMonth(harga_satuan * jumlah)
+    }
+
+    useEffect(() => {
+      const jumlah = getValues(`anggaran_bulan.${props.index}.jumlah`)
+      countTotal(jumlah)
+    }, [getValues])
 
     return (
       <div className="flex relative">
@@ -247,13 +330,13 @@ const FormDetailKertasKerjaView: FC = () => {
             <span>
               <SelectComponent
                 name={`anggaran_bulan.${props.index}.bulan`}
-                options={DATA_BULAN}
+                options={DATA_BULAN.map((b) => b.name)}
                 selected={field.bulan}
                 register={register}
                 handleSelect={handleSelect}
               />
             </span>
-            <span>Rp 0</span>
+            <span>Rp {numberUtils.delimit(totalPerMonth, '.')}</span>
           </div>
           <div className="flex mt-[14px]">
             <span className="flex-none w-[97px] mr-6">
@@ -264,6 +347,12 @@ const FormDetailKertasKerjaView: FC = () => {
                 placeholder="Jumlah"
                 errors={errors}
                 register={register}
+                registerOption={{
+                  onChange: (e) => {
+                    const jumlah = e.target.value
+                    countTotal(jumlah)
+                  },
+                }}
                 required={true}
                 isDisabled={formDisable.harga_per_month}
               />
