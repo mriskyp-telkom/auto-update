@@ -1,16 +1,16 @@
 import create, { State } from 'zustand'
 
 import {
-  FormIsiKertasKerjaData,
   FormPagu,
   FormPenanggungJawab,
+  FormTableKertasKerjaData,
   ResponseMengulas,
 } from 'renderer/types/AnggaranType'
 
 export interface AnggaranStates extends State {
   createKertasKerja: boolean
   confirmKertasKerja: boolean
-  tempDetailKertasKerja: FormIsiKertasKerjaData
+  tempDetailKertasKerja: FormTableKertasKerjaData
   alertMengulas: boolean
   responseMengulas: ResponseMengulas
   penanggungJawab: FormPenanggungJawab
@@ -20,7 +20,7 @@ export interface AnggaranStates extends State {
   setCreateKertasKerja: (createKertasKerja: boolean) => void
   setConfirmKertasKerja: (confirmKertasKerja: boolean) => void
   setTempDetailKertasKerja: (
-    tempDetailKertasKerja: FormIsiKertasKerjaData
+    tempDetailKertasKerja: FormTableKertasKerjaData
   ) => void
   setAlertMengulas: (alertMengulas: boolean) => void
   setResponseMengulas: (responseMengulas: ResponseMengulas) => void

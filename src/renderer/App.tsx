@@ -94,9 +94,12 @@ const App: FC = () => {
           <Routes>
             <Route path="/">
               <Route path="form/kertas-kerja">
-                <Route path=":mode" element={<FormDetailKertasKerjaView />}>
+                <Route
+                  path=":mode/:q_id_anggaran"
+                  element={<FormDetailKertasKerjaView />}
+                >
                   <Route
-                    path=":q_id_anggaran"
+                    path=":q_id_rapbs"
                     element={<FormDetailKertasKerjaView />}
                   />
                 </Route>

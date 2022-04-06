@@ -40,6 +40,15 @@ export interface FormIsiKertasKerjaData {
   anggaran_bulan: AnggaranBulanData[]
 }
 
+export interface FormTableKertasKerjaData {
+  id: number
+  program_kegiatan: string
+  kegiatan: string
+  rekening_belanja: string
+  satuan: string
+  uraian: string
+}
+
 export interface CardDashboardType {
   id_anggaran: string
   tahun: string
