@@ -25,9 +25,10 @@ beforeEach(async () => {
   await Migrate(db, cfg)
 })
 
-afterEach(() => {
-  const conn = getConnection()
-  conn.close()
+afterEach(async () => {
+  const con = getConnection()
+
+  await con.close()
 })
 
 test('GetSekolahPenjabById', async () => {

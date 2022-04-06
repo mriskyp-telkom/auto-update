@@ -20,4 +20,4 @@ CREATE TABLE pengguna (
    last_update          datetime             not null,
    updater_id           varchar(22)          not null,
    constraint PK_PENGGUNA primary key (pengguna_id)
-);
+)

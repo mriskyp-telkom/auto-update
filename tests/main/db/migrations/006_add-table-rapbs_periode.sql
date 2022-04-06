@@ -19,4 +19,4 @@ CREATE TABLE rapbs_periode (
    last_update          datetime             not null,
    updater_id           varchar(22)                 null,
    constraint PK_RAPBS_PERIODE primary key (id_rapbs_periode)
-);
+)
