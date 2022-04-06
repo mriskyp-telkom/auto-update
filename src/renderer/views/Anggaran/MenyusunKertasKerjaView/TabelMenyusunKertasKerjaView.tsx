@@ -20,6 +20,7 @@ import clsx from 'clsx'
 
 interface TabelMenyusunKertasKerjaProps {
   bulan: string
+  idAnggaran: string
 }
 
 const data = [
@@ -27,8 +28,20 @@ const data = [
     id: 1,
     program_kegiatan: 'Pelaksanaan Pendaftaran Peserta Didik Baru (PPDB)',
     anggaran_bulan: [
-      { jumlah: 2, satuan: 'Botol', bulan: 'januari' },
-      { jumlah: 1, satuan: 'Box', bulan: 'februari' },
+      { jumlah: 2, satuan: 'Botol', bulan: 'januari', id: 81 },
+      { jumlah: 1, satuan: 'Box', bulan: 'februari', id: 82 },
+    ],
+    harga_satuan: 'Rp 12.000',
+    kegiatan: 'Pelaksanaan Pendaftaran Peserta Didik Baru (PPDB)',
+    rekening_belanja: 'Pelaksanaan Pendaftaran Peserta Didik Baru (PPDB)',
+    uraian: 'Pengembangan Standar Proses',
+  },
+  {
+    id: 2,
+    program_kegiatan: ' Pendaftaran Peserta Didik Baru (PPDB)',
+    anggaran_bulan: [
+      { jumlah: 2, satuan: 'Botol', bulan: 'januari', id: 81 },
+      { jumlah: 1, satuan: 'Box', bulan: 'maret', id: 83 },
     ],
     harga_satuan: 'Rp 12.000',
     kegiatan: 'Pelaksanaan Pendaftaran Peserta Didik Baru (PPDB)',
@@ -54,7 +67,10 @@ const TabelMenyusunKertasKerjaView: FC<TabelMenyusunKertasKerjaProps> = (
   const handleClickRow = (event: any, row: FormIsiKertasKerjaData) => {
     if (!event.target.id.includes('headlessui-popover-button')) {
       setTempDetailKertasKerja(row)
-      navigate('/form/kertas-kerja/update', {
+      const link = `/form/kertas-kerja/update/${encodeURIComponent(
+        props.idAnggaran
+      )}`
+      navigate(link, {
         state: { backgroundLocation: location },
       })
     }

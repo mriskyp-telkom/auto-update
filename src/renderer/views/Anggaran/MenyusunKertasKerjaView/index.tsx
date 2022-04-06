@@ -277,7 +277,7 @@ const MenyusunKertasKerjaView: FC = () => {
           {getPanduan()}
           <div className="flex justify-end pt-5 pb-1">
             <Link
-              to="/form/kertas-kerja/create"
+              to={`/form/kertas-kerja/create/${encodeURIComponent(idAnggaran)}`}
               state={{ backgroundLocation: location }}
             >
               <Button color="white" size="md" variant="solid" className="mr-3">
@@ -343,16 +343,19 @@ const MenyusunKertasKerjaView: FC = () => {
           <div className="shadow pt-[14px]">
             <TabList style={{ marginLeft: 0 }}>
               {DATA_BULAN.map((bulan) => (
-                <Tab key={bulan} className="capitalize-first">
-                  {bulan}
+                <Tab key={bulan.id} className="capitalize-first">
+                  {bulan.name}
                 </Tab>
               ))}
             </TabList>
           </div>
           <TabPanels>
             {DATA_BULAN.map((bulan) => (
-              <TabPanel key={bulan}>
-                <TabelMenyusunKertasKerjaView bulan={bulan} />
+              <TabPanel key={bulan.id}>
+                <TabelMenyusunKertasKerjaView
+                  bulan={bulan.name}
+                  idAnggaran={idAnggaran}
+                />
               </TabPanel>
             ))}
           </TabPanels>

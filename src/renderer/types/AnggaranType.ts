@@ -24,6 +24,7 @@ export type FormIsiKertasKerjaType =
   | `anggaran_bulan.${number}.satuan`
 
 export interface AnggaranBulanData {
+  id: number
   bulan: string
   jumlah: number
   satuan: string
@@ -78,4 +79,33 @@ export interface FormPagu {
   volume: number
   harga_satuan: number
   jumlah: number
+}
+
+export interface Ptk {
+  idPtk: string
+  nama: string
+}
+
+export interface Periode {
+  idPeriode: number
+  volume: number
+  satuan: string
+  hargaSatuan: number
+  jumlah: number
+}
+
+export interface DetailKegiatan {
+  idAnggaran: string
+  idRefKode: string
+  idRefTahunAnggaran: number
+  kodeRekening: string
+  idBarang: string | null
+  uraian: string
+  satuan: string
+  urutan: string
+  hargaSatuan: number
+  volume: number
+  jumlah: number
+  ptk: Ptk | null
+  periode: Periode[]
 }
