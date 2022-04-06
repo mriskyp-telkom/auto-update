@@ -72,7 +72,7 @@ test('AddDetailKegiatanEmptyPtkPeriode', async () => {
 
 test('AddDetailKegiatanSuccess', async () => {
   const data = <DetailKegiatan>{
-    idAnggaran: '1',
+    idAnggaran: 'apQwiAb-9EWxv74iwMY6aQ',
     idRefKode: 'nC6K24ZodkO3wkcvW3wvYg',
     idRefTahunAnggaran: 2021,
     kodeRekening: '5.1.02.01.01.0024',
@@ -126,6 +126,7 @@ test('AddDetailKegiatanSuccess', async () => {
   expect(rapbs.volume).toBe(data.volume)
   expect(rapbs.hargaSatuan).toBe(data.hargaSatuan)
   expect(rapbs.jumlah).toBe(data.jumlah)
+  expect(rapbs.urutan).toBe('009')
 
   const periode = await getRepository(RapbsPeriode).findOne({
     idRapbsPeriode: ids.idRapbsPeriode[0],

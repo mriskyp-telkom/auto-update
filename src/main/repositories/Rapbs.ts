@@ -1,7 +1,9 @@
+import { ERROR } from 'global/constants'
 import { Rapbs } from 'main/models/Rapbs'
 import { RapbsPeriode } from 'main/models/RapbsPeriode'
 import { RefKode } from 'main/models/RefKode'
 import { RefRekening } from 'main/models/RefRekening'
+import { err, ok, Result } from 'neverthrow'
 import { createQueryBuilder, getRepository, InsertResult } from 'typeorm'
 
 export const GetRapbsBulan = async (
@@ -53,4 +55,41 @@ export const DelRapbs = async (idRapbs: string): Promise<any> => {
     })
     .where('id_rapbs = :idRapbs', { idRapbs })
     .execute()
+}
+
+export async function GetLatestUrutan(
+  idAnggaran: string,
+  idRefKode: string,
+  kodeRekening: string,
+  tahun: number
+): Promise<Result<string, Error>> {
+  const rapbs = await getRepository(Rapbs)
+    .createQueryBuilder('a')
+    .select('a.urutan')
+    .where({
+      idAnggaran: idAnggaran,
+      idRefKode: idRefKode,
+      kodeRekening: kodeRekening,
+      idRefTahunAnggaran: tahun,
+    })
+    .orderBy({ urutan: 'DESC' })
+    .limit(1)
+    .getOne()
+
+  if (rapbs === undefined) {
+    return err(new Error(ERROR.notFound))
+  }
+
+  return ok(rapbs.urutan)
+}
+
+export function GetNextUrutan(current: string): string {
+  let parsed = parseInt(current, 10)
+
+  if (isNaN(parsed)) {
+    return '000'
+  }
+
+  parsed++
+  return parsed.toString().padStart(3, '0')
 }

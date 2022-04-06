@@ -2,7 +2,11 @@ import { Rapbs } from 'main/models/Rapbs'
 import { RapbsPeriode } from 'main/models/RapbsPeriode'
 import { RapbsPtk } from 'main/models/RapbsPtk'
 import { GetConfig } from 'main/repositories/Config'
-import { AddRapbs } from 'main/repositories/Rapbs'
+import {
+  AddRapbs,
+  GetLatestUrutan,
+  GetNextUrutan,
+} from 'main/repositories/Rapbs'
 import { AddBulkRapbsPeriode } from 'main/repositories/RapbsPeriode'
 import { AddRapbsPtk } from 'main/repositories/RapbsPtk'
 import { DetailKegiatan, ResultDetailKegiatan } from 'main/types/Rapbs'
@@ -25,6 +29,19 @@ export async function AddDetailKegiatan(
     idRapbsPeriode: [],
   }
 
+  const latestUrutan = await GetLatestUrutan(
+    data.idAnggaran,
+    data.idRefKode,
+    data.kodeRekening,
+    data.idRefTahunAnggaran
+  )
+  let urutan = '001'
+
+  if (latestUrutan.isOk()) {
+    const v = latestUrutan.unwrapOr('000')
+    urutan = GetNextUrutan(v)
+  }
+
   const rapbs = <Rapbs>{
     idRapbs: idRapbs,
     sekolahId: sekolahId,
@@ -33,7 +50,7 @@ export async function AddDetailKegiatan(
     idRefTahunAnggaran: data.idRefTahunAnggaran,
     kodeRekening: data.kodeRekening,
     idBarang: idBarang,
-    urutan: data.urutan,
+    urutan: urutan,
     uraian: data.uraian,
     uraianText: data.uraian,
     volume: data.volume,
@@ -89,15 +106,17 @@ export async function AddDetailKegiatan(
   await queryRunner.startTransaction()
 
   try {
-    await AddRapbs(rapbs)
+    const promises = []
+    promises.push(AddRapbs(rapbs))
     if (rapbsPeriodes.length > 0) {
-      await AddBulkRapbsPeriode(rapbsPeriodes)
+      promises.push(AddBulkRapbsPeriode(rapbsPeriodes))
     }
 
     if (rabpsPtk !== undefined) {
-      await AddRapbsPtk(rabpsPtk)
+      promises.push(AddRapbsPtk(rabpsPtk))
     }
 
+    await Promise.all(promises)
     await queryRunner.commitTransaction()
   } catch (error) {
     await queryRunner.rollbackTransaction()
