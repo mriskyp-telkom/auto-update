@@ -42,7 +42,8 @@ import { createConnection, getRepository } from 'typeorm'
 import { getAppData } from './pathConfig'
 
 async function encryptDB(): Promise<void> {
-  const appDataPath = path.join(await getAppData(), 'arkas.db')
+  const appData = await getAppData()
+  const appDataPath = path.join(appData, 'arkas.db')
   /* eslint @typescript-eslint/no-var-requires: "off" */
   const db = require('better-sqlite3-multiple-ciphers')(appDataPath)
   try {
@@ -360,49 +361,52 @@ async function addRefLevelKode(): Promise<RefLevelKode[]> {
 }
 
 async function addRefLevelWilayah(): Promise<RefLevelWilayah[]> {
+  const newDate = new Date()
+
   const repoRefLevelWilayah = getRepository(RefLevelWilayah)
   const refLevelwilayahData = [
     {
       idLevelWilayah: 0,
       levelWilayah: 'Nasional',
-      createDate: new Date(),
-      lastUpdate: new Date(),
+      createDate: newDate,
+      lastUpdate: newDate,
     },
     {
       idLevelWilayah: 1,
       levelWilayah: 'Propinsi',
-      createDate: new Date(),
-      lastUpdate: new Date(),
+      createDate: newDate,
+      lastUpdate: newDate,
     },
     {
       idLevelWilayah: 2,
       levelWilayah: 'Kab / Kota',
-      createDate: new Date(),
-      lastUpdate: new Date(),
+      createDate: newDate,
+      lastUpdate: newDate,
     },
     {
       idLevelWilayah: 3,
       levelWilayah: 'Kecamatan',
-      createDate: new Date(),
-      lastUpdate: new Date(),
+      createDate: newDate,
+      lastUpdate: newDate,
     },
     {
       idLevelWilayah: 4,
       levelWilayah: 'Desa',
-      createDate: new Date(),
-      lastUpdate: new Date(),
+      createDate: newDate,
+      lastUpdate: newDate,
     },
   ]
   return await repoRefLevelWilayah.save(refLevelwilayahData)
 }
 
 async function addRefNegara(): Promise<RefNegara> {
+  const newDate = new Date()
   const refNegara = new RefNegara()
   refNegara.negaraId = 'ID'
   refNegara.nama = 'Indonesia'
   refNegara.luarNegeri = false
-  refNegara.createDate = new Date()
-  refNegara.lastUpdate = new Date()
+  refNegara.createDate = newDate
+  refNegara.lastUpdate = newDate
   return await refNegara.save()
 }
 
@@ -615,20 +619,35 @@ async function addAppConfig(): Promise<AppConfig[]> {
 }
 
 async function createDBLocal(appDataPath: string): Promise<void> {
-  if (!fs.existsSync(path.join(appDataPath, 'arkas.db'))) {
+  const dbFile = 'arkas.db'
+
+  if (!fs.existsSync(path.join(appDataPath, dbFile))) {
     const connDBLocal = await createConnection({
       type: 'better-sqlite3',
-      database: path.join(appDataPath, 'arkas.db'),
+      database: path.join(appDataPath, dbFile),
       entities: [
+        App,
+        AppConfig,
+        Anggaran,
+        ConfigAnggaran,
+        Instansi,
+        InstansiPengguna,
+        KasUmum,
+        KasUmumNota,
         MstSekolah,
         MstWilayah,
-        RefKode,
+        Pengguna,
+        Ptk,
+        Rapbs,
+        RapbsPeriode,
+        RapbsPtk,
         RefAcuanBarang,
         RefBku,
         RefBulan,
         RefIndikator,
         RefJabatan,
         RefJenisInstansi,
+        RefKode,
         RefLevelKode,
         RefLevelWilayah,
         RefNegara,
@@ -638,30 +657,17 @@ async function createDBLocal(appDataPath: string): Promise<void> {
         RefSumberDana,
         RefRekeningTransfer,
         RefTahunAnggaran,
-        Anggaran,
-        Rapbs,
-        RapbsPeriode,
-        RapbsPtk,
-        Ptk,
-        KasUmum,
-        KasUmumNota,
-        Pengguna,
-        InstansiPengguna,
-        Instansi,
-        UserRole,
-        Role,
-        Token,
-        ConfigAnggaran,
-        AppConfig,
-        App,
-        SekolahPenjab,
         ReportBku,
+        Role,
+        SekolahPenjab,
+        Token,
+        UserRole,
       ],
       synchronize: true,
     })
 
     await addApp()
-    await addRole()
+    await addAppConfig()
     await addRefBKU()
     await addRefJabatan()
     await addRefJenisInstansi()
@@ -670,7 +676,7 @@ async function createDBLocal(appDataPath: string): Promise<void> {
     await addRefNegara()
     await addRefPeriode()
     await addRefSumberDana()
-    await addAppConfig()
+    await addRole()
     await connDBLocal.close()
   }
   await encryptDB()
@@ -679,6 +685,7 @@ async function createDBLocal(appDataPath: string): Promise<void> {
 
 export const setupDB = async (): Promise<void> => {
   const appDataPath = await getAppData()
+  const dbFile = 'arkas.db'
 
   if (!fs.existsSync(appDataPath)) {
     fs.mkdirSync(appDataPath)
@@ -686,13 +693,13 @@ export const setupDB = async (): Promise<void> => {
 
   if (
     process.platform == 'win32' &&
-    !fs.existsSync(path.join(appDataPath, 'arkas.db'))
+    !fs.existsSync(path.join(appDataPath, dbFile))
   ) {
     let paramStr = ''
     if (!process.env.NODE_ENV || process.env.NODE_ENV === 'production') {
       paramStr = ''
     } else {
-      paramStr = path.join(appDataPath, 'arkas.db')
+      paramStr = path.join(appDataPath, dbFile)
     }
     const execPromisify = promisify(execFile)
     return execPromisify(

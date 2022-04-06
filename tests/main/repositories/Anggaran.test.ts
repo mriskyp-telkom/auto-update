@@ -32,12 +32,13 @@ afterEach(async () => {
 })
 
 test('AddAnggaran and GetAnggaran', async () => {
+  const newDate = new Date()
   const data = {
     id_ref_sumber_dana: 1,
     tahun: 2022,
     volume: 10,
     harga_satuan: 10000,
-    create_date: new Date(),
+    create_date: newDate,
     pengguna_id: '222',
     id_penjab: '343',
   }
@@ -57,7 +58,7 @@ test('AddAnggaran and GetAnggaran', async () => {
   dataAnggaran.isAktif = 1
   dataAnggaran.softDelete = 0
   dataAnggaran.createDate = new Date(data.create_date)
-  dataAnggaran.lastUpdate = new Date()
+  dataAnggaran.lastUpdate = newDate
   dataAnggaran.updaterId = data.pengguna_id
   dataAnggaran.idPenjab = data.id_penjab
 
@@ -68,7 +69,7 @@ test('AddAnggaran and GetAnggaran', async () => {
   const statusSekolah = 1
   const bentukPendidikanId = 1
   const kepsek = 'kepsek'
-  const createdDate = new Date()
+  const createdDate = newDate
   const updaterId = 'updaterId'
 
   let mstSekolah = new MstSekolah()
@@ -107,12 +108,10 @@ test('AddAnggaran and GetAnggaran', async () => {
   refSumberDana.lastUpdate = createdDate
 
   refSumberDana = await getRepository(RefSumberDana).save(refSumberDana)
-
   expect(refSumberDana.idRefSumberDana).toBe(data.id_ref_sumber_dana)
 
   const tahunAnggaran = [data.tahun]
 
   const anggaran = await GetAnggaran(data.id_ref_sumber_dana, tahunAnggaran)
-
   expect(anggaran.length).toBe(1)
 })

@@ -31,16 +31,18 @@ afterEach(async () => {
 })
 
 test('AddInstansiPengguna', async () => {
+  const newDate = new Date()
   const dataInstansiPengguna = new InstansiPengguna()
+
   dataInstansiPengguna.instansiPenggunaId = 'fqrYww_0p0W7mF0GCksfka'
   dataInstansiPengguna.penggunaId = 'A-miBPPeP0m2UQaNDV6DHB'
   dataInstansiPengguna.instansiId = 'RF8ExGeBk0ewknCtEPAkWQ'
   dataInstansiPengguna.jabatanId = 1
   dataInstansiPengguna.sk = '-'
-  dataInstansiPengguna.tanggalSk = new Date()
+  dataInstansiPengguna.tanggalSk = newDate
   dataInstansiPengguna.softDelete = 0
-  dataInstansiPengguna.createDate = new Date()
-  dataInstansiPengguna.lastUpdate = new Date()
+  dataInstansiPengguna.createDate = newDate
+  dataInstansiPengguna.lastUpdate = newDate
   dataInstansiPengguna.updaterId = 'abcd'
 
   const insertResult = await AddInstansiPengguna(dataInstansiPengguna)

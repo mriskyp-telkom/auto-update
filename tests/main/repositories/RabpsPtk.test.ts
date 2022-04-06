@@ -21,8 +21,9 @@ beforeEach(async () => {
 })
 
 afterEach(async () => {
-  const conn = getConnection()
-  await conn.close()
+  const con = getConnection()
+
+  await con.close()
 })
 
 test('AddDeleteGetRapbsPtk', async () => {
@@ -41,6 +42,17 @@ test('AddDeleteGetRapbsPtk', async () => {
   expect(findRapbsPtk.idRapbs).toBe(rapbsPtk.idRapbs)
   expect(findRapbsPtk.ptkId).toBe(rapbsPtk.ptkId)
   expect(findRapbsPtk.nama).toBe(rapbsPtk.nama)
+})
+
+test('DeleteGetRapbsPtk', async () => {
+  const now = new Date()
+  const rapbsPtk = <RapbsPtk>{
+    idRapbs: 'sjBrnFj9LkyYR6mx5uN7Ag',
+    ptkId: 'ZhCzoPUuEeCu8uXpSNkwnA',
+    nama: 'Test PTK',
+    createDate: now,
+    lastUpdate: now,
+  }
 
   await DeleteRapbsPtk(rapbsPtk.idRapbs, rapbsPtk.ptkId)
 
