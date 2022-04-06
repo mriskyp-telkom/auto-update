@@ -26,7 +26,7 @@ module.exports = {
           idPeriode: [81-92]
         }
       */
-  getRapbsBulan: ipcMain.on('kk:getRapbsBulan', async (e, data) => {
+  getRapbsBulan: ipcMain.on(IPC_KK.getRapbsBulan, async (e, data) => {
     e.returnValue = await GetRapbsBulan(data.idAnggaran, data.idPeriode)
   }),
 

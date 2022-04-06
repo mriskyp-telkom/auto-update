@@ -28,4 +28,5 @@ export const IPC_KK = {
   getRapbsSummary: `${KK}:getRapbsSummary`,
   anggaranDetailKegiatan: `${KK}:anggaranDetailKegiatan`,
   addAnggaranDetailKegiatan: `${KK}:addAnggaranDetailKegiatan`,
+  getRapbsBulan: `${KK}:getRapbsBulan`,
 }

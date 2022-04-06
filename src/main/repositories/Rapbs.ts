@@ -10,10 +10,10 @@ export const GetRapbsBulan = async (
 ): Promise<any> => {
   const data = await createQueryBuilder(Rapbs, 'r')
     .select([
-      'r.id_rapbs',
-      'rk3.uraian_kode as program',
+      'r.id_rapbs as id',
+      'rk3.uraian_kode as program_kegiatan',
       'rk.uraian_kode as kegiatan',
-      'rr.rekening as rekening',
+      'rr.rekening as rekening_belanja',
       'r.uraian_text as uraian',
       'rp.volume as jumlah',
       'rp.satuan as satuan',
