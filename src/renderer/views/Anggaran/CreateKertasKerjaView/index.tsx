@@ -100,6 +100,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
     enabled: api === stepAPi[0],
   })
   const {
+    // if run only if there are changes. refer to this
     data: dataToken,
     isError: isTokenError,
     remove: removeToken,
@@ -141,7 +142,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
 
   const {
     data: dataSekolah,
-    isError: isSekolahError,
+    isError: isSekolahError, // react query alias
     remove: removeSekolah,
   } = useAPIGetSekolah({
     retry: 0,
@@ -226,6 +227,8 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
     setAlertFailedSyncData(true)
   }
   useEffect(() => {
+    // if return [] only render 1
+
     const sekolah = ipcRenderer.sendSync('sekolah:getSekolah')
     const tahunAktif = ipcRenderer.sendSync(
       'config:getConfig',
@@ -264,12 +267,16 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
     }
   }, [infoConnection])
 
-  useEffect(() => {
-    if (dataToken !== undefined) {
-      setToken(dataToken?.data.access_token)
-      setApi(stepAPi[2])
-    }
-  }, [dataToken])
+  useEffect(
+    () => {
+      if (dataToken !== undefined) {
+        setToken(dataToken?.data.access_token)
+        setApi(stepAPi[2])
+      }
+    },
+    // run if token change
+    [dataToken]
+  )
 
   useEffect(() => {
     if (dataHDDVol !== undefined) {

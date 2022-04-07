@@ -37,6 +37,7 @@ export const RESPONSE_PENGESAHAN = {
   success: 'success',
   error_sisa_dana: 'error_sisa_dana',
   error_data_sentral: 'error_data_sentral',
+  failed_sync_data: 'failed_sync_data',
 }
 
 export const ALERT_MENGULAS = {
@@ -48,11 +49,11 @@ export const ALERT_MENGULAS = {
     btnCancelText: 'Tutup',
     btnActionText: 'Cek Status',
   },
-  [RESPONSE_PENGESAHAN.error_sisa_dana]: {
+  [RESPONSE_PENGESAHAN.failed_sync_data]: {
     type: 'failed',
     icon: 'close',
-    title: 'RKAS belum memenuhi syarat',
-    desc: 'Anda masih memiliki sisa dana yang belum dihabiskan. Silakan revisi RKAS Anda dan ajukan pengesahan kembali.',
+    title: 'Gagal Sinkronisasi Data',
+    desc: 'Maaf, terjadi gangguan di sistem kami. Silakan coba lagi dalam beberapa saat.',
     btnCancelText: '',
     btnActionText: 'Revisi RKAS',
   },
@@ -61,6 +62,14 @@ export const ALERT_MENGULAS = {
     icon: 'close',
     title: 'Maaf, RKAS perlu disesuaikan',
     desc: 'Ada perubahan di data referensi barang/jasa yang mempengaruhi anggaran Anda. Mohon sesuaikan berdasarkan panduan dan ajukan pengesahan kembali.',
+    btnCancelText: '',
+    btnActionText: 'Revisi RKAS',
+  },
+  [RESPONSE_PENGESAHAN.error_sisa_dana]: {
+    type: 'failed',
+    icon: 'close',
+    title: 'RKAS belum memenuhi syarat',
+    desc: 'Anda masih memiliki sisa dana yang belum dihabiskan. Silakan revisi RKAS Anda dan ajukan pengesahan kembali.',
     btnCancelText: '',
     btnActionText: 'Revisi RKAS',
   },

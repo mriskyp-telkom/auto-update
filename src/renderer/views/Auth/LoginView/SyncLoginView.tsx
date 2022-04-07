@@ -52,6 +52,7 @@ const SyncLoginView: FC = () => {
     remove: removeInfoConnection,
   } = useAPIInfoConnection({
     retry: 0,
+    // condition true, auto run
     enabled: api === stepAPi[0],
   })
   const {
