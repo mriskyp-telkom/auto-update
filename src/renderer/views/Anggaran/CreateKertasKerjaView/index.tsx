@@ -1,13 +1,11 @@
 import React, { FC, useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 import { Button } from '@wartek-id/button'
 import { Icon } from '@wartek-id/icon'
 
 import AlertDialogComponent from 'renderer/components/Dialog/AlertDialogComponent'
 import SyncDialogComponent from 'renderer/components/Dialog/SyncDialogComponent'
-
-import FormPenanggungJawabView from './FormPenanggungJawabView'
-import { useNavigate } from 'react-router'
 
 import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
 import { useAPIGetToken } from 'renderer/apis/token'
@@ -50,6 +48,8 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
   props: CreateKertasKerjaProps
 ) => {
   const navigate = useNavigate()
+  const location = useLocation()
+
   const [isSync, setIsSync] = useState(false)
   const [openModalFailed, setOpenModalFailed] = useState(false)
   const [api, setApi] = useState('')
@@ -77,9 +77,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
     (state: AuthStates) => state.setMultipleDevice
   )
   const setToken = useAppStore((state: AppStates) => state.setToken)
-  const setCreateKertasKerja = useAnggaranStore(
-    (state: AnggaranStates) => state.setCreateKertasKerja
-  )
+
   const setPaguTemp = useAnggaranStore(
     (state: AnggaranStates) => state.setPaguTemp
   )
@@ -365,7 +363,9 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
           setOpenModalFailed(true)
         } else {
           setPaguTemp(dataPagu?.data)
-          setCreateKertasKerja(true)
+          navigate('/form/penanggung-jawab/create', {
+            state: { backgroundLocation: location },
+          })
         }
       }
     }
@@ -473,7 +473,6 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
         isOpen={isSync}
         setIsOpen={setIsSync}
       />
-      <FormPenanggungJawabView mode="create" />
     </div>
   )
 }

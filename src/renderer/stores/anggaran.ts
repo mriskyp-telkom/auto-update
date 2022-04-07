@@ -8,8 +8,6 @@ import {
 } from 'renderer/types/AnggaranType'
 
 export interface AnggaranStates extends State {
-  createKertasKerja: boolean
-  confirmKertasKerja: boolean
   tempDetailKertasKerja: FormTableKertasKerjaData
   alertMengulas: boolean
   responseMengulas: ResponseMengulas
@@ -17,8 +15,6 @@ export interface AnggaranStates extends State {
   penanggungJawabTemp: FormPenanggungJawab
   pagu: FormPagu
   paguTemp: FormPagu
-  setCreateKertasKerja: (createKertasKerja: boolean) => void
-  setConfirmKertasKerja: (confirmKertasKerja: boolean) => void
   setTempDetailKertasKerja: (
     tempDetailKertasKerja: FormTableKertasKerjaData
   ) => void
@@ -31,8 +27,6 @@ export interface AnggaranStates extends State {
 }
 
 export const useAnggaranStore = create<AnggaranStates>((set) => ({
-  createKertasKerja: false,
-  confirmKertasKerja: false,
   tempDetailKertasKerja: null,
   responseMengulas: null,
   alertMengulas: false,
@@ -40,10 +34,6 @@ export const useAnggaranStore = create<AnggaranStates>((set) => ({
   penanggungJawabTemp: null,
   pagu: null,
   paguTemp: null,
-  setCreateKertasKerja: (createKertasKerja) =>
-    set(() => ({ createKertasKerja })),
-  setConfirmKertasKerja: (confirmKertasKerja) =>
-    set(() => ({ confirmKertasKerja })),
   setTempDetailKertasKerja: (tempDetailKertasKerja) =>
     set(() => ({ tempDetailKertasKerja })),
   setAlertMengulas: (alertMengulas) => set(() => ({ alertMengulas })),

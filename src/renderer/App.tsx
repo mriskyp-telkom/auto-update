@@ -17,6 +17,8 @@ import MengulasKertasKerjaView from 'renderer/views/Anggaran/MengulasKertasKerja
 import SyncMengulasKertasKerjaView from 'renderer/views/Anggaran/MengulasKertasKerjaView/SyncMengulasKertasKerjaView'
 
 import FormDetailKertasKerjaView from 'renderer/views/Anggaran/FormDetailKertasKerjaView'
+import FormPenanggungJawabView from 'renderer/views/Anggaran/Form/FormPenanggungJawabView'
+import FormPaguView from 'renderer/views/Anggaran/Form/FormPaguView'
 
 const ipcRenderer = window.require('electron').ipcRenderer
 
@@ -68,7 +70,7 @@ const App: FC = () => {
             <Route path="registration" element={<RegistrationView />} />
             <Route path="account-status" element={<StatusAccountView />} />
             <Route
-              path="create-account/:mode"
+              path="create-account/:q_mode"
               element={<CreateAccountView />}
             />
             <Route path="anggaran">
@@ -81,12 +83,10 @@ const App: FC = () => {
                   />
                 </Route>
               </Route>
-              <Route path="mengulas">
-                <Route
-                  path=":q_id_anggaran"
-                  element={<MengulasKertasKerjaView />}
-                />
-              </Route>
+              <Route
+                path="mengulas/:q_id_anggaran"
+                element={<MengulasKertasKerjaView />}
+              />
             </Route>
           </Route>
         </Routes>
@@ -104,15 +104,19 @@ const App: FC = () => {
                   />
                 </Route>
               </Route>
-              <Route
-                path="sync/anggaran/mengulas"
-                element={<SyncMengulasKertasKerjaView />}
-              >
-                <Route
-                  path=":q_id_anggaran"
-                  element={<SyncMengulasKertasKerjaView />}
-                />
+              <Route path="form/penanggung-jawab">
+                <Route path=":q_mode" element={<FormPenanggungJawabView />}>
+                  <Route
+                    path=":q_id_anggaran"
+                    element={<FormPenanggungJawabView />}
+                  />
+                </Route>
               </Route>
+              <Route path="form/pagu" element={<FormPaguView />} />
+              <Route
+                path="sync/anggaran/mengulas/:q_id_anggaran"
+                element={<SyncMengulasKertasKerjaView />}
+              />
               <Route path="logout" element={<LogoutView />} />
             </Route>
           </Routes>

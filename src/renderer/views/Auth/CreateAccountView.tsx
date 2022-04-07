@@ -51,7 +51,7 @@ const stepAPi = [
 
 const CreateAccountView: FC = () => {
   const navigate = useNavigate()
-  const { mode } = useParams()
+  const { q_mode } = useParams()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [kodeWilayah, setKodeWilayah] = useState('')
@@ -380,7 +380,7 @@ const CreateAccountView: FC = () => {
   }
 
   useEffect(() => {
-    if (mode === 'reset') {
+    if (q_mode === 'reset') {
       setValue('email', 'yasmin@gmail.com', { shouldValidate: true })
     }
   }, [setValue])
@@ -399,7 +399,7 @@ const CreateAccountView: FC = () => {
             setError={setError}
             handleClearError={handleClearError}
             required={true}
-            isDisabled={mode === 'reset'}
+            isDisabled={q_mode === 'reset'}
           />
         </div>
         <div className="pt-5">

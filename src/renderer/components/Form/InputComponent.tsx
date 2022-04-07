@@ -6,16 +6,18 @@ import { Input } from '@wartek-id/input'
 import {
   isFormatEmailValid,
   isEmailValid,
+  isOnlyAlphabet,
 } from 'renderer/utils/form-validation'
 
 import {
   ERROR_REQUIRED,
   EMAIL_ERROR_FORMAT,
   EMAIL_ERROR_VALIDATION,
+  ERROR_ALPHABET_ONLY,
 } from 'renderer/constants/errorForm'
 
 interface InputProps {
-  type: 'text' | 'email'
+  type: 'text' | 'email' | 'alphabet'
   required: boolean
   isDisabled?: boolean
   name: string
@@ -61,25 +63,25 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
       onBlur: (e) => {
         const value = e.target.value
         if (value !== '' && !isEmailValid(value)) {
-          setError('email', {
+          setError(name, {
             type: 'manual',
             message: EMAIL_ERROR_VALIDATION,
           })
           return
         }
         if (value !== '' && !isFormatEmailValid(value)) {
-          setError('email', {
+          setError(name, {
             type: 'manual',
             message: EMAIL_ERROR_FORMAT,
           })
           return
         }
 
-        props.handleClearError('email')
+        props.handleClearError(name)
       },
       onChange: (e) => {
         const value = e.target.value
-        if (errors[name]?.message === ERROR_REQUIRED) {
+        if (required && errors[name]?.message === ERROR_REQUIRED) {
           if (value !== '') {
             props.handleClearError(name)
             return
@@ -93,6 +95,42 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
         }
         if (errors[name]?.message === EMAIL_ERROR_FORMAT) {
           if (value !== '' && isFormatEmailValid(value)) {
+            props.handleClearError(name)
+            return
+          }
+        }
+      },
+    }
+  }
+
+  if (type === 'alphabet') {
+    validation = {
+      ...validation,
+      validate: {
+        onlyAlphabet: (v) => isOnlyAlphabet(v) || ERROR_ALPHABET_ONLY,
+      },
+      onBlur: (e) => {
+        const value = e.target.value
+        if (value !== '' && !isOnlyAlphabet(value)) {
+          setError(name, {
+            type: 'manual',
+            message: ERROR_ALPHABET_ONLY,
+          })
+          return
+        }
+
+        props.handleClearError(name)
+      },
+      onChange: (e) => {
+        const value = e.target.value
+        if (required && errors[name]?.message === ERROR_REQUIRED) {
+          if (value !== '') {
+            props.handleClearError(name)
+            return
+          }
+        }
+        if (errors[name]?.message === ERROR_ALPHABET_ONLY) {
+          if (value !== '' && isOnlyAlphabet(value)) {
             props.handleClearError(name)
             return
           }

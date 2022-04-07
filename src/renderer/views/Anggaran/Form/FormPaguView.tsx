@@ -16,12 +16,6 @@ const KonfirmasiPaguView: FC = () => {
   const [amount, setAmount] = useState(0)
 
   const [allowEdit, setAllowEdit] = useState(false)
-  const confirmKertasKerja = useAnggaranStore(
-    (state: AnggaranStates) => state.confirmKertasKerja
-  )
-  const setConfirmKertasKerja = useAnggaranStore(
-    (state: AnggaranStates) => state.setConfirmKertasKerja
-  )
 
   const paguTemp = useAnggaranStore((state: AnggaranStates) => state.paguTemp)
   const setPagu = useAnggaranStore((state: AnggaranStates) => state.setPagu)
@@ -34,6 +28,10 @@ const KonfirmasiPaguView: FC = () => {
     mode: 'onChange',
   })
 
+  const closeModal = () => {
+    navigate(-1)
+  }
+
   const onSubmit = async () => {
     setPagu({
       sekolah_id: paguTemp.sekolah_id,
@@ -43,12 +41,7 @@ const KonfirmasiPaguView: FC = () => {
       harga_satuan: paguTemp.harga_satuan,
       jumlah: amount,
     })
-    setConfirmKertasKerja(false)
     navigate('/anggaran/menyusun/create')
-  }
-
-  const onCancel = () => {
-    setConfirmKertasKerja(false)
   }
 
   useEffect(() => {
@@ -66,8 +59,8 @@ const KonfirmasiPaguView: FC = () => {
       width={720}
       title="Dana Pagu BOS Reguler"
       subtitle="Nominal diambil dari BOS Salur dan dihitung sesuai ketentuan Permendikbud terbaru. Pastikan data jumlah murid di Dapodik sudah diperbarui."
-      isOpen={confirmKertasKerja}
-      onCancel={onCancel}
+      isOpen={true}
+      onCancel={closeModal}
       onSubmit={handleSubmit(onSubmit)}
     >
       <div>

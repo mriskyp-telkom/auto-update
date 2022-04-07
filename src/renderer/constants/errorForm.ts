@@ -1,5 +1,6 @@
 export const ERROR_REQUIRED = 'Wajib Diisi'
 export const ERROR_NUMBER_ONLY = 'Isi dengan format angka'
+export const ERROR_ALPHABET_ONLY = 'Isi dengan format huruf'
 
 /* Email */
 export const EMAIL_ERROR_FORMAT =

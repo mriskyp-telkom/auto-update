@@ -7,7 +7,6 @@ import AmountCardComponent from 'renderer/components/Card/AmountCardComponent'
 import AlertDialogComponent from 'renderer/components/Dialog/AlertDialogComponent'
 import SyncDialogComponent from 'renderer/components/Dialog/SyncDialogComponent'
 
-import FormPenanggungJawabView from 'renderer/views/Anggaran/CreateKertasKerjaView/FormPenanggungJawabView'
 import PanduanMenyusunKKView from 'renderer/views/Anggaran/Panduan/PanduanMenyusunKKView'
 import PanduanErrorDataSentralKKView from 'renderer/views/Anggaran/Panduan/PanduanErrorDataSentralKKView'
 import PanduanErrorSisaDanaKKView from 'renderer/views/Anggaran/Panduan/PanduanErrorSisaDanaKKView'
@@ -20,7 +19,7 @@ import { Button } from '@wartek-id/button'
 
 import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
 
-import { IPC_ANGGARAN, IPC_PENJAB } from 'global/ipc'
+import { IPC_ANGGARAN } from 'global/ipc'
 import { DATA_BULAN } from 'renderer/constants/general'
 import {
   RESPONSE_PENGESAHAN,
@@ -59,10 +58,6 @@ const MenyusunKertasKerjaView: FC = () => {
 
   const responseMengulas = useAnggaranStore(
     (state: AnggaranStates) => state.responseMengulas
-  )
-
-  const setCreateKertasKerja = useAnggaranStore(
-    (state: AnggaranStates) => state.setCreateKertasKerja
   )
 
   const penanggungJawab = useAnggaranStore(
@@ -178,31 +173,6 @@ const MenyusunKertasKerjaView: FC = () => {
 
     if (q_mode === 'update' && q_id_anggaran !== undefined) {
       const id_anggaran = decodeURIComponent(q_id_anggaran)
-      const dataAnggaran = ipcRenderer.sendSync(
-        IPC_ANGGARAN.getAnggaranById,
-        id_anggaran
-      )
-      const dataPenjab = ipcRenderer.sendSync(
-        IPC_PENJAB.getPenjabById,
-        dataAnggaran.idPenjab
-      )
-
-      const penjab = {
-        id_penjab: dataAnggaran.idPenjab,
-        sekolah_id: dataPenjab.sekolahId,
-        kepsek: dataPenjab.ks,
-        bendahara: dataPenjab.bendahara,
-        komite: dataPenjab.komite,
-        nip_kepsek: dataPenjab.nipKs,
-        nip_bendahara: dataPenjab.nipBendahara,
-        nip_komite: dataPenjab.nipKomite,
-        email_kepsek: dataPenjab.emailKs,
-        email_bendahara: dataPenjab.emailBendahara,
-        email_komite: dataPenjab.emailKomite,
-        telepon_kepsek: dataPenjab.telpKs,
-        telepon_bendahara: dataPenjab.telpBendahara,
-      }
-      setPenanggungJawab(penjab)
       setIdAnggaran(id_anggaran)
       setPagu(id_anggaran)
     }
@@ -241,16 +211,20 @@ const MenyusunKertasKerjaView: FC = () => {
           </div>
           <div className="flex items-center text-[22px] font-semibold">
             Menyusun RKAS
-            <Icon
-              as="button"
-              color="default"
-              fontSize="default"
-              className="ml-[10px]"
-              style={{ color: '#054BCC' }}
-              onClick={() => setCreateKertasKerja(true)}
+            <Link
+              to={`/form/penanggung-jawab/update/${idAnggaran}`}
+              state={{ backgroundLocation: location }}
             >
-              edit
-            </Icon>
+              <Icon
+                as="button"
+                color="default"
+                fontSize="default"
+                className="ml-[10px]"
+                style={{ color: '#054BCC' }}
+              >
+                edit
+              </Icon>
+            </Link>
           </div>
           <div
             className="text-base font-semibold text-gray-600 mb-[88px]"
@@ -393,7 +367,6 @@ const MenyusunKertasKerjaView: FC = () => {
         isOpen={isSync}
         setIsOpen={setIsSync}
       />
-      <FormPenanggungJawabView mode="update" />
     </div>
   )
 }

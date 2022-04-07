@@ -2,6 +2,7 @@ import {
   emailFormatRegex,
   emailValidationRegex,
   onlyNumberRegex,
+  onlyAlphabetWithSpaceRegex,
 } from 'renderer/constants/regex'
 
 export const isFormatEmailValid = (value: string) => {
@@ -20,6 +21,13 @@ export const isEmailValid = (value: string) => {
 
 export const isOnlyNumber = (value: string) => {
   if (onlyNumberRegex.test(value)) {
+    return true
+  }
+  return false
+}
+
+export const isOnlyAlphabet = (value: string) => {
+  if (onlyAlphabetWithSpaceRegex.test(value)) {
     return true
   }
   return false
