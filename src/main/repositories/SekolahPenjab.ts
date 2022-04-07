@@ -36,7 +36,7 @@ export const findSekolahPenjabId = async (
       )?.idPenjab ?? null
     )
   } catch (e) {
-    console.log('ERROR ', e)
+    console.error('Error when fetching query:', e)
   }
 }
 

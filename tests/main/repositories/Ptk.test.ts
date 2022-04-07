@@ -47,17 +47,15 @@ test('AddBulkPtk', async () => {
   })
 
   const data = await AddBulkPtk(dataPtk)
-  //   console.log(data)
 
   // check generated maps
   const insertMaps = data.raw
-  //   console.log(insertMaps)
+
   expect(insertMaps).toBeGreaterThan(0)
 })
 
 test('GetLastUpdate', async () => {
   const lastUpdate = await GetLastUpdate()
-  // console.log(getResult)
   expect(lastUpdate).toBeDefined()
 })
 
@@ -65,6 +63,5 @@ test('GetPtk', async () => {
   const tahunPtk = 2022
 
   const getResult = await GetPtk(tahunPtk)
-  //   console.log(getResult)
   expect(getResult.length).toBeGreaterThan(0)
 })

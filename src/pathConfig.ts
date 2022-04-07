@@ -19,7 +19,7 @@ export async function getAppDataPath(): Promise<string> {
       return path.join(process.env.HOME, '.Arkas')
     }
     default: {
-      console.log('Unsupported platform!')
+      console.warn('Unsupported platform.')
       process.exit(1)
     }
   }
@@ -49,9 +49,9 @@ export async function getManualAppData(): Promise<string> {
   const dir = '/Users/user/dbArkas'
 
   if (fs.existsSync(dir)) {
-    console.log('Directory exists!')
+    console.warn('Directory exists!')
   } else {
-    console.log('Directory not found.')
+    console.warn('Directory not found.')
   }
 
   // return envPath

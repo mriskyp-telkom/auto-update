@@ -48,6 +48,6 @@ test('AddInstansiPengguna', async () => {
   const insertResult = await AddInstansiPengguna(dataInstansiPengguna)
   // check generated maps
   const data = insertResult.generatedMaps
-  // console.log(data)
+
   expect(data.length).toBeGreaterThan(0)
 })

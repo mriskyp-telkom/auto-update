@@ -55,7 +55,6 @@ const TabelMenyusunKertasKerjaView: FC<TabelMenyusunKertasKerjaProps> = (
   }
 
   useEffect(() => {
-    console.log(props.bulan)
     const data = {
       idAnggaran: props.idAnggaran,
       idPeriode: props.bulan.id,

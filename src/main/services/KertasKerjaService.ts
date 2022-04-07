@@ -121,7 +121,6 @@ export async function AddDetailKegiatan(
   } catch (error) {
     await queryRunner.rollbackTransaction()
 
-    console.log('Error runing query:', error)
     return err(new Error(error))
   } finally {
     await queryRunner.release()

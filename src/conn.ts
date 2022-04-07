@@ -92,7 +92,7 @@ export const connDB = async (): Promise<Connection> => {
     }
     return await createConnection(config)
   } catch (error) {
-    console.log(error)
+    console.error('Failed connect to db', error)
     return
   }
 }

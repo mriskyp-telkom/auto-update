@@ -28,10 +28,8 @@ module.exports = {
   register: ipcMain.on('user:registration', async (e, data) => {
     try {
       await Register(data)
-
       e.returnValue = 1
     } catch (err) {
-      console.log('error register user:', err)
       e.returnValue = 0
     }
   }),

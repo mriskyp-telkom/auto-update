@@ -58,6 +58,6 @@ test('AddInstansi', async () => {
   // expect(data.identifiers[i].varname).toBe()
   // check generated maps
   const data = insertResult.generatedMaps
-  //  console.log(data)
+
   expect(data.length).toBeGreaterThan(0)
 })

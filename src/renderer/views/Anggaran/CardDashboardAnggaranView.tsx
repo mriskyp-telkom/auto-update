@@ -45,7 +45,7 @@ const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (
   const enable3Icons = !isNotCreated && !isDisabled
 
   const handleDelete = () => {
-    console.log('delete')
+    //action delete
   }
 
   const handleOpen = () => {

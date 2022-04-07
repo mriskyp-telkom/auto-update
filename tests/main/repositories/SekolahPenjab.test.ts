@@ -34,9 +34,6 @@ afterEach(async () => {
 test('GetSekolahPenjabById', async () => {
   const data = await GetSekolahPenjabById('3GIqBvF91Em6K_VasjmhTw')
 
-  // console.log("isian data")
-  //   console.log(data)
-
   expect(data.idPenjab).toBe('3GIqBvF91Em6K_VasjmhTw')
   expect(data.sekolahId).toBe('XN60oPUuEeC-vv2_lhMTXQ')
   expect(data.tanggalMulai).toBe('2021-01-01')
@@ -94,7 +91,6 @@ test('addSekolahPenjab', async () => {
   const insertResult = await addSekolahPenjab(dataSekolahPenjab)
   // check generated maps
   const data = insertResult.generatedMaps
-  //   console.log(data)
   expect(data.length).toBeGreaterThan(0)
 })
 
@@ -138,7 +134,6 @@ test('findSekolahPenjabId', async () => {
 
   const sekolahPenjab = await findSekolahPenjabId(dataSekolahPenjab)
   // check generated maps
-  //   console.log(sekolahPenjab)
   expect(sekolahPenjab).toBe('3GIqBvF91Em6K_VasjmhTw')
 })
 
@@ -167,6 +162,5 @@ test('updateSekolahPenjab', async () => {
   const updateResult = await updateSekolahPenjab(dataSekolahPenjab)
   // check generated maps
   const data = updateResult.generatedMaps
-  //   console.log(data)
   expect(data.length).toBe(0)
 })
