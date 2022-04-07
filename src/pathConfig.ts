@@ -27,33 +27,22 @@ export async function getAppDataPath(): Promise<string> {
 
 export async function getAppData(): Promise<string> {
   const appPath = __dirname
-  const isManualPath = false
 
-  const envPath =
-    !process.env.NODE_ENV || process.env.NODE_ENV === 'production'
-      ? await getAppDataPath() // Live Mode
-      : path.join(appPath, 'AppData') // Dev Mode
+  const dir = process.env.DB_PATH
 
-  if (isManualPath) {
-    return getManualAppData()
-  } else {
-    if (process.env.NODE_ENV === 'testing') {
-      return path.join(await getAppDataPath(), 'Testing')
-    }
-  }
-  return envPath
-}
-
-export async function getManualAppData(): Promise<string> {
-  // change as your config local exists
-  const dir = '/Users/user/dbArkas'
-
-  if (fs.existsSync(dir)) {
-    console.warn('Directory exists!')
-  } else {
-    console.warn('Directory not found.')
+  if (process.env.NODE_ENV === 'production') {
+    return await getAppDataPath()
   }
 
-  // return envPath
-  return dir
+  if (process.env.NODE_ENV === 'testing') {
+    return path.join(await getAppDataPath(), 'Testing')
+  }
+
+  if (process.env.NODE_ENV === 'development' && fs.existsSync(dir)) {
+    // Directory exists
+    return dir
+  } else {
+    // Directory not found
+    return path.join(appPath, 'AppData')
+  }
 }
