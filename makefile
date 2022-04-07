@@ -27,3 +27,12 @@ code-coverage:
 repair-node:
 	rm -rf node_modules
 	npm install --force
+
+# when broken pipe from client loop send disconnect when doing fetch, do this to check server
+# client_loop: send disconnect: Broken pipe
+# fatal: Could not read from remote repository.
+# after run this command, try git fetch origin again
+.PHONY: add-server-connection-alive
+add-server-connection-alive:
+    echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+    echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
