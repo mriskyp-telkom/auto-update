@@ -15,14 +15,14 @@ import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
 
 import syncToIPCMain from 'renderer/configs/ipc'
 
+import { ERROR_REQUIRED, NIP_ERROR_LENGTH } from 'renderer/constants/errorForm'
+
 import { IPC_ANGGARAN, IPC_PENJAB } from 'global/ipc'
 
 const FormPenanggungJawabView: FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const { q_mode, q_id_anggaran } = useParams()
-
-  const id_anggaran = decodeURIComponent(q_id_anggaran)
 
   const [openModalConfirmCancel, setOpenModalConfirmCancel] = useState(false)
   const [dataPenjab, setDataPenjab] = useState(null)
@@ -45,11 +45,28 @@ const FormPenanggungJawabView: FC = () => {
     setValue,
     setError,
     clearErrors,
+    reset,
     formState: { errors, isDirty },
   } = useForm<FormPenanggungJawabData>({
     mode: 'onSubmit',
     reValidateMode: 'onBlur',
   })
+
+  const btnDisabled = () => {
+    if (
+      isDirty &&
+      (!!errors['nama_kepala_sekolah'] ||
+        !!errors['nama_bendahara'] ||
+        !!errors['nama_komite'] ||
+        !!errors['nip_kepala_sekolah'] ||
+        !!errors['nip_bendahara'] ||
+        !!errors['email_komite'])
+    ) {
+      return true
+    }
+
+    return false
+  }
 
   const handleClearError = (name: FormPenanggungJawabType) => {
     clearErrors(name)
@@ -57,23 +74,13 @@ const FormPenanggungJawabView: FC = () => {
 
   const handleSetValue = (penjab: any) => {
     if (penjab != null) {
-      setValue('nama_kepala_sekolah', penjab.kepsek, {
-        shouldValidate: true,
-      })
-      setValue('nama_bendahara', penjab.bendahara, {
-        shouldValidate: true,
-      })
-      setValue('nama_komite', penjab.komite, {
-        shouldValidate: true,
-      })
-      setValue('nip_kepala_sekolah', formatNIP(penjab.nip_kepsek), {
-        shouldValidate: true,
-      })
-      setValue('nip_bendahara', formatNIP(penjab.nip_bendahara), {
-        shouldValidate: true,
-      })
-      setValue('email_komite', penjab.nip_komite, {
-        shouldValidate: true,
+      reset({
+        nama_kepala_sekolah: penjab.kepsek,
+        nama_bendahara: penjab.bendahara,
+        nama_komite: penjab.komite,
+        nip_kepala_sekolah: formatNIP(penjab.nip_kepsek),
+        nip_bendahara: formatNIP(penjab.nip_bendahara),
+        email_komite: penjab.nip_komite,
       })
     }
   }
@@ -131,6 +138,42 @@ const FormPenanggungJawabView: FC = () => {
       : ''
   }
 
+  const handleBlurNip = (e: any, name: FormPenanggungJawabType) => {
+    const maskValue = e.target.value
+    const value = maskValue.replaceAll('.', '')
+
+    if (value !== '' && value.length !== 18) {
+      setError(name, {
+        type: 'manual',
+        message: NIP_ERROR_LENGTH,
+      })
+      return
+    }
+
+    handleClearError(name)
+  }
+
+  const handleChangeNip = (e: any, name: FormPenanggungJawabType) => {
+    const maskValue = e.target.value
+    const value = maskValue.replaceAll('.', '')
+
+    setValue(name, formatNIP(value))
+
+    if (errors[name]?.message === ERROR_REQUIRED) {
+      if (value !== '') {
+        handleClearError(name)
+        return
+      }
+    }
+
+    if (errors[name]?.message === NIP_ERROR_LENGTH) {
+      if (value.length === 18) {
+        handleClearError(name)
+        return
+      }
+    }
+  }
+
   useEffect(() => {
     let penjab = {}
 
@@ -139,6 +182,8 @@ const FormPenanggungJawabView: FC = () => {
     }
 
     if (q_mode === 'update' && q_id_anggaran !== undefined) {
+      const id_anggaran = decodeURIComponent(q_id_anggaran)
+
       const dataAnggaran = syncToIPCMain(
         IPC_ANGGARAN.getAnggaranById,
         id_anggaran
@@ -180,6 +225,7 @@ const FormPenanggungJawabView: FC = () => {
         isOpen={true}
         onCancel={handleCancel}
         onSubmit={handleSubmit(onSubmit)}
+        isSubmitDisabled={btnDisabled()}
       >
         <div>
           <div className="flex pb-5">
@@ -242,9 +288,12 @@ const FormPenanggungJawabView: FC = () => {
                 register={register}
                 required={false}
                 registerOption={{
-                  onChange: (e) => {
-                    setValue('nip_kepala_sekolah', formatNIP(e.target.value))
+                  validate: {
+                    minMaxLength: (v) =>
+                      v.replaceAll('.', '').length === 18 || NIP_ERROR_LENGTH,
                   },
+                  onBlur: (e) => handleBlurNip(e, 'nip_kepala_sekolah'),
+                  onChange: (e) => handleChangeNip(e, 'nip_kepala_sekolah'),
                 }}
               />
             </div>
@@ -260,9 +309,12 @@ const FormPenanggungJawabView: FC = () => {
                 register={register}
                 required={false}
                 registerOption={{
-                  onChange: (e) => {
-                    setValue('nip_bendahara', formatNIP(e.target.value))
+                  validate: {
+                    minMaxLength: (v) =>
+                      v.replaceAll('.', '').length === 18 || NIP_ERROR_LENGTH,
                   },
+                  onBlur: (e) => handleBlurNip(e, 'nip_bendahara'),
+                  onChange: (e) => handleChangeNip(e, 'nip_bendahara'),
                 }}
               />
             </div>

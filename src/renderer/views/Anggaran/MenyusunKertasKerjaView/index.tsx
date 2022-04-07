@@ -211,7 +211,9 @@ const MenyusunKertasKerjaView: FC = () => {
           <div className="flex items-center text-[22px] font-semibold">
             Menyusun RKAS
             <Link
-              to={`/form/penanggung-jawab/update/${idAnggaran}`}
+              to={`/form/penanggung-jawab/update/${encodeURIComponent(
+                idAnggaran
+              )}`}
               state={{ backgroundLocation: location }}
             >
               <Icon
