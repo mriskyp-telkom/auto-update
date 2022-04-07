@@ -13,6 +13,9 @@ module.exports = {
     'referensi:getRefKodeLastUpdate',
     async (e) => {
       const result = await getLastUpdate()
+      // console.log('result')
+      // console.log(result)
+
       e.returnValue =
         result != null
           ? CommonUtils.formatDateToString(result, 'YYYYMMDDHHmmss')

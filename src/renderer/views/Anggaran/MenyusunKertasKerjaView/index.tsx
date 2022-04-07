@@ -280,7 +280,10 @@ const MenyusunKertasKerjaView: FC = () => {
             Periode Anggaran {tahunAktif}
           </span>
           <span className="pt-4 pb-3">
-            <div className="w-full flex text-center justify-end font-normal text-tiny text-blue-700 pb-[28px]">
+            <div
+              className="w-full flex text-center justify-end font-normal 
+              text-tiny text-blue-700 pb-[28px]"
+            >
               <Icon
                 as="i"
                 color="default"
