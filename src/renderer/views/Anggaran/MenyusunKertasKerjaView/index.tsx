@@ -122,7 +122,6 @@ const MenyusunKertasKerjaView: FC = () => {
         ...dataAnggaran,
         create_date: new Date(),
       }
-      console.log(dataAnggaran)
       idAnggaran = ipcRenderer.sendSync('anggaran:addAnggaran', dataAnggaran)
     }
 

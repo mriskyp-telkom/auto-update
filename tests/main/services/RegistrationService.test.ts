@@ -96,7 +96,6 @@ test('Register', async () => {
   try {
     await Register(data)
   } catch (error) {
-    console.log(error)
     err = true
   }
 

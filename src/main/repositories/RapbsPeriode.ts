@@ -108,7 +108,7 @@ export const GetRapbsSummary = async (
       [{ tahap: tahap, id_anggaran: idAnggaran }]
     )
     .catch((e) => {
-      console.log('error happen during query %s', e)
+      console.error('Error when fetching query:', e)
     })
 
   return <RapbsSummary[]>result

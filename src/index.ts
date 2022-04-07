@@ -61,7 +61,7 @@ const createWindow = (): void => {
 
   mainWindow.webContents.setUserAgent('ARKAS Agent')
 
-  console.log('\n\n====> This is ', process.env.ENVIRONMENT, ' env. <====\n\n')
+  console.warn('\n\n====> This is ', process.env.ENVIRONMENT, ' env. <====\n\n')
 }
 
 // This method will be called when Electron has finished

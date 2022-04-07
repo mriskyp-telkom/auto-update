@@ -41,7 +41,6 @@ test('CreateToken', async () => {
 
   // check generated maps
   const data = insertResult.generatedMaps
-  console.log(data)
   expect(data.length).toBeGreaterThan(0)
 })
 
