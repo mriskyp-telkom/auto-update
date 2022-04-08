@@ -24,6 +24,7 @@ interface FormDialogProps {
   className?: string
   btnSubmitText?: string
   btnCancelText?: string
+  isSubmitDisabled?: boolean
   icon?: string
   isDelete?: boolean
   onDelete?: () => void
@@ -105,6 +106,7 @@ const FormDialogComponent: FC<FormDialogProps> = (props: FormDialogProps) => {
               variant="solid"
               className="px-4 py-2"
               type="submit"
+              disabled={props.isSubmitDisabled}
             >
               {props.icon && (
                 <Icon

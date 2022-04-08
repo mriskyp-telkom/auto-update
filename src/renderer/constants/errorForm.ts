@@ -13,3 +13,6 @@ export const PASSWORD_ERROR_MINLENGTH = 'Minimal 8 karakter'
 
 /* NPSN */
 export const NPSN_ERROR_LENGTH = 'NPSN harus terdiri dari 8 angka'
+
+/* NIP */
+export const NIP_ERROR_LENGTH = 'NIP harus terdiri dari 18 angka'
