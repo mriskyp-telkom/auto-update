@@ -378,6 +378,8 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
 
   useEffect(() => {
     if (dataRefSatuan !== undefined) {
+      // will be added later
+      ipcRenderer.send('referensi:addBulkRefSatuan', dataRefBarang?.data)
       setApi(stepAPi[11])
     }
   }, [dataRefSatuan])

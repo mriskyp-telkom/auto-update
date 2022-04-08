@@ -1,4 +1,4 @@
-import { createQueryBuilder } from 'typeorm'
+import { createQueryBuilder, getRepository, InsertResult } from 'typeorm'
 import { RefSatuan } from '../models/RefSatuan'
 
 export const getRefSatuanLastUpdate = async (): Promise<Date> => {
@@ -13,4 +13,10 @@ export const getRefSatuan = async (): Promise<any> => {
   return await createQueryBuilder(RefSatuan, 'rs')
     .where('rs.expired_date is null')
     .getRawMany()
+}
+
+export const addBulkRefSatuan = async (
+  bulkRefSatuan: RefSatuan[]
+): Promise<InsertResult> => {
+  return await getRepository(RefSatuan).upsert(bulkRefSatuan, ['refSatuanId'])
 }
