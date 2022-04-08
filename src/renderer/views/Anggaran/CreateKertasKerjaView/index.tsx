@@ -380,7 +380,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
     if (dataRefSatuan !== undefined) {
       setApi(stepAPi[11])
     }
-  }, [dataRefBarang])
+  }, [dataRefSatuan])
 
   useEffect(() => {
     if (dataPagu !== undefined) {
