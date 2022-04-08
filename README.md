@@ -97,6 +97,7 @@ yarn start
 ```
 
 Due yarn test will spawn a child process, we need to limit maxWorker that running the test async
+
 ```bash
     yarn test --maxWorkers 2
 ```

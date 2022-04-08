@@ -37,6 +37,7 @@ const stepAPi = [
   'refKode',
   'refRekening',
   'refBarang',
+  'refSatuan',
   'configPagu',
 ]
 
@@ -52,14 +53,18 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
 
   const [isSync, setIsSync] = useState(false)
   const [openModalFailed, setOpenModalFailed] = useState(false)
+
   const [api, setApi] = useState('')
   const [hddVol, setHddVol] = useState('')
   const [hddVolOld, setHddVolOld] = useState('')
   const [kodeWilayah, setKodeWilayah] = useState('')
+
   const [lastUpdatePtk, setLastUpdatePtk] = useState('')
   const [lastUpdateKode, setLastUpdateKode] = useState('')
   const [lastUpdateRekening, setLastUpdateRekening] = useState('')
   const [lastUpdateBarang, setLastUpdateBarang] = useState('')
+  const [lastUpdateSatuan, setLastUpdateSatuan] = useState('')
+
   const [alertDesc, setAlertDesc] = useState('')
 
   const npsn = useAuthStore((state: AuthStates) => state.npsn)
@@ -198,12 +203,21 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
   )
 
   const {
+    data: dataRefSatuan,
+    isError: isGetRefSatuanError,
+    remove: removeRefSatuan,
+  } = useAPIGetReferensi(
+    { referensi: 'satuan', lastUpdate: lastUpdateBarang },
+    { enabled: api === stepAPi[10] && lastUpdateSatuan !== '' }
+  )
+
+  const {
     data: dataPagu,
     isError: isGetPaguError,
     remove: removePagu,
   } = useAPIGetConfigPagu(
     { idSumberData: props.idSumberDana, isRevisi: 0 },
-    { enabled: api === stepAPi[10] }
+    { enabled: api === stepAPi[11] }
   )
 
   const removeCacheData = () => {
@@ -217,6 +231,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
     removeRefKode()
     removeRefRekening()
     removeRefBarang()
+    removeRefSatuan()
     removePagu()
   }
 
@@ -353,7 +368,17 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
   useEffect(() => {
     if (dataRefBarang !== undefined) {
       ipcRenderer.send('referensi:addBulkRefBarang', dataRefBarang?.data)
+      const satuanLastUpdate = ipcRenderer.sendSync(
+        'referensi:getRefSatuanLastUpdate'
+      )
+      setLastUpdateSatuan(satuanLastUpdate)
       setApi(stepAPi[10])
+    }
+  }, [dataRefBarang])
+
+  useEffect(() => {
+    if (dataRefSatuan !== undefined) {
+      setApi(stepAPi[11])
     }
   }, [dataRefBarang])
 
@@ -390,6 +415,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
       isGetRefKodeError ||
       isGetRefRekeningError ||
       isGetRefBarangError ||
+      isGetRefSatuanError ||
       isGetPaguError
     ) {
       failedSyncData()
@@ -405,6 +431,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
     isGetRefKodeError,
     isGetRefRekeningError,
     isGetRefBarangError,
+    isGetRefSatuanError,
     isGetPaguError,
   ])
 
