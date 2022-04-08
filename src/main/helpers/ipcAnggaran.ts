@@ -9,6 +9,7 @@ import {
   GetPagu,
   CopyAnggaran,
   GetTotalAnggaran,
+  GetAnggaranPengajuan,
 } from 'main/repositories/Anggaran'
 import { GetConfig } from 'main/repositories/Config'
 import CommonUtils from 'main/utils/CommonUtils'
@@ -99,6 +100,13 @@ module.exports = {
     async (e, idAnggaran) => {
       e.returnValue = await GetAnggaranById(idAnggaran)
     }
+  ),
+
+  getAnggaranPengajuan: ipcMain.on(IPC_ANGGARAN.getAnggaranPengajuan, async (e, idSumberDana) => {
+    const configTahunAktif = await GetConfig('tahun_aktif')
+    const tahunAktif = parseInt(configTahunAktif)
+    e.returnValue = await GetAnggaranPengajuan(idSumberDana, tahunAktif)
+  }
   ),
 
   addAnggaran: ipcMain.on('anggaran:addAnggaran', async (e, data) => {

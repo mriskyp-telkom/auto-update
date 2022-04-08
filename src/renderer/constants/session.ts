@@ -1,0 +1,1 @@
+const TypeSessionPengesahan = 2, TypeSessionPergeseran = 3, TypeSessionPerubahan = 5

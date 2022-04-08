@@ -1,4 +1,6 @@
 export const FORMAT_TANGGAL = 'D MMM YYYY'
+export const FORMAT_TANGGAL_SYNC = 'yyyyMMDDHHmmss'
+export const FORMAT_TANGGAL_PENGAJUAN = 'yyyy-MM-DD HH:mm:ss.SSS'
 export const DATA_BULAN = [
   {
     id: 81,

@@ -9,6 +9,10 @@ export function formatDateToString(date: Date, format = FORMAT_TANGGAL) {
   return moment(date).format(format)
 }
 
+export function dateToString(date: Date, format: string) {
+  return moment(date).format(format)
+}
+
 export function formatDateTimeStatus(date: Date) {
   const dateStatus = moment(date).format('YYYY-MM-DD')
   const today = moment(new Date()).format('YYYY-MM-DD')

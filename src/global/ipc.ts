@@ -1,17 +1,24 @@
 export const ANGGARAN = 'anggaran'
 export const PENJAB = 'penjab'
+export const PENGGUNA = 'pengguna'
 export const PTK = 'ptk'
 export const REFERENSI = 'referensi'
 export const KK = 'kk'
 
 export const IPC_ANGGARAN = {
   getAnggaranById: `${ANGGARAN}:getAnggaranById`,
+  getAnggaranPengajuan: `${ANGGARAN}:getAnggaranPengajuan`,
   getTotalAnggaran: `${ANGGARAN}:getTotalAnggaran`,
   getPagu: `${ANGGARAN}:getPagu`,
 }
 
 export const IPC_PENJAB = {
   getPenjabById: `${PENJAB}:getPenjabById`,
+  getAktifPenjab: `${PENJAB}:getAktifPenjab`,
+}
+
+export const IPC_PENGGUNA = {
+  getPengguna: `${PENGGUNA}:getPengguna`,
 }
 
 export const IPC_PTK = {

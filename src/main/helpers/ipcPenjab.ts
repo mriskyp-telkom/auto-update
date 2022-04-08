@@ -5,12 +5,17 @@ import {
   findSekolahPenjabId,
   updateSekolahPenjab,
   GetSekolahPenjabById,
+  GetAktifSekolahPenjab,
 } from 'main/repositories/SekolahPenjab'
 import CommonUtils from 'main/utils/CommonUtils'
 
 module.exports = {
   getPenjabById: ipcMain.on('penjab:getPenjabById', async (e, idPenjab) => {
     e.returnValue = await GetSekolahPenjabById(idPenjab)
+  }),
+
+  getAktifPenjab: ipcMain.on('penjab:getAktifPenjab', async (e) => {
+    e.returnValue = await GetAktifSekolahPenjab()
   }),
 
   addPenjab: ipcMain.on('penjab:addPenjab', async (e, data) => {

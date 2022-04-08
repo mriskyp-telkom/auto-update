@@ -1,0 +1,20 @@
+export interface ParamPengajuanPenjab {
+  id_penjab: string,
+  sekolah_id: string,
+  tanggal_mulai: string,
+  tanggal_selesai: string,
+  ks: string,
+  nip_ks: string,
+  email_ks: string,
+  telp_ks: string,
+  bendahara: string,
+  nip_bendahara: string,
+  email_bendahara: string,
+  telp_bendahara: string,
+  komite: string,
+  nip_komite: string,
+  soft_delete: number,
+  create_date: string,
+  last_update: string,
+  updater_id: string
+}

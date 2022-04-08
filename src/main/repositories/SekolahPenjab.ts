@@ -13,6 +13,13 @@ export const GetSekolahPenjabById = async (idPenjab: string): Promise<any> => {
   return data
 }
 
+export const GetAktifSekolahPenjab = async (): Promise<any> => {
+  const data = await getRepository(SekolahPenjab).findOne({
+    softDelete: 0,
+  })
+  return data
+}
+
 export const addSekolahPenjab = async (
   sekolahPenjab: SekolahPenjab
 ): Promise<InsertResult> => {

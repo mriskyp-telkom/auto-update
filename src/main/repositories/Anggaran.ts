@@ -66,6 +66,22 @@ export const GetAnggaran = async (
   return <AnggaranDTO[]>data
 }
 
+export const GetAnggaranPengajuan = async (
+  idSumberDana: number,
+  tahunAnggaran: number
+): Promise<any> => {
+  const data = await createQueryBuilder(Anggaran)
+    .where(
+      'soft_delete = 0  ' +
+        ' AND is_aktif = 1' +
+        ' AND id_ref_sumber_dana = :idSumberDana' +
+        ' AND tahun_anggaran = :tahunAnggaran',
+      { idSumberDana, tahunAnggaran }
+    )
+    .getMany()
+  return data
+}
+
 export const GetAnggaranById = async (
   idAnggaran: string
 ): Promise<Anggaran> => {

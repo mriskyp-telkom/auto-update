@@ -5,4 +5,6 @@ export const APP_CONFIG = {
   tahunAktif: 'tahun_aktif',
   tahunAnggaran: 'tahun_anggaran',
   koregInvalid: 'koreg_invalid',
+  versionApp: 'version_app',
+  koreg: 'koreg',
 }

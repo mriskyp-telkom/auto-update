@@ -1,0 +1,21 @@
+export interface ParamPengajuanRkasDetail {
+    id_rapbs_periode: string,
+    id_rapbs: string,
+    id_periode: number,
+    volume: number,
+    satuan: string,
+    harga_satuan: number,
+    jumlah: number,
+    v1: number,
+    s1: string,
+    v2: number,
+    s2: string,
+    v3: number,
+    s3: string,
+    v4: number,
+    s4: string,
+    soft_delete: number,
+    create_date: string,
+    last_update: string,
+    updater_id: string
+}
