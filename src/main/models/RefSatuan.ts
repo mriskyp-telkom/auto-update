@@ -6,11 +6,14 @@ export class RefSatuan extends BaseEntity {
     primary: true,
     name: 'ref_satuan_id',
     length: 22,
-    unique: true,
   })
   refSatuanId: string
 
-  @Column('varchar', { name: 'satuan', length: 30 })
+  @Column('varchar', {
+    name: 'satuan',
+    length: 30,
+    unique: true,
+  })
   satuan: string
 
   @Column('varchar', { name: 'unit', length: 30 })
