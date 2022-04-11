@@ -42,6 +42,11 @@ const TabelMenyusunKertasKerjaView: FC<TabelMenyusunKertasKerjaProps> = (
     (state: AnggaranStates) => state.setTempDetailKertasKerja
   )
 
+  const isFocused = useAnggaranStore((state: AnggaranStates) => state.isFocused)
+  const setIsFocused = useAnggaranStore(
+    (state: AnggaranStates) => state.setIsFocused
+  )
+
   const handleClickRow = (event: any, row: FormTableKertasKerjaData) => {
     if (!event.target.id.includes('headlessui-popover-button')) {
       setTempDetailKertasKerja(row)
@@ -54,13 +59,24 @@ const TabelMenyusunKertasKerjaView: FC<TabelMenyusunKertasKerjaProps> = (
     }
   }
 
-  useEffect(() => {
+  const fetchData = () => {
     const data = {
       idAnggaran: props.idAnggaran,
       idPeriode: props.bulan.id,
     }
     const dataRapbs = ipcRenderer.sendSync(IPC_KK.getRapbsBulan, data)
     setData(dataRapbs)
+  }
+
+  useEffect(() => {
+    if (isFocused) {
+      fetchData()
+      setIsFocused(false)
+    }
+  }, [isFocused])
+
+  useEffect(() => {
+    fetchData()
   }, [])
 
   const TDTable = (props: { text: string; width: string }) => {

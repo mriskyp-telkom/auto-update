@@ -90,6 +90,9 @@ const FormDetailKertasKerjaView: FC = () => {
   const setTempDetailKertasKerja = useAnggaranStore(
     (state: AnggaranStates) => state.setTempDetailKertasKerja
   )
+  const setIsFocused = useAnggaranStore(
+    (state: AnggaranStates) => state.setIsFocused
+  )
 
   const {
     register,
@@ -142,7 +145,7 @@ const FormDetailKertasKerjaView: FC = () => {
     data.kodeRekening = selectedRekening.kode
     data.idBarang = selectedUraian?.kode
     data.uraian =
-      selectedRekening != null ? selectedUraian.uraian : getValues('uraian')
+      selectedUraian != null ? selectedUraian.uraian : getValues('uraian')
     data.hargaSatuan = parseInt(
       getValues('harga_satuan')
         .replace(/[^,\d]/g, '')
@@ -182,6 +185,7 @@ const FormDetailKertasKerjaView: FC = () => {
     if (res.error) {
       // TODO: should display error modal
     } else {
+      setIsFocused(true)
       closeModal()
     }
   }

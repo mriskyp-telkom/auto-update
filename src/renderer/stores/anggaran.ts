@@ -15,6 +15,7 @@ export interface AnggaranStates extends State {
   penanggungJawabTemp: FormPenanggungJawab
   pagu: FormPagu
   paguTemp: FormPagu
+  isFocused: boolean
   setTempDetailKertasKerja: (
     tempDetailKertasKerja: FormTableKertasKerjaData
   ) => void
@@ -24,6 +25,7 @@ export interface AnggaranStates extends State {
   setPenanggungJawabTemp: (penanggungJawab: FormPenanggungJawab) => void
   setPagu: (pagu: FormPagu) => void
   setPaguTemp: (paguTemp: FormPagu) => void
+  setIsFocused: (isFocused: boolean) => void
 }
 
 export const useAnggaranStore = create<AnggaranStates>((set) => ({
@@ -34,6 +36,7 @@ export const useAnggaranStore = create<AnggaranStates>((set) => ({
   penanggungJawabTemp: null,
   pagu: null,
   paguTemp: null,
+  isFocused: false,
   setTempDetailKertasKerja: (tempDetailKertasKerja) =>
     set(() => ({ tempDetailKertasKerja })),
   setAlertMengulas: (alertMengulas) => set(() => ({ alertMengulas })),
@@ -43,4 +46,5 @@ export const useAnggaranStore = create<AnggaranStates>((set) => ({
     set(() => ({ penanggungJawabTemp })),
   setPagu: (pagu) => set(() => ({ pagu })),
   setPaguTemp: (paguTemp) => set(() => ({ paguTemp })),
+  setIsFocused: (isFocused) => set(() => ({ isFocused })),
 }))
