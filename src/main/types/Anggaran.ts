@@ -3,6 +3,42 @@ export interface AnggaranTotal {
   total: number
 }
 
+export interface AnggaranKegiatan {
+  idAnggaran: string
+  idPeriode: string
+  idRapbs: string
+  programKegiatan: string
+  kegiatan: string
+  rekeningBelanja: string
+  uraian: string
+  jumlah: number
+  satuan: string
+  hargaSatuan: number
+  total: number
+  isHonor: number
+}
+
+export interface DetailAnggaranKegiatan {
+  anggaran: AnggaranKegiatan
+  periode: AnggaranPeriode[]
+  rapbsPtk: AnggaranPtk | null
+}
+
+export interface AnggaranPeriode {
+  bulan: string
+  periode: number
+  satuan: string
+  hargaSatuan: number
+  jumlah: number
+  total: number
+}
+
+export interface AnggaranPtk {
+  idRapbs: string
+  idPtk: string
+  nama: string
+}
+
 export interface AnggaranDTO {
   id_anggaran: string
   nama_sumber_dana: string

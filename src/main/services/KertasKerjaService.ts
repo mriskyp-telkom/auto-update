@@ -6,15 +6,26 @@ import {
   AddRapbs,
   GetLatestUrutan,
   GetNextUrutan,
+  GetOneRapbsBulan,
 } from 'main/repositories/Rapbs'
-import { AddBulkRapbsPeriode } from 'main/repositories/RapbsPeriode'
-import { AddRapbsPtk } from 'main/repositories/RapbsPtk'
+import {
+  AddBulkRapbsPeriode,
+  GetManyRapbsPeriode,
+} from 'main/repositories/RapbsPeriode'
+import { AddRapbsPtk, GetRapbsPtk } from 'main/repositories/RapbsPtk'
 import { DetailKegiatan, ResultDetailKegiatan } from 'main/types/Rapbs'
 import CommonUtils from 'main/utils/CommonUtils'
 import { getConnection } from 'typeorm'
 import { GetPenggunaID } from './UserService'
 import { CONFIG } from 'global/constants'
 import { ok, err, Result } from 'neverthrow'
+import { GetMonth } from 'main/utils/Months'
+import {
+  AnggaranKegiatan,
+  DetailAnggaranKegiatan,
+  AnggaranPeriode,
+  AnggaranPtk,
+} from 'main/types/Anggaran'
 
 export async function AddDetailKegiatan(
   data: DetailKegiatan
@@ -124,6 +135,48 @@ export async function AddDetailKegiatan(
     return err(new Error(error))
   } finally {
     await queryRunner.release()
+  }
+
+  return ok(res)
+}
+
+export async function GetDetailKegiatan(
+  idRapbs: string
+): Promise<Result<DetailAnggaranKegiatan, Error>> {
+  const rapbs = await GetOneRapbsBulan(idRapbs)
+  if (rapbs.isErr()) {
+    rapbs.mapErr((e) => {
+      return err(e)
+    })
+  }
+
+  const rapbsPeriode = await GetManyRapbsPeriode(idRapbs)
+  const res: DetailAnggaranKegiatan = {
+    anggaran: rapbs.unwrapOr(<AnggaranKegiatan>{}),
+    periode: [],
+    rapbsPtk: null,
+  }
+
+  if (res.anggaran.isHonor === 1) {
+    const r = await GetRapbsPtk(res.anggaran.idRapbs)
+    if (r !== undefined) {
+      res.rapbsPtk = <AnggaranPtk>{
+        idRapbs: r.idRapbs,
+        idPtk: r.ptkId,
+        nama: r.nama,
+      }
+    }
+  }
+
+  for (const v of rapbsPeriode) {
+    res.periode.push(<AnggaranPeriode>{
+      bulan: GetMonth(v.idPeriode),
+      periode: v.idPeriode,
+      satuan: v.satuan,
+      jumlah: v.volume,
+      hargaSatuan: v.hargaSatuan,
+      total: v.jumlah,
+    })
   }
 
   return ok(res)

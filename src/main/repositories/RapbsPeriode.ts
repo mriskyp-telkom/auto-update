@@ -21,6 +21,12 @@ export const GetRapbsPeriode = async (
   return await getRepository(RapbsPeriode).findOne({ idRapbs: idRapbs })
 }
 
+export const GetManyRapbsPeriode = async (
+  idRapbs: string
+): Promise<RapbsPeriode[]> => {
+  return await getRepository(RapbsPeriode).find({ idRapbs: idRapbs })
+}
+
 export const AddRapbsPeriode = async (
   rapbsPeriode: RapbsPeriode
 ): Promise<any> => {
@@ -114,7 +120,7 @@ export const GetRapbsSummary = async (
   return <RapbsSummary[]>result
 }
 
-export const GetDetailKegiatan = async (
+export const GetDetailListRapbs = async (
   id_tahap: number,
   id_kode: string,
   id_anggaran: string
