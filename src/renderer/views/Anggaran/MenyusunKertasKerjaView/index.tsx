@@ -19,7 +19,7 @@ import { Button } from '@wartek-id/button'
 
 import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
 
-import { IPC_ANGGARAN } from 'global/ipc'
+import { IPC_ANGGARAN, IPC_KK } from 'global/ipc'
 import { DATA_BULAN } from 'renderer/constants/general'
 import {
   RESPONSE_PENGESAHAN,
@@ -29,6 +29,7 @@ import {
 import { APP_CONFIG } from 'renderer/constants/appConfig'
 
 import { AlertType } from 'renderer/types/ComponentType'
+import { formatDateTimeStatus } from 'renderer/utils/date-formatting'
 
 const ipcRenderer = window.require('electron').ipcRenderer
 
@@ -47,6 +48,7 @@ const MenyusunKertasKerjaView: FC = () => {
   const [idAnggaranBefore, setIdAnggaranBefore] = useState(null)
   const [penggunaId, setPenggunaId] = useState('')
   const [idAnggaran, setIdAnggaran] = useState(null)
+  const [lastUpdate, setLastUpdate] = useState(null)
 
   const alertMengulas = useAnggaranStore(
     (state: AnggaranStates) => state.alertMengulas
@@ -98,6 +100,14 @@ const MenyusunKertasKerjaView: FC = () => {
     setSisa(getPagu.sisa)
   }
 
+  const setRapbsLastUpdate = (idAnggaran: string) => {
+    const lastUpdate = ipcRenderer.sendSync(
+      IPC_KK.getRapbsLastUpdate,
+      idAnggaran
+    )
+    setLastUpdate(lastUpdate)
+  }
+
   const handleCreateKertasKerja = (mode: string) => {
     setOpenModalInit(false)
     setIsSync(true)
@@ -136,13 +146,17 @@ const MenyusunKertasKerjaView: FC = () => {
     }
 
     setPagu(idAnggaran)
+    setRapbsLastUpdate(idAnggaran)
     setIdAnggaran(idAnggaran)
     setIsSync(false)
   }
 
   useEffect(() => {
     const id_anggaran = decodeURIComponent(q_id_anggaran)
-    isFocused && setPagu(id_anggaran)
+    if (isFocused) {
+      setPagu(id_anggaran)
+      setRapbsLastUpdate(id_anggaran)
+    }
   }, [isFocused])
 
   const handleBackToBeranda = () => {
@@ -180,6 +194,7 @@ const MenyusunKertasKerjaView: FC = () => {
     if (q_mode === 'update' && q_id_anggaran !== undefined) {
       const id_anggaran = decodeURIComponent(q_id_anggaran)
       setIdAnggaran(id_anggaran)
+      setRapbsLastUpdate(id_anggaran)
       setPagu(id_anggaran)
     }
   }, [])
@@ -288,21 +303,24 @@ const MenyusunKertasKerjaView: FC = () => {
             Periode Anggaran {tahunAktif}
           </span>
           <span className="pt-4 pb-3">
-            <div
-              className="w-full flex text-center justify-end font-normal 
+            {lastUpdate && (
+              <div
+                className="w-full flex text-center justify-end font-normal 
               text-tiny text-blue-700 pb-[28px]"
-            >
-              <Icon
-                as="i"
-                color="default"
-                fontSize="default"
-                className="ml-[6px]"
-                style={{ fontSize: '18px', color: '#0B5FEF' }}
               >
-                done
-              </Icon>
-              Tersimpan otomatis pukul 13:00
-            </div>
+                <Icon
+                  as="i"
+                  color="default"
+                  fontSize="default"
+                  className="ml-[6px]"
+                  style={{ fontSize: '18px', color: '#0B5FEF' }}
+                >
+                  done
+                </Icon>
+                Tersimpan otomatis pada {''}
+                {formatDateTimeStatus(new Date(lastUpdate))}
+              </div>
+            )}
             <div className="flex">
               <AmountCardComponent
                 type="default"
