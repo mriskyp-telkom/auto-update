@@ -162,6 +162,7 @@ If you run this command below using Windows, it will generate .exe
 ```bash
     yarn make-win32
 ```
+
 If you run this command below using Mac, it will generate .dmg
 
 ```bash
@@ -169,18 +170,20 @@ If you run this command below using Mac, it will generate .dmg
 ```
 
 If you want to make installer using mac, but the target type for Windows, install wine first before executing `yarn make-win32`
+
 ```bash
      brew install --cask wine-stable
 ```
+
 or you can download Wine pkg from the official site
 
 After that, if somehow you still not able to install due some tools not installed yet
+
 ```bash
     install XQuartz-2.7.7.dmg from the official site
 ```
 
 Install it and then try again
-
 
 ## Release Pipeline
 

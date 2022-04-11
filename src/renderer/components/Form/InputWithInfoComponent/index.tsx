@@ -5,6 +5,8 @@ import { Input } from '@wartek-id/input'
 
 import { amountFormatting } from 'renderer/utils/number-formatting'
 
+import { ERROR_REQUIRED } from 'renderer/constants/errorForm'
+
 import styles from './index.module.css'
 
 import clsx from 'clsx'
@@ -38,7 +40,7 @@ const InputWithInfoComponent: FC<InputWithInfoProps> = (
   if (required) {
     validation = {
       ...validation,
-      required: 'Wajib diisi',
+      required: ERROR_REQUIRED,
     }
   }
 

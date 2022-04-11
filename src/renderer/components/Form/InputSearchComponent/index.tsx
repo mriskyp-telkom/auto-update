@@ -41,14 +41,19 @@ const InputSearchComponent: FC<InputSearchProps> = (
     validation = {
       ...validation,
       required: 'Wajib diisi',
-      onChange: (e: ChangeEvent<HTMLInputElement>) => handleChange(e),
+      onChange: (e: ChangeEvent<HTMLInputElement>) => {
+        handleChange(e)
+      },
     }
   }
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
-    const lowercasedFilter = value.toLowerCase()
     setQuery(value)
+  }
+
+  const filterOptions = (query: string) => {
+    const lowercasedFilter = query.toLowerCase()
     setData(
       props.dataOptions.filter((item: any) => {
         const res = Object.keys(item).some((key) =>
@@ -105,8 +110,12 @@ const InputSearchComponent: FC<InputSearchProps> = (
   })
 
   useEffect(() => {
+    filterOptions(query)
+  }, [query])
+
+  useEffect(() => {
     setData(props.dataOptions)
-  }, [props.dataOptions])
+  }, [])
 
   return (
     <div ref={ref} className="relative">

@@ -81,11 +81,13 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
       },
       onChange: (e) => {
         const value = e.target.value
-        if (required && errors[name]?.message === ERROR_REQUIRED) {
-          if (value !== '') {
-            props.handleClearError(name)
-            return
-          }
+        if (
+          required &&
+          value !== '' &&
+          errors[name]?.message === ERROR_REQUIRED
+        ) {
+          props.handleClearError(name)
+          return
         }
         if (errors[name]?.message === EMAIL_ERROR_VALIDATION) {
           if (value !== '' && isEmailValid(value)) {

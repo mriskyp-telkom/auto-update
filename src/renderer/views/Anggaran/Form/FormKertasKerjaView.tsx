@@ -30,6 +30,12 @@ import {
   optionsSatuan,
   headerHarga,
 } from 'renderer/constants/table'
+import {
+  ERROR_REQUIRED,
+  HARGA_SATUAN_ERROR_LENGTH,
+  HARGA_SATUAN_ERROR_LESS_THAN,
+  HARGA_SATUAN_ERROR_MORE_THAN,
+} from 'renderer/constants/errorForm'
 
 import { numberUtils } from '@wartek-id/fe-toolbox'
 
@@ -40,6 +46,10 @@ import styles from './index.module.css'
 import clsx from 'clsx'
 
 import { IPC_ANGGARAN, IPC_KK, IPC_PTK, IPC_REFERENSI } from 'global/ipc'
+
+import differenceWith from 'lodash/differenceWith'
+import isEqual from 'lodash/isEqual'
+import isEmpty from 'lodash/isEmpty'
 
 const initialFormDisable = {
   kegiatan: false,
@@ -67,14 +77,16 @@ const InputHargaSatuan = (props: any) => {
   )
 }
 
-const FormDetailKertasKerjaView: FC = () => {
+const FormKertasKerjaView: FC = () => {
   const navigate = useNavigate()
-  const { mode, q_id_anggaran } = useParams()
+  const { q_mode, q_id_anggaran } = useParams()
+
   const idAnggaran = decodeURIComponent(q_id_anggaran)
+
   const [openModalDelete, setOpenModalDelete] = useState(false)
   const [openModalSuccess, setOpenModalSuccess] = useState(false)
   const [openModalConfirmCancel, setOpenModalConfirmCancel] = useState(false)
-  const [urutanBulan, setUrutanBulan] = useState(0)
+
   const [formDisable, setFormDisable] = useState(initialFormDisable)
 
   const [headerPopupUraian, setHeaderPopupUraian] = useState(headerUraian)
@@ -102,12 +114,13 @@ const FormDetailKertasKerjaView: FC = () => {
     setError,
     setFocus,
     getValues,
-    resetField,
     control,
     reset,
-    formState: { errors, isDirty },
+    clearErrors,
+    formState: { errors, isDirty, submitCount },
   } = useForm<FormIsiKertasKerjaData>({
     mode: 'onSubmit',
+    reValidateMode: 'onBlur',
     defaultValues: {
       kegiatan: '',
       rekening_belanja: '',
@@ -115,10 +128,10 @@ const FormDetailKertasKerjaView: FC = () => {
       harga_satuan: '',
       anggaran_bulan: [
         {
-          id: DATA_BULAN[urutanBulan]?.id,
+          id: DATA_BULAN[0]?.id,
           jumlah: null,
           satuan: null,
-          bulan: DATA_BULAN[urutanBulan]?.name,
+          bulan: DATA_BULAN[0]?.name,
         },
       ],
     },
@@ -195,7 +208,6 @@ const FormDetailKertasKerjaView: FC = () => {
     closeModal()
     reset()
     setFormDisable(initialFormDisable)
-    setUrutanBulan(0)
   }
 
   const handleClick = (data: {
@@ -203,25 +215,28 @@ const FormDetailKertasKerjaView: FC = () => {
     name: FormIsiKertasKerjaType
     value: string
   }) => {
-    setFocus(data.name)
+    setValue(data.name, data.value, { shouldDirty: true })
 
     if (data.id.toString() === '' || data.value === '') {
-      setValue(data.name, '', { shouldDirty: true })
+      setFocus(data.name)
       return
     }
 
-    setValue(data.name, data.value, { shouldDirty: true, shouldValidate: true })
+    clearErrors(data.name)
+
     if (data.name === 'kegiatan') {
       const dataKegiatan = optionsKegiatan.find((k: any) => k.id === data.id)
       setSelectedKegiatan(dataKegiatan)
       setValue('uraian', '')
       setValue('harga_satuan', '')
+      setFocus('rekening_belanja')
       setFormDisable({
         ...formDisable,
         rekening_belanja: false,
         harga_satuan: true,
       })
     }
+
     if (data.name === 'rekening_belanja') {
       const dataRekening = optionsRekening.find(
         (k: any) => k.id.toString() === data.id.toString()
@@ -229,6 +244,7 @@ const FormDetailKertasKerjaView: FC = () => {
       setSelectedRekening(dataRekening)
       setValue('uraian', '')
       setValue('harga_satuan', '')
+      setFocus('uraian')
       setSelectedUraian(null)
       setFormDisable({
         ...formDisable,
@@ -241,6 +257,7 @@ const FormDetailKertasKerjaView: FC = () => {
         (k: any) => k.id.toString() === data.id.toString()
       )
       setSelectedUraian(dataUraian)
+      setFocus('harga_satuan')
       setFormDisable({
         ...formDisable,
         harga_satuan: false,
@@ -266,19 +283,91 @@ const FormDetailKertasKerjaView: FC = () => {
   }
 
   const handleTambahBulan = () => {
-    if (urutanBulan === DATA_BULAN.length - 1) {
-      return
-    }
-    const next = urutanBulan + 1
+    const bulan = getMonthOptions()
 
     append({
       jumlah: null,
       satuan: null,
-      bulan: DATA_BULAN[next]?.name,
-      id: DATA_BULAN[next]?.id,
+      bulan: bulan[0]?.name,
+      id: bulan[0]?.id,
     })
-    setUrutanBulan(next)
   }
+
+  const getMonthOptions = () => {
+    const picked = getValues('anggaran_bulan').map((data) => {
+      return {
+        id: data.id,
+        name: data.bulan,
+      }
+    })
+
+    const unpicked = differenceWith(DATA_BULAN, picked, isEqual)
+
+    return unpicked
+  }
+
+  const btnDisabled = () => {
+    if (submitCount > 0 && !isEmpty(errors)) {
+      return true
+    }
+    if (isDirty && !isEmpty(errors)) {
+      return true
+    }
+    return false
+  }
+
+  useEffect(() => {
+    if (selectedKegiatan != null && selectedRekening != null) {
+      let uraian = null
+      if (selectedKegiatan?.flag_honor === 1) {
+        setHeaderPopupUraian(headerPtk)
+        uraian = ipcRenderer.sendSync(IPC_PTK.getPtk)
+      } else {
+        setHeaderPopupUraian(headerUraian)
+        uraian = ipcRenderer.sendSync(
+          IPC_REFERENSI.getRefBarangByRekening,
+          selectedRekening.kode
+        )
+      }
+      setOptionsUraian(uraian)
+      unregister('uraian')
+    }
+  }, [selectedKegiatan, selectedRekening])
+
+  useEffect(() => {
+    if (selectedUraian != null) {
+      const harga = []
+      if (
+        selectedUraian.batas_atas != null &&
+        selectedUraian.batas_bawah != null
+      ) {
+        harga.push({
+          id: 1,
+          batas_atas: selectedUraian.batas_atas,
+          batas_bawah: selectedUraian.batas_bawah,
+        })
+      }
+      setOptionsHarga(harga)
+    }
+  }, [selectedUraian])
+
+  useEffect(() => {
+    const kegiatan = ipcRenderer.sendSync(IPC_REFERENSI.getRefKode)
+    const rekening = ipcRenderer.sendSync(IPC_REFERENSI.getRefRekening)
+    setOptionsKegiatan(kegiatan)
+    setOptionsRekening(rekening)
+
+    if (q_mode === 'update') {
+      //TODO: populate data from local db
+      setFormDisable({
+        kegiatan: false,
+        rekening_belanja: false,
+        uraian: false,
+        harga_satuan: false,
+        harga_per_month: false,
+      })
+    }
+  }, [])
 
   const FormHargaPerMonth = (props: {
     index: number
@@ -288,16 +377,16 @@ const FormDetailKertasKerjaView: FC = () => {
 
     const [totalPerMonth, setTotalPerMonth] = useState(0)
 
-    const getBulanId = (bulan: string) => {
-      return DATA_BULAN.find((bul) => bul.name === bulan)?.id
+    const getBulan = (bulan: string) => {
+      return DATA_BULAN.find((bul) => bul.name === bulan)
     }
 
     const handleSelect = (value: string) => {
-      const id = getBulanId(value)
+      const bulan = getBulan(value)
       update(props.index, {
         ...field,
-        bulan: value,
-        id,
+        bulan: bulan.name,
+        id: bulan.id,
       })
     }
 
@@ -306,11 +395,15 @@ const FormDetailKertasKerjaView: FC = () => {
     }
 
     const countTotal = (jumlah: number) => {
-      const harga_satuan = parseInt(
-        getValues('harga_satuan')
-          .replace(/[^,\d]/g, '')
-          .toString()
-      )
+      const harga_satuan =
+        getValues('harga_satuan') !== ''
+          ? parseInt(
+              getValues('harga_satuan')
+                .replace(/[^,\d]/g, '')
+                .toString()
+            )
+          : 0
+
       setTotalPerMonth(harga_satuan * jumlah)
     }
 
@@ -329,10 +422,11 @@ const FormDetailKertasKerjaView: FC = () => {
             <span>
               <SelectComponent
                 name={`anggaran_bulan.${props.index}.bulan`}
-                options={DATA_BULAN.map((b) => b.name)}
+                options={getMonthOptions().map((b: any) => b.name)}
                 selected={field.bulan}
                 register={register}
                 handleSelect={handleSelect}
+                disabled={getMonthOptions().length === 0}
               />
             </span>
             <span>Rp {numberUtils.delimit(totalPerMonth, '.')}</span>
@@ -388,72 +482,23 @@ const FormDetailKertasKerjaView: FC = () => {
     )
   }
 
-  useEffect(() => {
-    if (selectedKegiatan != null && selectedRekening != null) {
-      let uraian = null
-      if (selectedKegiatan?.flag_honor === 1) {
-        setHeaderPopupUraian(headerPtk)
-        uraian = ipcRenderer.sendSync(IPC_PTK.getPtk)
-      } else {
-        setHeaderPopupUraian(headerUraian)
-        uraian = ipcRenderer.sendSync(
-          IPC_REFERENSI.getRefBarangByRekening,
-          selectedRekening.kode
-        )
-      }
-      setOptionsUraian(uraian)
-      unregister('uraian')
-    }
-  }, [selectedKegiatan, selectedRekening])
-
-  useEffect(() => {
-    if (selectedUraian != null) {
-      const harga = []
-      if (
-        selectedUraian.batas_atas != null &&
-        selectedUraian.batas_bawah != null
-      ) {
-        harga.push({
-          id: 1,
-          batas_atas: selectedUraian.batas_atas,
-          batas_bawah: selectedUraian.batas_bawah,
-        })
-      }
-      setOptionsHarga(harga)
-    }
-  }, [selectedUraian])
-
-  useEffect(() => {
-    const kegiatan = ipcRenderer.sendSync(IPC_REFERENSI.getRefKode)
-    const rekening = ipcRenderer.sendSync(IPC_REFERENSI.getRefRekening)
-    setOptionsKegiatan(kegiatan)
-    setOptionsRekening(rekening)
-    if (mode === 'update') {
-      //TODO: populate data from local db
-      setFormDisable({
-        kegiatan: false,
-        rekening_belanja: false,
-        uraian: false,
-        harga_satuan: false,
-        harga_per_month: false,
-      })
-    }
-  }, [])
-
   return (
     <div>
       <FormDialogComponent
         width={960}
         maxHeight={550}
-        icon={mode !== 'update' && 'add'}
+        icon={q_mode !== 'update' && 'add'}
         title="Isi Detail Anggaran Kegiatan"
         isOpen={true}
-        isDelete={mode === 'update'}
-        btnSubmitText={mode === 'update' ? 'Perbarui' : 'Masukkan ke Anggaran'}
-        btnCancelText={mode === 'update' && 'Tutup'}
+        isDelete={q_mode === 'update'}
+        btnSubmitText={
+          q_mode === 'update' ? 'Perbarui' : 'Masukkan ke Anggaran'
+        }
+        btnCancelText={q_mode === 'update' && 'Tutup'}
         onDelete={() => setOpenModalDelete(true)}
         onCancel={handleCancel}
         onSubmit={handleSubmit(onSubmit)}
+        isSubmitDisabled={btnDisabled()}
       >
         <div>
           <div className="mb-5">
@@ -534,27 +579,45 @@ const FormDetailKertasKerjaView: FC = () => {
                   headers={headerHarga}
                   dataOptions={optionsHarga}
                   registerOption={{
-                    onChange: (e: any) => {
+                    validate: {
+                      minLength: (v: any) => {
+                        const value = v.replace(/[^,\d]/g, '').toString()
+
+                        return value >= 10 || HARGA_SATUAN_ERROR_LENGTH
+                      },
+                      lessThan: (v: any) => {
+                        const batas_bawah = optionsHarga[0]?.batas_bawah
+
+                        const value = v.replace(/[^,\d]/g, '').toString()
+
+                        return (
+                          parseInt(value) >= batas_bawah ||
+                          HARGA_SATUAN_ERROR_LESS_THAN
+                        )
+                      },
+                      moreThan: (v: any) => {
+                        const batas_atas = optionsHarga[0]?.batas_atas
+
+                        const value = v.replace(/[^,\d]/g, '').toString()
+
+                        return (
+                          parseInt(value) <= batas_atas ||
+                          HARGA_SATUAN_ERROR_MORE_THAN
+                        )
+                      },
+                    },
+                    onBlur: (e: any) => {
+                      const batas_bawah = optionsHarga[0]?.batas_bawah
+                      const batas_atas = optionsHarga[0]?.batas_atas
+
                       const value = e.target.value
                         .replace(/[^,\d]/g, '')
                         .toString()
 
-                      const batas_bawah = optionsHarga[0]?.batas_bawah
-                      const batas_atas = optionsHarga[0]?.batas_atas
-
-                      resetField('harga_satuan')
-
-                      if (value !== null) {
-                        setValue(
-                          'harga_satuan',
-                          `Rp ${numberUtils.delimit(value, '.')}`
-                        )
-                      }
-
-                      if (value.length < 2) {
+                      if (value < 10) {
                         setError('harga_satuan', {
                           type: 'manual',
-                          message: 'Harga satuan minimal 2 digit angka',
+                          message: HARGA_SATUAN_ERROR_LENGTH,
                         })
                         return
                       }
@@ -563,7 +626,7 @@ const FormDetailKertasKerjaView: FC = () => {
                         if (parseInt(value) < batas_bawah) {
                           setError('harga_satuan', {
                             type: 'manual',
-                            message: 'Harga kurang dari batas bawah SSH',
+                            message: HARGA_SATUAN_ERROR_LESS_THAN,
                           })
                           return
                         }
@@ -571,10 +634,62 @@ const FormDetailKertasKerjaView: FC = () => {
                         if (parseInt(value) > batas_atas) {
                           setError('harga_satuan', {
                             type: 'manual',
-                            message: 'Harga melebihi batas atas SSH',
+                            message: HARGA_SATUAN_ERROR_MORE_THAN,
                           })
                           return
                         }
+                      }
+
+                      clearErrors('harga_satuan')
+                    },
+                    onChange: (e: any) => {
+                      const batas_bawah = optionsHarga[0]?.batas_bawah
+                      const batas_atas = optionsHarga[0]?.batas_atas
+
+                      const value = e.target.value
+                        .replace(/[^,\d]/g, '')
+                        .toString()
+
+                      if (value !== null) {
+                        setValue(
+                          'harga_satuan',
+                          `Rp ${numberUtils.delimit(value, '.')}`
+                        )
+                      }
+
+                      if (
+                        value !== '' &&
+                        errors.harga_satuan?.message === ERROR_REQUIRED
+                      ) {
+                        clearErrors('harga_satuan')
+                        return
+                      }
+
+                      if (
+                        value >= 10 &&
+                        errors.harga_satuan?.message ===
+                          HARGA_SATUAN_ERROR_LENGTH
+                      ) {
+                        clearErrors('harga_satuan')
+                        return
+                      }
+
+                      if (
+                        parseInt(value) >= batas_bawah &&
+                        errors.harga_satuan?.message ===
+                          HARGA_SATUAN_ERROR_LESS_THAN
+                      ) {
+                        clearErrors('harga_satuan')
+                        return
+                      }
+
+                      if (
+                        parseInt(value) <= batas_atas &&
+                        errors.harga_satuan?.message ===
+                          HARGA_SATUAN_ERROR_MORE_THAN
+                      ) {
+                        clearErrors('harga_satuan')
+                        return
                       }
 
                       setFormDisable({
@@ -656,4 +771,4 @@ const FormDetailKertasKerjaView: FC = () => {
   )
 }
 
-export default FormDetailKertasKerjaView
+export default FormKertasKerjaView
