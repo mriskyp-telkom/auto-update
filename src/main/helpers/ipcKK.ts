@@ -6,6 +6,7 @@ import {
   DelRapbs,
   GetRapbs,
   GetRapbsBulan,
+  GetRapbsLastUpdate,
 } from 'main/repositories/Rapbs'
 import {
   AddRapbsPeriode,
@@ -177,10 +178,17 @@ module.exports = {
       e.returnValue = await AddDetailKegiatan(detailKegiatan)
     }
   ),
+
   getAnggaranDetailKegiatan: ipcMain.on(
     IPC_KK.getAnggaranDetailKegiatan,
     async (e, idAnggaran) => {
       e.returnValue = await GetDetailKegiatan(idAnggaran)
+    }
+  ),
+  getRapbsLastUpdate: ipcMain.on(
+    IPC_KK.getRapbsLastUpdate,
+    async (e, idAnggaran) => {
+      e.returnValue = await GetRapbsLastUpdate(idAnggaran)
     }
   ),
 }

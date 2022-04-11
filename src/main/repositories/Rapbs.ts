@@ -139,3 +139,11 @@ export function GetNextUrutan(current: string): string {
   parsed++
   return parsed.toString().padStart(3, '0')
 }
+
+export async function GetRapbsLastUpdate(idAnggaran: string): Promise<Date> {
+  const data = await createQueryBuilder(Rapbs, 'r')
+    .where('r.id_anggaran = :idAnggaran', { idAnggaran })
+    .orderBy('r.last_update', 'DESC')
+    .getOne()
+  return data != null ? data.lastUpdate : null
+}

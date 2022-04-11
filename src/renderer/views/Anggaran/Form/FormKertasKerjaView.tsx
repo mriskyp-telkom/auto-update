@@ -586,24 +586,28 @@ const FormKertasKerjaView: FC = () => {
                         return value >= 10 || HARGA_SATUAN_ERROR_LENGTH
                       },
                       lessThan: (v: any) => {
-                        const batas_bawah = optionsHarga[0]?.batas_bawah
+                        if (optionsHarga.length > 0) {
+                          const batas_bawah = optionsHarga[0]?.batas_bawah
 
-                        const value = v.replace(/[^,\d]/g, '').toString()
+                          const value = v.replace(/[^,\d]/g, '').toString()
 
-                        return (
-                          parseInt(value) >= batas_bawah ||
-                          HARGA_SATUAN_ERROR_LESS_THAN
-                        )
+                          return (
+                            parseInt(value) >= batas_bawah ||
+                            HARGA_SATUAN_ERROR_LESS_THAN
+                          )
+                        }
                       },
                       moreThan: (v: any) => {
-                        const batas_atas = optionsHarga[0]?.batas_atas
+                        if (optionsHarga.length > 0) {
+                          const batas_atas = optionsHarga[0]?.batas_atas
 
-                        const value = v.replace(/[^,\d]/g, '').toString()
+                          const value = v.replace(/[^,\d]/g, '').toString()
 
-                        return (
-                          parseInt(value) <= batas_atas ||
-                          HARGA_SATUAN_ERROR_MORE_THAN
-                        )
+                          return (
+                            parseInt(value) <= batas_atas ||
+                            HARGA_SATUAN_ERROR_MORE_THAN
+                          )
+                        }
                       },
                     },
                     onBlur: (e: any) => {
