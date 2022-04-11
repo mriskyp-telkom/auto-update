@@ -1,9 +1,13 @@
+import { FieldErrors } from 'react-hook-form'
+
 import {
   emailFormatRegex,
   emailValidationRegex,
   onlyNumberRegex,
   onlyAlphabetWithSpaceRegex,
 } from 'renderer/constants/regex'
+
+import isEmpty from 'lodash/isEmpty'
 
 export const isFormatEmailValid = (value: string) => {
   if (emailFormatRegex.test(value)) {
@@ -28,6 +32,13 @@ export const isOnlyNumber = (value: string) => {
 
 export const isOnlyAlphabet = (value: string) => {
   if (onlyAlphabetWithSpaceRegex.test(value)) {
+    return true
+  }
+  return false
+}
+
+export const btnFormDisabled = (errors: FieldErrors) => {
+  if (!isEmpty(errors)) {
     return true
   }
   return false

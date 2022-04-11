@@ -7,14 +7,23 @@ import {
   isFormatEmailValid,
   isEmailValid,
   isOnlyAlphabet,
+  isOnlyNumber,
 } from 'renderer/utils/form-validation'
 
 import {
   ERROR_REQUIRED,
   EMAIL_ERROR_FORMAT,
   EMAIL_ERROR_VALIDATION,
+  EMAIL_ERROR_REGISTERED,
+  EMAIL_ERROR_NOT_REGISTERED,
   ERROR_ALPHABET_ONLY,
+  ERROR_NUMBER_ONLY,
+  NPSN_ERROR_LENGTH,
+  NPSN_ERROR_NOT_REGISTERED,
+  KODE_AKTIVASI_ERROR_WRONG,
 } from 'renderer/constants/errorForm'
+
+import includes from 'lodash/includes'
 
 interface InputProps {
   type: 'text' | 'email' | 'alphabet'
@@ -30,6 +39,13 @@ interface InputProps {
   className?: string
 }
 
+const error_server = [
+  KODE_AKTIVASI_ERROR_WRONG,
+  NPSN_ERROR_NOT_REGISTERED,
+  EMAIL_ERROR_REGISTERED,
+  EMAIL_ERROR_NOT_REGISTERED,
+]
+
 const InputComponent: FC<InputProps> = (props: InputProps) => {
   const {
     type,
@@ -42,14 +58,37 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
     register,
   } = props
 
+  const clearErrorRequired = (value: string) => {
+    if (required && value !== '' && errors[name]?.message === ERROR_REQUIRED) {
+      props.handleClearError(name)
+      return
+    }
+  }
+
+  const clearErrorServer = (value: string) => {
+    if (value !== '' && includes(error_server, errors[name]?.message)) {
+      props.handleClearError(name)
+      return
+    }
+  }
+
   let validation = {
     ...props.registerOption,
+    onChange: (e: any) => {
+      const value = e.target.value
+      clearErrorServer(value)
+    },
   }
 
   if (required) {
     validation = {
       ...validation,
       required: ERROR_REQUIRED,
+      onChange: (e) => {
+        const value = e.target.value
+        clearErrorRequired(value)
+        clearErrorServer(value)
+      },
     }
   }
 
@@ -76,30 +115,27 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
           })
           return
         }
-
         props.handleClearError(name)
       },
       onChange: (e) => {
         const value = e.target.value
+        clearErrorRequired(value)
+        clearErrorServer(value)
         if (
-          required &&
           value !== '' &&
-          errors[name]?.message === ERROR_REQUIRED
+          isEmailValid(value) &&
+          errors[name]?.message === EMAIL_ERROR_VALIDATION
         ) {
           props.handleClearError(name)
           return
         }
-        if (errors[name]?.message === EMAIL_ERROR_VALIDATION) {
-          if (value !== '' && isEmailValid(value)) {
-            props.handleClearError(name)
-            return
-          }
-        }
-        if (errors[name]?.message === EMAIL_ERROR_FORMAT) {
-          if (value !== '' && isFormatEmailValid(value)) {
-            props.handleClearError(name)
-            return
-          }
+        if (
+          value !== '' &&
+          isFormatEmailValid(value) &&
+          errors[name]?.message === EMAIL_ERROR_FORMAT
+        ) {
+          props.handleClearError(name)
+          return
         }
       },
     }
@@ -120,22 +156,62 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
           })
           return
         }
-
         props.handleClearError(name)
       },
       onChange: (e) => {
         const value = e.target.value
-        if (required && errors[name]?.message === ERROR_REQUIRED) {
-          if (value !== '') {
-            props.handleClearError(name)
-            return
-          }
-        }
+        clearErrorRequired(value)
+        clearErrorServer(value)
         if (errors[name]?.message === ERROR_ALPHABET_ONLY) {
           if (value !== '' && isOnlyAlphabet(value)) {
             props.handleClearError(name)
             return
           }
+        }
+      },
+    }
+  }
+
+  if (name === 'npsn') {
+    validation = {
+      ...validation,
+      validate: {
+        onlyNumber: (v) => isOnlyNumber(v) || ERROR_NUMBER_ONLY,
+        minMaxLength: (v) => v.length === 8 || NPSN_ERROR_LENGTH,
+      },
+      onBlur: (e) => {
+        const value = e.target.value
+        if (value !== '' && !isOnlyNumber(value)) {
+          setError(name, {
+            type: 'manual',
+            message: ERROR_NUMBER_ONLY,
+          })
+          return
+        }
+        if (value !== '' && value.length !== 8) {
+          setError(name, {
+            type: 'manual',
+            message: NPSN_ERROR_LENGTH,
+          })
+          return
+        }
+        props.handleClearError(name)
+      },
+      onChange: (e) => {
+        const value = e.target.value
+        clearErrorRequired(value)
+        clearErrorServer(value)
+        if (
+          value !== '' &&
+          isOnlyNumber(value) &&
+          errors.npsn?.message === ERROR_NUMBER_ONLY
+        ) {
+          props.handleClearError(name)
+          return
+        }
+        if (value.length === 8 && errors.npsn?.message === NPSN_ERROR_LENGTH) {
+          props.handleClearError(name)
+          return
         }
       },
     }

@@ -17,14 +17,9 @@ import { Tooltip } from '@wartek-id/tooltip'
 import { Icon } from '@wartek-id/icon'
 
 import { APP_CONFIG } from 'renderer/constants/appConfig'
-import {
-  ERROR_REQUIRED,
-  ERROR_NUMBER_ONLY,
-  NPSN_ERROR_LENGTH,
-} from 'renderer/constants/errorForm'
 
 import { sendEventRegistrasi1 } from 'renderer/utils/analytic/auth-util'
-import { isOnlyNumber } from 'renderer/utils/form-validation'
+import { btnFormDisabled } from 'renderer/utils/form-validation'
 
 import { FormRegisterType, FormRegisterData } from 'renderer/types/LoginType'
 
@@ -38,8 +33,14 @@ import { AppStates, useAppStore } from 'renderer/stores/app'
 
 import filter from 'lodash/filter'
 
+import {
+  NPSN_ERROR_NOT_REGISTERED,
+  KODE_AKTIVASI_ERROR_WRONG,
+} from 'renderer/constants/errorForm'
+
 const ipcRenderer = window.require('electron').ipcRenderer
 const stepAPi = ['infoConnection', 'checkActivation']
+
 const RegistrationView: FC = () => {
   const navigate = useNavigate()
   const ref = useRef(null)
@@ -95,7 +96,7 @@ const RegistrationView: FC = () => {
     setFocus,
     getValues,
     clearErrors,
-    formState: { errors, isValid, submitCount },
+    formState: { errors },
   } = useForm<FormRegisterData>({
     mode: 'onSubmit',
     reValidateMode: 'onBlur',
@@ -107,6 +108,27 @@ const RegistrationView: FC = () => {
 
   const handleClearError = (name: FormRegisterType) => {
     clearErrors(name)
+  }
+
+  const onSubmit = async (data: FormRegisterData) => {
+    setAlertNoConnection(false)
+    setAlertLostConnection(false)
+    setAlertFailedSyncData(false)
+    if (!navigator.onLine) {
+      setAlertNoConnection(true)
+      return
+    }
+    setIsSync(true)
+    setNpsn(data.npsn)
+    setKoreg(data.activation_code)
+    setApi(stepAPi[0])
+  }
+
+  const onError = (error: any) => {
+    const isError = filter(error, ['type', 'required']).length > 0
+    if (isError) {
+      sendEventRegistrasi1(getValues('npsn'), 'kolom_kosong')
+    }
   }
 
   useEffect(() => {
@@ -162,7 +184,7 @@ const RegistrationView: FC = () => {
           response_status = 'kode_aktivasi_salah'
           setError('activation_code', {
             type: 'manual',
-            message: 'Kode aktivasi salah',
+            message: KODE_AKTIVASI_ERROR_WRONG,
           })
         } else if (result === 3) {
           response_status = 'multidevice_error'
@@ -171,8 +193,7 @@ const RegistrationView: FC = () => {
           response_status = 'npsn_tidak_terdaftar'
           setError('npsn', {
             type: 'manual',
-            message:
-              'NPSN tidak terdaftar di Dapodik. Silakan periksa kembali.',
+            message: NPSN_ERROR_NOT_REGISTERED,
           })
         }
       }
@@ -192,27 +213,6 @@ const RegistrationView: FC = () => {
     }
   }, [isError, isInfoConnError])
 
-  const onSubmit = async (data: FormRegisterData) => {
-    setAlertNoConnection(false)
-    setAlertLostConnection(false)
-    setAlertFailedSyncData(false)
-    if (!navigator.onLine) {
-      setAlertNoConnection(true)
-      return
-    }
-    setIsSync(true)
-    setNpsn(data.npsn)
-    setKoreg(data.activation_code)
-    setApi(stepAPi[0])
-  }
-
-  const onError = (error: any) => {
-    const isError = filter(error, ['type', 'required']).length > 0
-    if (isError) {
-      sendEventRegistrasi1(getValues('npsn'), 'kolom_kosong')
-    }
-  }
-
   return (
     <AuthLayout>
       <form ref={ref} onSubmit={handleSubmit(onSubmit, onError)}>
@@ -225,52 +225,8 @@ const RegistrationView: FC = () => {
             errors={errors}
             register={register}
             required={true}
-            registerOption={{
-              validate: {
-                onlyNumber: (v) => isOnlyNumber(v) || ERROR_NUMBER_ONLY,
-                minMaxLength: (v) => v.length === 8 || NPSN_ERROR_LENGTH,
-              },
-              onBlur: (e) => {
-                const value = e.target.value
-                if (value !== '' && !isOnlyNumber(value)) {
-                  setError('npsn', {
-                    type: 'manual',
-                    message: ERROR_NUMBER_ONLY,
-                  })
-                  return
-                }
-                if (value !== '' && value.length !== 8) {
-                  setError('npsn', {
-                    type: 'manual',
-                    message: NPSN_ERROR_LENGTH,
-                  })
-                  return
-                }
-
-                handleClearError('npsn')
-              },
-              onChange: (e) => {
-                const value = e.target.value
-                if (errors.npsn?.message === ERROR_REQUIRED) {
-                  if (value !== '') {
-                    handleClearError('npsn')
-                    return
-                  }
-                }
-                if (errors.npsn?.message === ERROR_NUMBER_ONLY) {
-                  if (value !== '' && isOnlyNumber(value)) {
-                    handleClearError('npsn')
-                    return
-                  }
-                }
-                if (errors.npsn?.message === NPSN_ERROR_LENGTH) {
-                  if (value.length === 8) {
-                    handleClearError('npsn')
-                    return
-                  }
-                }
-              },
-            }}
+            setError={setError}
+            handleClearError={handleClearError}
           />
         </div>
         <div className="pt-5">
@@ -301,6 +257,8 @@ const RegistrationView: FC = () => {
             placeholder="Masukkan kode aktivasi"
             errors={errors}
             register={register}
+            setError={setError}
+            handleClearError={handleClearError}
             required={true}
           />
         </div>
@@ -311,7 +269,7 @@ const RegistrationView: FC = () => {
             size="lg"
             variant="solid"
             type="submit"
-            disabled={!isValid && submitCount > 0}
+            disabled={btnFormDisabled(errors)}
           >
             Daftar
           </Button>

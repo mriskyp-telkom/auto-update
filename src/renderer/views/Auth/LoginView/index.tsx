@@ -18,8 +18,13 @@ import { FormLoginType, FormLoginData } from 'renderer/types/LoginType'
 import { AuthStates, useAuthStore } from 'renderer/stores/auth'
 
 import { APP_CONFIG } from 'renderer/constants/appConfig'
+import {
+  EMAIL_ERROR_NOT_REGISTERED,
+  PASSWORD_ERROR_WRONG,
+} from 'renderer/constants/errorForm'
 
 import { sendEventLogin } from 'renderer/utils/analytic/auth-util'
+import { btnFormDisabled } from 'renderer/utils/form-validation'
 
 import filter from 'lodash/filter'
 
@@ -49,7 +54,7 @@ const LoginView: FC = () => {
     setFocus,
     getValues,
     clearErrors,
-    formState: { errors, isDirty, submitCount },
+    formState: { errors },
   } = useForm<FormLoginData>({
     mode: 'onSubmit',
     reValidateMode: 'onBlur',
@@ -58,18 +63,6 @@ const LoginView: FC = () => {
       password: '',
     },
   })
-
-  const btnDisabled = () => {
-    if (submitCount > 0 && !isDirty) {
-      return true
-    }
-
-    if (isDirty && (!!errors['email'] || !!errors['password'])) {
-      return true
-    }
-
-    return false
-  }
 
   const handleClearError = (name: FormLoginType) => {
     clearErrors(name)
@@ -85,7 +78,7 @@ const LoginView: FC = () => {
     if (!ipcCheckUserName) {
       setError('email', {
         type: 'manual',
-        message: 'Email tidak terdaftar',
+        message: EMAIL_ERROR_NOT_REGISTERED,
       })
       response_status = 'email_tidak_terdaftar'
       return
@@ -100,7 +93,7 @@ const LoginView: FC = () => {
     if (!ipcCheckUserPass) {
       setError('password', {
         type: 'manual',
-        message: 'Password salah',
+        message: PASSWORD_ERROR_WRONG,
       })
       response_status = 'password_salah'
       return
@@ -176,7 +169,7 @@ const LoginView: FC = () => {
             size="lg"
             variant="solid"
             type="submit"
-            disabled={btnDisabled()}
+            disabled={btnFormDisabled(errors)}
           >
             Masuk
           </Button>

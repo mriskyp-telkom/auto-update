@@ -47,9 +47,10 @@ import clsx from 'clsx'
 
 import { IPC_ANGGARAN, IPC_KK, IPC_PTK, IPC_REFERENSI } from 'global/ipc'
 
+import { btnFormDisabled } from 'renderer/utils/form-validation'
+
 import differenceWith from 'lodash/differenceWith'
 import isEqual from 'lodash/isEqual'
-import isEmpty from 'lodash/isEmpty'
 
 const initialFormDisable = {
   kegiatan: false,
@@ -117,7 +118,7 @@ const FormKertasKerjaView: FC = () => {
     control,
     reset,
     clearErrors,
-    formState: { errors, isDirty, submitCount },
+    formState: { errors, isDirty },
   } = useForm<FormIsiKertasKerjaData>({
     mode: 'onSubmit',
     reValidateMode: 'onBlur',
@@ -306,16 +307,6 @@ const FormKertasKerjaView: FC = () => {
     return unpicked
   }
 
-  const btnDisabled = () => {
-    if (submitCount > 0 && !isEmpty(errors)) {
-      return true
-    }
-    if (isDirty && !isEmpty(errors)) {
-      return true
-    }
-    return false
-  }
-
   useEffect(() => {
     if (selectedKegiatan != null && selectedRekening != null) {
       let uraian = null
@@ -498,7 +489,7 @@ const FormKertasKerjaView: FC = () => {
         onDelete={() => setOpenModalDelete(true)}
         onCancel={handleCancel}
         onSubmit={handleSubmit(onSubmit)}
-        isSubmitDisabled={btnDisabled()}
+        isSubmitDisabled={btnFormDisabled(errors)}
       >
         <div>
           <div className="mb-5">

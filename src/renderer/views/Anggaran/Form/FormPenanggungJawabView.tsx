@@ -17,6 +17,8 @@ import syncToIPCMain from 'renderer/configs/ipc'
 
 import { ERROR_REQUIRED, NIP_ERROR_LENGTH } from 'renderer/constants/errorForm'
 
+import { btnFormDisabled } from 'renderer/utils/form-validation'
+
 import { IPC_ANGGARAN, IPC_PENJAB } from 'global/ipc'
 
 const FormPenanggungJawabView: FC = () => {
@@ -51,22 +53,6 @@ const FormPenanggungJawabView: FC = () => {
     mode: 'onSubmit',
     reValidateMode: 'onBlur',
   })
-
-  const btnDisabled = () => {
-    if (
-      isDirty &&
-      (!!errors['nama_kepala_sekolah'] ||
-        !!errors['nama_bendahara'] ||
-        !!errors['nama_komite'] ||
-        !!errors['nip_kepala_sekolah'] ||
-        !!errors['nip_bendahara'] ||
-        !!errors['email_komite'])
-    ) {
-      return true
-    }
-
-    return false
-  }
 
   const handleClearError = (name: FormPenanggungJawabType) => {
     clearErrors(name)
@@ -225,7 +211,7 @@ const FormPenanggungJawabView: FC = () => {
         isOpen={true}
         onCancel={handleCancel}
         onSubmit={handleSubmit(onSubmit)}
-        isSubmitDisabled={btnDisabled()}
+        isSubmitDisabled={btnFormDisabled(errors)}
       >
         <div>
           <div className="flex pb-5">
