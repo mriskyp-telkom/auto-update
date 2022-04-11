@@ -8,7 +8,7 @@ kill-node:
 
 .PHONY: yarn-test
 yarn-test:
-	yarn test > test_output.txt
+	yarn test --maxWorkers 2 > test_output.txt
 
 .PHONY: yarn-init
 yarn-init:
@@ -34,5 +34,5 @@ repair-node:
 # after run this command, try git fetch origin again
 .PHONY: add-server-connection-alive
 add-server-connection-alive:
-    echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
-    echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+	echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
+	echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config

@@ -17,3 +17,15 @@ VALUES
 
 INSERT INTO ref_rekening (kode_rekening, rekening, neraca, blokid, batas_atas, batas_bawah, validasi_type, is_ppn, is_pph21, is_pph22, is_pph23, is_pph4, is_sspd, bhp, is_custom_pajak_1, is_honor, is_buku, is_custom_satuan, create_date, last_update, expired_date) VALUES ('5.1.02.01.01.0055', 'Belanja Makanan dan Minuman pada Fasilitas Pelayanan Urusan Pendidikan', '', 1, NULL, NULL, NULL, 0, 0, 0, 1, 0, 1, 'bhp', NULL, NULL, NULL, NULL, '2020-12-01', '2020-12-01', NULL);
 INSERT INTO ref_rekening (kode_rekening, rekening, neraca, blokid, batas_atas, batas_bawah, validasi_type, is_ppn, is_pph21, is_pph22, is_pph23, is_pph4, is_sspd, bhp, is_custom_pajak_1, is_honor, is_buku, is_custom_satuan, create_date, last_update, expired_date) VALUES ('5.1.02.02.01.0003', 'Honorarium Narasumber atau Pembahas, Moderator, Pembawa Acara, dan Panitia', '', 1, NULL, NULL, NULL, 0, 1, 0, 0, 0, 0, 'bbj', NULL, NULL, NULL, NULL, '2020-12-01', '2020-12-01', NULL);
+
+insert into ref_satuan (ref_satuan_id, unit, satuan, 
+    soft_delete, created_date, expired_date, last_update)
+values
+('F02AC478-2FF5-E011-84D1-CFDBD42BDA04', 'OTA', 'Orang Tahun', 
+    0, 2022-01-01, NULL, 2022-01-01);
+
+insert into ref_satuan (ref_satuan_id, unit, satuan, 
+    soft_delete, created_date, expired_date, last_update)
+values
+('F02AC478-2FF5-E011-84D1-CFDBD42BDA0B', 'OR', 'Orang', 
+    0, 2022-01-01, NULL, 2022-01-01);

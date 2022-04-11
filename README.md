@@ -93,7 +93,12 @@ yarn start
 6. Run test
 
 ```bash
-yarn test
+    yarn test
+```
+
+Due yarn test will spawn a child process, we need to limit maxWorker that running the test async
+```bash
+    yarn test --maxWorkers 2
 ```
 
 If you want to run test in specific file do
