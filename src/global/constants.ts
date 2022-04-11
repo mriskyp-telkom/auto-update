@@ -7,6 +7,11 @@ export const STATUS_KERTAS_KERJA = {
   disabled: 'disabled',
 }
 
+export const VERSI_ANGGARAN = {
+  perubahan: { code: 'perubahan', label: 'Perubahan' },
+  pergeseran: { code: 'pergeseran', label: 'Pergeseran' },
+}
+
 export const CONFIG = {
   sekolahId: 'sekolah_id',
   penggunaId: 'pengguna_id',

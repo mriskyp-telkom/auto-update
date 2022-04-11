@@ -17,7 +17,7 @@ import {
   formatDateToString,
   formatDateTimeStatus,
 } from 'renderer/utils/date-formatting'
-import { STATUS_KERTAS_KERJA } from 'global/constants'
+import { STATUS_KERTAS_KERJA, VERSI_ANGGARAN } from 'global/constants'
 
 interface CardDashboardAnggaranProps {
   data: CardDashboardType
@@ -87,7 +87,10 @@ const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (
               )}
               {enableVerDate && (
                 <div className="text-tiny text-gray-900">
-                  Ver. {data.type === 'perubahan' ? 'Perubahan' : 'Pergeseran'}{' '}
+                  Ver.{' '}
+                  {data.type === VERSI_ANGGARAN.perubahan.code
+                    ? VERSI_ANGGARAN.perubahan.label
+                    : VERSI_ANGGARAN.pergeseran.label}{' '}
                   {formatDateToString(new Date(data.tanggal_pengesahan))}
                 </div>
               )}

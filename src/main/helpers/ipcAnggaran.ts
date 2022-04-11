@@ -13,7 +13,7 @@ import {
 import { GetConfig } from 'main/repositories/Config'
 import CommonUtils from 'main/utils/CommonUtils'
 
-import { STATUS_KERTAS_KERJA } from 'global/constants'
+import { STATUS_KERTAS_KERJA, VERSI_ANGGARAN } from 'global/constants'
 import { IPC_ANGGARAN } from 'global/ipc'
 
 module.exports = {
@@ -72,16 +72,16 @@ module.exports = {
           const pergeseran = data.is_revisi % 100
           anggaran.status = STATUS_KERTAS_KERJA.approved
           if (countPerubahan >= 1) {
-            anggaran.type = 'Perubahan'
+            anggaran.type = VERSI_ANGGARAN.perubahan.code //'Perubahan'
           }
           if (pergeseran > 0) {
-            anggaran.type = 'Pergeseran'
+            anggaran.type = VERSI_ANGGARAN.pergeseran.code //'Pergeseran'
           }
         } else if (
           data.alasan_penolakan != null &&
           data.alasan_penolakan !== ''
         ) {
-          data.status = STATUS_KERTAS_KERJA.not_approved
+          anggaran.status = STATUS_KERTAS_KERJA.not_approved
         }
       } else {
         anggaran.status = STATUS_KERTAS_KERJA.not_created
