@@ -68,6 +68,8 @@ const MenyusunKertasKerjaView: FC = () => {
     (state: AnggaranStates) => state.setPenanggungJawab
   )
 
+  const isFocused = useAnggaranStore((state: AnggaranStates) => state.isFocused)
+
   const pagu = useAnggaranStore((state: AnggaranStates) => state.pagu)
 
   const savePenjab = () => {
@@ -137,6 +139,11 @@ const MenyusunKertasKerjaView: FC = () => {
     setIdAnggaran(idAnggaran)
     setIsSync(false)
   }
+
+  useEffect(() => {
+    const id_anggaran = decodeURIComponent(q_id_anggaran)
+    isFocused && setPagu(id_anggaran)
+  }, [isFocused])
 
   const handleBackToBeranda = () => {
     navigate('/anggaran')

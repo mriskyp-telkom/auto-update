@@ -85,7 +85,7 @@ const MengulasKertasKerjaView: FC = () => {
           1,
           idAnggaran
         )
-        setAnggaran(anggaran?.total)
+        setAnggaran(anggaran?.total ?? 0)
       }
     }
   }, [modeMengulas])
@@ -98,7 +98,7 @@ const MengulasKertasKerjaView: FC = () => {
       selectedTahap,
       idAnggaran
     )
-    setAnggaran(anggaran?.total)
+    setAnggaran(anggaran?.total ?? 0)
   }
 
   const getPanduan = () => {
