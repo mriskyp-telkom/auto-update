@@ -15,8 +15,10 @@ VALUES
  ('LZG05Td-1EisChtLS1qNsA', '02.', '', 'Pengembangan Standar Isi', 1, 1, 1, 1, 1, 1, 6, '2018-07-08', '2020-02-24 11:00:00.000', NULL),
  ('j4AhkRGWlESgXkdlxUvQXQ', '07.', '', 'Pengembangan standar pembiayaan', 1, 1, 1, 1, 1, 1, 6, '2018-07-08', '2020-02-24 11:00:00.000', NULL);
 
-INSERT INTO ref_rekening (kode_rekening, rekening, neraca, blokid, batas_atas, batas_bawah, validasi_type, is_ppn, is_pph21, is_pph22, is_pph23, is_pph4, is_sspd, bhp, is_custom_pajak_1, is_honor, is_buku, is_custom_satuan, create_date, last_update, expired_date) VALUES ('5.1.02.01.01.0055', 'Belanja Makanan dan Minuman pada Fasilitas Pelayanan Urusan Pendidikan', '', 1, NULL, NULL, NULL, 0, 0, 0, 1, 0, 1, 'bhp', NULL, NULL, NULL, NULL, '2020-12-01', '2020-12-01', NULL);
-INSERT INTO ref_rekening (kode_rekening, rekening, neraca, blokid, batas_atas, batas_bawah, validasi_type, is_ppn, is_pph21, is_pph22, is_pph23, is_pph4, is_sspd, bhp, is_custom_pajak_1, is_honor, is_buku, is_custom_satuan, create_date, last_update, expired_date) VALUES ('5.1.02.02.01.0003', 'Honorarium Narasumber atau Pembahas, Moderator, Pembawa Acara, dan Panitia', '', 1, NULL, NULL, NULL, 0, 1, 0, 0, 0, 0, 'bbj', NULL, NULL, NULL, NULL, '2020-12-01', '2020-12-01', NULL);
+INSERT INTO ref_rekening (kode_rekening, rekening, neraca, blokid, batas_atas, batas_bawah, validasi_type, is_ppn, is_pph21, is_pph22, is_pph23, is_pph4, is_sspd, bhp, is_custom_pajak_1, is_honor, is_buku, is_custom_satuan, create_date, last_update, expired_date) 
+VALUES 
+('5.1.02.01.01.0055', 'Belanja Makanan dan Minuman pada Fasilitas Pelayanan Urusan Pendidikan', '', 1, NULL, NULL, NULL, 0, 0, 0, 1, 0, 1, 'bhp', NULL, NULL, NULL, NULL, '2020-12-01', '2020-12-01', NULL),
+('5.1.02.02.01.0003', 'Honorarium Narasumber atau Pembahas, Moderator, Pembawa Acara, dan Panitia', '', 1, NULL, NULL, NULL, 0, 1, 0, 0, 0, 0, 'bbj', NULL, NULL, NULL, NULL, '2020-12-01', '2020-12-01', NULL);
 
 insert into ref_satuan (ref_satuan_id, unit, satuan, 
     soft_delete, created_date, expired_date, last_update)

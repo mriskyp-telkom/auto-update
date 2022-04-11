@@ -1,4 +1,11 @@
-import { createQueryBuilder, getManager, getRepository } from 'typeorm'
+import {
+  createQueryBuilder,
+  getManager,
+  getRepository,
+  InsertResult,
+  UpdateResult,
+  getConnection,
+} from 'typeorm'
 import { Rapbs } from 'main/models/Rapbs'
 import { RapbsPeriode } from 'main/models/RapbsPeriode'
 import { Anggaran } from 'main/models/Anggaran'
@@ -8,12 +15,12 @@ import { RefKode } from 'main/models/RefKode'
 import { RefAcuanBarang } from 'main/models/RefAcuanBarang'
 import { getBentukPendidikan } from 'main/repositories/Sekolah'
 import CommonUtils from 'main/utils/CommonUtils'
-import { AnggaranTotal } from 'main/types/Anggaran'
+import { AnggaranTotal, AnggaranDTO, PaguDTO } from 'main/types/Anggaran'
 
 export const GetAnggaran = async (
   idSumberDana: number,
   tahunAnggaran: number[] | null
-): Promise<any> => {
+): Promise<AnggaranDTO[]> => {
   const data = await createQueryBuilder(Anggaran, 'a')
     .select([
       'a.id_anggaran',
@@ -27,9 +34,19 @@ export const GetAnggaran = async (
       'a.is_pengesahan',
       'a.create_date',
       'a.last_update',
-      'MAX(a.is_revisi) as is_revisi',
       'a.alasan_penolakan',
     ])
+    .innerJoin(
+      (qb) =>
+        qb
+          .select('tahun_anggaran', 'max(is_revisi) as is_revisi')
+          .from(Anggaran, 'b')
+          .where('soft_delete=0')
+          .andWhere('is_aktif=1')
+          .andWhere('id_ref_sumber_dana=:idSumberDana')
+          .groupBy('tahun_anggaran'),
+      'a.is_revisi = b.is_revisi and a.tahun_anggaran = b.tahun_anggaran'
+    )
     .innerJoin(
       RefSumberDana,
       'r',
@@ -45,15 +62,17 @@ export const GetAnggaran = async (
     .groupBy('tahun_anggaran')
     .orderBy('a.tahun_anggaran', 'DESC')
     .getRawMany()
-  return data
+
+  return <AnggaranDTO[]>data
 }
 
-export const GetAnggaranById = async (idAnggaran: string): Promise<any> => {
-  const data = await getRepository(Anggaran).findOne({ idAnggaran: idAnggaran })
-  return data
+export const GetAnggaranById = async (
+  idAnggaran: string
+): Promise<Anggaran> => {
+  return await getRepository(Anggaran).findOne({ idAnggaran: idAnggaran })
 }
 
-export const GetPagu = async (idAnggaran: string): Promise<any> => {
+export const GetPagu = async (idAnggaran: string): Promise<PaguDTO> => {
   const data = await createQueryBuilder(Anggaran, 'a')
     .select([
       'a.tahun_anggaran',
@@ -62,17 +81,18 @@ export const GetPagu = async (idAnggaran: string): Promise<any> => {
       'max(a.jumlah)-sum(ifnull(r.jumlah,0)) as sisa',
     ])
     .leftJoin(Rapbs, 'r', 'a.id_anggaran = r.id_anggaran and r.soft_delete=0')
-    .where('a.soft_delete = 0  ' + ' AND a.id_anggaran = :idAnggaran ', {
+    .where('a.soft_delete = 0')
+    .andWhere('a.id_anggaran = :idAnggaran', {
       idAnggaran,
     })
     .groupBy('a.id_anggaran')
     .addGroupBy('a.tahun_anggaran')
-    .getRawOne()
+    .getRawOne<PaguDTO>()
   return data
 }
 
 export const GetAnggaranBefore = async (
-  sumberDana: number,
+  idRefSumberDana: number,
   tahun: number
 ): Promise<string> => {
   const getIsRevisiMax =
@@ -80,10 +100,10 @@ export const GetAnggaranBefore = async (
       await createQueryBuilder(Anggaran, 'a')
         .select('MAX(a.is_revisi)', 'is_revisi')
         .where(
-          'a.soft_delete = 0 AND a.tahun_anggaran =:tahun AND a.id_ref_sumber_dana = :sumberDana',
+          'a.soft_delete = 0 AND a.tahun_anggaran =:tahun AND a.id_ref_sumber_dana = :idRefSumberDana',
           {
             tahun: tahun - 1,
-            sumberDana: sumberDana,
+            idRefSumberDana: idRefSumberDana,
           }
         )
         .getRawOne()
@@ -92,11 +112,11 @@ export const GetAnggaranBefore = async (
     const getIdAnggaran = await createQueryBuilder(Anggaran, 'a')
       .select('a.id_anggaran as id_anggaran')
       .where(
-        'a.soft_delete = 0 AND a.tahun_anggaran =:tahun AND a.is_revisi =:isRevisi AND a.id_ref_sumber_dana =:sumberDana ',
+        'a.soft_delete = 0 AND a.tahun_anggaran =:tahun AND a.is_revisi =:isRevisi AND a.id_ref_sumber_dana =:idRefSumberDana ',
         {
           tahun: tahun - 1,
           isRevisi: getIsRevisiMax,
-          sumberDana: sumberDana,
+          idRefSumberDana: idRefSumberDana,
         }
       )
       .getRawOne()
@@ -105,11 +125,15 @@ export const GetAnggaranBefore = async (
   return ''
 }
 
-export const AddAnggaran = async (anggaran: Anggaran): Promise<any> => {
+export const AddAnggaran = async (
+  anggaran: Anggaran
+): Promise<InsertResult> => {
   return await getRepository(Anggaran).insert(anggaran)
 }
 
-export const DelAnggaran = async (idAnggaran: string): Promise<any> => {
+export const DelAnggaran = async (
+  idAnggaran: string
+): Promise<UpdateResult> => {
   return await createQueryBuilder()
     .update(Anggaran)
     .set({
@@ -121,79 +145,133 @@ export const DelAnggaran = async (idAnggaran: string): Promise<any> => {
 }
 
 export const CopyAnggaran = async (
-  idAnggaranSource: string,
-  idAnggaranNew: string
-): Promise<boolean> => {
+  idAnggaranBefore: string,
+  idRefSumberDana: number,
+  sekolahId: string,
+  tahun: number,
+  volume: number,
+  hargaSatuan: number,
+  penggunaId: string,
+  idPenjab: string
+): Promise<string> => {
   let idRapbsNew: string
-  let refRek
-  let refKode
-  let refBarang
-  const getBentuk = await getBentukPendidikan()
-  const test = await getRepository(Rapbs).find({
-    softDelete: 0,
-    idAnggaran: idAnggaranSource,
-  })
+  let refRek, refKode, refBarang
+
+  const now = new Date()
+
+  const connection = getConnection()
+  const queryRunner = connection.createQueryRunner()
+
+  await queryRunner.connect()
+  await queryRunner.startTransaction()
 
   try {
-    for (let i = 0; i < test.length; i++) {
-      const el = test[i]
+    const idAnggaranNew = CommonUtils.encodeUUID(CommonUtils.uuid())
+    const dataAnggaran = new Anggaran()
+    dataAnggaran.idAnggaran = idAnggaranNew
+    dataAnggaran.idRefSumberDana = idRefSumberDana
+    dataAnggaran.sekolahId = sekolahId
+    dataAnggaran.tahunAnggaran = tahun
+    dataAnggaran.volume = volume
+    dataAnggaran.hargaSatuan = hargaSatuan
+    dataAnggaran.jumlah = volume * hargaSatuan
+    dataAnggaran.sisaAnggaran = 0
+    dataAnggaran.isApprove = 0
+    dataAnggaran.isRevisi = 0
+    dataAnggaran.isAktif = 1
+    dataAnggaran.softDelete = 0
+    dataAnggaran.createDate = now
+    dataAnggaran.lastUpdate = now
+    dataAnggaran.updaterId = penggunaId
+    dataAnggaran.idPenjab = idPenjab
 
-      refRek = await createQueryBuilder(RefRekening)
-        .where('expired_date is null and kode_rekening=:kodeRekening', {
-          kodeRekening: el.kodeRekening,
-        })
-        .getCount()
+    await AddAnggaran(dataAnggaran)
 
-      refKode = await createQueryBuilder(RefKode)
-        .where(
-          'expired_date is null ' +
-            'and bentuk_pendidikan_id=:bentukPendidikan ' +
-            'and id_ref_kode=:idRefKode',
-          {
-            bentukPendidikan: getBentuk,
-            idRefKode: el.idRefKode,
-          }
-        )
-        .getCount()
+    const getBentuk = await getBentukPendidikan()
+    const arrayOfRabps = await getRepository(Rapbs).find({
+      softDelete: 0,
+      idAnggaran: idAnggaranBefore,
+    })
 
-      refBarang =
-        el.idBarang ?? '' == ''
-          ? await createQueryBuilder(RefAcuanBarang)
-              .where('expired_date is null and id_barang=:idBarang', {
-                idBarang: el.idBarang,
-              })
-              .getCount()
-          : 1
+    for (let i = 0; i < arrayOfRabps.length; i++) {
+      const rabps = arrayOfRabps[i]
+      const refPromises = []
+
+      refPromises.push(
+        createQueryBuilder(RefRekening)
+          .where('expired_date is null and kode_rekening=:kodeRekening', {
+            kodeRekening: rabps.kodeRekening,
+          })
+          .getCount()
+      )
+
+      refPromises.push(
+        createQueryBuilder(RefKode)
+          .where(
+            'expired_date is null ' +
+              'and bentuk_pendidikan_id=:bentukPendidikan ' +
+              'and id_ref_kode=:idRefKode',
+            {
+              bentukPendidikan: getBentuk,
+              idRefKode: rabps.idRefKode,
+            }
+          )
+          .getCount()
+      )
+
+      refPromises.push(
+        createQueryBuilder(RefAcuanBarang)
+          .where('expired_date is null and id_barang=:idBarang', {
+            idBarang: rabps.idBarang,
+          })
+          .getCount()
+      )
+
+      const result = await Promise.all(refPromises)
+
+      refRek = result[0]
+      refKode = result[1]
+      refBarang = rabps.idBarang ?? '' == '' ? result[2] : 1
 
       if (refKode > 0 && refRek > 0 && refBarang > 0) {
-        const originalIdRapbs = el.idRapbs
-        const now = new Date()
+        const originalIdRapbs = rabps.idRapbs
         idRapbsNew = CommonUtils.encodeUUID(CommonUtils.uuid())
-        el.idAnggaran = idAnggaranNew
-        el.idRapbs = idRapbsNew
-        el.createDate = now
-        el.lastUpdate = now
-        await getRepository(Rapbs).insert(el)
+        rabps.idAnggaran = idAnggaranNew
+        rabps.idRapbs = idRapbsNew
+        rabps.createDate = now
+        rabps.lastUpdate = now
+        await getRepository(Rapbs).insert(rabps)
 
-        const getRapbsPeriode = await getRepository(RapbsPeriode).find({
+        const arrayOfOriginalRabpsPeriode = await getRepository(
+          RapbsPeriode
+        ).find({
           softDelete: 0,
           idRapbs: originalIdRapbs,
         })
-        for (let i = 0; i < getRapbsPeriode.length; i++) {
-          const eld = getRapbsPeriode[i]
-          eld.idRapbsPeriode = CommonUtils.encodeUUID(CommonUtils.uuid())
-          eld.idRapbs = idRapbsNew
-          eld.createDate = now
-          eld.lastUpdate = now
 
-          await getRepository(RapbsPeriode).insert(eld)
+        const arrayOfRabpsPeriode = []
+        for (let i = 0; i < arrayOfOriginalRabpsPeriode.length; i++) {
+          const rapbsPeriode = arrayOfOriginalRabpsPeriode[i]
+          rapbsPeriode.idRapbsPeriode = CommonUtils.encodeUUID(
+            CommonUtils.uuid()
+          )
+          rapbsPeriode.idRapbs = idRapbsNew
+          rapbsPeriode.createDate = now
+          rapbsPeriode.lastUpdate = now
+          arrayOfRabpsPeriode.push(rapbsPeriode)
         }
+
+        await getRepository(RapbsPeriode).insert(arrayOfRabpsPeriode)
       }
     }
-    return true
+    await queryRunner.commitTransaction()
+    return idAnggaranNew
   } catch {
-    return false
+    await queryRunner.rollbackTransaction()
+  } finally {
+    await queryRunner.release()
   }
+  return ''
 }
 
 /**

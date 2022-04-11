@@ -176,29 +176,27 @@ module.exports = {
         id_anggaran_before:
     */
     if (data.id_anggaran_before !== '') {
-      const idAnggaran = CommonUtils.encodeUUID(CommonUtils.uuid())
-      const now = new Date()
+      const {
+        id_anggaran_before,
+        id_ref_sumber_dana,
+        tahun,
+        volume,
+        harga_satuan,
+        pengguna_id,
+        id_penjab,
+      } = data
+      const sekolah_id = await GetConfig('sekolah_id')
 
-      const dataAnggaran = new Anggaran()
-      dataAnggaran.idAnggaran = idAnggaran
-      dataAnggaran.idRefSumberDana = data.id_ref_sumber_dana
-      dataAnggaran.sekolahId = await GetConfig('sekolah_id')
-      dataAnggaran.tahunAnggaran = data.tahun
-      dataAnggaran.volume = data.volume
-      dataAnggaran.hargaSatuan = data.harga_satuan
-      dataAnggaran.jumlah = data.volume * data.harga_satuan
-      dataAnggaran.sisaAnggaran = 0
-      dataAnggaran.isApprove = 0
-      dataAnggaran.isRevisi = 0
-      dataAnggaran.isAktif = 1
-      dataAnggaran.softDelete = 0
-      dataAnggaran.createDate = now
-      dataAnggaran.lastUpdate = now
-      dataAnggaran.updaterId = data.pengguna_id
-      dataAnggaran.idPenjab = data.id_penjab
-      await AddAnggaran(dataAnggaran)
-      const retCopy = await CopyAnggaran(data.id_anggaran_before, idAnggaran)
-      e.returnValue = retCopy ? idAnggaran : ''
+      e.returnValue = await CopyAnggaran(
+        id_anggaran_before,
+        id_ref_sumber_dana,
+        sekolah_id,
+        tahun,
+        volume,
+        harga_satuan,
+        pengguna_id,
+        id_penjab
+      )
     } else {
       e.returnValue = ''
     }
