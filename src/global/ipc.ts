@@ -22,6 +22,8 @@ export const IPC_REFERENSI = {
   getRefBarangByRekening: `${REFERENSI}:getRefBarangByRekening`,
   getRefKode: `${REFERENSI}:getRefKode`,
   getRefRekening: `${REFERENSI}:getRefRekening`,
+  getRefSatuan: `${REFERENSI}:getRefSatuan`,
+  addBulkRefSatuan: `${REFERENSI}:addBulkRefSatuan`,
 }
 
 export const IPC_KK = {
