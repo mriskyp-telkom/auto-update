@@ -20,12 +20,14 @@ import { ParamPengajuanAnggaran, ResponseMengulas } from 'renderer/types/Anggara
 import { ParamInitSync } from 'renderer/types/InitSyncType'
 
 import { IPC_ANGGARAN, IPC_PENJAB, IPC_PENGGUNA } from 'global/ipc'
+
 import { useAPIInitSync } from 'renderer/apis/initSync'
+import { useAPIPostAnggaran, useAPIPostPenjab, useAPIPostRkas, useAPIPostRkasDetail, useAPIPostRkasFinal, useAPIPostRkasPtk } from 'renderer/apis/pengajuan'
 import { dateToString } from 'renderer/utils/date-formatting'
+import { decodeUUID } from 'renderer/utils/string-formatting'
 import { FORMAT_TANGGAL_PENGAJUAN, FORMAT_TANGGAL_SYNC } from 'renderer/constants/general'
 import { ParamPengajuanPenjab } from 'renderer/types/PenjabType'
 import { Anggaran } from 'main/models/Anggaran'
-import { useAPIPostAnggaran, useAPIPostPenjab } from 'renderer/apis/pengajuan'
 // import { useAPIInitSync } from 'renderer/apis/initSync'
 
 const ipcRenderer = window.require('electron').ipcRenderer
@@ -45,19 +47,7 @@ const stepApi = [
   'finalRkas',
 ]
 
-// const stepAPiPengajuan = [
-//   'infoConnection',
-//   'getToken',
-//   'initSync',
-//   'postAnggaran',
-//   'postPenjab',
-//   'postRkas',
-//   'postRkasDetail',
-//   'postRkasPtk',
-//   'finalRkas',
-// ]
-
-const TypeSessionPengesahan = 2, TypeSessionPergeseran = 3, TypeSessionPerubahan = 5
+const TypeSessionPengesahan = '2', TypeSessionPergeseran = '3', TypeSessionPerubahan = '5'
 
 const SyncMengulasKertasKerjaView: FC = () => {
   const { q_id_anggaran } = useParams()
@@ -112,6 +102,24 @@ const SyncMengulasKertasKerjaView: FC = () => {
   )
   const setAlertFailedInitSync = useAppStore(
     (state: AppStates) => state.setAlertFailedInitSync
+  )
+  const setAlertFailedPostAnggaran = useAppStore(
+    (state: AppStates) => state.setAlertFailedPostAnggaran
+  )
+  const setAlertFailedPostPenjab = useAppStore(
+    (state: AppStates) => state.setAlertFailedPostPenjab
+  )
+  const setAlertFailedPostRkas = useAppStore(
+    (state: AppStates) => state.setAlertFailedPostRkas
+  )
+  const setAlertFailedPostRkasDetail = useAppStore(
+    (state: AppStates) => state.setAlertFailedPostRkasDetail
+  )
+  const setAlertFailedPostRkasPtk = useAppStore(
+    (state: AppStates) => state.setAlertFailedPostRkasPtk
+  )
+  const setAlertFailedPostRkasFinal = useAppStore(
+    (state: AppStates) => state.setAlertFailedPostRkasFinal
   )
   const setAlertMengulas = useAnggaranStore(
     (state: AnggaranStates) => state.setAlertMengulas
@@ -354,33 +362,14 @@ const SyncMengulasKertasKerjaView: FC = () => {
     return pagu?.sisa
   }
 
-  // const populateConfigs = () => {
-  //   const hddVol = ipcRenderer.sendSync(
-  //     'config:getConfig',
-  //     APP_CONFIG.hddVol
-  //   )
-  //   const versi = ipcRenderer.sendSync(
-  //     'config:getConfig',
-  //     APP_CONFIG.versionApp
-  //   )
-  //   const tahun = ipcRenderer.sendSync(
-  //     'config:getConfig',
-  //     APP_CONFIG.tahunAktif
-  //   )
-  //   const koreg = ipcRenderer.sendSync(
-  //     'config:getConfig',
-  //     APP_CONFIG.koreg
-  //   )
-  //   return {
-  //     'hddVol': hddVol,
-  //     'versi': versi,
-  //     'tahun': tahun,
-  //     'koreg': koreg
-  //   }
-  // }
-  
   useEffect(() => {
-    debugger
+    if (checkSisaDana() != 0) {
+      setApi(stepApi[0]) // put here just for test
+    }
+  }, [])
+
+  useEffect(() => {
+    // debugger
     if (infoConnection !== undefined) {
       const result = Number(infoConnection?.data)
       if (result === 1) {
@@ -391,32 +380,6 @@ const SyncMengulasKertasKerjaView: FC = () => {
       }
     }
   }, [infoConnection])
-  
-  useEffect(() => {
-    // debugger
-    if (dataToken !== undefined) {
-      const token = Number(dataToken?.data.access_token)
-      if (token !== undefined) {
-        setApi(stepApi[2])
-      } else {
-        removeToken()
-        setAlertFailedGetToken(true)
-      }
-    }
-  }, [dataToken])
-  
-  useEffect(() => {
-    // debugger
-    if (initSync !== undefined) {
-      const syncID = Number(initSync?.data)
-      if (syncID !== undefined) {
-        setApi(stepApi[3])
-      } else {
-        removeInitSync()
-        setAlertFailedInitSync(true)
-      }
-    }
-  }, [initSync])
 
   useEffect(() => {
     if (checkSisaDana() != 0) {
@@ -541,6 +504,94 @@ const SyncMengulasKertasKerjaView: FC = () => {
       setAlertMengulas(true)
     }
   }, [dataRefBarang, dataRefRekening, dataRefKode])
+
+  
+  useEffect(() => {
+    //debugger
+    if (initSync !== undefined) {
+      const syncID = initSync?.data
+      if (syncID !== undefined) {
+        setApi(stepApi[3])
+      } else {
+        removeInitSync()
+        setAlertFailedInitSync(true)
+      }
+    }
+  }, [initSync])
+
+  useEffect(() => {
+    if (anggaranResponse !== undefined) {
+      const resp = anggaranResponse?.data
+      if (resp === 1) {
+        setApi(stepApi[4])
+      } else {
+        removeAnggaranResponse()
+        setAlertFailedPostAnggaran(true)
+      }
+    }
+  }, [anggaranResponse])
+
+  useEffect(() => {
+    debugger
+    if (penjabResponse !== undefined) {
+      const resp = penjabResponse?.data
+      if (resp === 1) {
+        setApi(stepApi[5])
+      } else {
+        removePenjabResponse()
+        setAlertFailedPostPenjab(true)
+      }
+    }
+  }, [penjabResponse])
+
+  // useEffect(() => {
+  //   if (rkasResponse !== undefined) {
+  //     const resp = rkasResponse?.data
+  //     if (resp === 1) {
+  //       setApi(stepAPi[6])
+  //     } else {
+  //       removeRkasResponse()
+  //       setAlertFailedPostRkas(true)
+  //     }
+  //   }
+  // }, [rkasResponse])
+
+  // useEffect(() => {
+  //   if (rkasDetailResponse !== undefined) {
+  //     const resp = rkasDetailResponse?.data
+  //     if (resp === 1) {
+  //       setApi(stepAPi[7])
+  //     } else {
+  //       removeRkasDetailResponse()
+  //       setAlertFailedPostRkasDetail(true)
+  //     }
+  //   }
+  // }, [rkasDetailResponse])
+
+  // useEffect(() => {
+  //   if (rkasPtkResponse !== undefined) {
+  //     const resp = rkasPtkResponse?.data
+  //     if (resp === 1) {
+  //       setApi(stepAPi[8])
+  //     } else {
+  //       removeRkasPtkResponse()
+  //       setAlertFailedPostRkasPtk(true)
+  //     }
+  //   }
+  // }, [rkasPtkResponse])
+
+  // useEffect(() => {
+  //   if (rkasFinalResponse !== undefined) {
+  //     const resp = rkasFinalResponse?.data
+  //     if (resp === 1) {
+  //       //TODO: code after pengajuan success
+  //     } else {
+  //       removeRkasFinalResponse()
+  //       setAlertFailedPostRkasFinal(true)
+  //     }
+  //   }
+  // }, [rkasFinalResponse])
+
   return (
     <SyncDialogComponent
       title="Mengirim RKAS..."

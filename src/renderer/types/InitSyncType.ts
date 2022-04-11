@@ -6,5 +6,5 @@ export interface ParamInitSync {
     hdd_vol: string,
     npsn: string,
     versi: string,
-    type_session: number
+    type_session: string
 }

@@ -42,16 +42,16 @@ module.exports = {
         anggaran.tanggal_pengesahan =
           data.tanggal_pengesahan != null
             ? CommonUtils.formatDateToString(
-                data.tanggal_pengesahan,
-                'YYYY-MM-DD HH:mm'
-              )
+              data.tanggal_pengesahan,
+              'YYYY-MM-DD HH:mm'
+            )
             : ''
         anggaran.status_updated_at =
           data.last_update != null
             ? CommonUtils.formatDateToString(
-                data.last_update,
-                'YYYY-MM-DD HH:mm'
-              )
+              data.last_update,
+              'YYYY-MM-DD HH:mm'
+            )
             : ''
         if (
           data.tanggal_pengajuan == null &&
