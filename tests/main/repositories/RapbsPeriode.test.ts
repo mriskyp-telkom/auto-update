@@ -1,6 +1,6 @@
 import { Rapbs } from 'main/models/Rapbs'
 import { RapbsPeriode } from 'main/models/RapbsPeriode'
-import { GetDetailKegiatan } from 'main/repositories/RapbsPeriode'
+import { GetDetailListRapbs } from 'main/repositories/RapbsPeriode'
 import { createConnection, getConnection } from 'typeorm'
 import { cfg, Migrate } from '../migration'
 
@@ -28,7 +28,7 @@ afterEach(async () => {
 })
 
 test('GetDetailKegiatan', async () => {
-  const data = await GetDetailKegiatan(3, '02.', 'apQwiAb-9EWxv74iwMY6aQ')
+  const data = await GetDetailListRapbs(3, '02.', 'apQwiAb-9EWxv74iwMY6aQ')
 
   expect(data[0].rekening_belanja[0].label).toBe(
     'Belanja Makanan dan Minuman pada Fasilitas Pelayanan Urusan Pendidikan'

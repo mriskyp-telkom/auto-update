@@ -38,7 +38,7 @@ test('AddDeleteGetRapbsPtk', async () => {
 
   await AddRapbsPtk(rapbsPtk)
 
-  const findRapbsPtk = await GetRapbsPtk(rapbsPtk.idRapbs, rapbsPtk.ptkId)
+  const findRapbsPtk = await GetRapbsPtk(rapbsPtk.idRapbs)
   expect(findRapbsPtk.idRapbs).toBe(rapbsPtk.idRapbs)
   expect(findRapbsPtk.ptkId).toBe(rapbsPtk.ptkId)
   expect(findRapbsPtk.nama).toBe(rapbsPtk.nama)
@@ -56,6 +56,6 @@ test('DeleteGetRapbsPtk', async () => {
 
   await DeleteRapbsPtk(rapbsPtk.idRapbs, rapbsPtk.ptkId)
 
-  const findRapbsPtk2 = await GetRapbsPtk(rapbsPtk.idRapbs, rapbsPtk.ptkId)
+  const findRapbsPtk2 = await GetRapbsPtk(rapbsPtk.idRapbs)
   expect(findRapbsPtk2).toBe(undefined)
 })

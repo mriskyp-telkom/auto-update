@@ -13,7 +13,9 @@ VALUES
  ('BuLUTNIfsU-cEq0pdh0kvQ', '06.', '', 'Pengembangan standar pengelolaan', 1, 1, 1, 1, 1, 1, 6, '2018-07-08', '2020-02-24 11:00:00.000', NULL),
  ('DUyVL2AtDE6xb0buCnSUEQ', '04.', '', 'Pengembangan pendidik dan tenaga kependidikan', 1, 1, 1, 1, 1, 1, 6, '2018-07-08', '2020-02-24 11:00:00.000', NULL),
  ('LZG05Td-1EisChtLS1qNsA', '02.', '', 'Pengembangan Standar Isi', 1, 1, 1, 1, 1, 1, 6, '2018-07-08', '2020-02-24 11:00:00.000', NULL),
- ('j4AhkRGWlESgXkdlxUvQXQ', '07.', '', 'Pengembangan standar pembiayaan', 1, 1, 1, 1, 1, 1, 6, '2018-07-08', '2020-02-24 11:00:00.000', NULL);
+ ('j4AhkRGWlESgXkdlxUvQXQ', '07.', '', 'Pengembangan standar pembiayaan', 1, 1, 1, 1, 1, 1, 6, '2018-07-08', '2020-02-24 11:00:00.000', NULL),
+ ('JfpVF35Cd0aOZmb0bhN2iA', '07.12.01.', 'HlLBCW6Q7U-ijOx07EHCyA', 'Pembayaran Honor Guru', 1, 1, 1, 1, 1, 3, 6, '2018-07-08', '2020-02-24 11:00:00.000', NULL),
+ ('HlLBCW6Q7U-ijOx07EHCyA', '07.12.', 'j4AhkRGWlESgXkdlxUvQXQ', 'Pembiayaan untuk Pembayaran Honor', 1, 1, 1, 1, 1, 2, 6, '2018-07-08', '2020-02-24 11:00:00.000', NULL);
 
 INSERT INTO ref_rekening (kode_rekening, rekening, neraca, blokid, batas_atas, batas_bawah, validasi_type, is_ppn, is_pph21, is_pph22, is_pph23, is_pph4, is_sspd, bhp, is_custom_pajak_1, is_honor, is_buku, is_custom_satuan, create_date, last_update, expired_date) 
 VALUES 

@@ -11,12 +11,16 @@ import {
   AddRapbsPeriode,
   DelRapbsPeriode,
   GetRapbsPeriode,
-  GetDetailKegiatan,
+  GetDetailListRapbs,
   GetRapbsSummary,
 } from 'main/repositories/RapbsPeriode'
 import CommonUtils from 'main/utils/CommonUtils'
 import { IPC_KK } from 'global/ipc'
-import { AddDetailKegiatan } from 'main/services/KertasKerjaService'
+import {
+  AddDetailKegiatan,
+  GetDetailKegiatan,
+} from 'main/services/KertasKerjaService'
+import { AnggaranKegiatan } from 'main/types/Anggaran'
 
 module.exports = {
   /*
@@ -27,7 +31,8 @@ module.exports = {
         }
       */
   getRapbsBulan: ipcMain.on(IPC_KK.getRapbsBulan, async (e, data) => {
-    e.returnValue = await GetRapbsBulan(data.idAnggaran, data.idPeriode)
+    const res = await GetRapbsBulan(data.idAnggaran, data.idPeriode)
+    e.returnValue = res.unwrapOr(<AnggaranKegiatan[]>[])
   }),
 
   getRapbs: ipcMain.on('kk:getRapbs', async (e, idRapbs) => {
@@ -163,13 +168,19 @@ module.exports = {
   getRapbsPeriodeDetail: ipcMain.on(
     IPC_KK.anggaranDetailKegiatan,
     async (e, id_tahap, id_kode, id_anggaran) => {
-      e.returnValue = await GetDetailKegiatan(id_tahap, id_kode, id_anggaran)
+      e.returnValue = await GetDetailListRapbs(id_tahap, id_kode, id_anggaran)
     }
   ),
   addAnggaranDetailKegiatan: ipcMain.on(
     IPC_KK.addAnggaranDetailKegiatan,
     async (e, detailKegiatan) => {
       e.returnValue = await AddDetailKegiatan(detailKegiatan)
+    }
+  ),
+  getAnggaranDetailKegiatan: ipcMain.on(
+    IPC_KK.getAnggaranDetailKegiatan,
+    async (e, idAnggaran) => {
+      e.returnValue = await GetDetailKegiatan(idAnggaran)
     }
   ),
 }
