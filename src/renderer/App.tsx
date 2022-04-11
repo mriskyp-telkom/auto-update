@@ -16,7 +16,7 @@ import MenyusunKertasKerjaView from 'renderer/views/Anggaran/MenyusunKertasKerja
 import MengulasKertasKerjaView from 'renderer/views/Anggaran/MengulasKertasKerjaView'
 import SyncMengulasKertasKerjaView from 'renderer/views/Anggaran/MengulasKertasKerjaView/SyncMengulasKertasKerjaView'
 
-import FormDetailKertasKerjaView from 'renderer/views/Anggaran/FormDetailKertasKerjaView'
+import FormKertasKerjaView from 'renderer/views/Anggaran/Form/FormKertasKerjaView'
 import FormPenanggungJawabView from 'renderer/views/Anggaran/Form/FormPenanggungJawabView'
 import FormPaguView from 'renderer/views/Anggaran/Form/FormPaguView'
 
@@ -95,13 +95,10 @@ const App: FC = () => {
             <Route path="/">
               <Route path="form/kertas-kerja">
                 <Route
-                  path=":mode/:q_id_anggaran"
-                  element={<FormDetailKertasKerjaView />}
+                  path=":q_mode/:q_id_anggaran"
+                  element={<FormKertasKerjaView />}
                 >
-                  <Route
-                    path=":q_id_rapbs"
-                    element={<FormDetailKertasKerjaView />}
-                  />
+                  <Route path=":q_id_rapbs" element={<FormKertasKerjaView />} />
                 </Route>
               </Route>
               <Route path="form/penanggung-jawab">

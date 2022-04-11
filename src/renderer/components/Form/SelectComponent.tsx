@@ -14,6 +14,7 @@ interface SelectProps {
   options: any
   register: (arg0: string, arg1: RegisterOptions) => void
   handleSelect: (value: string) => void
+  disabled?: boolean
 }
 
 const SelectComponent: FC<SelectProps> = (props: SelectProps) => {
@@ -37,13 +38,21 @@ const SelectComponent: FC<SelectProps> = (props: SelectProps) => {
         name={name}
         {...register(name, {})}
       />
-      <Listbox value={selectedValue} onChange={handleChange}>
-        <Listbox.Button className="w-[88px]">
+      <Listbox
+        value={selectedValue}
+        onChange={handleChange}
+        disabled={props.disabled}
+      >
+        <Listbox.Button
+          className={clsx(props.disabled && 'cursor-not-allowed', 'w-[88px]')}
+        >
           <span className="w-full flex justify-between items-center">
             <span className="capitalize-first">{selectedValue}</span>
-            <Icon as="i" color="default" fontSize="default">
-              arrow_drop_down
-            </Icon>
+            {!props.disabled && (
+              <Icon as="i" color="default" fontSize="default">
+                arrow_drop_down
+              </Icon>
+            )}
           </span>
         </Listbox.Button>
         <Listbox.Options
