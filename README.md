@@ -199,6 +199,12 @@ After that, if somehow you still not able to install due some tools not installe
 
 Install it and then try again
 
+## Seed data
+
+Currently: Please use seed data based on the kemdikbud data in order to mirror the sync data and make sure that every unit test success
+
+If somehow you need to create a mock, please set comment that explained why should be differ from kemdikbud db dev
+
 ## Release Pipeline
 
 Make sure the changes are merged to `main` branch and **tagged with the expected version**. Staging build and release will happen automatically, production is to be triggered manually from pipeline.

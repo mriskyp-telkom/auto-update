@@ -45,6 +45,7 @@ beforeEach(async () => {
 
 afterEach(async () => {
   const conn = getConnection()
+
   await conn.close()
 })
 

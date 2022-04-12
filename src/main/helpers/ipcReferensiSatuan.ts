@@ -11,8 +11,6 @@ module.exports = {
     'satuan:getRefSatuanLastUpdate',
     async (e) => {
       const result = await getRefSatuanLastUpdate()
-      // console.log('result')
-      // console.log(result)
 
       e.returnValue =
         result != null

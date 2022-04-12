@@ -39,10 +39,8 @@ export async function getAppData(): Promise<string> {
   }
 
   if (process.env.NODE_ENV === 'development' && fs.existsSync(dir)) {
-    // Directory exists
     return dir
   } else {
-    // Directory not found
     return path.join(appPath, 'AppData')
   }
 }

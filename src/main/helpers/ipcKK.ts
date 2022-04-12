@@ -3,14 +3,12 @@ import { Rapbs } from 'main/models/Rapbs'
 import { RapbsPeriode } from 'main/models/RapbsPeriode'
 import {
   AddRapbs,
-  DelRapbs,
   GetRapbs,
   GetRapbsBulan,
   GetRapbsLastUpdate,
 } from 'main/repositories/Rapbs'
 import {
   AddRapbsPeriode,
-  DelRapbsPeriode,
   GetRapbsPeriode,
   GetDetailListRapbs,
   GetRapbsSummary,
@@ -19,6 +17,7 @@ import CommonUtils from 'main/utils/CommonUtils'
 import { IPC_KK } from 'global/ipc'
 import {
   AddDetailKegiatan,
+  DeleteRapbsByRapbsId,
   GetDetailKegiatan,
 } from 'main/services/KertasKerjaService'
 import { AnggaranKegiatan } from 'main/types/Anggaran'
@@ -104,9 +103,16 @@ module.exports = {
     }
   }),
 
-  deleteRapbs: ipcMain.on('kk:deleteRapbs', async (e, idRapbs) => {
-    e.returnValue = await DelRapbs(idRapbs)
+  deleteRapbs: ipcMain.on(IPC_KK.deleteRapbs, async (e, idRapbs) => {
+    e.returnValue = await DeleteRapbsByRapbsId(idRapbs)
   }),
+
+  addAnggaranDetailKegiatan: ipcMain.on(
+    IPC_KK.addAnggaranDetailKegiatan,
+    async (e, detailKegiatan) => {
+      e.returnValue = await AddDetailKegiatan(detailKegiatan)
+    }
+  ),
 
   addRapbsPeriode: ipcMain.on('kk:addRapbsPeriode', async (e, data) => {
     const idRapbsPeriode = CommonUtils.encodeUUID(CommonUtils.uuid())
@@ -132,6 +138,33 @@ module.exports = {
     }
   }),
 
+  getRapbsSummary: ipcMain.on(IPC_KK.getRapbsSummary, async (e, data) => {
+    const { tahap, idAnggaran } = data
+    const result = await GetRapbsSummary(tahap, idAnggaran)
+    e.returnValue = result
+  }),
+
+  getRapbsPeriodeDetail: ipcMain.on(
+    IPC_KK.anggaranDetailKegiatan,
+    async (e, id_tahap, id_kode, id_anggaran) => {
+      e.returnValue = await GetDetailListRapbs(id_tahap, id_kode, id_anggaran)
+    }
+  ),
+
+  getAnggaranDetailKegiatan: ipcMain.on(
+    IPC_KK.getAnggaranDetailKegiatan,
+    async (e, idRapbs) => {
+      e.returnValue = await GetDetailKegiatan(idRapbs)
+    }
+  ),
+
+  getRapbsLastUpdate: ipcMain.on(
+    IPC_KK.getRapbsLastUpdate,
+    async (e, idAnggaran) => {
+      e.returnValue = await GetRapbsLastUpdate(idAnggaran)
+    }
+  ),
+
   updateRapbsPeriode: ipcMain.on('kk:updateRapbsPeriode', async (e, data) => {
     const dataRapbsPeriode = new RapbsPeriode()
     dataRapbsPeriode.idRapbsPeriode = data.idRapbsPeriode
@@ -152,43 +185,4 @@ module.exports = {
       e.returnValue = null
     }
   }),
-
-  deleteRapbsPeriode: ipcMain.on(
-    'kk:deleteRapbsPeriode',
-    async (e, idRapbsPeriode) => {
-      e.returnValue = await DelRapbsPeriode(idRapbsPeriode)
-    }
-  ),
-
-  getRapbsSummary: ipcMain.on(IPC_KK.getRapbsSummary, async (e, data) => {
-    const { tahap, idAnggaran } = data
-    const result = await GetRapbsSummary(tahap, idAnggaran)
-    e.returnValue = result
-  }),
-
-  getRapbsPeriodeDetail: ipcMain.on(
-    IPC_KK.anggaranDetailKegiatan,
-    async (e, id_tahap, id_kode, id_anggaran) => {
-      e.returnValue = await GetDetailListRapbs(id_tahap, id_kode, id_anggaran)
-    }
-  ),
-  addAnggaranDetailKegiatan: ipcMain.on(
-    IPC_KK.addAnggaranDetailKegiatan,
-    async (e, detailKegiatan) => {
-      e.returnValue = await AddDetailKegiatan(detailKegiatan)
-    }
-  ),
-
-  getAnggaranDetailKegiatan: ipcMain.on(
-    IPC_KK.getAnggaranDetailKegiatan,
-    async (e, idRapbs) => {
-      e.returnValue = await GetDetailKegiatan(idRapbs)
-    }
-  ),
-  getRapbsLastUpdate: ipcMain.on(
-    IPC_KK.getRapbsLastUpdate,
-    async (e, idAnggaran) => {
-      e.returnValue = await GetRapbsLastUpdate(idAnggaran)
-    }
-  ),
 }

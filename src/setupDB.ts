@@ -31,6 +31,7 @@ import { RefPeriode } from './main/models/RefPeriode'
 import { RefRekening } from './main/models/RefRekening'
 import { RefRekeningTransfer } from './main/models/RefRekeningTransfer'
 import { RefSumberDana } from './main/models/RefSumberDana'
+import { RefSatuan } from './main/models/RefSatuan'
 import { RefTahunAnggaran } from './main/models/RefTahunAnggaran'
 import { Role } from './main/models/Role'
 import { Token } from './main/models/Token'
@@ -49,11 +50,13 @@ async function encryptDB(): Promise<void> {
   try {
     db.pragma("cipher='sqlcipher'")
     db.pragma(`legacy=4`)
+    db.pragma('journal_mode = WAL')
     db.pragma("rekey='K3md1kbudRIS3n4yan'")
     db.close()
   } catch {
     db.pragma("cipher='sqlcipher'")
     db.pragma(`legacy=4`)
+    db.pragma('journal_mode = WAL')
     db.pragma("key='K3md1kbudRIS3n4yan'")
     db.close()
   }
@@ -654,6 +657,7 @@ async function createDBLocal(appDataPath: string): Promise<void> {
         RefPajak,
         RefPeriode,
         RefRekening,
+        RefSatuan,
         RefSumberDana,
         RefRekeningTransfer,
         RefTahunAnggaran,

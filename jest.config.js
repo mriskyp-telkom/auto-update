@@ -25,4 +25,7 @@ module.exports = {
       },
     },
   ],
+  collectCoverageFrom: ['src/**/*.js', 'src/**/*.ts', '!**/node_modules/**'],
+  coverageReporters: ['html', 'text', 'text-summary', 'cobertura'],
+  testMatch: ['**/*.test.js', '**/*.test.ts'],
 }

@@ -215,6 +215,6 @@ test('GetTotalAnggaran', async () => {
 
   const totalAnggaranData = await GetTotalAnggaran(idTahap, idAnggaran)
 
-  expect(totalAnggaranData.total).toBe(106095000)
+  expect(totalAnggaranData.total).toBe(108095000)
   expect(totalAnggaranData.id_anggaran).toBe(idAnggaran)
 })

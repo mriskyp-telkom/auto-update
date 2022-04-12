@@ -9,6 +9,7 @@ import {
   RapbsSummary,
 } from 'main/types/RapbsPeriodeDetail'
 import {
+  UpdateResult,
   getManager,
   createQueryBuilder,
   getRepository,
@@ -25,33 +26,6 @@ export const GetManyRapbsPeriode = async (
   idRapbs: string
 ): Promise<RapbsPeriode[]> => {
   return await getRepository(RapbsPeriode).find({ idRapbs: idRapbs })
-}
-
-export const AddRapbsPeriode = async (
-  rapbsPeriode: RapbsPeriode
-): Promise<any> => {
-  return await getRepository(RapbsPeriode).upsert(rapbsPeriode, [
-    'idRapbsPeriode',
-  ])
-}
-
-export const AddBulkRapbsPeriode = async (
-  rapbsPeriode: RapbsPeriode[]
-): Promise<InsertResult> => {
-  return await getRepository(RapbsPeriode).upsert(rapbsPeriode, [
-    'idRapbsPeriode',
-  ])
-}
-
-export const DelRapbsPeriode = async (idRapbsPeriode: string): Promise<any> => {
-  return await createQueryBuilder()
-    .update(RapbsPeriode)
-    .set({
-      softDelete: 1,
-      lastUpdate: new Date(),
-    })
-    .where('id_rapbs_periode = :idRapbsPeriode', { idRapbsPeriode })
-    .execute()
 }
 
 /**
@@ -423,6 +397,35 @@ export const GetDetailListRapbs = async (
   })
 
   return kegiatan
+}
+
+export const AddRapbsPeriode = async (
+  rapbsPeriode: RapbsPeriode
+): Promise<any> => {
+  return await getRepository(RapbsPeriode).upsert(rapbsPeriode, [
+    'idRapbsPeriode',
+  ])
+}
+
+export const AddBulkRapbsPeriode = async (
+  rapbsPeriode: RapbsPeriode[]
+): Promise<InsertResult> => {
+  return await getRepository(RapbsPeriode).upsert(rapbsPeriode, [
+    'idRapbsPeriode',
+  ])
+}
+
+export const DelRapbsPeriodeByRapbsId = async (
+  idRapbs: string
+): Promise<UpdateResult> => {
+  return await createQueryBuilder()
+    .update(RapbsPeriode)
+    .set({
+      softDelete: 1,
+      lastUpdate: new Date(),
+    })
+    .where('id_rapbs = :idRapbs', { idRapbs })
+    .execute()
 }
 
 function populateMonthlyDetails(periode: number, bulan: Bulan): BulanDetail[] {
