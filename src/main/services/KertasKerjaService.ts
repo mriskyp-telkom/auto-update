@@ -11,13 +11,14 @@ import {
 } from 'main/repositories/Rapbs'
 import {
   AddBulkRapbsPeriode,
+  BulkUpdateByRapbsId,
   GetManyRapbsPeriode,
   DelRapbsPeriodeByRapbsId,
 } from 'main/repositories/RapbsPeriode'
 import { AddRapbsPtk, GetRapbsPtk } from 'main/repositories/RapbsPtk'
 import {
   DetailKegiatan,
-  ResultDetailKegiatan,
+  ResultAddDetailKegiatan,
   ResultDeleteRapbs,
 } from 'main/types/Rapbs'
 import CommonUtils from 'main/utils/CommonUtils'
@@ -35,13 +36,13 @@ import {
 
 export async function AddDetailKegiatan(
   data: DetailKegiatan
-): Promise<Result<ResultDetailKegiatan, Error>> {
+): Promise<Result<ResultAddDetailKegiatan, Error>> {
   const now = new Date()
   const idRapbs = CommonUtils.encodeUUID(CommonUtils.uuid())
   const idBarang = data.idBarang == '' ? null : data.idBarang
   const penggunaId = await GetPenggunaID()
   const sekolahId = await GetConfig(CONFIG.sekolahId)
-  const res = <ResultDetailKegiatan>{
+  const res = <ResultAddDetailKegiatan>{
     idRapbs: idRapbs,
     idRapbsPeriode: [],
   }
@@ -215,4 +216,79 @@ export async function GetDetailKegiatan(
   }
 
   return ok(res)
+}
+
+export async function UpdateDetailKegiatan(
+  data: DetailKegiatan
+): Promise<Result<boolean, Error>> {
+  const now = new Date()
+  const idBarang = data.idBarang == '' ? null : data.idBarang
+  const penggunaId = await GetPenggunaID()
+  const sekolahId = await GetConfig(CONFIG.sekolahId)
+  const idRapbs = data.idRapbs
+
+  const rapbs = <Rapbs>{
+    idRapbs: idRapbs,
+    sekolahId: sekolahId,
+    idAnggaran: data.idAnggaran,
+    idRefKode: data.idRefKode,
+    idRefTahunAnggaran: data.idRefTahunAnggaran,
+    kodeRekening: data.kodeRekening,
+    idBarang: idBarang,
+    urutan: data.urutan,
+    uraian: data.uraian,
+    uraianText: data.uraian,
+    volume: data.volume,
+    satuan: data.satuan,
+    hargaSatuan: data.hargaSatuan,
+    jumlah: data.jumlah,
+    v1: data.volume,
+    s1: data.satuan,
+    keterangan: '',
+    softDelete: 0,
+    createDate: data.createDate,
+    lastUpdate: now,
+    updaterId: penggunaId,
+  }
+
+  const rapbsPeriodes: RapbsPeriode[] = []
+  data.periode?.forEach((periode) => {
+    rapbsPeriodes.push(<RapbsPeriode>{
+      idRapbs: idRapbs,
+      idPeriode: periode.idPeriode,
+      volume: periode.volume,
+      satuan: periode.satuan,
+      hargaSatuan: periode.hargaSatuan,
+      jumlah: periode.jumlah,
+      v1: periode.volume,
+      s1: periode.satuan,
+      softDelete: 0,
+      updaterId: penggunaId,
+    })
+  })
+
+  const connection = getConnection()
+  const queryRunner = connection.createQueryRunner()
+
+  await queryRunner.connect()
+  await queryRunner.startTransaction()
+
+  try {
+    const promises = []
+    promises.push(AddRapbs(rapbs))
+    if (rapbsPeriodes.length > 0) {
+      promises.push(BulkUpdateByRapbsId(idRapbs, rapbsPeriodes))
+    }
+
+    await Promise.all(promises)
+    await queryRunner.commitTransaction()
+  } catch (error) {
+    await queryRunner.rollbackTransaction()
+
+    return err(new Error(error))
+  } finally {
+    await queryRunner.release()
+  }
+
+  return ok(true)
 }

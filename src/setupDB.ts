@@ -50,13 +50,11 @@ async function encryptDB(): Promise<void> {
   try {
     db.pragma("cipher='sqlcipher'")
     db.pragma(`legacy=4`)
-    db.pragma('journal_mode = WAL')
     db.pragma("rekey='K3md1kbudRIS3n4yan'")
     db.close()
   } catch {
     db.pragma("cipher='sqlcipher'")
     db.pragma(`legacy=4`)
-    db.pragma('journal_mode = WAL')
     db.pragma("key='K3md1kbudRIS3n4yan'")
     db.close()
   }
