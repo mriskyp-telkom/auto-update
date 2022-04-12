@@ -1,8 +1,8 @@
 # image: docker:latest
 
 stages:
-  # - build
-  # - test
+  - build
+  - test
   - build-staging
   - publish-staging
   - build-production
