@@ -62,8 +62,6 @@ make:
     - gsutil -m cp -r -Z out/make gs://${BUCKET}/arkas-$CI_COMMIT_TAG
   only:
     - tags
-
-
     
 publish-staging:
 extends: .publish
