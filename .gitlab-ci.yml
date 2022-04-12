@@ -65,7 +65,10 @@ test:
     - echo "test"
   allow_failure: false
   artifacts:
-    when: always
+    paths:
+      - node_modules/
+    expire_in: 2 week
+    # when: always
     reports:
       junit:
         - junit.xml
