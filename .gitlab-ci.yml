@@ -1,7 +1,6 @@
 # image: docker:latest
 
 stages:
-  # - build
   - test
   - build-staging
   - publish-staging
@@ -38,20 +37,7 @@ variables:
   only:
     - tags
 
-# build:
-#   stage: build
-#   image: node:latest
-#   script:
-#     - yarn
-#   cache:
-#     paths:
-#       - node_modules/
-#   allow_failure: true
-#   artifacts:
-#     expire_in: 1 days
-#     when: on_success
-#     paths:
-#       - node_modules/
+
 
 
 test:
