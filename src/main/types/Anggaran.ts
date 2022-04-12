@@ -7,6 +7,9 @@ export interface AnggaranKegiatan {
   idAnggaran: string
   idPeriode: string
   idRapbs: string
+  idRefKode: string
+  kodeRekening: string
+  idBarang: string
   programKegiatan: string
   kegiatan: string
   rekeningBelanja: string

@@ -28,6 +28,9 @@ export const GetRapbsBulan = async (
         'rp.harga_satuan as hargaSatuan',
         'rp.jumlah as total',
         "case when substr(rk2.id_kode,4,2) = '12' then 1 else 0 end as isHonor",
+        'r.id_ref_kode as idRefKode',
+        'r.kode_rekening as kodeRekening',
+        'r.id_barang as idBarang',
       ])
       .innerJoin('rapbs_periode', 'rp', 'r.id_rapbs = rp.id_rapbs')
       .innerJoin('ref_kode', 'rk', 'r.id_ref_kode = rk.id_ref_kode')
@@ -68,6 +71,9 @@ export const GetOneRapbsBulan = async (
         'rp.harga_satuan as hargaSatuan',
         'rp.jumlah as total',
         "case when substr(rk2.id_kode,4,2) = '12' then 1 else 0 end as isHonor",
+        'r.id_ref_kode as idRefKode',
+        'r.kode_rekening as kodeRekening',
+        'r.id_barang as idBarang',
       ])
       .innerJoin('rapbs_periode', 'rp', 'r.id_rapbs = rp.id_rapbs')
       .innerJoin('ref_kode', 'rk', 'r.id_ref_kode = rk.id_ref_kode')
