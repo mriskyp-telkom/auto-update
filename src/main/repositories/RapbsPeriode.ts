@@ -528,24 +528,11 @@ function populateMonthlyDetails(periode: number, bulan: Bulan): BulanDetail[] {
   }
 }
 
-export async function SoftDeleteByRapbsId(
-  idRapbs: string
-): Promise<UpdateResult> {
-  return await createQueryBuilder()
-    .update(RapbsPeriode)
-    .where('id_rapbs = :idRapbs', { idRapbs })
-    .set({
-      softDelete: 1,
-      lastUpdate: new Date(),
-    })
-    .execute()
-}
-
 export async function BulkUpdateByRapbsId(
   idRapbs: string,
   data: RapbsPeriode[]
 ) {
-  await SoftDeleteByRapbsId(idRapbs)
+  await DelRapbsPeriodeByRapbsId(idRapbs)
 
   const now = new Date()
   const currentPeriode = await getRepository(RapbsPeriode).find({
