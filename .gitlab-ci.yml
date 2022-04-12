@@ -60,6 +60,7 @@ test:
   # dependencies:
   #   - build
   script:
+    - yarn add jest
     - yarn test:ci
     - echo "test"
   allow_failure: false
