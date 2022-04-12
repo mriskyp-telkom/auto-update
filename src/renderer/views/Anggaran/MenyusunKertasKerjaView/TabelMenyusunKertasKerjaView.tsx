@@ -52,7 +52,7 @@ const TabelMenyusunKertasKerjaView: FC<TabelMenyusunKertasKerjaProps> = (
       setTempDetailKertasKerja(row)
       const link = `/form/kertas-kerja/update/${encodeURIComponent(
         props.idAnggaran
-      )}/${encodeURIComponent(row.id)}`
+      )}/${encodeURIComponent(row.idRapbs)}`
       navigate(link, {
         state: { backgroundLocation: location },
       })
@@ -129,7 +129,7 @@ const TabelMenyusunKertasKerjaView: FC<TabelMenyusunKertasKerjaProps> = (
                       width={col.width}
                     />
                   )
-                } else if (col.key === 'total' || col.key === 'harga_satuan') {
+                } else if (col.key === 'total' || col.key === 'hargaSatuan') {
                   return (
                     <TDTable
                       key={col.key}
