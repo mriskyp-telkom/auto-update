@@ -58,14 +58,12 @@ test:
         - target/JUnitReport/report.xml
       cobertura: target/coverage/cobertura-coverage.xml
   only:
-  - master
   - main
 
 report:
   stage: report
-  needs: ['test']
+  image: node:latest
   only:
-    - master
     - main
   script:
     - mkdir public
