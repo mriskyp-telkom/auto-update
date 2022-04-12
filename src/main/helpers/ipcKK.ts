@@ -181,8 +181,8 @@ module.exports = {
 
   getAnggaranDetailKegiatan: ipcMain.on(
     IPC_KK.getAnggaranDetailKegiatan,
-    async (e, idAnggaran) => {
-      e.returnValue = await GetDetailKegiatan(idAnggaran)
+    async (e, idRapbs) => {
+      e.returnValue = await GetDetailKegiatan(idRapbs)
     }
   ),
   getRapbsLastUpdate: ipcMain.on(
