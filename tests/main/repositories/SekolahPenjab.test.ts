@@ -34,38 +34,62 @@ afterEach(async () => {
 test('GetSekolahPenjabById', async () => {
   const data = await GetSekolahPenjabById('3GIqBvF91Em6K_VasjmhTw')
 
+  //  in order to hide user information, using mock this data to hide the information. other than this data, is from db
+  const ks = 'Wasidi'
+  const nipKs = '123456789'
+  const emailKs = 'Wasidi@wartek.belajar.id'
+  const telpKs = '123456789'
+  const bendahara = 'Wasidi'
+  const nipBendahara = '123456789'
+  const emailBendahara = 'Wasidi@wartek.belajar.id'
+  const telpBendahara = '123456789'
+  const komite = 'Wasidi'
+  const nipKomite = ''
+  const softDelete = 0
+  // end of comment to hide user information mocked
+
   expect(data.idPenjab).toBe('3GIqBvF91Em6K_VasjmhTw')
   expect(data.sekolahId).toBe('XN60oPUuEeC-vv2_lhMTXQ')
   expect(data.tanggalMulai).toBe('2021-01-01')
   expect(data.tanggalSelesai).toBe('2021-12-31')
-  expect(data.ks).toBe('Sarjiyono, S.Pd.,M.Pd.')
-  expect(data.nipKs).toBe('196903141993011001')
-  expect(data.emailKs).toBe('yono.sarjono.sarji@gmail.com')
-  expect(data.telpKs).toBe('081328077124')
-  expect(data.bendahara).toBe('Wasidi')
-  expect(data.nipBendahara).toBe('197311171999031005')
-  expect(data.komite).toBe('Sumijo, S.Pd.SD.')
-  expect(data.nipKomite).toBe('')
-  expect(data.softDelete).toBe(0)
+
+  //  in order to hide user information, using mock this data to hide the information. other than this data, is from db
+  expect(data.ks).toBe(ks)
+  expect(data.nipKs).toBe(nipKs)
+  expect(data.emailKs).toBe(emailKs)
+  expect(data.telpKs).toBe(telpKs)
+  expect(data.bendahara).toBe(bendahara)
+  expect(data.emailBendahara).toBe(emailBendahara)
+  expect(data.nipBendahara).toBe(nipBendahara)
+  expect(data.telpBendahara).toBe(telpBendahara)
+  expect(data.komite).toBe(komite)
+  expect(data.nipKomite).toBe(nipKomite)
+  expect(data.softDelete).toBe(softDelete)
+  // end of comment to hide user information mocked
+
   expect(data.updaterId).toBe('XN60oPUuEeC-vv2_lhMTXQ')
 })
 
 test('addSekolahPenjab', async () => {
   const idPenjab = '3GIqBvF91Em6K_VasjmhTw'
-  const sekolahId = '3GIqBvF91Em6K_VasjmhTw'
+  const sekolahId = 'XN60oPUuEeC-vv2_lhMTXQ'
   const tanggalMulai = '2021-01-01'
   const tanggalSelesai = '2021-12-31'
-  const ks = 'Sarjiyono, S.Pd.,M.Pd.'
-  const nipKs = '196903141993011001'
-  const emailKs = 'yono.sarjono.sarji@gmail.com'
-  const telpKs = '081328077124'
+
+  //  in order to hide user information, using mock this data to hide the information. other than this data, is from db
+  const ks = 'Wasidi'
+  const nipKs = '123456789'
+  const emailKs = 'Wasidi@wartek.belajar.id'
+  const telpKs = '123456789'
   const bendahara = 'Wasidi'
-  const nipBendahara = '197311171999031005'
-  const emailBendahara = 'wasidi117@gmail.com'
-  const telpBendahara = '085228787703'
-  const komite = 'Sumijo, S.Pd.SD.'
+  const nipBendahara = '123456789'
+  const emailBendahara = 'Wasidi@wartek.belajar.id'
+  const telpBendahara = '123456789'
+  const komite = 'Wasidi'
   const nipKomite = ''
   const softDelete = 0
+  // end of comment to hide user information mocked
+
   const updaterId = 'XN60oPUuEeC-vv2_lhMTXQ'
 
   const dataSekolahPenjab = new SekolahPenjab()
@@ -99,17 +123,21 @@ test('findSekolahPenjabId', async () => {
   const sekolahId = '3GIqBvF91Em6K_VasjmhTw'
   const tanggalMulai = '2021-01-01'
   const tanggalSelesai = '2021-12-31'
-  const ks = 'Sarjiyono, S.Pd.,M.Pd.'
-  const nipKs = '196903141993011001'
-  const emailKs = 'yono.sarjono.sarji@gmail.com'
-  const telpKs = '081328077124'
+
+  //  in order to hide user information, using mock this data to hide the information. other than this data, is from db
+  const ks = 'Wasidi'
+  const nipKs = '123456789'
+  const emailKs = 'Wasidi@wartek.belajar.id'
+  const telpKs = '123456789'
   const bendahara = 'Wasidi'
-  const nipBendahara = '197311171999031005'
-  const emailBendahara = 'wasidi117@gmail.com'
-  const telpBendahara = '085228787703'
-  const komite = 'Sumijo, S.Pd.SD.'
+  const nipBendahara = '123456789'
+  const emailBendahara = 'Wasidi@wartek.belajar.id'
+  const telpBendahara = '123456789'
+  const komite = 'Wasidi'
   const nipKomite = ''
   const softDelete = 0
+  // end of comment to hide user information mocked
+
   const updaterId = 'XN60oPUuEeC-vv2_lhMTXQ'
 
   const dataSekolahPenjab = new SekolahPenjab()
@@ -139,22 +167,36 @@ test('findSekolahPenjabId', async () => {
 
 test('updateSekolahPenjab', async () => {
   const idPenjab = '3GIqBvF91Em6K_VasjmhTw'
-  const ks = 'Sarjiyono, S.Pd.,M.Pd.'
-  const nipKs = '196903141993011001'
+
+  //  in order to hide user information, using mock this data to hide the information. other than this data, is from db
+  const ks = 'Wasidi'
+  const nipKs = '123456789'
+  const emailKs = 'Wasidi@wartek.belajar.id'
+  const telpKs = '123456789'
   const bendahara = 'Wasidi'
-  const nipBendahara = '197311171999031005'
-  const komite = 'Sumijo, S.Pd.SD.'
+  const nipBendahara = '123456789'
+  const emailBendahara = 'Wasidi@wartek.belajar.id'
+  const telpBendahara = '123456789'
+  const komite = 'Wasidi'
   const nipKomite = ''
+  const softDelete = 0
+  // end of comment to hide user information mocked
+
   const updaterId = 'XN60oPUuEeC-vv2_lhMTXQ'
 
   const dataSekolahPenjab = new SekolahPenjab()
   dataSekolahPenjab.idPenjab = idPenjab
   dataSekolahPenjab.ks = ks
+  dataSekolahPenjab.telpKs = telpKs
+  dataSekolahPenjab.emailKs = emailKs
   dataSekolahPenjab.nipKs = nipKs
   dataSekolahPenjab.bendahara = bendahara
+  dataSekolahPenjab.emailBendahara = emailBendahara
   dataSekolahPenjab.nipBendahara = nipBendahara
+  dataSekolahPenjab.telpBendahara = telpBendahara
   dataSekolahPenjab.komite = komite
   dataSekolahPenjab.nipKomite = nipKomite
+  dataSekolahPenjab.softDelete = softDelete
   dataSekolahPenjab.createDate = new Date()
   dataSekolahPenjab.lastUpdate = new Date()
   dataSekolahPenjab.updaterId = updaterId

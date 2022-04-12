@@ -44,11 +44,13 @@ const stepAPi = ['infoConnection', 'checkActivation']
 const RegistrationView: FC = () => {
   const navigate = useNavigate()
   const ref = useRef(null)
+
   const [api, setApi] = useState('')
   const [isSync, setIsSync] = useState(false)
   const [openModalInfo, setOpenModalInfo] = useState(false)
   const [koregInvalid, setKoregInvalid] = useState('')
   const [hddVol, setHddVol] = useState('')
+
   const setNpsn = useAuthStore((state: AuthStates) => state.setNpsn)
   const setKoreg = useAuthStore((state: AuthStates) => state.setKoreg)
   const npsn = useAuthStore((state: AuthStates) => state.npsn)

@@ -25,11 +25,11 @@ VALUES
 insert into ref_satuan (ref_satuan_id, unit, satuan, 
     soft_delete, created_date, expired_date, last_update)
 values
-('F02AC478-2FF5-E011-84D1-CFDBD42BDA04', 'OTA', 'Orang Tahun', 
+('UD7QhfkRSzKGDwQVe3F5SA', 'OTA', 'Orang Tahun', 
     0, 2022-01-01, NULL, 2022-01-01);
 
 insert into ref_satuan (ref_satuan_id, unit, satuan, 
     soft_delete, created_date, expired_date, last_update)
 values
-('F02AC478-2FF5-E011-84D1-CFDBD42BDA0B', 'OR', 'Orang', 
+('3flG2MN8QxeV6yuJ1YtROg', 'OR', 'Orang', 
     0, 2022-01-01, NULL, 2022-01-01);

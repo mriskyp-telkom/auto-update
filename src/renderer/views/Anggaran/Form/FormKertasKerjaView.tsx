@@ -80,9 +80,10 @@ const InputHargaSatuan = (props: any) => {
 
 const FormKertasKerjaView: FC = () => {
   const navigate = useNavigate()
-  const { q_mode, q_id_anggaran } = useParams()
+  const { q_mode, q_id_anggaran, q_id_rapbs } = useParams()
 
   const idAnggaran = decodeURIComponent(q_id_anggaran)
+  const idRapbs = decodeURIComponent(q_id_rapbs)
 
   const [openModalDelete, setOpenModalDelete] = useState(false)
   const [openModalSuccess, setOpenModalSuccess] = useState(false)
@@ -276,11 +277,21 @@ const FormKertasKerjaView: FC = () => {
 
   const handleDelete = () => {
     setOpenModalDelete(false)
-    setOpenModalSuccess(true)
-    setTimeout(() => {
-      setOpenModalSuccess(false)
-      closeModal()
-    }, 3000)
+
+    // before
+    const res = ipcRenderer.sendSync(IPC_KK.deleteRapbs, idRapbs)
+
+    if (res.value.isDeleted) {
+      // after
+      setOpenModalSuccess(true)
+      setTimeout(() => {
+        setOpenModalSuccess(false)
+        setIsFocused(true)
+        closeModal()
+      }, 3000)
+    } else if (res.isError) {
+      // TO DO:
+    }
   }
 
   const handleTambahBulan = () => {
