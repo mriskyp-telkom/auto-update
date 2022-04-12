@@ -40,7 +40,6 @@ variables:
 
 build:
   stage: build
-  extends: .before_script_template
   image: node:latest
   script:
     - npm install yarn --legacy-peer-deps
@@ -58,7 +57,6 @@ build:
 
 test:
   stage: test
-  extends: .before_script_template
   image: node:latest
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
   dependencies:
