@@ -56,9 +56,9 @@ test:
       cobertura: coverage/cobertura-coverage.xml
 
 rspec:
-  stage: test
+  stage: rspec
   image: ruby:2.3
-   dependencies:
+  dependencies:
     - test
   script:
     - bundle install
@@ -68,7 +68,7 @@ rspec:
       - coverage/
 
 coverage-pages:
-  stage: deploy
+  stage: coverage-pages
   image: ruby:2.3
   dependencies:
     - rspec
@@ -81,7 +81,7 @@ coverage-pages:
   only:
     - master
 
-    
+
 # staging
 make-win-deb-staging:
   # base image is defined here https://gitlab.com/wartek-id/sds/sds/-/tree/main/docker/arkas-builder-base
