@@ -7,7 +7,10 @@ import { Icon } from '@wartek-id/icon'
 import {
   ERROR_REQUIRED,
   PASSWORD_ERROR_MINLENGTH,
+  PASSWORD_ERROR_WRONG,
 } from 'renderer/constants/errorForm'
+
+import isEmpty from 'lodash/isEmpty'
 
 interface InputPasswordProps {
   name: string
@@ -36,9 +39,9 @@ const InputPasswordComponent: FC<InputPasswordProps> = (
           type: 'manual',
           message: PASSWORD_ERROR_MINLENGTH,
         })
-      } else {
-        props.handleClearError(name)
+        return
       }
+      props.handleClearError(name)
     },
     onChange: (e: any) => {
       const value = e.target.value
@@ -48,38 +51,50 @@ const InputPasswordComponent: FC<InputPasswordProps> = (
           return
         }
       }
-      if (errors[name]?.message === PASSWORD_ERROR_MINLENGTH) {
-        if (value.length > 7) {
-          props.handleClearError(name)
-          return
-        }
+      if (
+        value.length > 7 &&
+        errors[name]?.message === PASSWORD_ERROR_MINLENGTH
+      ) {
+        props.handleClearError(name)
+        return
+      }
+      if (value !== '' && errors[name]?.message === PASSWORD_ERROR_WRONG) {
+        props.handleClearError(name)
+        return
       }
     },
   }
 
   return (
-    <InputGroup>
-      <Input
-        type={visibilityPassword ? 'text' : 'password'}
-        placeholder="Masukkan password"
-        id={name}
-        name={name}
-        isInvalid={!!errors[name]}
-        errorMessage={errors[name]?.message}
-        {...register(name, validation)}
-      />
-      <InputRightAddon>
-        <Icon
-          as="i"
-          color="default"
-          fontSize="default"
-          onClick={() => setVisibilityPassword(!visibilityPassword)}
-          className="pointer-events-initial"
-        >
-          {visibilityPassword ? 'visibility' : 'visibility_off'}
-        </Icon>
-      </InputRightAddon>
-    </InputGroup>
+    <>
+      <InputGroup>
+        <Input
+          type={visibilityPassword ? 'text' : 'password'}
+          placeholder="Masukkan password"
+          id={name}
+          name={name}
+          isInvalid={!!errors[name]}
+          errorMessage={errors[name]?.message}
+          {...register(name, validation)}
+        />
+        <InputRightAddon>
+          <Icon
+            as="i"
+            color="default"
+            fontSize="default"
+            onClick={() => setVisibilityPassword(!visibilityPassword)}
+            className="pointer-events-initial"
+          >
+            {visibilityPassword ? 'visibility' : 'visibility_off'}
+          </Icon>
+        </InputRightAddon>
+      </InputGroup>
+      {isEmpty(errors[name]) && name === 'password' && (
+        <div className="text-tiny font-normal text-gray-600 pt-1">
+          {PASSWORD_ERROR_MINLENGTH}
+        </div>
+      )}
+    </>
   )
 }
 

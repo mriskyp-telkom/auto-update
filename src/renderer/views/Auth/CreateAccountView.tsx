@@ -23,6 +23,7 @@ import { AuthStates, useAuthStore } from 'renderer/stores/auth'
 import { AppStates, useAppStore } from 'renderer/stores/app'
 
 import { APP_CONFIG } from 'renderer/constants/appConfig'
+import { EMAIL_ERROR_REGISTERED } from 'renderer/constants/errorForm'
 
 import { useAPIInfoConnection } from 'renderer/apis/utils'
 import { useAPIRegistration } from 'renderer/apis/registration'
@@ -32,8 +33,12 @@ import {
   useAPIGetReferensi,
   useAPIGetReferensiWilayah,
 } from 'renderer/apis/referensi'
+
 import { sendEventRegistrasi2 } from 'renderer/utils/analytic/auth-util'
+import { btnFormDisabled } from 'renderer/utils/form-validation'
+
 import filter from 'lodash/filter'
+
 import { RegisterData } from 'main/types/Pengguna'
 
 const ipcRenderer = window.require('electron').ipcRenderer
@@ -52,6 +57,7 @@ const stepAPi = [
 const CreateAccountView: FC = () => {
   const navigate = useNavigate()
   const { q_mode } = useParams()
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [kodeWilayah, setKodeWilayah] = useState('')
@@ -85,7 +91,7 @@ const CreateAccountView: FC = () => {
     setFocus,
     getValues,
     clearErrors,
-    formState: { errors, isValid, submitCount },
+    formState: { errors },
   } = useForm<FormResetAccountData>({
     mode: 'onSubmit',
     reValidateMode: 'onBlur',
@@ -195,6 +201,7 @@ const CreateAccountView: FC = () => {
     removeRefRekening()
     removeRefBarang()
   }
+
   const goToDashboard = () => {
     ipcRenderer.sendSync('token:createSession', email)
     setIsSync(false)
@@ -208,6 +215,40 @@ const CreateAccountView: FC = () => {
     setApi('')
     removeCacheData()
     setAlertFailedSyncData(true)
+  }
+
+  const handleClearError = (name: FormResetAccountType) => {
+    clearErrors(name)
+  }
+
+  const onSubmit = async (data: FormResetAccountData) => {
+    setAlertNoConnection(false)
+    setAlertLostConnection(false)
+    setAlertFailedSyncData(false)
+
+    if (data.password !== data.password_confirmation) {
+      setError('password_confirmation', {
+        type: 'manual',
+        message: 'Password tidak sesuai',
+      })
+      sendEventRegistrasi2(getValues('email'), 'password_tidak_sesuai')
+      return
+    }
+    if (!navigator.onLine) {
+      setAlertNoConnection(true)
+      return
+    }
+    setEmail(data.email)
+    setPassword(data.password)
+    setApi(stepAPi[0])
+    setIsSync(true)
+  }
+
+  const onError = (error: any) => {
+    const isError = filter(error, ['type', 'required']).length > 0
+    if (isError) {
+      sendEventRegistrasi2(getValues('email'), 'kolom_kosong')
+    }
   }
 
   useEffect(() => {
@@ -252,7 +293,7 @@ const CreateAccountView: FC = () => {
       } else if (registration?.data.status_code === 2) {
         setError('email', {
           type: 'manual',
-          message: 'Email sudah terdaftar. Silakan gunakan email lain.',
+          message: EMAIL_ERROR_REGISTERED,
         })
         sendEventRegistrasi2(getValues('email'), 'email_terdaftar')
         failedSyncData()
@@ -345,40 +386,6 @@ const CreateAccountView: FC = () => {
     isGetRefKodeError,
   ])
 
-  const handleClearError = (name: FormResetAccountType) => {
-    clearErrors(name)
-  }
-
-  const onSubmit = async (data: FormResetAccountData) => {
-    setAlertNoConnection(false)
-    setAlertLostConnection(false)
-    setAlertFailedSyncData(false)
-
-    if (data.password !== data.password_confirmation) {
-      setError('password_confirmation', {
-        type: 'manual',
-        message: 'Password tidak sesuai',
-      })
-      sendEventRegistrasi2(getValues('email'), 'password_tidak_sesuai')
-      return
-    }
-    if (!navigator.onLine) {
-      setAlertNoConnection(true)
-      return
-    }
-    setEmail(data.email)
-    setPassword(data.password)
-    setApi(stepAPi[0])
-    setIsSync(true)
-  }
-
-  const onError = (error: any) => {
-    const isError = filter(error, ['type', 'required']).length > 0
-    if (isError) {
-      sendEventRegistrasi2(getValues('email'), 'kolom_kosong')
-    }
-  }
-
   useEffect(() => {
     if (q_mode === 'reset') {
       setValue('email', 'yasmin@gmail.com', { shouldValidate: true })
@@ -433,7 +440,7 @@ const CreateAccountView: FC = () => {
             size="lg"
             variant="solid"
             type="submit"
-            disabled={!isValid && submitCount > 0}
+            disabled={btnFormDisabled(errors)}
           >
             Masuk
           </Button>
