@@ -1,5 +1,5 @@
 stages:
-  - test tarn
+  - test-yarn
   - build-staging
   - publish-staging
   - build-production
