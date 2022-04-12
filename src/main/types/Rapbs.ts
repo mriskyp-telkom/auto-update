@@ -31,3 +31,10 @@ export interface ResultDetailKegiatan {
   idRapbs: string | null
   idRapbsPeriode: string[]
 }
+
+export interface ResultDeleteRapbs {
+  idRapbs: string | null
+  isDeleted: boolean
+  isError: boolean
+  errMessage: string | null
+}

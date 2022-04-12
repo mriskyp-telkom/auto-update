@@ -2,7 +2,12 @@ import { ERROR } from 'global/constants'
 import { Rapbs } from 'main/models/Rapbs'
 import { AnggaranKegiatan } from 'main/types/Anggaran'
 import { err, ok, Result } from 'neverthrow'
-import { createQueryBuilder, getRepository, InsertResult } from 'typeorm'
+import {
+  createQueryBuilder,
+  getRepository,
+  InsertResult,
+  UpdateResult,
+} from 'typeorm'
 
 export const GetRapbsBulan = async (
   idAnggaran: string,
@@ -88,21 +93,6 @@ export const GetRapbs = async (idRapbs: string): Promise<Rapbs> => {
   return await getRepository(Rapbs).findOne({ idRapbs: idRapbs })
 }
 
-export const AddRapbs = async (rapbs: Rapbs): Promise<InsertResult> => {
-  return await getRepository(Rapbs).upsert(rapbs, ['idRapbs'])
-}
-
-export const DelRapbs = async (idRapbs: string): Promise<any> => {
-  return await createQueryBuilder()
-    .update(Rapbs)
-    .set({
-      softDelete: 1,
-      lastUpdate: new Date(),
-    })
-    .where('id_rapbs = :idRapbs', { idRapbs })
-    .execute()
-}
-
 export async function GetLatestUrutan(
   idAnggaran: string,
   idRefKode: string,
@@ -146,4 +136,21 @@ export async function GetRapbsLastUpdate(idAnggaran: string): Promise<Date> {
     .orderBy('r.last_update', 'DESC')
     .getOne()
   return data != null ? data.lastUpdate : null
+}
+
+export const AddRapbs = async (rapbs: Rapbs): Promise<InsertResult> => {
+  return await getRepository(Rapbs).upsert(rapbs, ['idRapbs'])
+}
+
+export const DelRapbsByRapbsId = async (
+  idRapbs: string
+): Promise<UpdateResult> => {
+  return await createQueryBuilder()
+    .update(Rapbs)
+    .set({
+      softDelete: 1,
+      lastUpdate: new Date(),
+    })
+    .where('id_rapbs = :idRapbs', { idRapbs })
+    .execute()
 }

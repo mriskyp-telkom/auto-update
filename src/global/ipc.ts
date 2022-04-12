@@ -6,8 +6,8 @@ export const KK = 'kk'
 
 export const IPC_ANGGARAN = {
   getAnggaranById: `${ANGGARAN}:getAnggaranById`,
-  getTotalAnggaran: `${ANGGARAN}:getTotalAnggaran`,
   getPagu: `${ANGGARAN}:getPagu`,
+  getTotalAnggaran: `${ANGGARAN}:getTotalAnggaran`,
 }
 
 export const IPC_PENJAB = {
@@ -22,15 +22,18 @@ export const IPC_REFERENSI = {
   getRefBarangByRekening: `${REFERENSI}:getRefBarangByRekening`,
   getRefKode: `${REFERENSI}:getRefKode`,
   getRefRekening: `${REFERENSI}:getRefRekening`,
-  getRefSatuan: `${REFERENSI}:getRefSatuan`,
+
   addBulkRefSatuan: `${REFERENSI}:addBulkRefSatuan`,
+  getRefSatuan: `${REFERENSI}:getRefSatuan`,
 }
 
 export const IPC_KK = {
-  getRapbsSummary: `${KK}:getRapbsSummary`,
   anggaranDetailKegiatan: `${KK}:anggaranDetailKegiatan`,
   addAnggaranDetailKegiatan: `${KK}:addAnggaranDetailKegiatan`,
   getAnggaranDetailKegiatan: `${KK}:getAnggaranDetailKegiatan`,
+
   getRapbsBulan: `${KK}:getRapbsBulan`,
   getRapbsLastUpdate: `${KK}:getRapbsLastUpdate`,
+  getRapbsSummary: `${KK}:getRapbsSummary`,
+  deleteRapbsByRapbsId: `${KK}:deleteRapbsByRapbsId`,
 }

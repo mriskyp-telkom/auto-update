@@ -3,14 +3,14 @@ import { Rapbs } from 'main/models/Rapbs'
 import { RapbsPeriode } from 'main/models/RapbsPeriode'
 import {
   AddRapbs,
-  DelRapbs,
+  DelRapbsByRapbsId,
   GetRapbs,
   GetRapbsBulan,
   GetRapbsLastUpdate,
 } from 'main/repositories/Rapbs'
 import {
   AddRapbsPeriode,
-  DelRapbsPeriode,
+  DelRapbsPeriodeByRapbsId,
   GetRapbsPeriode,
   GetDetailListRapbs,
   GetRapbsSummary,
@@ -105,7 +105,7 @@ module.exports = {
   }),
 
   deleteRapbs: ipcMain.on('kk:deleteRapbs', async (e, idRapbs) => {
-    e.returnValue = await DelRapbs(idRapbs)
+    e.returnValue = await DelRapbsByRapbsId(idRapbs)
   }),
 
   addRapbsPeriode: ipcMain.on('kk:addRapbsPeriode', async (e, data) => {
@@ -156,7 +156,7 @@ module.exports = {
   deleteRapbsPeriode: ipcMain.on(
     'kk:deleteRapbsPeriode',
     async (e, idRapbsPeriode) => {
-      e.returnValue = await DelRapbsPeriode(idRapbsPeriode)
+      e.returnValue = await DelRapbsPeriodeByRapbsId(idRapbsPeriode)
     }
   ),
 
