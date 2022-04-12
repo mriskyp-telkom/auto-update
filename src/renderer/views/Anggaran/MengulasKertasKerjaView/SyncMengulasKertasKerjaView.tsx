@@ -273,7 +273,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
     populateInitSync(),
     {
       retry: 0,
-      enabled: api === stepApi[2],
+      enabled: api === stepApi[5],
     }
   )
 
@@ -285,7 +285,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
     populatePengajuanAnggaran(),
     {
       retry: 0,
-      enabled: api === stepApi[3],
+      enabled: api === stepApi[6],
     }
   )
 
@@ -297,7 +297,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
     populatePengajuanPenjab(),
     {
       retry: 0,
-      enabled: api === stepApi[4],
+      enabled: api === stepApi[7],
     }
   )
 
@@ -495,9 +495,9 @@ const SyncMengulasKertasKerjaView: FC = () => {
       (dataRefRekening && Object.keys(dataRefRekening).length > 0) ||
       (dataRefBarang && Object.keys(dataRefBarang).length > 0)
     ) {
-      // hit api referensi, check if resp is not empty, then show dialog
-      const response =
-        RESPONSE_PENGESAHAN.error_data_sentral as ResponseMengulas
+      setApi(stepApi[5])      
+    } else {
+      const response = RESPONSE_PENGESAHAN.error_data_sentral as ResponseMengulas
       directPage(response)
       setResponseMengulas(response)
       removeCacheData()
@@ -511,7 +511,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
     if (initSync !== undefined) {
       const syncID = initSync?.data
       if (syncID !== undefined) {
-        setApi(stepApi[3])
+        setApi(stepApi[6])
       } else {
         removeInitSync()
         setAlertFailedInitSync(true)
@@ -523,7 +523,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
     if (anggaranResponse !== undefined) {
       const resp = anggaranResponse?.data
       if (resp === 1) {
-        setApi(stepApi[4])
+        setApi(stepApi[7])
       } else {
         removeAnggaranResponse()
         setAlertFailedPostAnggaran(true)
@@ -536,7 +536,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
     if (penjabResponse !== undefined) {
       const resp = penjabResponse?.data
       if (resp === 1) {
-        setApi(stepApi[5])
+        setApi(stepApi[8])
       } else {
         removePenjabResponse()
         setAlertFailedPostPenjab(true)
