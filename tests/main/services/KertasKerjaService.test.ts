@@ -32,6 +32,9 @@ test('GetDetailKegiatan', async () => {
   expect(dataTest1.anggaran.idAnggaran).toBe('apQwiAb-9EWxv74iwMY6aQ')
   expect(dataTest1.anggaran.idPeriode).toBe(92)
   expect(dataTest1.anggaran.idRapbs).toBe('oscfVRfYC0-MnRVq8OIIbQ')
+  expect(dataTest1.anggaran.idRefKode).toBe('rBdJhBgAdU2dU2DF6JFfhA')
+  expect(dataTest1.anggaran.kodeRekening).toBe('5.1.02.01.01.0055')
+  expect(dataTest1.anggaran.idBarang).toBe('')
   expect(dataTest1.anggaran.isHonor).toBe(0)
   expect(dataTest1.anggaran.programKegiatan).toBe('Pengembangan Standar Isi')
   expect(dataTest1.anggaran.kegiatan).toBe('Penyusunan Kurikulum')
@@ -48,7 +51,6 @@ test('GetDetailKegiatan', async () => {
   expect(dataTest1.periode[0].jumlah).toBe(100)
   expect(dataTest1.periode[0].hargaSatuan).toBe(20000)
   expect(dataTest1.periode[0].total).toBe(2000000)
-  expect(dataTest1.rapbsPtk).toBe(null)
 
   const resIsHonor = await GetDetailKegiatan('XN60oPUuEeC-vv2_lhMTXQ')
   const dataTest2 = resIsHonor.unwrapOr(<DetailAnggaranKegiatan>{})
@@ -56,6 +58,9 @@ test('GetDetailKegiatan', async () => {
   expect(dataTest2.anggaran.idAnggaran).toBe('apQwiAb-9EWxv74iwMY6aQ')
   expect(dataTest2.anggaran.idPeriode).toBe(92)
   expect(dataTest2.anggaran.idRapbs).toBe('XN60oPUuEeC-vv2_lhMTXQ')
+  expect(dataTest2.anggaran.idRefKode).toBe('JfpVF35Cd0aOZmb0bhN2iA')
+  expect(dataTest2.anggaran.kodeRekening).toBe('5.1.02.01.01.0055')
+  expect(dataTest2.anggaran.idBarang).toBe('02.04.01.09.17')
   expect(dataTest2.anggaran.isHonor).toBe(1)
   expect(dataTest2.anggaran.programKegiatan).toBe(
     'Pengembangan standar pembiayaan'
