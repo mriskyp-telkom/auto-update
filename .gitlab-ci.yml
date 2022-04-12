@@ -1,4 +1,4 @@
-# image: node:latest
+image: docker:latest
 
 stages:
   - build
@@ -51,7 +51,7 @@ build:
     when: on_success
     paths:
       - node_modules/
-      
+
 
 test:
   stage: test
