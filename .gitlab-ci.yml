@@ -42,7 +42,7 @@ build:
   stage: build
   image: node:latest
   script:
-    - npm install yarn --legacy-peer-deps
+    # - npm install yarn --legacy-peer-deps
     - yarn install
   cache:
     paths:
