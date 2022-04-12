@@ -16,6 +16,8 @@ import MenyusunKertasKerjaView from 'renderer/views/Anggaran/MenyusunKertasKerja
 import MengulasKertasKerjaView from 'renderer/views/Anggaran/MengulasKertasKerjaView'
 import SyncMengulasKertasKerjaView from 'renderer/views/Anggaran/MengulasKertasKerjaView/SyncMengulasKertasKerjaView'
 
+import DashboardTataUsahaView from 'renderer/views/TataUsaha/DashboardTataUsahaView'
+
 import FormKertasKerjaView from 'renderer/views/Anggaran/Form/FormKertasKerjaView'
 import FormPenanggungJawabView from 'renderer/views/Anggaran/Form/FormPenanggungJawabView'
 import FormPaguView from 'renderer/views/Anggaran/Form/FormPaguView'
@@ -87,6 +89,9 @@ const App: FC = () => {
                 path="mengulas/:q_id_anggaran"
                 element={<MengulasKertasKerjaView />}
               />
+            </Route>
+            <Route path="tata-usaha">
+              <Route index={true} element={<DashboardTataUsahaView />} />
             </Route>
           </Route>
         </Routes>

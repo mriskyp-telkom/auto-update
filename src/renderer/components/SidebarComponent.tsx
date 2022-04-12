@@ -12,7 +12,7 @@ const MenusTop = () => {
       label: 'Anggaran',
     },
     {
-      route: '/administration',
+      route: '/tata-usaha',
       label: 'Tata Usaha',
     },
     {
