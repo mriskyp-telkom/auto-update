@@ -81,6 +81,7 @@ coverage-pages:
   only:
     - master
 
+    
 # staging
 make-win-deb-staging:
   # base image is defined here https://gitlab.com/wartek-id/sds/sds/-/tree/main/docker/arkas-builder-base
