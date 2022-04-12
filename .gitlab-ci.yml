@@ -1,8 +1,8 @@
-image: docker:latest
+# image: docker:latest
 
 stages:
-  - build
-  - test
+  # - build
+  # - test
   - build-staging
   - publish-staging
   - build-production
@@ -38,35 +38,35 @@ variables:
   only:
     - tags
 
-build:
-  stage: build
-  script:
-    - npm install yarn --legacy-peer-deps
-    - yarn install
-  cache:
-    paths:
-      - node_modules/
-  artifacts:
-    expire_in: 1 days
-    when: on_success
-    paths:
-      - node_modules/
+# build:
+#   stage: build
+#   script:
+#     - npm install yarn --legacy-peer-deps
+#     - yarn install
+#   cache:
+#     paths:
+#       - node_modules/
+#   artifacts:
+#     expire_in: 1 days
+#     when: on_success
+#     paths:
+#       - node_modules/
 
 
-test:
-  stage: test
-  coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
-  dependencies:
-    - build
-  script:
-    - yarn test:ci
-    - echo "test"
-  artifacts:
-    when: always
-    reports:
-      junit:
-        - junit.xml
-      cobertura: coverage/cobertura-coverage.xml
+# test:
+#   stage: test
+#   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
+#   dependencies:
+#     - build
+#   script:
+#     - yarn test:ci
+#     - echo "test"
+#   artifacts:
+#     when: always
+#     reports:
+#       junit:
+#         - junit.xml
+#       cobertura: coverage/cobertura-coverage.xml
 
 # staging
 make-win-deb-staging:
