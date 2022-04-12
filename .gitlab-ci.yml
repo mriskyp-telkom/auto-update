@@ -36,7 +36,7 @@ variables:
   only:
     - tags
 
-test-yarn:
+test:
   stage: test
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
   dependencies:
@@ -49,6 +49,16 @@ test-yarn:
       junit:
         - junit.xml
       cobertura: coverage/cobertura-coverage.xml
+    
+publish-staging:
+extends: .publish
+stage: publish-staging
+environment:
+  name: staging
+variables:
+  BUCKET: arkas_releases_staging
+needs: ['make-win-deb-staging']
+allow_failure: false
 
 # staging
 make-win-deb-staging:
