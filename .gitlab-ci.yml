@@ -1,6 +1,6 @@
 stages:
-  - build
-  - test
+  - build-module
+  - test-module
   - build-staging
   - publish-staging
   - build-production
@@ -9,8 +9,8 @@ stages:
 variables:
   GITLAB_AUTH_TOKEN: $CI_JOB_TOKEN
 
-build:
-  stage: build
+build-module:
+  stage: build-module
   script:
     - yarn
   cache:
@@ -22,8 +22,8 @@ build:
     paths:
       - node_modules/
 
-test:
-  stage: test
+test-yarn:
+  stage: test-module
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
   dependencies:
     - build
