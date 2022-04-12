@@ -1,7 +1,6 @@
 stages:
   - test
-  - rspec
-  - coverage-pages
+  - report
   - build-staging
   - publish-staging
   - build-production
@@ -44,42 +43,36 @@ test:
   script:
     - yarn add jest
     - yarn test:ci
-    - echo "test"
+    - echo "done running unit test"
   allow_failure: false
   artifacts:
+    when: always
     paths:
-      - node_modules/
-    expire_in: never
+      - target/JUnitReport/
+    expire_in: 2 weeks
     reports:
       junit:
-        - junit.xml
-      cobertura: coverage/cobertura-coverage.xml
+        - target/JUnitReport/report.xml
+      cobertura: target/coverage/cobertura-coverage.xml
+  only:
+  - master
+  - main
 
-rspec:
-  stage: rspec
-  image: ruby:2.3
-  dependencies:
-    - test
-  script:
-    - bundle install
-    - rspec
-  artifacts:
-    paths:
-      - coverage/
-
-coverage-pages:
-  stage: coverage-pages
-  image: ruby:2.3
-  dependencies:
-    - rspec
-  script:
-    - mv coverage/ public/
-  artifacts:
-    paths:
-      - public
-    expire_in: 30 days
+report:
+  stage: report
+  dependencies: test
   only:
     - master
+    - main
+  script:
+    - mkdir public
+    - mv target/JUnitReport/* public
+        - mv target/coverage/* public
+  artifacts:
+    when: always
+    paths:
+      - public
+    expire_in: 1 week
 
 
 # staging
