@@ -46,9 +46,7 @@ import styles from './index.module.css'
 import clsx from 'clsx'
 
 import { IPC_ANGGARAN, IPC_KK, IPC_PTK, IPC_REFERENSI } from 'global/ipc'
-
 import { btnFormDisabled } from 'renderer/utils/form-validation'
-
 import differenceWith from 'lodash/differenceWith'
 import isEqual from 'lodash/isEqual'
 
@@ -237,6 +235,7 @@ const FormKertasKerjaView: FC = () => {
         rekening_belanja: false,
         harga_satuan: true,
       })
+      unregister('uraian')
     }
 
     if (data.name === 'rekening_belanja') {
@@ -253,6 +252,7 @@ const FormKertasKerjaView: FC = () => {
         uraian: false,
         harga_satuan: true,
       })
+      unregister('uraian')
     }
     if (data.name === 'uraian') {
       const dataUraian = optionsUraian.find(
@@ -332,7 +332,6 @@ const FormKertasKerjaView: FC = () => {
         )
       }
       setOptionsUraian(uraian)
-      unregister('uraian')
     }
   }, [selectedKegiatan, selectedRekening])
 
@@ -360,7 +359,55 @@ const FormKertasKerjaView: FC = () => {
     setOptionsRekening(rekening)
 
     if (q_mode === 'update') {
-      //TODO: populate data from local db
+      const idRapbs = decodeURIComponent(q_id_rapbs)
+      const res = ipcRenderer.sendSync(
+        IPC_KK.getAnggaranDetailKegiatan,
+        idRapbs
+      )
+      const anggaran = res.value.anggaran
+      const periode = res.value.periode
+      const rapbsPtk = res.value.rapbsPtk
+
+      const dataKegiatan = kegiatan.find(
+        (k: any) => k.id === anggaran.idRefKode
+      )
+      const dataRekBelanja = rekening.find(
+        (r: any) => r.kode === anggaran.kodeRekening
+      )
+
+      setSelectedKegiatan(dataKegiatan)
+      setSelectedRekening(dataRekBelanja)
+
+      const uraian = { id: '', kode: '', uraian: '' }
+
+      if (anggaran.idBarang != null && anggaran.idBarang !== '') {
+        uraian.kode = anggaran.idBarang
+        uraian.uraian = anggaran.uraian
+      }
+      if (rapbsPtk != null) {
+        uraian.id = rapbsPtk.idPtk
+        uraian.uraian = rapbsPtk.nama
+      }
+
+      setSelectedUraian(uraian)
+
+      reset({
+        kegiatan: anggaran.kegiatan,
+        rekening_belanja: anggaran.rekeningBelanja,
+        uraian: anggaran.uraian,
+        harga_satuan: anggaran.hargaSatuan.toString(),
+      })
+
+      periode.map((per: any, index: number) => {
+        const idx = DATA_BULAN.findIndex((b) => b.id == per.periode)
+        update(index, {
+          id: per.periode,
+          jumlah: per.jumlah,
+          satuan: per.satuan,
+          bulan: DATA_BULAN[idx].name,
+        })
+      })
+
       setFormDisable({
         kegiatan: false,
         rekening_belanja: false,
