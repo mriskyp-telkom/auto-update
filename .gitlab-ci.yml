@@ -1,6 +1,6 @@
 stages:
-  - build-module
-  - test-module
+  - build
+  - test
   - build-staging
   - publish-staging
   - build-production
@@ -10,7 +10,7 @@ variables:
   GITLAB_AUTH_TOKEN: $CI_JOB_TOKEN
 
 .build-module:
-  stage: build-module
+  stage: build
   script:
     - yarn
   cache:
@@ -22,8 +22,8 @@ variables:
     paths:
       - node_modules/
 
-.test-yarn:
-  stage: test-module
+test-yarn:
+  stage: test
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
   dependencies:
     - build
@@ -36,7 +36,7 @@ variables:
         - junit.xml
       cobertura: coverage/cobertura-coverage.xml
 
-.make:
+make:
   cache:
     key:
       files:
