@@ -46,6 +46,8 @@ test:
     - yarn add jest
     - yarn test:ci
     - echo "done running unit test"
+    - mkdir target/JUnitReport/
+    - mkdir target/coverage/
   allow_failure: false
   artifacts:
     when: always
