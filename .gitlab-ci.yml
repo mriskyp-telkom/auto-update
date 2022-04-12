@@ -67,7 +67,7 @@ report:
   script:
     - mkdir public
     - mv target/JUnitReport/* public
-        - mv target/coverage/* public
+    - mv target/coverage/* public
   artifacts:
     when: always
     paths:
