@@ -43,7 +43,7 @@ build:
   image: node:latest
   script:
     # - npm install yarn --legacy-peer-deps
-    - yarn install
+    - yarn install --pure-lockfile --cache-folder .yarn
   cache:
     paths:
       - node_modules/
