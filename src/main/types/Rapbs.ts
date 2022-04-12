@@ -12,6 +12,8 @@ export interface Periode {
 }
 
 export interface DetailKegiatan {
+  // idRapbs is required for update rapbs
+  idRapbs: string
   idAnggaran: string
   idRefKode: string
   idRefTahunAnggaran: number
@@ -24,10 +26,12 @@ export interface DetailKegiatan {
   volume: number
   jumlah: number
   ptk: Ptk | null
-  periode: Periode[]
+  periode: Periode[] | null
+  // createDate is required for update rapbs
+  createDate: Date | null
 }
 
-export interface ResultDetailKegiatan {
+export interface ResultAddDetailKegiatan {
   idRapbs: string | null
   idRapbsPeriode: string[]
 }

@@ -8,6 +8,7 @@ import {
   BulanDetail,
   RapbsSummary,
 } from 'main/types/RapbsPeriodeDetail'
+import CommonUtils from 'main/utils/CommonUtils'
 import {
   UpdateResult,
   getManager,
@@ -525,4 +526,53 @@ function populateMonthlyDetails(periode: number, bulan: Bulan): BulanDetail[] {
     default:
       return []
   }
+}
+
+export async function SoftDeleteByRapbsId(
+  idRapbs: string
+): Promise<UpdateResult> {
+  return await createQueryBuilder()
+    .update(RapbsPeriode)
+    .where('id_rapbs = :idRapbs', { idRapbs })
+    .set({
+      softDelete: 1,
+      lastUpdate: new Date(),
+    })
+    .execute()
+}
+
+export async function BulkUpdateByRapbsId(
+  idRapbs: string,
+  data: RapbsPeriode[]
+) {
+  await SoftDeleteByRapbsId(idRapbs)
+
+  const now = new Date()
+  const currentPeriode = await getRepository(RapbsPeriode).find({
+    idRapbs: idRapbs,
+  })
+
+  const mapPeriode = new Map()
+  for (const p of currentPeriode) {
+    mapPeriode.set(p.idPeriode, p)
+  }
+
+  for (let i = 0; i < data.length; i++) {
+    const periode = data[i]
+
+    const v = mapPeriode.get(periode.idPeriode)
+    if (v === undefined) {
+      periode.idRapbsPeriode = CommonUtils.encodeUUID(CommonUtils.uuid())
+      periode.createDate = now
+      periode.lastUpdate = now
+    } else {
+      periode.createDate = v.createDate
+      periode.idRapbsPeriode = v.idRapbsPeriode
+      periode.lastUpdate = now
+    }
+
+    data[i] = periode
+  }
+
+  await AddBulkRapbsPeriode(data)
 }
