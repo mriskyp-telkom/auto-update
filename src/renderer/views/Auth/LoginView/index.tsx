@@ -69,7 +69,6 @@ const LoginView: FC = () => {
   }
 
   const onSubmit = async (data: FormLoginData) => {
-    let response_status = ''
     const ipcCheckUserName = ipcRenderer.sendSync(
       'user:checkUsername',
       data.email
@@ -80,7 +79,7 @@ const LoginView: FC = () => {
         type: 'manual',
         message: EMAIL_ERROR_NOT_REGISTERED,
       })
-      response_status = 'email_tidak_terdaftar'
+      sendEventLogin(getValues('email'), 'email_tidak_terdaftar')
       return
     }
 
@@ -95,7 +94,7 @@ const LoginView: FC = () => {
         type: 'manual',
         message: PASSWORD_ERROR_WRONG,
       })
-      response_status = 'password_salah'
+      sendEventLogin(getValues('email'), 'password_salah')
       return
     }
 
@@ -104,10 +103,6 @@ const LoginView: FC = () => {
       'config:getConfig',
       APP_CONFIG.tahunAktif
     )
-
-    if (response_status !== '') {
-      sendEventLogin(getValues('email'), response_status)
-    }
 
     setEmail(data.email)
     setNpsn(sekolah.npsn)
