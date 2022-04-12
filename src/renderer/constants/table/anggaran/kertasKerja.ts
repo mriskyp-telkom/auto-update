@@ -5,7 +5,7 @@ export const headerKertasKerja = [
     width: '4%',
   },
   {
-    key: 'program_kegiatan',
+    key: 'programKegiatan',
     label: 'Program Kegiatan',
     width: '16%',
   },
@@ -15,7 +15,7 @@ export const headerKertasKerja = [
     width: '16%',
   },
   {
-    key: 'rekening_belanja',
+    key: 'rekeningBelanja',
     label: 'Rekening Belanja',
     width: '16%',
   },
@@ -35,7 +35,7 @@ export const headerKertasKerja = [
     width: '8%',
   },
   {
-    key: 'harga_satuan',
+    key: 'hargaSatuan',
     label: 'Harga Satuan',
     width: '10%',
   },
