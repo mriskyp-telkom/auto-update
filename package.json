@@ -16,7 +16,7 @@
     "format": "prettier --write . ",
     "test": "jest",
     "test-coverage": "jest --coverage",
-    "test:ci": "jest --config ./jest.config.js --collectCoverage --coverageDirectory=\"./coverage\" --ci --reporters=default --reporters=jest-junit --watchAll=false",  
+    "test:ci": "jest --config ./jest.config.js --collectCoverage --coverageDirectory=\"./coverage\" --ci --reporters=default --reporters=jest-junit --watchAll=false"  
   },
   "keywords": [],
   "license": "MIT",
