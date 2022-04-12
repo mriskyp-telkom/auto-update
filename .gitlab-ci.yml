@@ -39,15 +39,15 @@ variables:
     - tags
 
 build:
-  extends: .plan
-  image: node:latest
   stage: build
+  image: node:latest
   script:
     - npm install yarn --legacy-peer-deps
     - yarn install
   cache:
     paths:
       - node_modules/
+  allow_failure: true
   artifacts:
     expire_in: 1 days
     when: on_success
@@ -56,15 +56,15 @@ build:
 
 
 test:
-  extends: .plan
-  image: node:latest
   stage: test
+  image: node:latest
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
   dependencies:
     - build
   script:
     - yarn test:ci
     - echo "test"
+  allow_failure: false
   artifacts:
     when: always
     reports:
