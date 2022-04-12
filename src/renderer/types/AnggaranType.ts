@@ -49,10 +49,10 @@ export interface FormIsiKertasKerjaData {
 }
 
 export interface FormTableKertasKerjaData {
-  id: number
-  program_kegiatan: string
+  idRapbs: number
+  programKegiatan: string
   kegiatan: string
-  rekening_belanja: string
+  rekeningBelanja: string
   satuan: string
   uraian: string
 }
