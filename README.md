@@ -104,15 +104,23 @@ Due yarn test will spawn a child process, we need to limit maxWorker that runnin
 
 If you want to run test in specific file do
 
-````bash
+```bash
 yarn test <filename>
 ```
+
+If you facing error better-sqlite3 due to different Node.js version, run your test using this command below :
+
+```bash
+ELECTRON_RUN_AS_NODE=true ./node_modules/.bin/electron ./node_modules/jest-cli/bin/jest.js
+```
+
+source : https://github.com/JoshuaWise/better-sqlite3/issues/545
 
 7. Using make file
 
 ```bash
 make yarn-test
-````
+```
 
 8. Using Instance
    locate your path jest, locate the path of test file, and add the instance

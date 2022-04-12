@@ -14,7 +14,8 @@
     "lint:script": "eslint . --ext ts,tsx,js --fix --max-warnings=0",
     "postinstall": "husky install",
     "format": "prettier --write . ",
-    "test": "jest"
+    "test": "jest",
+    "test-coverage": "jest --coverage"
   },
   "keywords": [],
   "license": "MIT",
@@ -67,6 +68,10 @@
     }
   },
   "devDependencies": {
+    "@babel/core": "^7.17.9",
+    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-react": "^7.16.7",
+    "@babel/preset-typescript": "^7.16.7",
     "@electron-forge/cli": "^6.0.0-beta.61",
     "@electron-forge/maker-deb": "^6.0.0-beta.61",
     "@electron-forge/maker-dmg": "^6.0.0-beta.63",
@@ -75,6 +80,8 @@
     "@electron-forge/maker-zip": "^6.0.0-beta.61",
     "@electron-forge/plugin-webpack": "6.0.0-beta.61",
     "@popperjs/core": "^2.11.2",
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^12.1.0",
     "@types/axios": "^0.14.0",
     "@types/jest": "^27.4.1",
     "@types/lodash": "^4.14.179",
@@ -85,6 +92,7 @@
     "@typescript-eslint/parser": "^4.0.1",
     "@vercel/webpack-asset-relocator-loader": "1.7.0",
     "autoprefixer": "^10.4.2",
+    "babel-jest": "^27.5.1",
     "check-code-coverage": "^1.10.0",
     "clsx": "^1.1.1",
     "copy-webpack-plugin": "^10.2.0",
