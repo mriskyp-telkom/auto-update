@@ -1,5 +1,5 @@
 stages:
-  - test-yarn
+  - test
   - build-staging
   - publish-staging
   - build-production
@@ -8,19 +8,6 @@ stages:
 variables:
   GITLAB_AUTH_TOKEN: $CI_JOB_TOKEN
 
-test-yarn:
-  stage: test
-  coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
-  dependencies:
-    - build
-  script:
-    - yarn test:ci
-  artifacts:
-    when: always
-    reports:
-      junit:
-        - junit.xml
-      cobertura: coverage/cobertura-coverage.xml
 
 .make:
   cache:
@@ -48,6 +35,20 @@ test-yarn:
     - gsutil -m cp -r -Z out/make gs://${BUCKET}/arkas-$CI_COMMIT_TAG
   only:
     - tags
+
+test-yarn:
+  stage: test
+  coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
+  dependencies:
+    - build
+  script:
+    - yarn test:ci
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - junit.xml
+      cobertura: coverage/cobertura-coverage.xml
 
 # staging
 make-win-deb-staging:
