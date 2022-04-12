@@ -1,4 +1,5 @@
 stages:
+  - build
   - test
   - build-staging
   - publish-staging
@@ -8,6 +9,32 @@ stages:
 variables:
   GITLAB_AUTH_TOKEN: $CI_JOB_TOKEN
 
+  build:
+  stage: build
+  script:
+    - yarn
+  cache:
+    paths:
+      - node_modules/
+  artifacts:
+    expire_in: 1 days
+    when: on_success
+    paths:
+      - node_modules/
+      
+test:
+  stage: test
+  coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
+  dependencies:
+    - build
+  script:
+    - yarn test:ci
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - junit.xml
+      cobertura: coverage/cobertura-coverage.xml
 
 .make:
   cache:
@@ -36,19 +63,7 @@ variables:
   only:
     - tags
 
-test:
-  stage: test
-  coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
-  dependencies:
-    - build
-  script:
-    - yarn test:ci
-  artifacts:
-    when: always
-    reports:
-      junit:
-        - junit.xml
-      cobertura: coverage/cobertura-coverage.xml
+
     
 publish-staging:
 extends: .publish
