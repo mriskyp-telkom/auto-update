@@ -28,6 +28,12 @@ repair-node:
 	rm -rf node_modules
 	npm install --force
 
+.PHONY: repair-yarn
+	rm -rf node_modules
+	yarn install
+
+
+
 # when broken pipe from client loop send disconnect when doing fetch, do this to check server
 # client_loop: send disconnect: Broken pipe
 # fatal: Could not read from remote repository.

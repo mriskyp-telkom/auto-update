@@ -214,9 +214,6 @@ const SyncMengulasKertasKerjaView: FC = () => {
   }, [dataRefRekening])
 
   useEffect(() => {
-    // console.log('infoConnection')
-    // console.log(infoConnection)
-    // console.log(isInfoConnError)
     if (
       isInfoConnError ||
       isTokenError ||

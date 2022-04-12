@@ -416,7 +416,7 @@ export const AddBulkRapbsPeriode = async (
 }
 
 export const DelRapbsPeriodeByRapbsId = async (
-  idRapbsPeriode: string
+  idRapbs: string
 ): Promise<UpdateResult> => {
   return await createQueryBuilder()
     .update(RapbsPeriode)
@@ -424,7 +424,7 @@ export const DelRapbsPeriodeByRapbsId = async (
       softDelete: 1,
       lastUpdate: new Date(),
     })
-    .where('id_rapbs_periode = :idRapbsPeriode', { idRapbsPeriode })
+    .where('id_rapbs = :idRapbs', { idRapbs })
     .execute()
 }
 

@@ -35,5 +35,5 @@ export const IPC_KK = {
   getRapbsBulan: `${KK}:getRapbsBulan`,
   getRapbsLastUpdate: `${KK}:getRapbsLastUpdate`,
   getRapbsSummary: `${KK}:getRapbsSummary`,
-  deleteRapbsByRapbsId: `${KK}:deleteRapbsByRapbsId`,
+  deleteRapbs: `${KK}:deleteRapbs`,
 }

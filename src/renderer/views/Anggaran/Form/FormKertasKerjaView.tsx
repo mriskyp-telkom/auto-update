@@ -279,8 +279,9 @@ const FormKertasKerjaView: FC = () => {
     setOpenModalDelete(false)
 
     // before
-    const res = ipcRenderer.sendSync(IPC_KK.deleteRapbsByRapbsId, idRapbs)
-    if (res.isDeleted) {
+    const res = ipcRenderer.sendSync(IPC_KK.deleteRapbs, idRapbs)
+
+    if (res.value.isDeleted) {
       // after
       setOpenModalSuccess(true)
       setTimeout(() => {

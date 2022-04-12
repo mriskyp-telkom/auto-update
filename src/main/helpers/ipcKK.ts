@@ -103,7 +103,7 @@ module.exports = {
     }
   }),
 
-  deleteRapbs: ipcMain.on('kk:deleteRapbs', async (e, idRapbs) => {
+  deleteRapbs: ipcMain.on(IPC_KK.deleteRapbs, async (e, idRapbs) => {
     e.returnValue = await DeleteRapbsByRapbsId(idRapbs)
   }),
 

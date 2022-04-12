@@ -271,9 +271,9 @@ export async function DeleteRapbsByRapbsId(
   }
 
   try {
-    const deletedRapbs = await DelRapbsPeriodeByRapbsId(idRapbs)
+    const deletedRapbs = await DelRapbsByRapbsId(idRapbs)
 
-    const deletedRapbsPeriode = await DelRapbsByRapbsId(idRapbs)
+    const deletedRapbsPeriode = await DelRapbsPeriodeByRapbsId(idRapbs)
 
     if (deletedRapbs.affected && deletedRapbsPeriode.affected) {
       res.isDeleted = true
@@ -281,6 +281,7 @@ export async function DeleteRapbsByRapbsId(
       res.isError = true
       res.errMessage = 'no affected rows'
     }
+    return ok(res)
   } catch (error) {
     res.isError = true
     res.errMessage = error
