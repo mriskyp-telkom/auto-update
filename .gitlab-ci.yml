@@ -9,7 +9,7 @@ stages:
 variables:
   GITLAB_AUTH_TOKEN: $CI_JOB_TOKEN
 
-.build-module:
+build:
   stage: build
   script:
     - yarn
@@ -22,7 +22,7 @@ variables:
     paths:
       - node_modules/
 
-test-yarn:
+test:
   stage: test
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
   dependencies:
