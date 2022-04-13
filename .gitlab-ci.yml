@@ -49,7 +49,6 @@ test:
     - mkdir target/coverage/
   allow_failure: false
   artifacts:
-    when: always
     paths:
       - target/JUnitReport/
     expire_in: 2 weeks
