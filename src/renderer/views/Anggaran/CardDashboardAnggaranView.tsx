@@ -5,7 +5,7 @@ import BadgeComponent, { BadgeType } from 'renderer/components/BadgeComponent'
 
 import CreateKertasKerjaView from './CreateKertasKerjaView'
 
-import { CardDashboardType } from 'renderer/types/AnggaranType'
+import { KKCardDashboardType } from 'renderer/types/AnggaranType'
 
 import { LABEL_STATUS_KERTAS_KERJA } from 'renderer/constants/anggaran'
 
@@ -20,7 +20,7 @@ import {
 import { STATUS_KERTAS_KERJA, VERSI_ANGGARAN } from 'global/constants'
 
 interface CardDashboardAnggaranProps {
-  data: CardDashboardType
+  data: KKCardDashboardType
 }
 
 const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (

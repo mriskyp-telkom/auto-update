@@ -27,8 +27,12 @@ module.exports = {
         ...guruMobile.colors,
         warning: '#ffc453',
       },
+      borderRadius: {
+        large: '.625rem',
+      },
       boxShadow: {
         DEFAULT: 'inset 0px -1px 0px #c9cbcf',
+        custom1: '0px 1px 4px rgba(0, 22, 10, 0.2)',
       },
     },
   },

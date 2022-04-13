@@ -4,7 +4,7 @@ import PageLayout from 'renderer/views/Layout/PageLayout'
 
 import CardDashboardAnggaranView from './CardDashboardAnggaranView'
 
-import { CardDashboardType } from 'renderer/types/AnggaranType'
+import { KKCardDashboardType } from 'renderer/types/AnggaranType'
 
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from '@wartek-id/tabs'
 import { ID_SUMBER_DANA } from 'renderer/constants/anggaran'
@@ -37,7 +37,7 @@ const DashboardAnggaranView: FC = () => {
           </div>
           <TabPanels>
             <TabPanel className="mt-6 mb-[2px] grid justify-items-center">
-              {bosReguler.map((item: CardDashboardType, index: number) => {
+              {bosReguler.map((item: KKCardDashboardType, index: number) => {
                 return <CardDashboardAnggaranView key={index} data={item} />
               })}
             </TabPanel>

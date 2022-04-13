@@ -57,7 +57,7 @@ export interface FormTableKertasKerjaData {
   uraian: string
 }
 
-export interface CardDashboardType {
+export interface KKCardDashboardType {
   id_anggaran: string
   tahun: string
   status: string
