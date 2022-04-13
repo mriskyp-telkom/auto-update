@@ -112,6 +112,7 @@ export interface Periode {
 }
 
 export interface DetailKegiatan {
+  idRapbs: string | null
   idAnggaran: string
   idRefKode: string
   idRefTahunAnggaran: number
