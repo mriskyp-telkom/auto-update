@@ -42,11 +42,14 @@ test:
   image: node:latest
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
   script:
+    - pwd
+    - ls
     - yarn add jest
     - yarn test:ci
     - echo "done running unit test"
     - mkdir target/JUnitReport/
     - mkdir target/coverage/
+    - ls
   allow_failure: false
   artifacts:
     when: always
