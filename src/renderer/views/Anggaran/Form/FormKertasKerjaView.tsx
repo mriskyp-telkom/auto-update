@@ -128,7 +128,7 @@ const FormKertasKerjaView: FC = () => {
       harga_satuan: '',
       anggaran_bulan: [
         {
-          id: DATA_BULAN[0]?.id,
+          id_bulan: DATA_BULAN[0]?.id,
           jumlah: null,
           satuan: null,
           bulan: DATA_BULAN[0]?.name,
@@ -178,7 +178,7 @@ const FormKertasKerjaView: FC = () => {
       const periode = {} as Periode
       const jumlah = parseInt(bulan.jumlah.toString())
       periode.hargaSatuan = data.hargaSatuan
-      periode.idPeriode = bulan.id
+      periode.idPeriode = bulan.id_bulan
       periode.volume = jumlah
       periode.jumlah = jumlah * data.hargaSatuan
       periode.satuan = bulan.satuan
@@ -272,6 +272,13 @@ const FormKertasKerjaView: FC = () => {
         harga_satuan: false,
       })
     }
+    if (data.name === 'anggaran_bulan.0.satuan') {
+      fields.map((field, index) => {
+        if (index !== 0) {
+          setValue(`anggaran_bulan.${index}.satuan`, data.value)
+        }
+      })
+    }
   }
 
   const handleCancel = () => {
@@ -306,16 +313,16 @@ const FormKertasKerjaView: FC = () => {
 
     append({
       jumlah: null,
-      satuan: null,
+      satuan: getValues('anggaran_bulan.0.satuan'),
       bulan: bulan[0]?.name,
-      id: bulan[0]?.id,
+      id_bulan: bulan[0]?.id,
     })
   }
 
   const getMonthOptions = () => {
     const picked = getValues('anggaran_bulan').map((data) => {
       return {
-        id: data.id,
+        id: data.id_bulan,
         name: data.bulan,
       }
     })
@@ -408,7 +415,7 @@ const FormKertasKerjaView: FC = () => {
       periode.map((per: any, index: number) => {
         const idx = DATA_BULAN.findIndex((b) => b.id == per.periode)
         update(index, {
-          id: per.periode,
+          id_bulan: per.periode,
           jumlah: per.jumlah,
           satuan: per.satuan,
           bulan: DATA_BULAN[idx].name,
@@ -433,6 +440,9 @@ const FormKertasKerjaView: FC = () => {
 
     const [totalPerMonth, setTotalPerMonth] = useState(0)
 
+    const isDisabledSatuan =
+      props.index === 0 ? formDisable.harga_per_month : true
+
     const getBulan = (bulan: string) => {
       return DATA_BULAN.find((bul) => bul.name === bulan)
     }
@@ -442,7 +452,7 @@ const FormKertasKerjaView: FC = () => {
       update(props.index, {
         ...field,
         bulan: bulan.name,
-        id: bulan.id,
+        id_bulan: bulan.id,
       })
     }
 
@@ -518,7 +528,7 @@ const FormKertasKerjaView: FC = () => {
                 headers={headerSatuan}
                 headerShow={false}
                 dataOptions={optionsSatuan}
-                isDisabled={formDisable.harga_per_month}
+                isDisabled={isDisabledSatuan}
               />
             </span>
           </div>
