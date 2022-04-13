@@ -1,5 +1,4 @@
 stages:
-  - build
   - test
   - report
   - build-staging
@@ -39,13 +38,6 @@ variables:
 
 before_script:
   - yarn install --no-lockfile
-
-build:
-  stage: build
-  script: yarn build
-  artifacts:
-    paths:
-      - 'packages/*/lib'  # all artifacts that are used by tests
 
 test:
   stage: test
