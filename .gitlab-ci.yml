@@ -49,6 +49,7 @@ test:
     - mkdir target/coverage/
   allow_failure: false
   artifacts:
+    when: always
     paths:
       - target/JUnitReport/
     expire_in: 2 weeks
@@ -56,8 +57,6 @@ test:
       junit:
         - target/JUnitReport/report.xml
       cobertura: target/coverage/cobertura-coverage.xml
-  only:
-  - master
 
 # report:
 #   stage: report
