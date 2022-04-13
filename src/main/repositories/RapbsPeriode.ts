@@ -546,12 +546,12 @@ export async function BulkUpdateByRapbsId(
 
   for (let i = 0; i < data.length; i++) {
     const periode = data[i]
+    periode.createDate = now
+    periode.lastUpdate = now
 
     const v = mapPeriode.get(periode.idPeriode)
     if (v === undefined) {
       periode.idRapbsPeriode = CommonUtils.encodeUUID(CommonUtils.uuid())
-      periode.createDate = now
-      periode.lastUpdate = now
     } else {
       periode.createDate = v.createDate
       periode.idRapbsPeriode = v.idRapbsPeriode
