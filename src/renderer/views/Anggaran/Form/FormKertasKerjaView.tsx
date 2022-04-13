@@ -820,6 +820,18 @@ const FormKertasKerjaView: FC = () => {
         hideBtnAction={true}
         layer={2}
       />
+      <AlertDialogComponent
+        type="failed"
+        icon="delete"
+        title="Gagal menghapus kegiatan"
+        desc="Maaf, terjadi gangguan di sistem kami. Silakan coba lagi dałam beberapa saat."
+        isOpen={openModalDelete}
+        btnCancelText="Tutup"
+        btnActionText="Hapus Ulang"
+        onCancel={() => setOpenModalDelete(false)}
+        onSubmit={handleDelete}
+        layer={2}
+      />
     </div>
   )
 }

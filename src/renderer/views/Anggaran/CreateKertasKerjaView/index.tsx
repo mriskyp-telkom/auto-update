@@ -476,7 +476,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
       />
       <SyncDialogComponent
         title="Sinkronisasi Data..."
-        percentage={50}
+        percentage={0}
         isOpen={isSync}
         setIsOpen={setIsSync}
       />

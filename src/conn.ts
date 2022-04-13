@@ -1,3 +1,4 @@
+import { RefSatuan } from 'main/models/RefSatuan'
 import path from 'path'
 import { Connection, createConnection } from 'typeorm'
 import { BetterSqlite3ConnectionOptions } from 'typeorm/driver/better-sqlite3/BetterSqlite3ConnectionOptions'
@@ -39,6 +40,7 @@ import { SekolahPenjab } from './main/models/SekolahPenjab'
 import { ReportBku } from './main/models/ReportBku'
 import { getAppData } from './pathConfig'
 
+// for make sure connection db
 export const connDB = async (): Promise<Connection> => {
   try {
     const config: BetterSqlite3ConnectionOptions = {
@@ -49,7 +51,6 @@ export const connDB = async (): Promise<Connection> => {
         App,
         AppConfig,
         ConfigAnggaran,
-
         Ptk,
         Instansi,
         InstansiPengguna,
@@ -75,6 +76,7 @@ export const connDB = async (): Promise<Connection> => {
         RefPeriode,
         RefRekening,
         RefRekeningTransfer,
+        RefSatuan,
         RefSumberDana,
         RefTahunAnggaran,
         ReportBku,
