@@ -30,3 +30,20 @@ export const API_GET_CONFIG_PAGU = (idSumberDana: number, isRevisi: number) =>
 
 export const API_GET_PTK_LAST = (lastUpdate: string) =>
   `/api/sekolah/ptk_last/${lastUpdate}`
+
+// init
+export const API_POST_SYNC_INIT = `/api/sync/init`
+
+// anggaran
+export const API_POST_ANGGARAN = `/api/anggaran`
+
+// rkas
+export const API_POST_RKAS = `/api/rkas`
+
+export const API_POST_RKAS_PENJAB = `/api/rkas/penjab`
+
+export const API_POST_RKAS_DETAIL = `/api/rkas/detail`
+
+export const API_POST_RKAS_PTK = `/api/rkas/ptk`
+
+export const API_POST_RKAS_FINAL = `/api/rkas/final`

@@ -15,7 +15,7 @@ import { APP_CONFIG } from 'renderer/constants/appConfig'
 
 import { sendEventLogin } from 'renderer/utils/analytic/auth-util'
 
-const stepAPi = [
+const stepApi = [
   'infoConnection',
   'getToken',
   'checkHDDVol',
@@ -53,7 +53,7 @@ const SyncLoginView: FC = () => {
   } = useAPIInfoConnection({
     retry: 0,
     // condition true, auto run
-    enabled: api === stepAPi[0],
+    enabled: api === stepApi[0],
   })
   const {
     data: dataToken,
@@ -67,7 +67,7 @@ const SyncLoginView: FC = () => {
     {
       retry: 0,
       enabled:
-        api === stepAPi[1] && npsn !== '' && tahunAktif !== '' && koreg !== '',
+        api === stepApi[1] && npsn !== '' && tahunAktif !== '' && koreg !== '',
     }
   )
 
@@ -82,7 +82,7 @@ const SyncLoginView: FC = () => {
     },
     {
       retry: 0,
-      enabled: api === stepAPi[2] && hddVol !== '' && hddVolOld !== '',
+      enabled: api === stepApi[2] && hddVol !== '' && hddVolOld !== '',
     }
   )
 
@@ -91,7 +91,7 @@ const SyncLoginView: FC = () => {
     isError: isGetConfigError,
     remove: removeConfigAll,
   } = useAPIGetConfigAll({
-    enabled: api === stepAPi[3],
+    enabled: api === stepApi[3],
     retry: 0,
   })
 
@@ -101,7 +101,7 @@ const SyncLoginView: FC = () => {
     remove: removeRefKode,
   } = useAPIGetReferensi(
     { referensi: 'kode', lastUpdate: lastUpdateKode },
-    { enabled: api === stepAPi[4] && lastUpdateKode !== '', retry: 0 }
+    { enabled: api === stepApi[4] && lastUpdateKode !== '', retry: 0 }
   )
   const {
     data: refRekening,
@@ -109,7 +109,7 @@ const SyncLoginView: FC = () => {
     remove: removeRefRekening,
   } = useAPIGetReferensi(
     { referensi: 'rekening', lastUpdate: lastUpdateRekening },
-    { enabled: api === stepAPi[5] && lastUpdateRekening !== '' }
+    { enabled: api === stepApi[5] && lastUpdateRekening !== '' }
   )
   const {
     data: refBarang,
@@ -117,7 +117,7 @@ const SyncLoginView: FC = () => {
     remove: removeRefBarang,
   } = useAPIGetReferensi(
     { referensi: 'barang', lastUpdate: lastUpdateBarang },
-    { enabled: api === stepAPi[6] && lastUpdateBarang !== '' }
+    { enabled: api === stepApi[6] && lastUpdateBarang !== '' }
   )
 
   const removeCacheData = () => {
@@ -139,7 +139,7 @@ const SyncLoginView: FC = () => {
   useEffect(() => {
     if (infoConnection !== undefined) {
       if (Number(infoConnection.data) === 1) {
-        setApi(stepAPi[1])
+        setApi(stepApi[1])
       } else {
         redirectToDashboard()
       }
@@ -164,7 +164,7 @@ const SyncLoginView: FC = () => {
       }
       setHddVol(hddVol)
       setHddVolOld(hddVolOld)
-      setApi(stepAPi[2])
+      setApi(stepApi[2])
     }
   }, [dataToken])
 
@@ -173,7 +173,7 @@ const SyncLoginView: FC = () => {
       if (Number(dataHDDVol.data) === 1) {
         ipcRenderer.send('config:setConfig', APP_CONFIG.hddVolOld, hddVol)
         ipcRenderer.send('config:setConfig', APP_CONFIG.koregInvalid, '0')
-        setApi(stepAPi[3])
+        setApi(stepApi[3])
       } else {
         removeCacheData()
         setSyncLogin(false)
@@ -189,7 +189,7 @@ const SyncLoginView: FC = () => {
         'referensi:getRefKodeLastUpdate'
       )
       setLastUpdateKode(kodeLastUpdate)
-      setApi(stepAPi[4])
+      setApi(stepApi[4])
     }
   }, [configAll])
 
@@ -200,7 +200,7 @@ const SyncLoginView: FC = () => {
       )
       ipcRenderer.send('referensi:addBulkRefKode', refKode?.data)
       setLastUpdateRekening(rekeningLastUpdate)
-      setApi(stepAPi[5])
+      setApi(stepApi[5])
     }
   }, [refKode])
 
@@ -211,7 +211,7 @@ const SyncLoginView: FC = () => {
         'referensi:getRefBarangLastUpdate'
       )
       setLastUpdateBarang(barangLastUpdate)
-      setApi(stepAPi[6])
+      setApi(stepApi[6])
     }
   }, [refRekening])
 

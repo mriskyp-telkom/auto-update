@@ -39,7 +39,7 @@ import {
 } from 'renderer/constants/errorForm'
 
 const ipcRenderer = window.require('electron').ipcRenderer
-const stepAPi = ['infoConnection', 'checkActivation']
+const stepApi = ['infoConnection', 'checkActivation']
 
 const RegistrationView: FC = () => {
   const navigate = useNavigate()
@@ -79,7 +79,7 @@ const RegistrationView: FC = () => {
     {
       retry: 0,
       enabled:
-        npsn !== '' && koreg !== '' && hddVol !== '' && api === stepAPi[1],
+        npsn !== '' && koreg !== '' && hddVol !== '' && api === stepApi[1],
     }
   )
   const {
@@ -88,7 +88,7 @@ const RegistrationView: FC = () => {
     remove: removeInfoConnection,
   } = useAPIInfoConnection({
     retry: 0,
-    enabled: api === stepAPi[0],
+    enabled: api === stepApi[0],
   })
 
   const {
@@ -123,7 +123,7 @@ const RegistrationView: FC = () => {
     setIsSync(true)
     setNpsn(data.npsn)
     setKoreg(data.activation_code)
-    setApi(stepAPi[0])
+    setApi(stepApi[0])
   }
 
   const onError = (error: any) => {
@@ -151,7 +151,7 @@ const RegistrationView: FC = () => {
     if (infoConnection !== undefined) {
       const result = Number(infoConnection?.data)
       if (result === 1) {
-        setApi(stepAPi[1])
+        setApi(stepApi[1])
       } else {
         removeInfoConnection()
         setIsSync(false)

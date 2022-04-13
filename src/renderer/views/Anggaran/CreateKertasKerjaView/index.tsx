@@ -26,7 +26,7 @@ import AlertFailedSyncData from 'renderer/views/AlertFailedSyncData'
 
 const ipcRenderer = window.require('electron').ipcRenderer
 
-const stepAPi = [
+const stepApi = [
   'infoConnection',
   'getToken',
   'checkHddVol',
@@ -97,7 +97,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
     remove: removeInfoConnection,
   } = useAPIInfoConnection({
     retry: 0,
-    enabled: api === stepAPi[0],
+    enabled: api === stepApi[0],
   })
   const {
     // if run only if there are changes. refer to this
@@ -112,7 +112,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
     {
       retry: 0,
       enabled:
-        api === stepAPi[1] && npsn !== '' && tahunAktif !== '' && koreg !== '',
+        api === stepApi[1] && npsn !== '' && tahunAktif !== '' && koreg !== '',
     }
   )
 
@@ -127,7 +127,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
     },
     {
       retry: 0,
-      enabled: api === stepAPi[2] && hddVol !== '' && hddVolOld !== '',
+      enabled: api === stepApi[2] && hddVol !== '' && hddVolOld !== '',
     }
   )
 
@@ -136,7 +136,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
     isError: isGetConfigError,
     remove: removeConfigAll,
   } = useAPIGetConfigAll({
-    enabled: api === stepAPi[3],
+    enabled: api === stepApi[3],
     retry: 0,
   })
 
@@ -146,7 +146,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
     remove: removeSekolah,
   } = useAPIGetSekolah({
     retry: 0,
-    enabled: api === stepAPi[4],
+    enabled: api === stepApi[4],
   })
 
   const {
@@ -155,7 +155,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
     remove: removePtk,
   } = useAPIGetPtkLast(lastUpdatePtk, {
     retry: 0,
-    enabled: api === stepAPi[5],
+    enabled: api === stepApi[5],
   })
 
   const {
@@ -168,7 +168,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
     },
     {
       retry: 0,
-      enabled: api === stepAPi[6],
+      enabled: api === stepApi[6],
     }
   )
 
@@ -178,7 +178,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
     remove: removeRefKode,
   } = useAPIGetReferensi(
     { referensi: 'kode', lastUpdate: lastUpdateKode },
-    { enabled: api === stepAPi[7] && lastUpdateKode !== '', retry: 0 }
+    { enabled: api === stepApi[7] && lastUpdateKode !== '', retry: 0 }
   )
   const {
     data: dataRefRekening,
@@ -186,7 +186,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
     remove: removeRefRekening,
   } = useAPIGetReferensi(
     { referensi: 'rekening', lastUpdate: lastUpdateRekening },
-    { enabled: api === stepAPi[8] && lastUpdateRekening !== '' }
+    { enabled: api === stepApi[8] && lastUpdateRekening !== '' }
   )
   const {
     data: dataRefBarang,
@@ -194,7 +194,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
     remove: removeRefBarang,
   } = useAPIGetReferensi(
     { referensi: 'barang', lastUpdate: lastUpdateBarang },
-    { enabled: api === stepAPi[9] && lastUpdateBarang !== '' }
+    { enabled: api === stepApi[9] && lastUpdateBarang !== '' }
   )
 
   const {
@@ -203,7 +203,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
     remove: removePagu,
   } = useAPIGetConfigPagu(
     { idSumberData: props.idSumberDana, isRevisi: 0 },
-    { enabled: api === stepAPi[10] }
+    { enabled: api === stepApi[10] }
   )
 
   const removeCacheData = () => {
@@ -260,7 +260,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
   useEffect(() => {
     if (infoConnection !== undefined) {
       if (Number(infoConnection.data) === 1) {
-        setApi(stepAPi[1])
+        setApi(stepApi[1])
       } else {
         failedSyncData()
       }
@@ -271,7 +271,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
     () => {
       if (dataToken !== undefined) {
         setToken(dataToken?.data.access_token)
-        setApi(stepAPi[2])
+        setApi(stepApi[2])
       }
     },
     // run if token change
@@ -281,7 +281,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
   useEffect(() => {
     if (dataHDDVol !== undefined) {
       if (Number(dataHDDVol.data) === 1) {
-        setApi(stepAPi[3])
+        setApi(stepApi[3])
       } else {
         setApi('')
         removeCacheData()
@@ -295,7 +295,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
   useEffect(() => {
     if (dataConfigAll !== undefined) {
       ipcRenderer.send('config:setBulkConfig', dataConfigAll?.data)
-      setApi(stepAPi[4])
+      setApi(stepApi[4])
     }
   }, [dataConfigAll])
 
@@ -306,14 +306,14 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
       setKodeWilayah(dataSekolah?.data?.kode_wilayah)
       setPenanggungJawabTemp(dataSekolah?.data)
       setLastUpdatePtk(ptkLastUpdate)
-      setApi(stepAPi[5])
+      setApi(stepApi[5])
     }
   }, [dataSekolah])
 
   useEffect(() => {
     if (dataPtk !== undefined) {
       ipcRenderer.send('ptk:addBulkPtk', dataPtk?.data)
-      setApi(stepAPi[6])
+      setApi(stepApi[6])
     }
   }, [dataPtk])
 
@@ -324,7 +324,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
         'referensi:getRefKodeLastUpdate'
       )
       setLastUpdateKode(kodeLastUpdate)
-      setApi(stepAPi[7])
+      setApi(stepApi[7])
     }
   }, [dataWilayah])
 
@@ -335,7 +335,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
         'referensi:getRefRekeningLastUpdate'
       )
       setLastUpdateRekening(rekeningLastUpdate)
-      setApi(stepAPi[8])
+      setApi(stepApi[8])
     }
   }, [dataRefKode])
 
@@ -346,14 +346,14 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
         'referensi:getRefBarangLastUpdate'
       )
       setLastUpdateBarang(barangLastUpdate)
-      setApi(stepAPi[9])
+      setApi(stepApi[9])
     }
   }, [dataRefRekening])
 
   useEffect(() => {
     if (dataRefBarang !== undefined) {
       ipcRenderer.send('referensi:addBulkRefBarang', dataRefBarang?.data)
-      setApi(stepAPi[10])
+      setApi(stepApi[10])
     }
   }, [dataRefBarang])
 
@@ -416,7 +416,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
       return
     }
     setIsSync(true)
-    setApi(stepAPi[0])
+    setApi(stepApi[0])
   }
 
   const onSubmitConfirm = () => {
