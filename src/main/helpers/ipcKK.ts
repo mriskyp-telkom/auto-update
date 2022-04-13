@@ -19,6 +19,7 @@ import {
   AddDetailKegiatan,
   DeleteRapbsByRapbsId,
   GetDetailKegiatan,
+  UpdateDetailKegiatan,
 } from 'main/services/KertasKerjaService'
 import { AnggaranKegiatan } from 'main/types/Anggaran'
 
@@ -155,6 +156,13 @@ module.exports = {
     IPC_KK.getAnggaranDetailKegiatan,
     async (e, idRapbs) => {
       e.returnValue = await GetDetailKegiatan(idRapbs)
+    }
+  ),
+
+  updateAnggaranDetailKegiatan: ipcMain.on(
+    IPC_KK.updateAnggaranDetailKegiatan,
+    async (e, detailKegiatan) => {
+      e.returnValue = await UpdateDetailKegiatan(detailKegiatan)
     }
   ),
 
