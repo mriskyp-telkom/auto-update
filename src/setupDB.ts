@@ -679,8 +679,10 @@ async function createDBLocal(appDataPath: string): Promise<void> {
     await addRefPeriode()
     await addRefSumberDana()
     await addRole()
+    // check also conn.ts
     await connDBLocal.close()
   }
+
   await encryptDB()
   return
 }

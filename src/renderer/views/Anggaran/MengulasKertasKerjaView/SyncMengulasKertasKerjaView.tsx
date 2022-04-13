@@ -36,6 +36,11 @@ const SyncMengulasKertasKerjaView: FC = () => {
   const navigate = useNavigate()
   const [api, setApi] = useState('')
 
+  const [percentage, setPercentage] = useState(0)
+  const [percentageSisaDana, setPercentageSisaDana] = useState(0)
+  const [percentageDataCentral, setPercentageDataCentral] = useState(0)
+  const [isPercentageCompleted, setIsPercentageCompleted] = useState(false)
+
   // attribute setter
   const [lastUpdateKode, setLastUpdateKode] = useState('')
   const [lastUpdateRekening, setLastUpdateRekening] = useState('')
@@ -142,16 +147,35 @@ const SyncMengulasKertasKerjaView: FC = () => {
   }
 
   useEffect(() => {
-    if (checkSisaDana() != 0) {
-      const response = RESPONSE_PENGESAHAN.error_sisa_dana as ResponseMengulas
-      directPage(response)
-      setResponseMengulas(response)
-      setAlertMengulas(true)
-    } else {
-      // if api info connection
-      setApi(stepAPi[0])
+    if (!isPercentageCompleted) {
+      if (percentageSisaDana == 1 && percentageDataCentral == 1) {
+        setIsPercentageCompleted(true)
+        setTimeout(() => {
+          setPercentage(100)
+        }, 1000)
+      } else if (percentageSisaDana == 1 || percentageDataCentral == 1) {
+        setTimeout(() => {
+          setPercentage(50)
+        }, 2000)
+      }
     }
-  }, [])
+  }, [percentageDataCentral, percentageSisaDana])
+
+  useEffect(() => {
+    if (percentageSisaDana == 0) {
+      if (checkSisaDana() != 0) {
+        const response = RESPONSE_PENGESAHAN.error_sisa_dana as ResponseMengulas
+        directPage(response)
+        setResponseMengulas(response)
+        setAlertMengulas(true)
+      } else {
+        // if api info connection
+        setPercentageSisaDana(1)
+        setPercentage(50)
+        setApi(stepAPi[0])
+      }
+    }
+  }, [percentageSisaDana])
 
   useEffect(() => {
     const sekolah = ipcRenderer.sendSync('sekolah:getSekolah')
@@ -249,13 +273,15 @@ const SyncMengulasKertasKerjaView: FC = () => {
       setResponseMengulas(response)
       removeCacheData()
       setAlertMengulas(true)
+    } else {
+      setPercentageDataCentral(1)
     }
   }, [dataRefBarang, dataRefRekening, dataRefKode])
   return (
     <SyncDialogComponent
       title="Mengirim RKAS..."
       subtitle="Pastikan Anda terkoneksi ke internet yang lancar."
-      percentage={50}
+      percentage={percentage}
       isOpen={true}
       setIsOpen={closeModal}
     />
