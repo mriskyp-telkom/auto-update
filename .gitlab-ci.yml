@@ -1,4 +1,5 @@
 stages:
+  - build
   - test
   - report
   - build-staging
@@ -36,6 +37,23 @@ variables:
   only:
     - tags
 
+before_script:
+  - yarn install --no-lockfile
+
+# optimize using artifacts
+cache:
+  paths:
+    - node_modules
+    - "packages/*/node_modules"
+    - .eslint
+
+build:
+  stage: build
+  script: yarn build
+  artifacts:
+    paths:
+      - 'packages/*/lib'  # all artifacts that are used by tests
+
 test:
   stage: test
   image: node:latest
@@ -43,6 +61,7 @@ test:
   script:
     - pwd
     - ls
+    - yarn-deduplicate yarn.lock
     - yarn add jest
     - yarn test:ci
     - echo "done running unit test"
@@ -85,7 +104,7 @@ make-win-deb-staging:
     - node -v && npm install -g npm@8.1.2 && npm -v
     - mv ./.env.staging ./.env && rm ./.env.production
     - npm install yarn --legacy-peer-deps
-    - yarn install
+    - yarn install 
     - yarn make-win32 && rm -rf out/Arkas-win32-x64
     - yarn make && rm -rf out/Arkas-linux-x64
     - 'echo "==> total size: $(du -sh .)"'
