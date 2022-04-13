@@ -1,6 +1,6 @@
 stages:
   - test
-  # - report
+  - report
   - build-staging
   - publish-staging
   - build-production
@@ -58,20 +58,18 @@ test:
         - target/JUnitReport/report.xml
       cobertura: target/coverage/cobertura-coverage.xml
 
-# report:
-#   stage: report
-#   image: node:latest
-#   only:
-#     - master
-#   script:
-#     - mkdir public
-#     - mv target/JUnitReport/* public
-#     - mv target/coverage/* public
-#   artifacts:
-#     when: always
-#     paths:
-#       - public
-#     expire_in: 1 week
+report:
+  stage: report
+  image: node:latest
+  script:
+    - mkdir public
+    - mv target/JUnitReport/* public
+    - mv target/coverage/* public
+  artifacts:
+    when: always
+    paths:
+      - public
+    expire_in: 1 week
 
 
 # staging
