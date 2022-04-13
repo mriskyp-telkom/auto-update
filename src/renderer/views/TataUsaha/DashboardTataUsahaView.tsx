@@ -2,7 +2,29 @@ import React, { FC } from 'react'
 
 import PageLayout from 'renderer/views/Layout/PageLayout'
 
+import CardDashboardTataUsahaView from './CardDashboardTataUsahaView'
+
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from '@wartek-id/tabs'
+
+import { BKUCardDashboardType } from 'renderer/types/TataUsahaType'
+
+const bosReguler = [
+  {
+    tahun: 2022,
+    status: 'not_active',
+    show_bulan: true,
+  },
+  {
+    tahun: 2021,
+    status: 'done',
+    show_bulan: true,
+  },
+  {
+    tahun: 2020,
+    status: 'done',
+    show_bulan: false,
+  },
+]
 
 const DashboardTataUsahaView: FC = () => {
   return (
@@ -20,8 +42,10 @@ const DashboardTataUsahaView: FC = () => {
             </TabList>
           </div>
           <TabPanels>
-            <TabPanel className="mt-6 mb-[2px] grid justify-items-center">
-              Bos Reguler Tata Usaha
+            <TabPanel className="mt-6 mb-[2px] mr-3 grid justify-items-center max-h-[550px] scrollBar overflow-y-scroll">
+              {bosReguler.map((item: BKUCardDashboardType, index: number) => {
+                return <CardDashboardTataUsahaView key={index} data={item} />
+              })}
             </TabPanel>
             <TabPanel>Guru Mengajar adalah ...</TabPanel>
             <TabPanel>Guru Portfolio adalah ...</TabPanel>
