@@ -43,7 +43,7 @@ import { RegisterData } from 'main/types/Pengguna'
 
 const ipcRenderer = window.require('electron').ipcRenderer
 
-const stepAPi = [
+const stepApi = [
   'infoConnection',
   'registration',
   'getToken',
@@ -108,7 +108,7 @@ const CreateAccountView: FC = () => {
     remove: removeInfoConnection,
   } = useAPIInfoConnection({
     retry: 0,
-    enabled: api === stepAPi[0],
+    enabled: api === stepApi[0],
   })
   const {
     data: registration,
@@ -124,7 +124,7 @@ const CreateAccountView: FC = () => {
     },
     {
       retry: 0,
-      enabled: api === stepAPi[1],
+      enabled: api === stepApi[1],
     }
   )
   const {
@@ -139,7 +139,7 @@ const CreateAccountView: FC = () => {
     {
       retry: 0,
       enabled:
-        api === stepAPi[2] && npsn !== '' && tahunAktif !== '' && koreg !== '',
+        api === stepApi[2] && npsn !== '' && tahunAktif !== '' && koreg !== '',
     }
   )
 
@@ -149,7 +149,7 @@ const CreateAccountView: FC = () => {
     remove: removeSekolah,
   } = useAPIGetSekolah({
     retry: 0,
-    enabled: api === stepAPi[3],
+    enabled: api === stepApi[3],
   })
 
   const {
@@ -162,7 +162,7 @@ const CreateAccountView: FC = () => {
     },
     {
       retry: 0,
-      enabled: api === stepAPi[4],
+      enabled: api === stepApi[4],
     }
   )
 
@@ -172,7 +172,7 @@ const CreateAccountView: FC = () => {
     remove: removeRefKode,
   } = useAPIGetReferensi(
     { referensi: 'kode', lastUpdate: lastUpdateKode },
-    { enabled: api === stepAPi[4] && lastUpdateKode !== '', retry: 0 }
+    { enabled: api === stepApi[4] && lastUpdateKode !== '', retry: 0 }
   )
   const {
     data: rekening,
@@ -180,7 +180,7 @@ const CreateAccountView: FC = () => {
     remove: removeRefRekening,
   } = useAPIGetReferensi(
     { referensi: 'rekening', lastUpdate: lastUpdateRekening },
-    { enabled: api === stepAPi[5] && lastUpdateRekening !== '' }
+    { enabled: api === stepApi[5] && lastUpdateRekening !== '' }
   )
   const {
     data: barang,
@@ -188,7 +188,7 @@ const CreateAccountView: FC = () => {
     remove: removeRefBarang,
   } = useAPIGetReferensi(
     { referensi: 'barang', lastUpdate: lastUpdateBarang },
-    { enabled: api === stepAPi[6] && lastUpdateBarang !== '' }
+    { enabled: api === stepApi[6] && lastUpdateBarang !== '' }
   )
 
   const removeCacheData = () => {
@@ -240,7 +240,7 @@ const CreateAccountView: FC = () => {
     }
     setEmail(data.email)
     setPassword(data.password)
-    setApi(stepAPi[0])
+    setApi(stepApi[0])
     setIsSync(true)
   }
 
@@ -275,7 +275,7 @@ const CreateAccountView: FC = () => {
   useEffect(() => {
     if (infoConnection !== undefined) {
       if (infoConnection?.data === 1) {
-        setApi(stepAPi[1])
+        setApi(stepApi[1])
       } else {
         removeCacheData()
         setIsSync(false)
@@ -289,7 +289,7 @@ const CreateAccountView: FC = () => {
     if (registration !== undefined) {
       if (registration?.data.status_code === 1) {
         setTahunAktif(registration?.data?.tahun_aktif)
-        setApi(stepAPi[2])
+        setApi(stepApi[2])
       } else if (registration?.data.status_code === 2) {
         setError('email', {
           type: 'manual',
@@ -306,7 +306,7 @@ const CreateAccountView: FC = () => {
   useEffect(() => {
     if (dataToken !== undefined) {
       setToken(dataToken?.data.access_token)
-      setApi(stepAPi[3])
+      setApi(stepApi[3])
     }
   }, [dataToken])
 
@@ -324,7 +324,7 @@ const CreateAccountView: FC = () => {
       const ipcRegistration = ipcRenderer.sendSync('user:registration', data)
 
       if (ipcRegistration === 1) {
-        setApi(stepAPi[4])
+        setApi(stepApi[4])
       } else {
         failedSyncData()
       }
@@ -334,21 +334,21 @@ const CreateAccountView: FC = () => {
   useEffect(() => {
     if (wilayah !== undefined) {
       ipcRenderer.sendSync('referensi:addWilayah', wilayah?.data)
-      setApi(stepAPi[5])
+      setApi(stepApi[5])
     }
   }, [wilayah])
 
   useEffect(() => {
     if (kode !== undefined) {
       ipcRenderer.send('referensi:addBulkRefKode', kode?.data)
-      setApi(stepAPi[6])
+      setApi(stepApi[6])
     }
   }, [kode])
 
   useEffect(() => {
     if (rekening !== undefined) {
       ipcRenderer.send('referensi:addBulkRefRekening', rekening?.data)
-      setApi(stepAPi[7])
+      setApi(stepApi[7])
     }
   }, [rekening])
 

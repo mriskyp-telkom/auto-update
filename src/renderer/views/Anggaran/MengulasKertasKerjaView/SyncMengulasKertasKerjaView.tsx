@@ -21,7 +21,7 @@ import { IPC_ANGGARAN } from 'global/ipc'
 
 const ipcRenderer = window.require('electron').ipcRenderer
 
-const stepAPi = [
+const stepApi = [
   'infoConnection',
   'getToken',
   'refKode',
@@ -29,13 +29,44 @@ const stepAPi = [
   'refBarang',
 ]
 
+/** TO DO
+ *  **GET** /api/utils/info_connection
+ *  **GET** /token
+ *  **POST** /api/sync/init
+ *  **POST** /api/anggaran
+ *  **POST** /api/rkas/penjab
+ *  **POST** /api/rkas
+ *  **POST** /api/rkas/detail
+ *  **POST** /api/rkas/Ptk
+ *  **POST** api/rkas/final
+ */
+// const stepSyncApi = [
+//   'infoConnection',
+//   'getToken',
+//   // 'init',
+//   // 'anggaran'
+// ]
+
 const SyncMengulasKertasKerjaView: FC = () => {
   const { q_id_anggaran } = useParams()
+  // ambil rapbs dari id anggaran
   const idAnggaran = decodeURIComponent(q_id_anggaran)
 
   const navigate = useNavigate()
   const [api, setApi] = useState('')
 
+  const npsn = useAuthStore((state: AuthStates) => state.npsn)
+  const tahunAktif = useAuthStore((state: AuthStates) => state.tahunAktif)
+  const koreg = useAuthStore((state: AuthStates) => state.koreg)
+
+  const setNpsn = useAuthStore((state: AuthStates) => state.setNpsn)
+  const setTahunAktif = useAuthStore((state: AuthStates) => state.setTahunAktif)
+  const setKoreg = useAuthStore((state: AuthStates) => state.setKoreg)
+
+  //////////////////////////////////////////////////////////////////////
+  /**
+   * const pagu sisa dana and data central
+   */
   const [percentage, setPercentage] = useState(0)
   const [percentageSisaDana, setPercentageSisaDana] = useState(0)
   const [percentageDataCentral, setPercentageDataCentral] = useState(0)
@@ -45,14 +76,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
   const [lastUpdateKode, setLastUpdateKode] = useState('')
   const [lastUpdateRekening, setLastUpdateRekening] = useState('')
   const [lastUpdateBarang, setLastUpdateBarang] = useState('')
-
-  const npsn = useAuthStore((state: AuthStates) => state.npsn)
-  const tahunAktif = useAuthStore((state: AuthStates) => state.tahunAktif)
-  const koreg = useAuthStore((state: AuthStates) => state.koreg)
-
-  const setNpsn = useAuthStore((state: AuthStates) => state.setNpsn)
-  const setTahunAktif = useAuthStore((state: AuthStates) => state.setTahunAktif)
-  const setKoreg = useAuthStore((state: AuthStates) => state.setKoreg)
+  ////////////////////////////////////////////////////////////////////////
 
   const removeCacheData = () => {
     removeInfoConnection()
@@ -76,6 +100,12 @@ const SyncMengulasKertasKerjaView: FC = () => {
 
   const setToken = useAppStore((state: AppStates) => state.setToken)
 
+  ////////////////////////////////////////////////////////////////////////
+
+  /**
+   *
+   * const to check pagu sisa dana and data central
+   */
   const {
     // read from api to sync from endpoint
     data: infoConnection,
@@ -83,7 +113,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
     remove: removeInfoConnection,
   } = useAPIInfoConnection({
     retry: 0,
-    enabled: api === stepAPi[0],
+    enabled: api === stepApi[0],
   })
 
   const {
@@ -100,7 +130,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
     {
       retry: 0,
       enabled:
-        api === stepAPi[1] && npsn !== '' && tahunAktif !== '' && koreg !== '',
+        api === stepApi[1] && npsn !== '' && tahunAktif !== '' && koreg !== '',
     }
   )
 
@@ -111,7 +141,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
     remove: removeRefKode,
   } = useAPIGetReferensi(
     { referensi: 'kode', lastUpdate: lastUpdateKode },
-    { enabled: api === stepAPi[2] && lastUpdateKode !== '', retry: 0 }
+    { enabled: api === stepApi[2] && lastUpdateKode !== '', retry: 0 }
   )
   const {
     // read from api to sync from endpoint
@@ -120,7 +150,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
     remove: removeRefRekening,
   } = useAPIGetReferensi(
     { referensi: 'rekening', lastUpdate: lastUpdateRekening },
-    { enabled: api === stepAPi[3] && lastUpdateRekening !== '' }
+    { enabled: api === stepApi[3] && lastUpdateRekening !== '' }
   )
   const {
     // read from api to sync from endpoint
@@ -129,7 +159,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
     remove: removeRefBarang,
   } = useAPIGetReferensi(
     { referensi: 'barang', lastUpdate: lastUpdateBarang },
-    { enabled: api === stepAPi[4] && lastUpdateBarang !== '' }
+    { enabled: api === stepApi[4] && lastUpdateBarang !== '' }
   )
 
   const directPage = (response: ResponseMengulas) => {
@@ -145,6 +175,11 @@ const SyncMengulasKertasKerjaView: FC = () => {
     const pagu = ipcRenderer.sendSync(IPC_ANGGARAN.getPagu, idAnggaran)
     return pagu?.sisa
   }
+
+  ////////////////////////////////////////////////////////////////////////
+  /**
+   * Use Effect Pagu Sisa Dana and Data Central
+   */
 
   useEffect(() => {
     if (!isPercentageCompleted) {
@@ -172,7 +207,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
         // if api info connection
         setPercentageSisaDana(1)
         setPercentage(50)
-        setApi(stepAPi[0])
+        setApi(stepApi[0])
       }
     }
   }, [percentageSisaDana])
@@ -192,7 +227,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
   useEffect(() => {
     if (infoConnection) {
       // get token
-      setApi(stepAPi[1])
+      setApi(stepApi[1])
     }
   }, [infoConnection])
 
@@ -206,7 +241,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
           'referensi:getRefKodeLastUpdate'
         )
         setLastUpdateKode(kodeLastUpdate)
-        setApi(stepAPi[2])
+        setApi(stepApi[2])
       }
     }
   }, [dataToken])
@@ -219,7 +254,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
           'referensi:getRefRekeningLastUpdate'
         )
         setLastUpdateRekening(rekeningLastUpdate)
-        setApi(stepAPi[3])
+        setApi(stepApi[3])
       }
     }
   }, [dataRefKode])
@@ -232,7 +267,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
           'referensi:getRefBarangLastUpdate'
         )
         setLastUpdateBarang(barangLastUpdate)
-        setApi(stepAPi[4])
+        setApi(stepApi[4])
       }
     }
   }, [dataRefRekening])
@@ -260,6 +295,13 @@ const SyncMengulasKertasKerjaView: FC = () => {
     isGetRefRekeningError,
   ])
 
+  ////////////////////////////////////////////////////////////////////////
+
+  ////////////////////////////////////////////////////////////////////////
+  /**
+   * Use Effect main process:
+   *
+   */
   useEffect(() => {
     if (
       (dataRefKode && Object.keys(dataRefKode).length > 0) ||
@@ -275,8 +317,15 @@ const SyncMengulasKertasKerjaView: FC = () => {
       setAlertMengulas(true)
     } else {
       setPercentageDataCentral(1)
+
+      // click
+
+      // setelah success dan kasih timeout 2 detik
+      // navigate('/anggaran')
     }
   }, [dataRefBarang, dataRefRekening, dataRefKode])
+
+  ////////////////////////////////////////////////////////////////////////
   return (
     <SyncDialogComponent
       title="Mengirim RKAS..."
