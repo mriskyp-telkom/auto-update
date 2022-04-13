@@ -1,6 +1,6 @@
 stages:
   - test
-  - report
+  # - report
   - build-staging
   - publish-staging
   - build-production
@@ -8,7 +8,6 @@ stages:
 
 variables:
   GITLAB_AUTH_TOKEN: $CI_JOB_TOKEN
-
 
 
 .make:
@@ -61,20 +60,20 @@ test:
   only:
   - master
 
-report:
-  stage: report
-  image: node:latest
-  only:
-    - master
-  script:
-    - mkdir public
-    - mv target/JUnitReport/* public
-    - mv target/coverage/* public
-  artifacts:
-    when: always
-    paths:
-      - public
-    expire_in: 1 week
+# report:
+#   stage: report
+#   image: node:latest
+#   only:
+#     - master
+#   script:
+#     - mkdir public
+#     - mv target/JUnitReport/* public
+#     - mv target/coverage/* public
+#   artifacts:
+#     when: always
+#     paths:
+#       - public
+#     expire_in: 1 week
 
 
 # staging
