@@ -271,7 +271,7 @@ export async function UpdateDetailKegiatan(
     s1: data.satuan,
     keterangan: '',
     softDelete: 0,
-    createDate: data.createDate,
+    createDate: currentRapbs.createDate,
     lastUpdate: now,
     updaterId: penggunaId,
   }

@@ -194,8 +194,14 @@ const FormKertasKerjaView: FC = () => {
 
   const onSubmit = async () => {
     const body = constructData()
-    const res = ipcRenderer.sendSync(IPC_KK.addAnggaranDetailKegiatan, body)
-    if (res.error) {
+    let res
+    if (q_mode === 'create') {
+      res = ipcRenderer.sendSync(IPC_KK.addAnggaranDetailKegiatan, body)
+    } else if (q_mode === 'update' && q_id_rapbs != null) {
+      body.idRapbs = idRapbs
+      res = ipcRenderer.sendSync(IPC_KK.updateAnggaranDetailKegiatan, body)
+    }
+    if (res?.error) {
       // TODO: should display error modal
     } else {
       setIsFocused(true)
@@ -254,6 +260,7 @@ const FormKertasKerjaView: FC = () => {
       })
       unregister('uraian')
     }
+
     if (data.name === 'uraian') {
       const dataUraian = optionsUraian.find(
         (k: any) => k.id.toString() === data.id.toString()
@@ -281,7 +288,7 @@ const FormKertasKerjaView: FC = () => {
     // before
     const res = ipcRenderer.sendSync(IPC_KK.deleteRapbs, idRapbs)
 
-    if (res.value.isDeleted) {
+    if (res?.value?.isDeleted) {
       // after
       setOpenModalSuccess(true)
       setTimeout(() => {

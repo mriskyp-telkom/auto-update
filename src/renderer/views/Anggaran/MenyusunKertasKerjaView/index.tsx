@@ -71,6 +71,9 @@ const MenyusunKertasKerjaView: FC = () => {
   )
 
   const isFocused = useAnggaranStore((state: AnggaranStates) => state.isFocused)
+  const setIsFocused = useAnggaranStore(
+    (state: AnggaranStates) => state.setIsFocused
+  )
 
   const pagu = useAnggaranStore((state: AnggaranStates) => state.pagu)
 
@@ -144,16 +147,18 @@ const MenyusunKertasKerjaView: FC = () => {
       }
       idAnggaran = ipcRenderer.sendSync('anggaran:copyAnggaran', dataAnggaran)
     }
-
+    setIdAnggaran(idAnggaran)
     setPagu(idAnggaran)
     setRapbsLastUpdate(idAnggaran)
-    setIdAnggaran(idAnggaran)
+    setIsFocused(true)
     setIsSync(false)
   }
 
   useEffect(() => {
-    const id_anggaran = decodeURIComponent(q_id_anggaran)
-    if (isFocused) {
+    const id_anggaran =
+      q_id_anggaran != null ? decodeURIComponent(q_id_anggaran) : idAnggaran
+
+    if (isFocused && id_anggaran != null && id_anggaran !== '') {
       setPagu(id_anggaran)
       setRapbsLastUpdate(id_anggaran)
     }
