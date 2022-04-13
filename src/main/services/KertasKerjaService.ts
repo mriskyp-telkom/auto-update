@@ -8,10 +8,11 @@ import {
   GetNextUrutan,
   GetOneRapbsBulan,
   DelRapbsByRapbsId,
+  GetRapbs,
 } from 'main/repositories/Rapbs'
 import {
   AddBulkRapbsPeriode,
-  BulkUpdateByRapbsId,
+  BulkUpsertByRapbsId,
   GetManyRapbsPeriode,
   DelRapbsPeriodeByRapbsId,
 } from 'main/repositories/RapbsPeriode'
@@ -227,6 +228,30 @@ export async function UpdateDetailKegiatan(
   const sekolahId = await GetConfig(CONFIG.sekolahId)
   const idRapbs = data.idRapbs
 
+  const currentRapbs = await GetRapbs(idRapbs)
+  if (currentRapbs === undefined) {
+    return err(new Error('Rapbs not found'))
+  }
+
+  if (
+    data.idRefKode !== currentRapbs.idRefKode ||
+    data.kodeRekening !== currentRapbs.kodeRekening
+  ) {
+    data.urutan = '001'
+
+    const latestUrutan = await GetLatestUrutan(
+      data.idAnggaran,
+      data.idRefKode,
+      data.kodeRekening,
+      data.idRefTahunAnggaran
+    )
+
+    if (latestUrutan.isOk()) {
+      const v = latestUrutan.unwrapOr(data.urutan)
+      data.urutan = GetNextUrutan(v)
+    }
+  }
+
   const rapbs = <Rapbs>{
     idRapbs: idRapbs,
     sekolahId: sekolahId,
@@ -276,9 +301,7 @@ export async function UpdateDetailKegiatan(
   try {
     const promises = []
     promises.push(AddRapbs(rapbs))
-    if (rapbsPeriodes.length > 0) {
-      promises.push(BulkUpdateByRapbsId(idRapbs, rapbsPeriodes))
-    }
+    promises.push(BulkUpsertByRapbsId(idRapbs, rapbsPeriodes))
 
     await Promise.all(promises)
     await queryRunner.commitTransaction()

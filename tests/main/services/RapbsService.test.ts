@@ -82,7 +82,7 @@ test('AddandUpdateDetailKegiatanSuccess', async () => {
     idBarang: '01.200',
     uraian: 'Kertas HVS Folio',
     satuan: 'Rim',
-    urutan: '001',
+    urutan: '009',
     volume: 10,
     hargaSatuan: 200,
     jumlah: 2000,
@@ -124,6 +124,7 @@ test('AddandUpdateDetailKegiatanSuccess', async () => {
   expect(rapbs.idRefKode).toBe(data.idRefKode)
   expect(rapbs.kodeRekening).toBe(data.kodeRekening)
   expect(rapbs.idBarang).toBe(data.idBarang)
+  expect(rapbs.urutan).toBe(data.urutan)
   expect(rapbs.uraian).toBe(data.uraian)
   expect(rapbs.satuan).toBe(data.satuan)
   expect(rapbs.volume).toBe(data.volume)
@@ -162,7 +163,7 @@ test('AddandUpdateDetailKegiatanSuccess', async () => {
     idAnggaran: 'apQwiAb-9EWxv74iwMY6aQ',
     idRefKode: 'nC6K24ZodkO3wkcvW3wvYg',
     idRefTahunAnggaran: 2021,
-    kodeRekening: '5.1.02.01.01.0024',
+    kodeRekening: '5.1.02.01.01.0021',
     idBarang: '01.200',
     uraian: 'Pensil 2B Joyko P-88 Hijau (12 Pcs)',
     satuan: 'Paket',
@@ -209,6 +210,7 @@ test('AddandUpdateDetailKegiatanSuccess', async () => {
   expect(rapbsUpdate.idRefKode).toBe(dataUpdate.idRefKode)
   expect(rapbsUpdate.kodeRekening).toBe(dataUpdate.kodeRekening)
   expect(rapbsUpdate.idBarang).toBe(dataUpdate.idBarang)
+  expect(rapbsUpdate.urutan).toBe('001') // new urutan number because kodeRekening changed
   expect(rapbsUpdate.uraian).toBe(dataUpdate.uraian)
   expect(rapbsUpdate.satuan).toBe(dataUpdate.satuan)
   expect(rapbsUpdate.volume).toBe(dataUpdate.volume)

@@ -528,11 +528,15 @@ function populateMonthlyDetails(periode: number, bulan: Bulan): BulanDetail[] {
   }
 }
 
-export async function BulkUpdateByRapbsId(
+export async function BulkUpsertByRapbsId(
   idRapbs: string,
   data: RapbsPeriode[]
 ) {
   await DelRapbsPeriodeByRapbsId(idRapbs)
+
+  if (data.length === 0) {
+    return
+  }
 
   const now = new Date()
   const currentPeriode = await getRepository(RapbsPeriode).find({
