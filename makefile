@@ -43,9 +43,3 @@ repair-yarn:
 add-server-connection-alive:
 	echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
 	echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
-
-.PHONY: yarn-update-all
-yarn-update-all:
-	yarn add --dev yarn-upgrade-all
-	yarn yarn-upgrade-all
-	
