@@ -40,13 +40,6 @@ variables:
 before_script:
   - yarn install --no-lockfile
 
-# optimize using artifacts
-cache:
-  paths:
-    - node_modules
-    - "packages/*/node_modules"
-    - .eslint
-
 build:
   stage: build
   script: yarn build
