@@ -24,6 +24,8 @@ const InputPasswordComponent: FC<InputPasswordProps> = (
   props: InputPasswordProps
 ) => {
   const { name, errors, register, setError } = props
+
+  const [isFocus, setIsFocus] = useState(false)
   const [visibilityPassword, setVisibilityPassword] = useState(false)
 
   const validation = {
@@ -41,15 +43,14 @@ const InputPasswordComponent: FC<InputPasswordProps> = (
         })
         return
       }
+      setIsFocus(false)
       props.handleClearError(name)
     },
     onChange: (e: any) => {
       const value = e.target.value
-      if (errors[name]?.message === ERROR_REQUIRED) {
-        if (value !== '') {
-          props.handleClearError(name)
-          return
-        }
+      if (value !== '' && errors[name]?.message === ERROR_REQUIRED) {
+        props.handleClearError(name)
+        return
       }
       if (
         value.length > 7 &&
@@ -65,6 +66,8 @@ const InputPasswordComponent: FC<InputPasswordProps> = (
     },
   }
 
+  const showInfoLength = isFocus && isEmpty(errors[name]) && name === 'password'
+
   return (
     <>
       <InputGroup>
@@ -75,6 +78,7 @@ const InputPasswordComponent: FC<InputPasswordProps> = (
           name={name}
           isInvalid={!!errors[name]}
           errorMessage={errors[name]?.message}
+          onClick={() => setIsFocus(true)}
           {...register(name, validation)}
         />
         <InputRightAddon>
@@ -89,7 +93,7 @@ const InputPasswordComponent: FC<InputPasswordProps> = (
           </Icon>
         </InputRightAddon>
       </InputGroup>
-      {isEmpty(errors[name]) && name === 'password' && (
+      {showInfoLength && (
         <div className="text-tiny font-normal text-gray-600 pt-1">
           {PASSWORD_ERROR_MINLENGTH}
         </div>
