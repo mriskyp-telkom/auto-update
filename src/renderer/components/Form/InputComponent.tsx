@@ -77,6 +77,7 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
     onChange: (e: any) => {
       const value = e.target.value
       clearErrorServer(value)
+      props.registerOption?.onChange(e)
     },
   }
 
@@ -88,6 +89,7 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
         const value = e.target.value
         clearErrorRequired(value)
         clearErrorServer(value)
+        props.registerOption?.onChange(e)
       },
     }
   }
@@ -121,6 +123,7 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
         const value = e.target.value
         clearErrorRequired(value)
         clearErrorServer(value)
+        props.registerOption?.onChange(e)
         if (
           value !== '' &&
           isEmailValid(value) &&
@@ -162,6 +165,7 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
         const value = e.target.value
         clearErrorRequired(value)
         clearErrorServer(value)
+        props.registerOption?.onChange(e)
         if (errors[name]?.message === ERROR_ALPHABET_ONLY) {
           if (value !== '' && isOnlyAlphabet(value)) {
             props.handleClearError(name)
@@ -201,6 +205,7 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
         const value = e.target.value
         clearErrorRequired(value)
         clearErrorServer(value)
+        props.registerOption?.onChange(e)
         if (
           value !== '' &&
           isOnlyNumber(value) &&
