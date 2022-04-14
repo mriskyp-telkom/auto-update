@@ -182,6 +182,7 @@ const SyncLoginView: FC = () => {
       }
     }
   }, [dataHDDVol])
+
   useEffect(() => {
     if (configAll !== undefined) {
       ipcRenderer.send('config:setBulkConfig', configAll?.data)
