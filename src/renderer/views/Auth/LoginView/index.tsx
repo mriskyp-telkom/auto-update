@@ -13,7 +13,7 @@ import SyncLoginView from './SyncLoginView'
 
 import { Button } from '@wartek-id/button'
 
-import { FormLoginType, FormLoginData } from 'renderer/types/LoginType'
+import { FormLoginType, FormLoginData } from 'renderer/types/forms/LoginType'
 
 import { AuthStates, useAuthStore } from 'renderer/stores/auth'
 

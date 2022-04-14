@@ -9,7 +9,7 @@ import FormDialogComponent from 'renderer/components/Dialog/FormDialogComponent'
 import {
   FormPenanggungJawabData,
   FormPenanggungJawabType,
-} from 'renderer/types/AnggaranType'
+} from 'renderer/types/forms/AnggaranType'
 
 import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
 

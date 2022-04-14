@@ -17,7 +17,7 @@ import { Button } from '@wartek-id/button'
 import {
   FormResetAccountData,
   FormResetAccountType,
-} from 'renderer/types/LoginType'
+} from 'renderer/types/forms/LoginType'
 
 import { AuthStates, useAuthStore } from 'renderer/stores/auth'
 import { AppStates, useAppStore } from 'renderer/stores/app'

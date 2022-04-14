@@ -2,7 +2,7 @@ import { AxiosResponse } from 'axios'
 import { useQuery, UseQueryOptions } from 'react-query'
 import { api } from 'renderer/configs/api'
 import { API_POST_SYNC_INIT } from 'renderer/constants/api'
-import { ParamSyncType } from 'renderer/types/SyncType'
+import { ParamSyncType } from 'renderer/types/apis/SyncType'
 
 export function useAPISync(
   params: ParamSyncType,

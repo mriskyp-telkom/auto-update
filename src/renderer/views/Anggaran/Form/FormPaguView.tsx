@@ -7,7 +7,7 @@ import { numberUtils } from '@wartek-id/fe-toolbox'
 import FormDialogComponent from 'renderer/components/Dialog/FormDialogComponent'
 import InputComponent from 'renderer/components/Form/InputComponent'
 
-import { KonfirmasiKertasKerjaData } from 'renderer/types/AnggaranType'
+import { KonfirmasiKertasKerjaData } from 'renderer/types/datas/AnggaranType'
 import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
 
 const KonfirmasiPaguView: FC = () => {

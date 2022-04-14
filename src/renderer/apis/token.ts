@@ -4,7 +4,8 @@ import { useQuery, UseQueryOptions } from 'react-query'
 import { api } from 'renderer/configs/api'
 import { API_GET_TOKEN } from 'renderer/constants/api'
 
-import { TokenData, ParamTokenType } from 'renderer/types/TokenType'
+import { ParamTokenType } from 'renderer/types/apis/TokenType'
+import { TokenData } from 'renderer/types/datas/TokenType'
 
 export function useAPIGetToken(
   paramToken: ParamTokenType,

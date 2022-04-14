@@ -21,7 +21,10 @@ import { APP_CONFIG } from 'renderer/constants/appConfig'
 import { sendEventRegistrasi1 } from 'renderer/utils/analytic/auth-util'
 import { btnFormDisabled } from 'renderer/utils/form-validation'
 
-import { FormRegisterType, FormRegisterData } from 'renderer/types/LoginType'
+import {
+  FormRegisterType,
+  FormRegisterData,
+} from 'renderer/types/forms/LoginType'
 
 import {
   useAPICheckActivation,

@@ -7,8 +7,3 @@ export interface TokenData {
   expires: string
   errorDesc: string
 }
-
-export interface ParamTokenType {
-  username: string
-  password: string
-}
