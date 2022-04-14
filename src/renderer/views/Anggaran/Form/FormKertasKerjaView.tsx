@@ -158,7 +158,9 @@ const FormKertasKerjaView: FC = () => {
     data.kodeRekening = selectedRekening.kode
     data.idBarang = selectedUraian?.kode
     data.uraian =
-      selectedUraian != null ? selectedUraian.uraian : getValues('uraian')
+      selectedUraian != null && selectedUraian.uraian != ''
+        ? selectedUraian.uraian
+        : getValues('uraian')
     data.hargaSatuan = parseInt(
       getValues('harga_satuan')
         .replace(/[^,\d]/g, '')
@@ -396,13 +398,11 @@ const FormKertasKerjaView: FC = () => {
 
       if (anggaran.idBarang != null && anggaran.idBarang !== '') {
         uraian.kode = anggaran.idBarang
-        uraian.uraian = anggaran.uraian
       }
       if (rapbsPtk != null) {
         uraian.id = rapbsPtk.idPtk
-        uraian.uraian = rapbsPtk.nama
       }
-
+      uraian.uraian = anggaran.uraian
       setSelectedUraian(uraian)
 
       reset({
