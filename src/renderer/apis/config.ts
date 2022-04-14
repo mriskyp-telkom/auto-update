@@ -6,7 +6,7 @@ import {
   API_GET_CONFIG_ALL,
   API_GET_CONFIG_PAGU,
 } from 'renderer/constants/api'
-import { ParamConfigPagu } from 'renderer/types/UtilType'
+import { ParamConfigPagu } from 'renderer/types/apis/UtilType'
 
 export function useAPIGetConfigAll(queryOpts?: UseQueryOptions<AxiosResponse>) {
   return useQuery<AxiosResponse>(

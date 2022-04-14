@@ -1,11 +1,12 @@
 import create, { State } from 'zustand'
 
+import { ResponseMengulas } from 'renderer/types/AnggaranType'
+
 import {
   FormPagu,
   FormPenanggungJawab,
-  ResponseMengulas,
   FormTableKertasKerjaData,
-} from 'renderer/types/AnggaranType'
+} from 'renderer/types/forms/AnggaranType'
 
 export interface AnggaranStates extends State {
   tempDetailKertasKerja: FormTableKertasKerjaData

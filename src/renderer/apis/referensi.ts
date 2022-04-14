@@ -8,7 +8,7 @@ import {
 import {
   ParamsReferensiType,
   ParamsReferensiWilayahType,
-} from 'renderer/types/ReferensiType'
+} from 'renderer/types/apis/ReferensiType'
 
 export function useAPIGetReferensi(
   params: ParamsReferensiType,

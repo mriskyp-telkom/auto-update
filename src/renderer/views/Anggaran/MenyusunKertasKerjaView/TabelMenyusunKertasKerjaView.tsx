@@ -5,7 +5,7 @@ import { Tooltip } from '@wartek-id/tooltip'
 
 import { numberUtils } from '@wartek-id/fe-toolbox'
 
-import { FormTableKertasKerjaData } from 'renderer/types/AnggaranType'
+import { FormTableKertasKerjaData } from 'renderer/types/forms/AnggaranType'
 
 import { headerKertasKerja } from 'renderer/constants/table'
 import { RESPONSE_PENGESAHAN } from 'renderer/constants/anggaran'

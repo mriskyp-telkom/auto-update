@@ -2,7 +2,7 @@ import { AxiosResponse } from 'axios'
 import { useQuery, UseQueryOptions } from 'react-query'
 import { api } from 'renderer/configs/api'
 import { API_REGISTRATION } from 'renderer/constants/api'
-import { ParamRegistrationType } from 'renderer/types/RegistrationType'
+import { ParamRegistrationType } from 'renderer/types/apis/RegistrationType'
 
 export function useAPIRegistration(
   params: ParamRegistrationType,

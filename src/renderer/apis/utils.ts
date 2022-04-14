@@ -9,10 +9,11 @@ import {
 } from 'renderer/constants/api'
 
 import {
-  HDDVolData,
   ParamCheckActivation,
   ParamHDDVolType,
-} from 'renderer/types/UtilType'
+} from 'renderer/types/apis/UtilType'
+
+import { HDDVolData } from 'renderer/types/datas/UtilType'
 
 export function useAPICheckHDDVol(
   params: ParamHDDVolType,

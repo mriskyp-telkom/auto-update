@@ -11,14 +11,14 @@ import SelectComponent from 'renderer/components/Form/SelectComponent'
 
 import { Icon } from '@wartek-id/icon'
 
+import { DetailKegiatan, Ptk, Periode } from 'renderer/types/AnggaranType'
+
 import {
   FormIsiKertasKerjaType,
   FormIsiKertasKerjaData,
-  AnggaranBulanData,
-  DetailKegiatan,
-  Ptk,
-  Periode,
-} from 'renderer/types/AnggaranType'
+} from 'renderer/types/forms/AnggaranType'
+
+import { AnggaranBulanData } from 'renderer/types/datas/AnggaranType'
 
 import { DATA_BULAN } from 'renderer/constants/general'
 import {
