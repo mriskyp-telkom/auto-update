@@ -32,7 +32,7 @@ export type FormIsiKertasKerjaType =
   | `anggaran_bulan.${number}.satuan`
 
 export interface AnggaranBulanData {
-  id: number
+  id_bulan: number
   bulan: string
   jumlah: number
   satuan: string

@@ -115,7 +115,7 @@ const InputSearchComponent: FC<InputSearchProps> = (
 
   useEffect(() => {
     setData(props.dataOptions)
-  }, [])
+  }, [props.dataOptions])
 
   return (
     <div ref={ref} className="relative">
