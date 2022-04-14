@@ -46,4 +46,8 @@ const SyncDialogComponent: FC<SyncDialogProps> = (props: SyncDialogProps) => {
   )
 }
 
+SyncDialogComponent.defaultProps = {
+  subtitle: '',
+}
+
 export default SyncDialogComponent

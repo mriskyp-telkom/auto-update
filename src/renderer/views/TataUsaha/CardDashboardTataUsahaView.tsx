@@ -2,6 +2,7 @@ import React, { FC } from 'react'
 
 import InformationCardComponent from 'renderer/components/Card/InformationCardComponent'
 import BadgeComponent, { BadgeType } from 'renderer/components/BadgeComponent'
+import AktivasiBKUView from 'renderer/views/TataUsaha/Aktivasi/AktivasiBKUView'
 
 import { Button } from '@wartek-id/button'
 import { Icon } from '@wartek-id/icon'
@@ -76,14 +77,7 @@ const CardDashboardTataUsahaView: FC<CardDashboardTataUsahaProps> = (
           <span className="flex">
             {isNotActive && (
               <div className="grid justify-items-end">
-                <Button
-                  color="black"
-                  size="md"
-                  variant="solid"
-                  onClick={handleClick}
-                >
-                  Aktivasi BKU
-                </Button>
+                <AktivasiBKUView />
                 <div className="text-blue-700 text-[12px] text-right pt-2">
                   <b>“Aktivasi BKU”</b> membutuhkan koneksi internet
                 </div>
