@@ -11,6 +11,8 @@ import { DATA_BULAN } from 'renderer/constants/general'
 import {
   STATUS_BKU_PERTAHUN,
   LABEL_STATUS_BKU_PERTAHUN,
+  STATUS_BKU_PERBULAN,
+  LABEL_STATUS_BKU_PERBULAN,
 } from 'renderer/constants/tata-usaha'
 
 import {
@@ -19,9 +21,11 @@ import {
 } from 'renderer/types/TataUsahaType'
 
 import filter from 'lodash/filter'
+import clsx from 'clsx'
 
 interface CardBulanProps {
   data: BKUCardDashboardBulanType
+  status_pertahun: string
 }
 
 interface CardDashboardTataUsahaProps {
@@ -31,9 +35,41 @@ interface CardDashboardTataUsahaProps {
 const CardBulan: FC<CardBulanProps> = (props: CardBulanProps) => {
   const { data } = props
 
+  const isDisabled = data.status === undefined
+
+  const status = isDisabled ? STATUS_BKU_PERBULAN.not_created : data.status
+
+  const color = isDisabled ? 'bg-gray-10 text-gray-500' : 'bg-white'
+
+  const classStatus = color + ' border-gray-500'
+
   return (
-    <div className="rounded shadow-custom1 py-3 px-5 w-[177px] h-[48px] text-center capitalize-first">
-      {data.bulan}
+    <div
+      className={clsx(
+        color,
+        'rounded shadow-custom1 py-3 px-5 w-[177px] capitalize-first'
+      )}
+    >
+      <div className="flex justify-center mb-3">
+        {data.status === STATUS_BKU_PERBULAN.done && (
+          <Icon as="i" className="mr-2" color="default" fontSize="default">
+            done
+          </Icon>
+        )}
+        {data.bulan}
+      </div>
+      <div className="flex justify-center">
+        {LABEL_STATUS_BKU_PERBULAN.filter((item) => item.status === status).map(
+          (status, index) => (
+            <BadgeComponent
+              key={index}
+              type={isDisabled ? 'custom' : (status.type as BadgeType)}
+              label={status.label}
+              class={classStatus}
+            />
+          )
+        )}
+      </div>
     </div>
   )
 }
@@ -148,7 +184,13 @@ const CardDashboardTataUsahaView: FC<CardDashboardTataUsahaProps> = (
                 bulan: bulan.name,
                 status: filtered[0]?.status,
               }
-              return <CardBulan key={index} data={bulanStatus} />
+              return (
+                <CardBulan
+                  key={index}
+                  data={bulanStatus}
+                  status_pertahun={data.status}
+                />
+              )
             })}
           </div>
         </div>
