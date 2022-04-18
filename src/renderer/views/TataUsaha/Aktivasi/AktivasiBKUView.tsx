@@ -2,10 +2,11 @@ import React, { FC } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 
 import AlertDialogComponent from 'renderer/components/Dialog/AlertDialogComponent'
-
+import AlertNoConnection from 'renderer/views/AlertNoConnection'
 import { TataUsahaStates, useTataUsahaStore } from 'renderer/stores/tata-usaha'
 
 import { Button } from '@wartek-id/button'
+import { AppStates, useAppStore } from 'renderer/stores/app'
 
 const AktivasiBKUView: FC = () => {
   const navigate = useNavigate()
@@ -19,15 +20,24 @@ const AktivasiBKUView: FC = () => {
     (state: TataUsahaStates) => state.setIsActivationBKUFailed
   )
 
+  const setAlertNoConnection = useAppStore(
+    (state: AppStates) => state.setAlertNoConnection
+  )
+
   const alertDesc =
     'Berdasarkan website BOS Salur, sekolah Anda belum menerima \
    dana BOS Reguler tahap ini sehingga belum bisa mengaktifkan BKU. \
    Silakan periksa website BOS Salur secara berkala untuk melihat status penerimaan dana.'
 
   const handleClickAktivasi = () => {
-    navigate('/sync/tata-usaha/aktivasi', {
-      state: { backgroundLocation: location },
-    })
+    setAlertNoConnection(false)
+    if (navigator.onLine) {
+      navigate('/sync/tata-usaha/aktivasi', {
+        state: { backgroundLocation: location },
+      })
+    } else {
+      setAlertNoConnection(true)
+    }
   }
 
   return (
@@ -49,6 +59,10 @@ const AktivasiBKUView: FC = () => {
         hideBtnCancel={true}
         btnActionText="Tutup"
         onSubmit={() => setIsActivationBKUFailed(false)}
+      />
+      <AlertNoConnection
+        onSubmit={handleClickAktivasi}
+        onCancel={() => setAlertNoConnection(false)}
       />
     </>
   )
