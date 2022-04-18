@@ -81,10 +81,12 @@ const CardDashboardTataUsahaView: FC<CardDashboardTataUsahaProps> = (
 
   const isNotActive = data.status === STATUS_BKU_PERTAHUN.not_active
   const isDone = data.status === STATUS_BKU_PERTAHUN.done
+  const isActive = data.status === STATUS_BKU_PERTAHUN.active
   const isTempInactive = data.status === STATUS_BKU_PERTAHUN.temporary_inactive
 
   const showBulan = data.bulan.length > 0
-  const showThreeButton = !isNotActive && showBulan
+  const showBtnList = !isNotActive && showBulan
+  const showBtnCetak = isDone || isActive
 
   const handleClick = () => {
     //handle
@@ -127,20 +129,7 @@ const CardDashboardTataUsahaView: FC<CardDashboardTataUsahaProps> = (
                 </div>
               </div>
             )}
-            {showThreeButton && (
-              <Button
-                color="white"
-                size="md"
-                variant="solid"
-                onClick={handleClick}
-              >
-                <Icon as="i" color="default" fontSize="small" className="mr-1">
-                  delete
-                </Icon>
-                Hapus
-              </Button>
-            )}
-            {isDone && (
+            {showBtnCetak && (
               <Button
                 color="white"
                 size="md"
@@ -154,7 +143,7 @@ const CardDashboardTataUsahaView: FC<CardDashboardTataUsahaProps> = (
                 Cetak
               </Button>
             )}
-            {showThreeButton && (
+            {showBtnList && (
               <Button
                 color="white"
                 size="md"
