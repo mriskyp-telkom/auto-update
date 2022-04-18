@@ -19,10 +19,12 @@ export type BadgeType =
   | 'disabled-with-border'
   | 'soft-blue-with-border'
   | 'soft-gray-with-border'
+  | 'custom'
 
 interface BadgeProps {
   type: BadgeType
   label: string
+  class?: string
 }
 
 const includesNeutral = [
@@ -31,6 +33,7 @@ const includesNeutral = [
   'soft-blue-with-border',
   'soft-gray-with-border',
   'neutral-with-border',
+  'custom',
 ]
 
 const BadgeComponent: FC<BadgeProps> = (props: BadgeProps) => {
@@ -42,6 +45,7 @@ const BadgeComponent: FC<BadgeProps> = (props: BadgeProps) => {
     props.type === 'disabled-with-border' && 'bg-gray-200 border-gray-500',
     props.type === 'disabled' && 'bg-gray-200 border-none',
     props.type === 'neutral' && 'border-none',
+    props.type === 'custom' && props.class,
     'text-[13px] py-1 px-3'
   )
 

@@ -25,13 +25,57 @@ const bosReguler = [
     bulan: [
       {
         bulan: 'januari',
-        status: 'draft',
+        status: 'done',
+      },
+      {
+        bulan: 'februari',
+        status: 'done',
+      },
+      {
+        bulan: 'maret',
+        status: 'done',
+      },
+      {
+        bulan: 'april',
+        status: 'done',
+      },
+      {
+        bulan: 'mei',
+        status: 'done',
+      },
+      {
+        bulan: 'juni',
+        status: 'done',
+      },
+      {
+        bulan: 'juli',
+        status: 'done',
+      },
+      {
+        bulan: 'agustus',
+        status: 'done',
+      },
+      {
+        bulan: 'september',
+        status: 'done',
+      },
+      {
+        bulan: 'oktober',
+        status: 'done',
+      },
+      {
+        bulan: 'november',
+        status: 'done',
+      },
+      {
+        bulan: 'desember',
+        status: 'done',
       },
     ],
   },
   {
     tahun: 2020,
-    status: 'temporary_inactive',
+    status: 'done',
     bulan: [],
   },
 ]
