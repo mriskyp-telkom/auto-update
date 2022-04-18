@@ -15,6 +15,7 @@ import DashboardAnggaranView from 'renderer/views/Anggaran/DashboardAnggaranView
 import MenyusunKertasKerjaView from 'renderer/views/Anggaran/MenyusunKertasKerjaView'
 import MengulasKertasKerjaView from 'renderer/views/Anggaran/MengulasKertasKerjaView'
 import SyncMengulasKertasKerjaView from 'renderer/views/Anggaran/MengulasKertasKerjaView/SyncMengulasKertasKerjaView'
+import SyncCekStatusKKView from 'renderer/views/Anggaran/CekStatus/SyncCekStatusKKView'
 
 import DashboardTataUsahaView from 'renderer/views/TataUsaha/DashboardTataUsahaView'
 import SyncAktivasiBKUView from 'renderer/views/TataUsaha/Aktivasi/SyncAktivasiBKUView'
@@ -120,6 +121,10 @@ const App: FC = () => {
               <Route
                 path="sync/anggaran/mengulas/:q_id_anggaran"
                 element={<SyncMengulasKertasKerjaView />}
+              />
+              <Route
+                path="sync/anggaran/cek-status"
+                element={<SyncCekStatusKKView />}
               />
               <Route
                 path="sync/tata-usaha/aktivasi"

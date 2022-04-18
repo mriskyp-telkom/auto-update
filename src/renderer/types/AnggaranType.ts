@@ -9,6 +9,8 @@ export interface KKCardDashboardType {
   id_sumber_dana: number
 }
 
+export type ResponseCekStatus = 'approved' | 'in_progress' | 'declined'
+
 export type ResponseMengulas =
   | 'success'
   | 'error_sisa_dana'
