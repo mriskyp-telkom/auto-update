@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import BadgeComponent, { BadgeType } from 'renderer/components/BadgeComponent'
 
 import CreateKertasKerjaView from './CreateKertasKerjaView'
+import CekStatusKKView from 'renderer/views/Anggaran/CekStatus/CekStatusKKView'
 
 import { KKCardDashboardType } from 'renderer/types/AnggaranType'
 
@@ -11,7 +12,6 @@ import { LABEL_STATUS_KERTAS_KERJA } from 'renderer/constants/anggaran'
 
 import { Icon } from '@wartek-id/icon'
 import { Tooltip } from '@wartek-id/tooltip'
-import { Button } from '@wartek-id/button'
 
 import {
   formatDateToString,
@@ -112,26 +112,7 @@ const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (
           {enable3Icons && (
             <>
               <div className="flex">
-                {isWaitingAproval && (
-                  <Button
-                    color="white"
-                    size="sm"
-                    variant="solid"
-                    className="font-normal mr-10"
-                    style={{ fontSize: '12px' }}
-                  >
-                    <Icon
-                      as="i"
-                      color="default"
-                      fontSize="small"
-                      className="mr-1"
-                      style={{ fontSize: '16px' }}
-                    >
-                      refresh
-                    </Icon>
-                    Cek Status Terbaru
-                  </Button>
-                )}
+                {isWaitingAproval && <CekStatusKKView />}
                 <div className="flex">
                   <div className="ml-6">
                     <Tooltip

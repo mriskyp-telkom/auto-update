@@ -75,6 +75,39 @@ export const ALERT_MENGULAS = {
   },
 }
 
+export const RESPONSE_CEK_STATUS = {
+  approved: 'approved',
+  in_progress: 'in_progress',
+  declined: 'declined',
+}
+
+export const ALERT_CEK_STATUS = {
+  [RESPONSE_CEK_STATUS.approved]: {
+    type: 'success',
+    icon: 'done',
+    title: 'RKAS Sudah Disahkan!',
+    desc: 'Sesuai peraturan yang berlaku, Anda sudah dapat melakukan pembelanjaan setelah menerima dana. Silakan cetak RKAS sebagai pelengkap laporan pembelanjaan.',
+    btnCancelText: 'Tutup',
+    btnActionText: 'Cetak RKAS',
+  },
+  [RESPONSE_CEK_STATUS.in_progress]: {
+    type: 'warning',
+    icon: 'hourglass_bottom',
+    title: 'RKAS masih dalam proses',
+    desc: 'Dinas memerlukan 7-14 hari kerja untuk memeriksa dan melakukan pengesahan. Silahkan cek status terbaru secara berkala.',
+    btnCancelText: 'Tutup',
+    btnActionText: 'Lihat RKAS',
+  },
+  [RESPONSE_CEK_STATUS.declined]: {
+    type: 'failed',
+    icon: 'close',
+    title: 'Maaf, RKAS belum disetujui',
+    desc: 'Berdasarkan pemeriksaan dinas, ada beberapa hal di RKAS Anda yang belum sesuai dengan peraturan yang berlaku. Silakan lakukan revisi sesuai catatan yang diberikan.',
+    btnCancelText: 'Tutup',
+    btnActionText: 'Revisi RKAS',
+  },
+}
+
 export const ID_SUMBER_DANA = {
   BOS_REGULER: 1,
   BOS_DAERAH: 3,
