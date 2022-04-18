@@ -1,5 +1,10 @@
-export interface BKUCardDashboardType {
+export interface BKUCardDashboardBulanType {
+  bulan: string
+  status: string
+}
+
+export interface BKUCardDashboardTahunType {
   tahun: number
   status: string
-  show_bulan: boolean
+  bulan: BKUCardDashboardBulanType[]
 }

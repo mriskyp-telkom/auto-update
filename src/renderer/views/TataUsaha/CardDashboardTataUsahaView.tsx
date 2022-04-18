@@ -10,23 +10,30 @@ import { Icon } from '@wartek-id/icon'
 import { DATA_BULAN } from 'renderer/constants/general'
 import {
   STATUS_BKU_PERTAHUN,
-  LABEL_STATUS_BKU,
+  LABEL_STATUS_BKU_PERTAHUN,
 } from 'renderer/constants/tata-usaha'
 
-import { BKUCardDashboardType } from 'renderer/types/TataUsahaType'
+import {
+  BKUCardDashboardTahunType,
+  BKUCardDashboardBulanType,
+} from 'renderer/types/TataUsahaType'
+
+import filter from 'lodash/filter'
 
 interface CardBulanProps {
-  bulan: string
+  data: BKUCardDashboardBulanType
 }
 
 interface CardDashboardTataUsahaProps {
-  data: BKUCardDashboardType
+  data: BKUCardDashboardTahunType
 }
 
 const CardBulan: FC<CardBulanProps> = (props: CardBulanProps) => {
+  const { data } = props
+
   return (
     <div className="rounded shadow-custom1 py-3 px-5 w-[177px] h-[48px] text-center capitalize-first">
-      {props.bulan}
+      {data.bulan}
     </div>
   )
 }
@@ -40,7 +47,8 @@ const CardDashboardTataUsahaView: FC<CardDashboardTataUsahaProps> = (
   const isDone = data.status === STATUS_BKU_PERTAHUN.done
   const isTempInactive = data.status === STATUS_BKU_PERTAHUN.temporary_inactive
 
-  const showThreeButton = !isNotActive && data.show_bulan
+  const showBulan = data.bulan.length > 0
+  const showThreeButton = !isNotActive && showBulan
 
   const handleClick = () => {
     //handle
@@ -62,7 +70,7 @@ const CardDashboardTataUsahaView: FC<CardDashboardTataUsahaProps> = (
                 <div className="text-[20px]">BKU BOS Reguler {data.tahun}</div>
               </span>
               <span>
-                {LABEL_STATUS_BKU.filter(
+                {LABEL_STATUS_BKU_PERTAHUN.filter(
                   (item) => item.status === data.status
                 ).map((status, index) => (
                   <BadgeComponent
@@ -124,16 +132,24 @@ const CardDashboardTataUsahaView: FC<CardDashboardTataUsahaProps> = (
           </span>
         </div>
         {isTempInactive && (
-          <InformationCardComponent text="BKU terkunci karena sedang dalam proses perubahan/pergeseran" />
+          <InformationCardComponent
+            text="BKU terkunci karena sedang dalam proses perubahan/pergeseran"
+            class="mt-4"
+          />
         )}
       </div>
-      {data.show_bulan && (
+      {showBulan && (
         <div>
           <div className="border-b mb-1 border-gray-200"></div>
           <div className="grid grid-cols-4 gap-x-12 gap-y-7 py-4 px-7">
-            {DATA_BULAN.map((bulan, index) => (
-              <CardBulan key={index} bulan={bulan.name} />
-            ))}
+            {DATA_BULAN.map((bulan, index) => {
+              const filtered = filter(data.bulan, ['bulan', bulan.name])
+              const bulanStatus = {
+                bulan: bulan.name,
+                status: filtered[0]?.status,
+              }
+              return <CardBulan key={index} data={bulanStatus} />
+            })}
           </div>
         </div>
       )}

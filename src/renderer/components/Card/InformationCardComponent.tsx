@@ -2,15 +2,24 @@ import React, { FC } from 'react'
 
 import { Icon } from '@wartek-id/icon'
 
+import clsx from 'clsx'
+
 interface InformationCardProps {
   text: string
+  class?: string
 }
 
 const InformationCardComponent: FC<InformationCardProps> = (
   props: InformationCardProps
 ) => {
   return (
-    <div className="border border-gray-300 border-solid rounded p-5 flex items-center">
+    <div
+      className={clsx(
+        props.class,
+        'flex items-center p-5',
+        'border border-gray-300 border-solid rounded'
+      )}
+    >
       <Icon
         as="i"
         color="default"

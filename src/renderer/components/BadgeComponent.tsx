@@ -4,29 +4,49 @@ import { Badge } from '@wartek-id/badge'
 
 import clsx from 'clsx'
 
-export type BadgeType =
+import includes from 'lodash/includes'
+
+type BadgeMainType =
   | 'success'
   | 'warning'
   | 'critical'
   | 'informational'
   | 'neutral'
+
+export type BadgeType =
+  | BadgeMainType
   | 'disabled'
+  | 'disabled-with-border'
+  | 'soft-blue-with-border'
+  | 'soft-gray-with-border'
 
 interface BadgeProps {
   type: BadgeType
   label: string
 }
 
+const includesNeutral = [
+  'disabled',
+  'disabled-with-border',
+  'soft-blue-with-border',
+  'soft-gray-with-border',
+  'neutral-with-border',
+]
+
 const BadgeComponent: FC<BadgeProps> = (props: BadgeProps) => {
-  const type = props.type === 'disabled' ? 'neutral' : props.type
+  const type = includes(includesNeutral, props.type) ? 'neutral' : props.type
 
   const classes = clsx(
-    props.type === 'disabled' && 'bg-gray-200',
-    'border-none text-[13px] py-1 px-3'
+    props.type === 'soft-blue-with-border' && 'bg-[#e7f6fe] border-blue-700',
+    props.type === 'soft-gray-with-border' && 'bg-gray-10 border-gray-300',
+    props.type === 'disabled-with-border' && 'bg-gray-200 border-gray-500',
+    props.type === 'disabled' && 'bg-gray-200 border-none',
+    props.type === 'neutral' && 'border-none',
+    'text-[13px] py-1 px-3'
   )
 
   return (
-    <Badge variant={type} className={classes}>
+    <Badge variant={type as BadgeMainType} className={classes}>
       {props.label}
     </Badge>
   )
