@@ -6,23 +6,33 @@ import CardDashboardTataUsahaView from './CardDashboardTataUsahaView'
 
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from '@wartek-id/tabs'
 
-import { BKUCardDashboardType } from 'renderer/types/TataUsahaType'
+import { BKUCardDashboardTahunType } from 'renderer/types/TataUsahaType'
 
 const bosReguler = [
   {
     tahun: 2022,
     status: 'not_active',
-    show_bulan: true,
+    bulan: [
+      {
+        bulan: 'januari',
+        status: 'draft',
+      },
+    ],
   },
   {
     tahun: 2021,
-    status: 'done',
-    show_bulan: true,
+    status: 'active',
+    bulan: [
+      {
+        bulan: 'januari',
+        status: 'draft',
+      },
+    ],
   },
   {
     tahun: 2020,
-    status: 'done',
-    show_bulan: false,
+    status: 'temporary_inactive',
+    bulan: [],
   },
 ]
 
@@ -43,9 +53,11 @@ const DashboardTataUsahaView: FC = () => {
           </div>
           <TabPanels>
             <TabPanel className="mt-6 mb-[2px] mr-3 grid justify-items-center max-h-[550px] scrollBar overflow-y-scroll">
-              {bosReguler.map((item: BKUCardDashboardType, index: number) => {
-                return <CardDashboardTataUsahaView key={index} data={item} />
-              })}
+              {bosReguler.map(
+                (item: BKUCardDashboardTahunType, index: number) => {
+                  return <CardDashboardTataUsahaView key={index} data={item} />
+                }
+              )}
             </TabPanel>
             <TabPanel>Guru Mengajar adalah ...</TabPanel>
             <TabPanel>Guru Portfolio adalah ...</TabPanel>
