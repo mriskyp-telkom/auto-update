@@ -1,35 +1,25 @@
 import React, { FC, useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import SyncDialogComponent from 'renderer/components/Dialog/SyncDialogComponent'
-import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
-import { RESPONSE_CEK_STATUS } from 'renderer/constants/anggaran'
-import {
-  ResponseCekStatus,
-  Anggaran,
-  StatusAnggaran,
-} from 'renderer/types/AnggaranType'
+import { Button } from '@wartek-id/button'
+import { Icon } from '@wartek-id/icon'
 import { AuthStates, useAuthStore } from 'renderer/stores/auth'
 import { IPC_ANGGARAN, IPC_SEKOLAH } from 'global/ipc'
 import { AppStates, useAppStore } from 'renderer/stores/app'
 import { useAPIInfoConnection } from 'renderer/apis/utils'
 import { useAPIGetToken } from 'renderer/apis/token'
 import { useAPIGetAnggaran } from 'renderer/apis/anggaran'
-
+import { Anggaran, StatusAnggaran } from 'renderer/types/AnggaranType'
 import { APP_CONFIG } from 'renderer/constants/appConfig'
-import AlertFailedSyncData from 'renderer/views/AlertFailedSyncData'
 
 const ipcRenderer = window.require('electron').ipcRenderer
 const stepApi = ['infoConnection', 'getToken', 'getAnggaran']
 
-const SyncCekStatusKKView: FC = () => {
-  let { q_id_anggaran } = useParams()
-  q_id_anggaran = decodeURIComponent(q_id_anggaran)
-  const navigate = useNavigate()
+interface CheckStatusTerbaruProps {
+  idAnggaran: string
+}
 
-  const setResponseCekStatus = useAnggaranStore(
-    (state: AnggaranStates) => state.setResponseCekStatus
-  )
-
+const CheckStatusTerbaruView: FC<CheckStatusTerbaruProps> = (
+  props: CheckStatusTerbaruProps
+) => {
   const [api, setApi] = useState('')
   const [statusAnggaran, setStatusAnggaran] = useState(
     StatusAnggaran.NotSubmited
@@ -42,10 +32,10 @@ const SyncCekStatusKKView: FC = () => {
   const setTahunAktif = useAuthStore((state: AuthStates) => state.setTahunAktif)
   const setKoreg = useAuthStore((state: AuthStates) => state.setKoreg)
   const setToken = useAppStore((state: AppStates) => state.setToken)
-  const setAlertFailedSyncData = useAppStore(
-    (state: AppStates) => state.setAlertFailedSyncData
+  const uuidAnggaran = ipcRenderer.sendSync(
+    'utils:decodeUUID',
+    props.idAnggaran
   )
-  const uuidAnggaran = ipcRenderer.sendSync('utils:decodeUUID', q_id_anggaran)
 
   useEffect(() => {
     const sekolah = ipcRenderer.sendSync(IPC_SEKOLAH.getSekolah)
@@ -101,9 +91,14 @@ const SyncCekStatusKKView: FC = () => {
     removeAnggaran()
   }
 
+  function onClickCreate() {
+    setApi(stepApi[0])
+  }
+
   useEffect(() => {
     if (infoConnection !== undefined) {
       setApi(stepApi[1])
+      removeCacheData()
     }
   }, [infoConnection])
 
@@ -121,7 +116,7 @@ const SyncCekStatusKKView: FC = () => {
 
         if (anggaran.id_anggaran === uuidAnggaran) {
           const updateData = Object.assign({} as Anggaran, anggaran)
-          updateData.id_anggaran = q_id_anggaran
+          updateData.id_anggaran = props.idAnggaran
           updateData.sekolah_id = ipcRenderer.sendSync(
             'utils:encodeUUID',
             updateData.sekolah_id
@@ -152,63 +147,37 @@ const SyncCekStatusKKView: FC = () => {
       }
     }
 
+    statusAnggaran
     setApi('')
   }, [dataAnggaran])
 
-  const failedSyncData = () => {
-    setApi('')
-    removeCacheData()
-    setAlertFailedSyncData(true)
-  }
-
-  const closeModalLoading = () => {
-    navigate(-1)
-  }
-
   useEffect(() => {
     if (isInfoConnError || isTokenError || isAnggaranError) {
-      failedSyncData()
+      // console.log("error while doing api calls")
     }
   }, [isInfoConnError, isTokenError, isAnggaranError])
 
-  const closeModal = () => {
-    setApi(stepApi[0])
-    switch (statusAnggaran) {
-      case StatusAnggaran.WaitingForApproval:
-        setResponseCekStatus(
-          RESPONSE_CEK_STATUS.in_progress as ResponseCekStatus
-        )
-        break
-      case StatusAnggaran.Approved:
-        setResponseCekStatus(RESPONSE_CEK_STATUS.approved as ResponseCekStatus)
-        break
-      case StatusAnggaran.Declined:
-        setResponseCekStatus(RESPONSE_CEK_STATUS.declined as ResponseCekStatus)
-        break
-      case StatusAnggaran.NotSubmited:
-        break
-      default:
-        break
-    }
-  }
-
-  useEffect(() => {
-    setTimeout(() => {
-      closeModal()
-    }, 3000)
-  }, [])
-
   return (
-    <div>
-      <SyncDialogComponent
-        title="Cek Status Terbaru..."
-        percentage={50}
-        isOpen={true}
-        setIsOpen={closeModal}
-      />
-      <AlertFailedSyncData onSubmit={closeModal} onCancel={closeModalLoading} />
-    </div>
+    <Button
+      color="white"
+      size="sm"
+      variant="solid"
+      className="font-normal mr-10"
+      style={{ fontSize: '12px' }}
+      onClick={onClickCreate}
+    >
+      <Icon
+        as="i"
+        color="default"
+        fontSize="small"
+        className="mr-1"
+        style={{ fontSize: '16px' }}
+      >
+        refresh
+      </Icon>
+      Cek Status Terbaru
+    </Button>
   )
 }
 
-export default SyncCekStatusKKView
+export default CheckStatusTerbaruView

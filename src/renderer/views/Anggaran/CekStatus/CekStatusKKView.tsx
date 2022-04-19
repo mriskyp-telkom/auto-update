@@ -12,7 +12,13 @@ import { ALERT_CEK_STATUS } from 'renderer/constants/anggaran'
 
 import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
 
-const CekStatusKKView: FC = () => {
+interface CekStatusKKViewProps {
+  idAnggaran: string
+}
+
+const CekStatusKKView: FC<CekStatusKKViewProps> = (
+  props: CekStatusKKViewProps
+) => {
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -27,9 +33,12 @@ const CekStatusKKView: FC = () => {
   )
 
   const handleClickCekStatus = () => {
-    navigate('/sync/anggaran/cek-status', {
-      state: { backgroundLocation: location },
-    })
+    navigate(
+      '/sync/anggaran/cek-status/' + encodeURIComponent(props.idAnggaran),
+      {
+        state: { backgroundLocation: location },
+      }
+    )
   }
 
   const handleCloseAlert = () => {

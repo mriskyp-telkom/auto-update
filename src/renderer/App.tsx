@@ -123,7 +123,7 @@ const App: FC = () => {
                 element={<SyncMengulasKertasKerjaView />}
               />
               <Route
-                path="sync/anggaran/cek-status"
+                path="sync/anggaran/cek-status/:q_id_anggaran"
                 element={<SyncCekStatusKKView />}
               />
               <Route
