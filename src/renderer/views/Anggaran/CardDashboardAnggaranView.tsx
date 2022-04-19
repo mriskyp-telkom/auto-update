@@ -78,7 +78,7 @@ const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (
               )}
               {isWaitingAproval && (
                 <div className="text-tiny text-blue-700">
-                  Status diperbarui pada{' '}
+                  Status diperbarui{' '}
                   {formatDateTimeStatus(new Date(data.status_updated_at))}
                 </div>
               )}

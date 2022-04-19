@@ -15,7 +15,7 @@ export function formatDateTimeStatus(date: Date) {
   const isSame = moment(today).isSame(dateStatus)
 
   if (isSame) {
-    return formatDateToString(date, 'k:mm')
+    return `pukul ${formatDateToString(date, 'k:mm')}`
   }
-  return formatDateToString(date)
+  return `pada ${formatDateToString(date)}`
 }
