@@ -3,11 +3,14 @@ export const PENJAB = 'penjab'
 export const PTK = 'ptk'
 export const REFERENSI = 'referensi'
 export const KK = 'kk'
+export const SEKOLAH = 'sekolah'
 
 export const IPC_ANGGARAN = {
   getAnggaranById: `${ANGGARAN}:getAnggaranById`,
   getPagu: `${ANGGARAN}:getPagu`,
   getTotalAnggaran: `${ANGGARAN}:getTotalAnggaran`,
+  addAnggaran: `${ANGGARAN}:addAnggaran`,
+  upsertAnggaran: `${ANGGARAN}:upsertAnggaran`,
 }
 
 export const IPC_PENJAB = {
@@ -37,4 +40,8 @@ export const IPC_KK = {
   getRapbsLastUpdate: `${KK}:getRapbsLastUpdate`,
   getRapbsSummary: `${KK}:getRapbsSummary`,
   deleteRapbs: `${KK}:deleteRapbs`,
+}
+
+export const IPC_SEKOLAH = {
+  getSekolah: `${SEKOLAH}:getSekolah`,
 }

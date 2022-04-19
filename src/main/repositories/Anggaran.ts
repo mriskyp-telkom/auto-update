@@ -131,6 +131,12 @@ export const AddAnggaran = async (
   return await getRepository(Anggaran).insert(anggaran)
 }
 
+export const UpsertAnggaran = async (
+  anggaran: Anggaran
+): Promise<InsertResult> => {
+  return await getRepository(Anggaran).upsert(anggaran, ['idAnggaran'])
+}
+
 export const DelAnggaran = async (
   idAnggaran: string
 ): Promise<UpdateResult> => {

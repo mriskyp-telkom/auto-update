@@ -1,15 +1,12 @@
 import React, { FC } from 'react'
 import { useNavigate } from 'react-router-dom'
-
 import BadgeComponent, { BadgeType } from 'renderer/components/BadgeComponent'
-
 import CreateKertasKerjaView from './CreateKertasKerjaView'
 import CekStatusKKView from 'renderer/views/Anggaran/CekStatus/CekStatusKKView'
 
 import { KKCardDashboardType } from 'renderer/types/AnggaranType'
 
 import { LABEL_STATUS_KERTAS_KERJA } from 'renderer/constants/anggaran'
-
 import { Icon } from '@wartek-id/icon'
 import { Tooltip } from '@wartek-id/tooltip'
 
@@ -112,7 +109,9 @@ const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (
           {enable3Icons && (
             <>
               <div className="flex">
-                {isWaitingAproval && <CekStatusKKView />}
+                {isWaitingAproval && (
+                  <CekStatusKKView idAnggaran={data.id_anggaran} />
+                )}
                 <div className="flex">
                   <div className="ml-6">
                     <Tooltip

@@ -1,5 +1,6 @@
 import { ipcMain } from 'electron'
 import { Anggaran } from 'main/models/Anggaran'
+import { Anggaran as AnggaranData } from 'renderer/types/AnggaranType'
 import {
   AddAnggaran,
   DelAnggaran,
@@ -9,6 +10,7 @@ import {
   GetPagu,
   CopyAnggaran,
   GetTotalAnggaran,
+  UpsertAnggaran,
 } from 'main/repositories/Anggaran'
 import { GetConfig } from 'main/repositories/Config'
 import CommonUtils from 'main/utils/CommonUtils'
@@ -101,7 +103,7 @@ module.exports = {
     }
   ),
 
-  addAnggaran: ipcMain.on('anggaran:addAnggaran', async (e, data) => {
+  addAnggaran: ipcMain.on(IPC_ANGGARAN.addAnggaran, async (e, data) => {
     /*
       data:
         id_ref_sumber_dana
@@ -131,6 +133,38 @@ module.exports = {
     dataAnggaran.idPenjab = data.id_penjab
     await AddAnggaran(dataAnggaran)
     e.returnValue = idAnggaran
+  }),
+
+  upsertAnggaran: ipcMain.on(IPC_ANGGARAN.upsertAnggaran, async (e, data) => {
+    const d = <AnggaranData>data
+
+    const anggaran = new Anggaran()
+    anggaran.idAnggaran = d.id_anggaran
+    anggaran.idRefSumberDana = d.id_ref_sumber_dana
+    anggaran.sekolahId = d.sekolah_id
+    anggaran.tahunAnggaran = d.tahun_anggaran
+    anggaran.volume = d.volume
+    anggaran.hargaSatuan = d.harga_satuan
+    anggaran.jumlah = d.jumlah
+    anggaran.sisaAnggaran = d.sisa_anggaran
+    anggaran.isApprove = d.is_approve
+    anggaran.isRevisi = d.is_revisi
+    anggaran.isAktif = d.is_aktif
+    anggaran.softDelete = 0
+    anggaran.createDate = new Date(d.create_date)
+    anggaran.lastUpdate = new Date()
+    anggaran.updaterId = await GetConfig('pengguna_id')
+    anggaran.idPenjab = d.id_penjab
+
+    if (d.tanggal_pengajuan !== '') {
+      anggaran.tanggalPengajuan = new Date(d.tanggal_pengajuan)
+    }
+
+    if (d.tanggal_pengesahan !== '') {
+      anggaran.tanggalPengesahan = new Date(d.tanggal_pengesahan)
+    }
+
+    e.returnValue = await UpsertAnggaran(anggaran)
   }),
 
   checkBefore: ipcMain.on('anggaran:checkBefore', async (e, data) => {

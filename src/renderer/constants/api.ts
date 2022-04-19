@@ -24,6 +24,7 @@ export const API_CHECK_ACTIVATION = (
 export const API_REGISTRATION = '/api/user/registration'
 
 export const API_GET_SEKOLAH = '/api/sekolah'
+export const API_ANGGARAN = '/api/anggaran'
 
 export const API_GET_CONFIG_PAGU = (idSumberDana: number, isRevisi: number) =>
   `/api/config/pagu/${idSumberDana}/${isRevisi}`
