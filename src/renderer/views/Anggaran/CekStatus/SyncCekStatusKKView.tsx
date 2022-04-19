@@ -31,9 +31,6 @@ const SyncCekStatusKKView: FC = () => {
   )
 
   const [api, setApi] = useState('')
-  const [statusAnggaran, setStatusAnggaran] = useState(
-    StatusAnggaran.NotSubmited
-  )
   const npsnState = useAuthStore((state: AuthStates) => state.npsn)
   const tahunAktifState = useAuthStore((state: AuthStates) => state.tahunAktif)
   const koregState = useAuthStore((state: AuthStates) => state.koreg)
@@ -137,22 +134,41 @@ const SyncCekStatusKKView: FC = () => {
 
           ipcRenderer.sendSync(IPC_ANGGARAN.upsertAnggaran, updateData)
 
+          let sa: StatusAnggaran = StatusAnggaran.NotSubmited
           if (anggaran.is_approve === 0 || anggaran.tanggal_pengajuan !== '') {
-            setStatusAnggaran(StatusAnggaran.WaitingForApproval)
+            sa = StatusAnggaran.WaitingForApproval as StatusAnggaran
           }
 
           if (anggaran.is_approve === 1 || anggaran.tanggal_pengesahan !== '') {
-            setStatusAnggaran(StatusAnggaran.Approved)
+            sa = StatusAnggaran.Approved as StatusAnggaran
           }
 
           if (anggaran.alasan_penolakan !== '') {
-            setStatusAnggaran(StatusAnggaran.Declined)
+            sa = StatusAnggaran.Declined as StatusAnggaran
+          }
+
+          removeCacheData()
+          closeModalLoading()
+          switch (sa) {
+            case StatusAnggaran.WaitingForApproval:
+              setResponseCekStatus(
+                RESPONSE_CEK_STATUS.in_progress as ResponseCekStatus
+              )
+              break
+            case StatusAnggaran.Approved:
+              setResponseCekStatus(
+                RESPONSE_CEK_STATUS.approved as ResponseCekStatus
+              )
+              break
+            case StatusAnggaran.Declined:
+              setResponseCekStatus(
+                RESPONSE_CEK_STATUS.declined as ResponseCekStatus
+              )
+              break
           }
         }
       }
     }
-
-    setApi('')
   }, [dataAnggaran])
 
   const failedSyncData = () => {
@@ -173,23 +189,6 @@ const SyncCekStatusKKView: FC = () => {
 
   const closeModal = () => {
     setApi(stepApi[0])
-    switch (statusAnggaran) {
-      case StatusAnggaran.WaitingForApproval:
-        setResponseCekStatus(
-          RESPONSE_CEK_STATUS.in_progress as ResponseCekStatus
-        )
-        break
-      case StatusAnggaran.Approved:
-        setResponseCekStatus(RESPONSE_CEK_STATUS.approved as ResponseCekStatus)
-        break
-      case StatusAnggaran.Declined:
-        setResponseCekStatus(RESPONSE_CEK_STATUS.declined as ResponseCekStatus)
-        break
-      case StatusAnggaran.NotSubmited:
-        break
-      default:
-        break
-    }
   }
 
   useEffect(() => {
