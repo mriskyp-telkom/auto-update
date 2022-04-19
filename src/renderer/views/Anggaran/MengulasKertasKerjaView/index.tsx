@@ -20,7 +20,6 @@ import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
 
 import {
   RESPONSE_PENGESAHAN,
-  RESPONSE_CEK_STATUS,
   ALERT_MENGULAS,
   MODE_MENGULAS,
   LABEL_MODE_MENGULAS,
@@ -57,10 +56,6 @@ const MengulasKertasKerjaView: FC = () => {
 
   const responseMengulas = useAnggaranStore(
     (state: AnggaranStates) => state.responseMengulas
-  )
-
-  const responseCekStatus = useAnggaranStore(
-    (state: AnggaranStates) => state.responseCekStatus
   )
 
   const handleBackToBeranda = () => {
@@ -110,10 +105,7 @@ const MengulasKertasKerjaView: FC = () => {
     if (responseMengulas === null) {
       return <PanduanMengulasKKView />
     }
-    if (
-      responseMengulas === RESPONSE_PENGESAHAN.success ||
-      responseCekStatus === RESPONSE_CEK_STATUS.in_progress
-    ) {
+    if (responseMengulas === RESPONSE_PENGESAHAN.success) {
       return <PanduanCekStatusKKView />
     }
   }
