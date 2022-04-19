@@ -1,9 +1,6 @@
 import create, { State } from 'zustand'
 
-import {
-  ResponseMengulas,
-  ResponseCekStatus,
-} from 'renderer/types/AnggaranType'
+import { ResponseMengulas } from 'renderer/types/AnggaranType'
 
 import {
   FormPagu,
@@ -15,7 +12,6 @@ export interface AnggaranStates extends State {
   tempDetailKertasKerja: FormTableKertasKerjaData
   alertMengulas: boolean
   responseMengulas: ResponseMengulas
-  responseCekStatus: ResponseCekStatus
   penanggungJawab: FormPenanggungJawab
   penanggungJawabTemp: FormPenanggungJawab
   pagu: FormPagu
@@ -26,7 +22,6 @@ export interface AnggaranStates extends State {
   ) => void
   setAlertMengulas: (alertMengulas: boolean) => void
   setResponseMengulas: (responseMengulas: ResponseMengulas) => void
-  setResponseCekStatus: (responseCekStatus: ResponseCekStatus) => void
   setPenanggungJawab: (penanggungJawab: FormPenanggungJawab) => void
   setPenanggungJawabTemp: (penanggungJawab: FormPenanggungJawab) => void
   setPagu: (pagu: FormPagu) => void
@@ -37,7 +32,6 @@ export interface AnggaranStates extends State {
 export const useAnggaranStore = create<AnggaranStates>((set) => ({
   tempDetailKertasKerja: null,
   responseMengulas: null,
-  responseCekStatus: null,
   alertMengulas: false,
   penanggungJawab: null,
   penanggungJawabTemp: null,
@@ -48,8 +42,6 @@ export const useAnggaranStore = create<AnggaranStates>((set) => ({
     set(() => ({ tempDetailKertasKerja })),
   setAlertMengulas: (alertMengulas) => set(() => ({ alertMengulas })),
   setResponseMengulas: (responseMengulas) => set(() => ({ responseMengulas })),
-  setResponseCekStatus: (responseCekStatus) =>
-    set(() => ({ responseCekStatus })),
   setPenanggungJawab: (penanggungJawab) => set(() => ({ penanggungJawab })),
   setPenanggungJawabTemp: (penanggungJawabTemp) =>
     set(() => ({ penanggungJawabTemp })),

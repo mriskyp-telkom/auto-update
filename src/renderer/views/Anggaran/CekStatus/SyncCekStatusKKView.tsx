@@ -1,36 +1,43 @@
 import React, { FC, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+
+import AlertDialogComponent from 'renderer/components/Dialog/AlertDialogComponent'
 import SyncDialogComponent from 'renderer/components/Dialog/SyncDialogComponent'
-import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
-import { RESPONSE_CEK_STATUS } from 'renderer/constants/anggaran'
-import {
-  ResponseCekStatus,
-  Anggaran,
-  StatusAnggaran,
-} from 'renderer/types/AnggaranType'
+
+import AlertFailedSyncData from 'renderer/views/AlertFailedSyncData'
+
 import { AuthStates, useAuthStore } from 'renderer/stores/auth'
-import { IPC_ANGGARAN, IPC_SEKOLAH } from 'global/ipc'
 import { AppStates, useAppStore } from 'renderer/stores/app'
+
+import {
+  RESPONSE_CEK_STATUS,
+  ALERT_CEK_STATUS,
+} from 'renderer/constants/anggaran'
+import { APP_CONFIG } from 'renderer/constants/appConfig'
+
+import { Anggaran } from 'renderer/types/AnggaranType'
+import { AlertType } from 'renderer/types/ComponentType'
+
+import { IPC_ANGGARAN, IPC_SEKOLAH } from 'global/ipc'
+
 import { useAPIInfoConnection } from 'renderer/apis/utils'
 import { useAPIGetToken } from 'renderer/apis/token'
 import { useAPIGetAnggaran } from 'renderer/apis/anggaran'
-
-import { APP_CONFIG } from 'renderer/constants/appConfig'
-import AlertFailedSyncData from 'renderer/views/AlertFailedSyncData'
 
 const ipcRenderer = window.require('electron').ipcRenderer
 const stepApi = ['infoConnection', 'getToken', 'getAnggaran']
 
 const SyncCekStatusKKView: FC = () => {
-  let { q_id_anggaran } = useParams()
-  q_id_anggaran = decodeURIComponent(q_id_anggaran)
+  const { q_id_anggaran } = useParams()
   const navigate = useNavigate()
 
-  const setResponseCekStatus = useAnggaranStore(
-    (state: AnggaranStates) => state.setResponseCekStatus
-  )
+  const idAnggaran = decodeURIComponent(q_id_anggaran)
 
   const [api, setApi] = useState('')
+  const [isSync, setIsSync] = useState(false)
+  const [isAlert, setIsAlert] = useState(false)
+  const [statusKK, setStatusKK] = useState(null)
+
   const npsnState = useAuthStore((state: AuthStates) => state.npsn)
   const tahunAktifState = useAuthStore((state: AuthStates) => state.tahunAktif)
   const koregState = useAuthStore((state: AuthStates) => state.koreg)
@@ -42,18 +49,7 @@ const SyncCekStatusKKView: FC = () => {
   const setAlertFailedSyncData = useAppStore(
     (state: AppStates) => state.setAlertFailedSyncData
   )
-  const uuidAnggaran = ipcRenderer.sendSync('utils:decodeUUID', q_id_anggaran)
-
-  useEffect(() => {
-    const sekolah = ipcRenderer.sendSync(IPC_SEKOLAH.getSekolah)
-    const tahunAktif = ipcRenderer.sendSync(
-      'config:getConfig',
-      APP_CONFIG.tahunAktif
-    )
-    setNpsn(sekolah.npsn)
-    setKoreg(sekolah.kodeRegistrasi)
-    setTahunAktif(tahunAktif)
-  }, [])
+  const uuidAnggaran = ipcRenderer.sendSync('utils:decodeUUID', idAnggaran)
 
   const {
     data: infoConnection,
@@ -98,6 +94,35 @@ const SyncCekStatusKKView: FC = () => {
     removeAnggaran()
   }
 
+  const failedSyncData = () => {
+    setApi('')
+    setIsSync(false)
+    removeCacheData()
+    setAlertFailedSyncData(true)
+  }
+
+  const closeModal = () => {
+    navigate(-1)
+  }
+
+  const handleSync = () => {
+    setIsAlert(false)
+    setIsSync(true)
+    setApi(stepApi[0])
+  }
+
+  const handleBtnAlert = () => {
+    if (
+      statusKK === RESPONSE_CEK_STATUS.in_progress ||
+      statusKK === RESPONSE_CEK_STATUS.approved
+    ) {
+      navigate(`mengulas/${q_id_anggaran}`)
+    }
+    if (statusKK === RESPONSE_CEK_STATUS.declined) {
+      navigate(`menyusun/update/${q_id_anggaran}`)
+    }
+  }
+
   useEffect(() => {
     if (infoConnection !== undefined) {
       setApi(stepApi[1])
@@ -118,7 +143,7 @@ const SyncCekStatusKKView: FC = () => {
 
         if (anggaran.id_anggaran === uuidAnggaran) {
           const updateData = Object.assign({} as Anggaran, anggaran)
-          updateData.id_anggaran = q_id_anggaran
+          updateData.id_anggaran = idAnggaran
           updateData.sekolah_id = ipcRenderer.sendSync(
             'utils:encodeUUID',
             updateData.sekolah_id
@@ -134,52 +159,28 @@ const SyncCekStatusKKView: FC = () => {
 
           ipcRenderer.sendSync(IPC_ANGGARAN.upsertAnggaran, updateData)
 
-          let sa: StatusAnggaran = StatusAnggaran.NotSubmited
+          let status = ''
+
           if (anggaran.is_approve === 0 || anggaran.tanggal_pengajuan !== '') {
-            sa = StatusAnggaran.WaitingForApproval as StatusAnggaran
+            status = RESPONSE_CEK_STATUS.in_progress
           }
 
           if (anggaran.is_approve === 1 || anggaran.tanggal_pengesahan !== '') {
-            sa = StatusAnggaran.Approved as StatusAnggaran
+            status = RESPONSE_CEK_STATUS.approved
           }
 
           if (anggaran.alasan_penolakan !== '') {
-            sa = StatusAnggaran.Declined as StatusAnggaran
+            status = RESPONSE_CEK_STATUS.approved
           }
 
           removeCacheData()
-          closeModalLoading()
-          switch (sa) {
-            case StatusAnggaran.WaitingForApproval:
-              setResponseCekStatus(
-                RESPONSE_CEK_STATUS.in_progress as ResponseCekStatus
-              )
-              break
-            case StatusAnggaran.Approved:
-              setResponseCekStatus(
-                RESPONSE_CEK_STATUS.approved as ResponseCekStatus
-              )
-              break
-            case StatusAnggaran.Declined:
-              setResponseCekStatus(
-                RESPONSE_CEK_STATUS.declined as ResponseCekStatus
-              )
-              break
-          }
+          setStatusKK(status)
+          setIsSync(false)
+          setIsAlert(true)
         }
       }
     }
   }, [dataAnggaran])
-
-  const failedSyncData = () => {
-    setApi('')
-    removeCacheData()
-    setAlertFailedSyncData(true)
-  }
-
-  const closeModalLoading = () => {
-    navigate(-1)
-  }
 
   useEffect(() => {
     if (isInfoConnError || isTokenError || isAnggaranError) {
@@ -187,14 +188,16 @@ const SyncCekStatusKKView: FC = () => {
     }
   }, [isInfoConnError, isTokenError, isAnggaranError])
 
-  const closeModal = () => {
-    setApi(stepApi[0])
-  }
-
   useEffect(() => {
-    setTimeout(() => {
-      closeModal()
-    }, 3000)
+    handleSync()
+    const sekolah = ipcRenderer.sendSync(IPC_SEKOLAH.getSekolah)
+    const tahunAktif = ipcRenderer.sendSync(
+      'config:getConfig',
+      APP_CONFIG.tahunAktif
+    )
+    setNpsn(sekolah.npsn)
+    setKoreg(sekolah.kodeRegistrasi)
+    setTahunAktif(tahunAktif)
   }, [])
 
   return (
@@ -202,10 +205,23 @@ const SyncCekStatusKKView: FC = () => {
       <SyncDialogComponent
         title="Cek Status Terbaru..."
         percentage={50}
-        isOpen={true}
-        setIsOpen={closeModal}
+        isOpen={isSync}
+        setIsOpen={() => setIsSync(false)}
       />
-      <AlertFailedSyncData onSubmit={closeModal} onCancel={closeModalLoading} />
+      {statusKK !== null && (
+        <AlertDialogComponent
+          type={ALERT_CEK_STATUS[statusKK].type as AlertType}
+          icon={ALERT_CEK_STATUS[statusKK].icon}
+          title={ALERT_CEK_STATUS[statusKK].title}
+          desc={ALERT_CEK_STATUS[statusKK].desc}
+          isOpen={isAlert}
+          btnCancelText={ALERT_CEK_STATUS[statusKK].btnCancelText}
+          btnActionText={ALERT_CEK_STATUS[statusKK].btnActionText}
+          onCancel={closeModal}
+          onSubmit={handleBtnAlert}
+        />
+      )}
+      <AlertFailedSyncData onSubmit={handleSync} onCancel={closeModal} />
     </div>
   )
 }
