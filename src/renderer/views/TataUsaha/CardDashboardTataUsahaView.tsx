@@ -30,6 +30,7 @@ interface CardBulanProps {
 
 interface CardDashboardTataUsahaProps {
   data: BKUCardDashboardTahunType
+  sumberDana: number
 }
 
 const CardBulan: FC<CardBulanProps> = (props: CardBulanProps) => {
@@ -77,7 +78,7 @@ const CardBulan: FC<CardBulanProps> = (props: CardBulanProps) => {
 const CardDashboardTataUsahaView: FC<CardDashboardTataUsahaProps> = (
   props: CardDashboardTataUsahaProps
 ) => {
-  const { data } = props
+  const { data, sumberDana } = props
 
   const isNotActive = data.status === STATUS_BKU_PERTAHUN.not_active
   const isDone = data.status === STATUS_BKU_PERTAHUN.done
@@ -123,7 +124,7 @@ const CardDashboardTataUsahaView: FC<CardDashboardTataUsahaProps> = (
           <span className="flex">
             {isNotActive && (
               <div className="grid justify-items-end">
-                <AktivasiBKUView />
+                <AktivasiBKUView sumberDana={sumberDana} />
                 <div className="text-blue-700 text-[12px] text-right pt-2">
                   <b>“Aktivasi BKU”</b> membutuhkan koneksi internet
                 </div>

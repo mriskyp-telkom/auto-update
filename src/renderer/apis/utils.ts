@@ -6,11 +6,14 @@ import {
   API_CHECK_ACTIVATION,
   API_CHECK_HDD_VOL,
   API_INFO_CONNECTION,
+  API_SALUR,
 } from 'renderer/constants/api'
 
 import {
   ParamCheckActivation,
   ParamHDDVolType,
+  ParamSalur,
+  SalurResponse,
 } from 'renderer/types/apis/UtilType'
 
 import { HDDVolData } from 'renderer/types/datas/UtilType'
@@ -49,6 +52,22 @@ export function useAPICheckActivation(
       api().get(
         API_CHECK_ACTIVATION(params.npsn, params.koreg, params.hdd_vol)
       ),
+    queryOpts
+  )
+}
+
+export function useAPISalur(
+  params: ParamSalur,
+  queryOpts?: UseQueryOptions<AxiosResponse<SalurResponse>>
+) {
+  return useQuery<AxiosResponse<SalurResponse>>(
+    ['salur', params],
+    () =>
+      api().get(API_SALUR(params), {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }),
     queryOpts
   )
 }
