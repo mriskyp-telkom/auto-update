@@ -12,6 +12,7 @@ export const IPC_ANGGARAN = {
   getTotalAnggaran: `${ANGGARAN}:getTotalAnggaran`,
   addAnggaran: `${ANGGARAN}:addAnggaran`,
   upsertAnggaran: `${ANGGARAN}:upsertAnggaran`,
+  updateIsPengesahan: `${ANGGARAN}:updateIsPengesahan`,
 }
 
 export const IPC_PENJAB = {

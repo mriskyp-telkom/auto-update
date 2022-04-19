@@ -15,6 +15,7 @@ import {
   DelAnggaran,
   CopyAnggaran,
   GetTotalAnggaran,
+  UpdateIsPengesahan,
 } from 'main/repositories/Anggaran'
 import { cfg, Migrate } from '../migration'
 
@@ -217,4 +218,12 @@ test('GetTotalAnggaran', async () => {
 
   expect(totalAnggaranData.total).toBe(108095000)
   expect(totalAnggaranData.id_anggaran).toBe(idAnggaran)
+})
+
+test('UpdateIsPengesahan', async () => {
+  const idAnggaran = 'ODMMS_baREyJzOtKTDHEdw'
+  await UpdateIsPengesahan(idAnggaran, 3)
+
+  const anggaran = await GetAnggaranById(idAnggaran)
+  expect(anggaran.isPengesahan).toBe(3)
 })

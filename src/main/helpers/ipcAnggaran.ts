@@ -11,6 +11,7 @@ import {
   CopyAnggaran,
   GetTotalAnggaran,
   UpsertAnggaran,
+  UpdateIsPengesahan,
 } from 'main/repositories/Anggaran'
 import { GetConfig } from 'main/repositories/Config'
 import CommonUtils from 'main/utils/CommonUtils'
@@ -166,6 +167,13 @@ module.exports = {
 
     e.returnValue = await UpsertAnggaran(anggaran)
   }),
+
+  updateIsPengesahan: ipcMain.on(
+    IPC_ANGGARAN.updateIsPengesahan,
+    async (e, idAnggaran, isPengesahan) => {
+      e.returnValue = await UpdateIsPengesahan(idAnggaran, isPengesahan)
+    }
+  ),
 
   checkBefore: ipcMain.on('anggaran:checkBefore', async (e, data) => {
     /*
