@@ -208,19 +208,19 @@ export const CopyAnggaran = async (
     await AddAnggaran(dataAnggaran)
 
     const getBentuk = await getBentukPendidikan()
-    const arrayOfRabps = await getRepository(Rapbs).find({
+    const arrayOfRapbs = await getRepository(Rapbs).find({
       softDelete: 0,
       idAnggaran: idAnggaranBefore,
     })
 
-    for (let i = 0; i < arrayOfRabps.length; i++) {
-      const rabps = arrayOfRabps[i]
+    for (let i = 0; i < arrayOfRapbs.length; i++) {
+      const rapbs = arrayOfRapbs[i]
       const refPromises = []
 
       refPromises.push(
         createQueryBuilder(RefRekening)
           .where('expired_date is null and kode_rekening=:kodeRekening', {
-            kodeRekening: rabps.kodeRekening,
+            kodeRekening: rapbs.kodeRekening,
           })
           .getCount()
       )
@@ -233,7 +233,7 @@ export const CopyAnggaran = async (
               'and id_ref_kode=:idRefKode',
             {
               bentukPendidikan: getBentuk,
-              idRefKode: rabps.idRefKode,
+              idRefKode: rapbs.idRefKode,
             }
           )
           .getCount()
@@ -242,7 +242,7 @@ export const CopyAnggaran = async (
       refPromises.push(
         createQueryBuilder(RefAcuanBarang)
           .where('expired_date is null and id_barang=:idBarang', {
-            idBarang: rabps.idBarang,
+            idBarang: rapbs.idBarang,
           })
           .getCount()
       )
@@ -251,16 +251,17 @@ export const CopyAnggaran = async (
 
       refRek = result[0]
       refKode = result[1]
-      refBarang = rabps.idBarang ?? '' == '' ? result[2] : 1
+      refBarang = rapbs.idBarang ?? '' == '' ? result[2] : 1
 
       if (refKode > 0 && refRek > 0 && refBarang > 0) {
-        const originalIdRapbs = rabps.idRapbs
+        const originalIdRapbs = rapbs.idRapbs
         idRapbsNew = CommonUtils.encodeUUID(CommonUtils.uuid())
-        rabps.idAnggaran = idAnggaranNew
-        rabps.idRapbs = idRapbsNew
-        rabps.createDate = now
-        rabps.lastUpdate = now
-        await getRepository(Rapbs).insert(rabps)
+        rapbs.idAnggaran = idAnggaranNew
+        rapbs.idRapbs = idRapbsNew
+        rapbs.idRefTahunAnggaran = tahun
+        rapbs.createDate = now
+        rapbs.lastUpdate = now
+        await getRepository(Rapbs).insert(rapbs)
 
         const arrayOfOriginalRabpsPeriode = await getRepository(
           RapbsPeriode
