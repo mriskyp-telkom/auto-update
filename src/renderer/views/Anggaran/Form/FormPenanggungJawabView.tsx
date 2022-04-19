@@ -15,7 +15,7 @@ import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
 
 import syncToIPCMain from 'renderer/configs/ipc'
 
-import { ERROR_REQUIRED, NIP_ERROR_LENGTH } from 'renderer/constants/errorForm'
+import { NIP_ERROR_LENGTH } from 'renderer/constants/errorForm'
 
 import { btnFormDisabled } from 'renderer/utils/form-validation'
 
@@ -124,6 +124,12 @@ const FormPenanggungJawabView: FC = () => {
       : ''
   }
 
+  const handleMinLengthNip = (v: any) => {
+    const fixed = v === '' || v.replaceAll('.', '').length === 18
+
+    return fixed || NIP_ERROR_LENGTH
+  }
+
   const handleBlurNip = (e: any, name: FormPenanggungJawabType) => {
     const maskValue = e.target.value
     const value = maskValue.replaceAll('.', '')
@@ -145,18 +151,13 @@ const FormPenanggungJawabView: FC = () => {
 
     setValue(name, formatNIP(value))
 
-    if (errors[name]?.message === ERROR_REQUIRED) {
-      if (value !== '') {
-        handleClearError(name)
-        return
-      }
-    }
-
-    if (errors[name]?.message === NIP_ERROR_LENGTH) {
-      if (value.length === 18) {
-        handleClearError(name)
-        return
-      }
+    if (
+      value !== '' &&
+      value.length === 18 &&
+      errors[name]?.message === NIP_ERROR_LENGTH
+    ) {
+      handleClearError(name)
+      return
     }
   }
 
@@ -275,8 +276,7 @@ const FormPenanggungJawabView: FC = () => {
                 required={false}
                 registerOption={{
                   validate: {
-                    minMaxLength: (v) =>
-                      v.replaceAll('.', '').length === 18 || NIP_ERROR_LENGTH,
+                    minMaxLength: (v) => handleMinLengthNip(v),
                   },
                   onBlur: (e) => handleBlurNip(e, 'nip_kepala_sekolah'),
                   onChange: (e) => handleChangeNip(e, 'nip_kepala_sekolah'),
@@ -296,8 +296,7 @@ const FormPenanggungJawabView: FC = () => {
                 required={false}
                 registerOption={{
                   validate: {
-                    minMaxLength: (v) =>
-                      v.replaceAll('.', '').length === 18 || NIP_ERROR_LENGTH,
+                    minMaxLength: (v) => handleMinLengthNip(v),
                   },
                   onBlur: (e) => handleBlurNip(e, 'nip_bendahara'),
                   onChange: (e) => handleChangeNip(e, 'nip_bendahara'),

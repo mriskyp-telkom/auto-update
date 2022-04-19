@@ -101,6 +101,7 @@ const RegistrationView: FC = () => {
     setFocus,
     getValues,
     clearErrors,
+    setValue,
     formState: { errors },
   } = useForm<FormRegisterData>({
     mode: 'onSubmit',
@@ -232,6 +233,12 @@ const RegistrationView: FC = () => {
             required={true}
             setError={setError}
             handleClearError={handleClearError}
+            registerOption={{
+              onChange: (e) => {
+                const value = e.target.value
+                setValue('npsn', value.replace(/\D/g, ''))
+              },
+            }}
           />
         </div>
         <div className="pt-5">
