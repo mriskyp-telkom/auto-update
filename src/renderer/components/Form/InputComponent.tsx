@@ -7,7 +7,6 @@ import {
   isFormatEmailValid,
   isEmailValid,
   isOnlyAlphabet,
-  isOnlyNumber,
 } from 'renderer/utils/form-validation'
 
 import {
@@ -17,7 +16,6 @@ import {
   EMAIL_ERROR_REGISTERED,
   EMAIL_ERROR_NOT_REGISTERED,
   ERROR_ALPHABET_ONLY,
-  ERROR_NUMBER_ONLY,
   NPSN_ERROR_LENGTH,
   NPSN_ERROR_NOT_REGISTERED,
   KODE_AKTIVASI_ERROR_WRONG,
@@ -180,18 +178,10 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
     validation = {
       ...validation,
       validate: {
-        onlyNumber: (v) => isOnlyNumber(v) || ERROR_NUMBER_ONLY,
         minMaxLength: (v) => v.length === 8 || NPSN_ERROR_LENGTH,
       },
       onBlur: (e) => {
         const value = e.target.value
-        if (value !== '' && !isOnlyNumber(value)) {
-          setError(name, {
-            type: 'manual',
-            message: ERROR_NUMBER_ONLY,
-          })
-          return
-        }
         if (value !== '' && value.length !== 8) {
           setError(name, {
             type: 'manual',
@@ -206,14 +196,6 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
         clearErrorRequired(value)
         clearErrorServer(value)
         props.registerOption?.onChange(e)
-        if (
-          value !== '' &&
-          isOnlyNumber(value) &&
-          errors.npsn?.message === ERROR_NUMBER_ONLY
-        ) {
-          props.handleClearError(name)
-          return
-        }
         if (value.length === 8 && errors.npsn?.message === NPSN_ERROR_LENGTH) {
           props.handleClearError(name)
           return
