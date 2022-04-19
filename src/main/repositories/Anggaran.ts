@@ -137,6 +137,20 @@ export const UpsertAnggaran = async (
   return await getRepository(Anggaran).upsert(anggaran, ['idAnggaran'])
 }
 
+export const UpdateIsPengesahan = async (
+  idAnggaran: string,
+  isPengesahan: number
+): Promise<UpdateResult> => {
+  return await createQueryBuilder()
+    .update(Anggaran)
+    .set({
+      isPengesahan: isPengesahan,
+      lastUpdate: new Date(),
+    })
+    .where('id_anggaran = :idAnggaran', { idAnggaran })
+    .execute()
+}
+
 export const DelAnggaran = async (
   idAnggaran: string
 ): Promise<UpdateResult> => {
