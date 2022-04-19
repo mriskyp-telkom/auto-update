@@ -12,12 +12,7 @@ const bosReguler = [
   {
     tahun: 2022,
     status: 'not_active',
-    bulan: [
-      {
-        bulan: 'januari',
-        status: 'draft',
-      },
-    ],
+    bulan: [],
   },
   {
     tahun: 2021,
