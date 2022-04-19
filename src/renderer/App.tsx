@@ -15,7 +15,6 @@ import DashboardAnggaranView from 'renderer/views/Anggaran/DashboardAnggaranView
 import MenyusunKertasKerjaView from 'renderer/views/Anggaran/MenyusunKertasKerjaView'
 import MengulasKertasKerjaView from 'renderer/views/Anggaran/MengulasKertasKerjaView'
 import SyncMengulasKertasKerjaView from 'renderer/views/Anggaran/MengulasKertasKerjaView/SyncMengulasKertasKerjaView'
-import SyncCekStatusKKView from 'renderer/views/Anggaran/CekStatus/SyncCekStatusKKView'
 
 import DashboardTataUsahaView from 'renderer/views/TataUsaha/DashboardTataUsahaView'
 import SyncAktivasiBKUView from 'renderer/views/TataUsaha/Aktivasi/SyncAktivasiBKUView'
@@ -23,6 +22,7 @@ import SyncAktivasiBKUView from 'renderer/views/TataUsaha/Aktivasi/SyncAktivasiB
 import FormKertasKerjaView from 'renderer/views/Anggaran/Form/FormKertasKerjaView'
 import FormPenanggungJawabView from 'renderer/views/Anggaran/Form/FormPenanggungJawabView'
 import FormPaguView from 'renderer/views/Anggaran/Form/FormPaguView'
+import SyncCekStatusKKView from './views/Anggaran/CekStatus/SyncCekStatusKKView'
 
 const ipcRenderer = window.require('electron').ipcRenderer
 
@@ -127,9 +127,9 @@ const App: FC = () => {
                 element={<SyncCekStatusKKView />}
               />
               <Route
-                path="sync/tata-usaha/aktivasi"
+                path="sync/tata-usaha/aktivasi/:q_sumber_dana"
                 element={<SyncAktivasiBKUView />}
-              />
+              ></Route>
               <Route path="logout" element={<LogoutView />} />
             </Route>
           </Routes>

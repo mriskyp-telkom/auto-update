@@ -13,3 +13,20 @@ export interface ParamConfigPagu {
   idSumberData: number
   isRevisi: number
 }
+
+export interface ParamSalur {
+  tahun: number
+  sumberDana: number
+}
+
+export interface Penerimaan {
+  tahap: number
+  label: string
+  tanggal: string
+  ttotal: number
+}
+
+export interface SalurResponse {
+  type: string
+  penerimaan: Penerimaan[]
+}

@@ -7,6 +7,7 @@ import CardDashboardTataUsahaView from './CardDashboardTataUsahaView'
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from '@wartek-id/tabs'
 
 import { BKUCardDashboardTahunType } from 'renderer/types/TataUsahaType'
+import { ID_SUMBER_DANA } from 'renderer/constants/anggaran'
 
 const bosReguler = [
   {
@@ -94,7 +95,13 @@ const DashboardTataUsahaView: FC = () => {
             <TabPanel className="mt-6 mb-[2px] mr-3 grid justify-items-center max-h-[550px] scrollBar overflow-y-scroll">
               {bosReguler.map(
                 (item: BKUCardDashboardTahunType, index: number) => {
-                  return <CardDashboardTataUsahaView key={index} data={item} />
+                  return (
+                    <CardDashboardTataUsahaView
+                      key={index}
+                      data={item}
+                      sumberDana={ID_SUMBER_DANA.BOS_REGULER}
+                    />
+                  )
                 }
               )}
             </TabPanel>

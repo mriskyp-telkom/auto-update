@@ -3,6 +3,7 @@ export const PENJAB = 'penjab'
 export const PTK = 'ptk'
 export const REFERENSI = 'referensi'
 export const KK = 'kk'
+export const CONFIG = 'config'
 export const SEKOLAH = 'sekolah'
 
 export const IPC_ANGGARAN = {
@@ -40,6 +41,11 @@ export const IPC_KK = {
   getRapbsLastUpdate: `${KK}:getRapbsLastUpdate`,
   getRapbsSummary: `${KK}:getRapbsSummary`,
   deleteRapbs: `${KK}:deleteRapbs`,
+}
+
+export const IPC_CONFIG = {
+  getConfig: `${CONFIG}:getConfig`,
+  setConfig: `${CONFIG}:setConfig`,
 }
 
 export const IPC_SEKOLAH = {

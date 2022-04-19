@@ -7,8 +7,15 @@ import { TataUsahaStates, useTataUsahaStore } from 'renderer/stores/tata-usaha'
 
 import { Button } from '@wartek-id/button'
 import { AppStates, useAppStore } from 'renderer/stores/app'
+import AlertFailedSyncData from 'renderer/views/AlertFailedSyncData'
 
-const AktivasiBKUView: FC = () => {
+interface AktivasiBKUViewProps {
+  sumberDana: number
+}
+const AktivasiBKUView: FC<AktivasiBKUViewProps> = (
+  props: AktivasiBKUViewProps
+) => {
+  const { sumberDana } = props
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -24,6 +31,10 @@ const AktivasiBKUView: FC = () => {
     (state: AppStates) => state.setAlertNoConnection
   )
 
+  const setAlertFailedSyncData = useAppStore(
+    (state: AppStates) => state.setAlertFailedSyncData
+  )
+
   const alertDesc =
     'Berdasarkan website BOS Salur, sekolah Anda belum menerima \
    dana BOS Reguler tahap ini sehingga belum bisa mengaktifkan BKU. \
@@ -32,7 +43,7 @@ const AktivasiBKUView: FC = () => {
   const handleClickAktivasi = () => {
     setAlertNoConnection(false)
     if (navigator.onLine) {
-      navigate('/sync/tata-usaha/aktivasi', {
+      navigate(`/sync/tata-usaha/aktivasi/${sumberDana}`, {
         state: { backgroundLocation: location },
       })
     } else {
@@ -63,6 +74,10 @@ const AktivasiBKUView: FC = () => {
       <AlertNoConnection
         onSubmit={handleClickAktivasi}
         onCancel={() => setAlertNoConnection(false)}
+      />
+      <AlertFailedSyncData
+        onSubmit={handleClickAktivasi}
+        onCancel={() => setAlertFailedSyncData(false)}
       />
     </>
   )
