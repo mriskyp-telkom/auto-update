@@ -15,9 +15,11 @@ interface InputSearchProps {
   dataOptions?: Array<any>
   headerShow?: boolean
   width: number
+  height?: number
   required: boolean
   isDisabled?: boolean
   name: string
+  defaultValue: string
   placeholder: string
   errors: FieldErrors
   register: (arg0: string, arg1: RegisterOptions) => void
@@ -33,7 +35,15 @@ const InputSearchComponent: FC<InputSearchProps> = (
   const [query, setQuery] = useState('')
   const [data, setData] = useState([])
 
-  const { required, name, placeholder, isDisabled, errors, register } = props
+  const {
+    required,
+    name,
+    placeholder,
+    isDisabled,
+    errors,
+    defaultValue,
+    register,
+  } = props
 
   let validation = {}
 
@@ -75,28 +85,39 @@ const InputSearchComponent: FC<InputSearchProps> = (
     return item
   }
 
-  const handleClickOutside = (event: MouseEvent) => {
+  const handleClickOutside = (event: any) => {
     if (open && ref.current && !ref.current.contains(event.target)) {
-      handleSendData('', name, '')
+      const inputValue = ref.current.children[0].children[1].children[0].value
+      handleSendData('', name, inputValue, defaultValue)
     }
   }
 
   const handleClick = (event: any) => {
     const id = event.target.dataset.id
-    const name = event.target.dataset.name
     const fieldShow = filter(props.headers, ['show', true])[0].key
     const value = filter(props.dataOptions, ['id', parseInt(id) || id])[0][
       fieldShow
     ]
-    handleSendData(id, name, value)
+    handleSendData(id, name, value, defaultValue)
   }
 
-  const handleSendData = (id: string | number, name: string, value: string) => {
-    setQuery(value)
+  const handleSendData = (
+    id: string | number,
+    name: string,
+    value: string,
+    defaultValue: string
+  ) => {
+    if (id !== '') {
+      setQuery(value)
+    }
+    if (id === '') {
+      setQuery('')
+    }
     const sendData = {
       id: id,
       name: name,
       value: value,
+      defaultValue: defaultValue,
     }
     setOpen(false)
     props.onClick(sendData)
@@ -162,7 +183,10 @@ const InputSearchComponent: FC<InputSearchProps> = (
               </tr>
             )}
           </thead>
-          <tbody className={`text-[14px] font-normal`}>
+          <tbody
+            className="text-[14px] font-normal"
+            style={{ height: `${props.height}px` }}
+          >
             {data?.map((data: any, indexData) => (
               <tr
                 key={indexData}
@@ -176,7 +200,6 @@ const InputSearchComponent: FC<InputSearchProps> = (
                     dangerouslySetInnerHTML={{
                       __html: makeBold(data[header.key]),
                     }}
-                    data-name={props.name}
                     data-id={data.id}
                     style={{ width: header.width }}
                   ></td>
@@ -192,6 +215,7 @@ const InputSearchComponent: FC<InputSearchProps> = (
 
 InputSearchComponent.defaultProps = {
   headerShow: true,
+  height: 100,
 }
 
 export default InputSearchComponent

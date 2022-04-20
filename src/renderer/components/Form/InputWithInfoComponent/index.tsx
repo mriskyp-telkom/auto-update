@@ -58,7 +58,7 @@ const InputWithInfoComponent: FC<InputWithInfoProps> = (
   })
 
   return (
-    <div ref={ref}>
+    <div ref={ref} className="relative">
       <Input
         type="text"
         placeholder={placeholder}
