@@ -10,6 +10,7 @@ import PanduanErrorDataSentralKKView from 'renderer/views/Anggaran/Panduan/Pandu
 import PanduanErrorSisaDanaKKView from 'renderer/views/Anggaran/Panduan/PanduanErrorSisaDanaKKView'
 
 import TabelMenyusunKertasKerjaView from './TabelMenyusunKertasKerjaView'
+import syncToIPCMain from 'renderer/configs/ipc'
 
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from '@wartek-id/tabs'
 import { Icon } from '@wartek-id/icon'
@@ -28,8 +29,7 @@ import { APP_CONFIG } from 'renderer/constants/appConfig'
 
 import { AlertType } from 'renderer/types/ComponentType'
 import { formatDateTimeStatus } from 'renderer/utils/date-formatting'
-
-const ipcRenderer = window.require('electron').ipcRenderer
+import { ResponseMengulas } from 'renderer/types/AnggaranType'
 
 const MenyusunKertasKerjaView: FC = () => {
   const navigate = useNavigate()
@@ -58,6 +58,10 @@ const MenyusunKertasKerjaView: FC = () => {
 
   const responseMengulas = useAnggaranStore(
     (state: AnggaranStates) => state.responseMengulas
+  )
+
+  const setResponseMengulas = useAnggaranStore(
+    (state: AnggaranStates) => state.setResponseMengulas
   )
 
   const penanggungJawab = useAnggaranStore(
@@ -91,21 +95,24 @@ const MenyusunKertasKerjaView: FC = () => {
       updater_id: penggunaId,
       create_date: new Date(),
     }
-    return ipcRenderer.sendSync('penjab:addPenjab', penjab)
+    return syncToIPCMain('penjab:addPenjab', penjab)
   }
 
   const setPagu = (idAnggaran: string) => {
-    const getPagu = ipcRenderer.sendSync(IPC_ANGGARAN.getPagu, idAnggaran)
+    const getPagu = syncToIPCMain(IPC_ANGGARAN.getPagu, idAnggaran)
+    const dataAnggaran = syncToIPCMain(IPC_ANGGARAN.getAnggaranById, idAnggaran)
+    let response: ResponseMengulas = null
+    if (getPagu.total > 0 && dataAnggaran.isPengesahan === 2) {
+      response = RESPONSE_PENGESAHAN.error_sisa_dana as ResponseMengulas
+    }
+    setResponseMengulas(response)
     setJumlahPagu(getPagu.pagu)
     setTotal(getPagu.total)
     setSisa(getPagu.sisa)
   }
 
   const setRapbsLastUpdate = (idAnggaran: string) => {
-    const lastUpdate = ipcRenderer.sendSync(
-      IPC_KK.getRapbsLastUpdate,
-      idAnggaran
-    )
+    const lastUpdate = syncToIPCMain(IPC_KK.getRapbsLastUpdate, idAnggaran)
     setLastUpdate(lastUpdate)
   }
 
@@ -135,7 +142,7 @@ const MenyusunKertasKerjaView: FC = () => {
         ...dataAnggaran,
         create_date: new Date(),
       }
-      idAnggaran = ipcRenderer.sendSync('anggaran:addAnggaran', dataAnggaran)
+      idAnggaran = syncToIPCMain('anggaran:addAnggaran', dataAnggaran)
     }
 
     if (mode === MODE_CREATE_KERTAS_KERJA.salin) {
@@ -143,7 +150,7 @@ const MenyusunKertasKerjaView: FC = () => {
         ...dataAnggaran,
         id_anggaran_before: idAnggaranBefore,
       }
-      idAnggaran = ipcRenderer.sendSync('anggaran:copyAnggaran', dataAnggaran)
+      idAnggaran = syncToIPCMain('anggaran:copyAnggaran', dataAnggaran)
     }
     setIdAnggaran(idAnggaran)
     setPagu(idAnggaran)
@@ -179,17 +186,14 @@ const MenyusunKertasKerjaView: FC = () => {
   }
 
   useEffect(() => {
-    const tahunAktif = ipcRenderer.sendSync(
-      'config:getConfig',
-      APP_CONFIG.tahunAktif
-    )
-    const penggunaId = ipcRenderer.sendSync('user:getPenggunaId')
+    const tahunAktif = syncToIPCMain('config:getConfig', APP_CONFIG.tahunAktif)
+    const penggunaId = syncToIPCMain('user:getPenggunaId')
     const data = {
       sumber_dana: pagu?.sumber_dana_id,
       tahun: tahunAktif,
     }
 
-    const idAnggaranBefore = ipcRenderer.sendSync('anggaran:checkBefore', data)
+    const idAnggaranBefore = syncToIPCMain('anggaran:checkBefore', data)
     setTahunAktif(tahunAktif)
     setIdAnggaranBefore(idAnggaranBefore)
     setPenggunaId(penggunaId)
