@@ -2,7 +2,7 @@ import { BaseEntity, Column, Entity, Index } from 'typeorm'
 
 @Index('REL_RAPBS_PERIODE_FK', ['idRapbs'], {})
 @Index('REL_PERIODE_FK', ['idPeriode'], {})
-@Entity('rapbs_periode')
+@Entity({ name: 'rapbs_periode' })
 export class RapbsPeriode extends BaseEntity {
   @Column('varchar', {
     primary: true,

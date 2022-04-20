@@ -2,7 +2,7 @@ import { BaseEntity, Column, Entity, Index } from 'typeorm'
 
 @Index('REL_JENIS_KODE_FK', ['idLevelKode'], {})
 @Index('RECURSIVE_KODE_FK', ['parentKode'], {})
-@Entity('ref_kode')
+@Entity({ name: 'ref_kode' })
 export class RefKode extends BaseEntity {
   @Column('varchar', {
     primary: true,

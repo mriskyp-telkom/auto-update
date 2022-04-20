@@ -14,7 +14,7 @@ import { UserRole } from './UserRole'
 @Index('FK_HISTORYJABATAN_JABATAN_FK', ['jabatanId'], {})
 @Index('FK_HISTORYJABATAN_INSTANSI_FK', ['instansiId'], {})
 @Index('FK_HISTORYJABATAN_PEGAWAI_FK', ['penggunaId'], {})
-@Entity('instansi_pengguna')
+@Entity({ name: 'instansi_pengguna' })
 export class InstansiPengguna extends BaseEntity {
   @Column('varchar', {
     primary: true,

@@ -1,6 +1,6 @@
 import { BaseEntity, Column, Entity } from 'typeorm'
 
-@Entity('app_config')
+@Entity({ name: 'app_config' })
 export class AppConfig extends BaseEntity {
   @Column('varchar', {
     primary: true,

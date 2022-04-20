@@ -14,7 +14,7 @@ beforeEach(async () => {
     dropSchema: false,
     entities: [Ptk],
     synchronize: false,
-    logging: true,
+    logging: process.env.NODE_ENV === 'development' ? true : false,
   })
 
   await Migrate(db, cfg)

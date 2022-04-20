@@ -30,7 +30,7 @@ beforeEach(async () => {
     dropSchema: false,
     entities: [Anggaran, MstSekolah, AppConfig, RefSumberDana, Rapbs],
     synchronize: false,
-    logging: true,
+    logging: process.env.NODE_ENV === 'development' ? true : false,
   })
 
   await Migrate(db, cfg)

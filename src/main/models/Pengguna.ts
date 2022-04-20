@@ -1,7 +1,7 @@
 import { BaseEntity, Column, Entity, OneToMany } from 'typeorm'
 import { InstansiPengguna } from './InstansiPengguna'
 
-@Entity('pengguna')
+@Entity({ name: 'pengguna' })
 export class Pengguna extends BaseEntity {
   @Column('varchar', {
     primary: true,

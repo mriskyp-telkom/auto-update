@@ -2,45 +2,25 @@ import fs from 'fs'
 import path from 'path'
 import { execFile } from 'child_process'
 import { promisify } from 'util'
-import { Anggaran } from './main/models/Anggaran'
 import { AppConfig } from './main/models/AppConfig'
-import { ConfigAnggaran } from './main/models/ConfigAnggaran'
-import { Instansi } from './main/models/Instansi'
-import { InstansiPengguna } from './main/models/InstansiPengguna'
-import { KasUmum } from './main/models/KasUmum'
-import { KasUmumNota } from './main/models/KasUmumNota'
-import { MstSekolah } from './main/models/MstSekolah'
-import { MstWilayah } from './main/models/MstWilayah'
-import { Pengguna } from './main/models/Pengguna'
-import { Ptk } from './main/models/Ptk'
-import { Rapbs } from './main/models/Rapbs'
-import { RapbsPeriode } from './main/models/RapbsPeriode'
-import { RapbsPtk } from './main/models/RapbsPtk'
-import { RefAcuanBarang } from './main/models/RefAcuanBarang'
 import { RefBku } from './main/models/RefBku'
-import { RefBulan } from './main/models/RefBulan'
-import { RefIndikator } from './main/models/RefIndikator'
 import { RefJabatan } from './main/models/RefJabatan'
 import { RefJenisInstansi } from './main/models/RefJenisInstansi'
-import { RefKode } from './main/models/RefKode'
 import { RefLevelKode } from './main/models/RefLevelKode'
 import { RefLevelWilayah } from './main/models/RefLevelWilayah'
 import { RefNegara } from './main/models/RefNegara'
-import { RefPajak } from './main/models/RefPajak'
 import { RefPeriode } from './main/models/RefPeriode'
-import { RefRekening } from './main/models/RefRekening'
-import { RefRekeningTransfer } from './main/models/RefRekeningTransfer'
 import { RefSumberDana } from './main/models/RefSumberDana'
-import { RefSatuan } from './main/models/RefSatuan'
-import { RefTahunAnggaran } from './main/models/RefTahunAnggaran'
 import { Role } from './main/models/Role'
-import { Token } from './main/models/Token'
-import { UserRole } from './main/models/UserRole'
 import { App } from './main/models/App'
-import { SekolahPenjab } from './main/models/SekolahPenjab'
-import { ReportBku } from './main/models/ReportBku'
 import { createConnection, getRepository } from 'typeorm'
 import { getAppData } from './pathConfig'
+import {
+  checkExistsTable,
+  entitiesDB,
+  getLoggerConfig,
+  getSynchronizeConfig,
+} from './dbConfig'
 
 async function encryptDB(): Promise<void> {
   const appData = await getAppData()
@@ -623,49 +603,15 @@ async function createDBLocal(appDataPath: string): Promise<void> {
   const dbFile = 'arkas.db'
 
   if (!fs.existsSync(path.join(appDataPath, dbFile))) {
+    const arkasDb = path.join(appDataPath, dbFile)
+
     const connDBLocal = await createConnection({
       type: 'better-sqlite3',
-      database: path.join(appDataPath, dbFile),
-      entities: [
-        App,
-        AppConfig,
-        Anggaran,
-        ConfigAnggaran,
-        Instansi,
-        InstansiPengguna,
-        KasUmum,
-        KasUmumNota,
-        MstSekolah,
-        MstWilayah,
-        Pengguna,
-        Ptk,
-        Rapbs,
-        RapbsPeriode,
-        RapbsPtk,
-        RefAcuanBarang,
-        RefBku,
-        RefBulan,
-        RefIndikator,
-        RefJabatan,
-        RefJenisInstansi,
-        RefKode,
-        RefLevelKode,
-        RefLevelWilayah,
-        RefNegara,
-        RefPajak,
-        RefPeriode,
-        RefRekening,
-        RefSatuan,
-        RefSumberDana,
-        RefRekeningTransfer,
-        RefTahunAnggaran,
-        ReportBku,
-        Role,
-        SekolahPenjab,
-        Token,
-        UserRole,
-      ],
-      synchronize: true,
+      statementCacheSize: 120,
+      database: arkasDb,
+      entities: entitiesDB,
+      synchronize: await getSynchronizeConfig(),
+      logging: await getLoggerConfig(),
     })
 
     await addApp()
@@ -679,10 +625,10 @@ async function createDBLocal(appDataPath: string): Promise<void> {
     await addRefPeriode()
     await addRefSumberDana()
     await addRole()
-    // check also conn.ts
+
+    await checkExistsTable()
     await connDBLocal.close()
   }
-
   await encryptDB()
   return
 }

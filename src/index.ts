@@ -86,19 +86,19 @@ app.on('ready', async () => {
     connDB().then(() => {
       machineId(true).then((id) => {
         SetConfig('hdd_vol', id)
-        require('./main/helpers/ipcUser')
-        require('./main/helpers/ipcToken')
+        require('./main/helpers/ipcAnggaran')
         require('./main/helpers/ipcConfig')
+        require('./main/helpers/ipcKK')
+        require('./main/helpers/ipcPengguna')
+        require('./main/helpers/ipcPenjab')
+        require('./main/helpers/ipcPtk')
+        require('./main/helpers/ipcReferensiBarang')
         require('./main/helpers/ipcReferensiKode')
         require('./main/helpers/ipcReferensiRekening')
-        require('./main/helpers/ipcReferensiBarang')
-        require('./main/helpers/ipcPengguna')
-        require('./main/helpers/ipcSekolah')
         require('./main/helpers/ipcReferensiWilayah')
-        require('./main/helpers/ipcAnggaran')
-        require('./main/helpers/ipcKK')
-        require('./main/helpers/ipcPtk')
-        require('./main/helpers/ipcPenjab')
+        require('./main/helpers/ipcSekolah')
+        require('./main/helpers/ipcToken')
+        require('./main/helpers/ipcUser')
         require('./main/helpers/ipcUtils')
 
         setTimeout(function () {

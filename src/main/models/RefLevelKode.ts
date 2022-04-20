@@ -1,6 +1,6 @@
 import { BaseEntity, Column, Entity } from 'typeorm'
 
-@Entity('ref_level_kode')
+@Entity({ name: 'ref_level_kode' })
 export class RefLevelKode extends BaseEntity {
   @Column('numeric', {
     primary: true,

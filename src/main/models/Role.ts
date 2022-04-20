@@ -1,7 +1,7 @@
 import { BaseEntity, Column, Entity, Index } from 'typeorm'
 
 @Index('FK_ROLEAPP_FK', ['appId'], {})
-@Entity('role')
+@Entity({ name: 'role' })
 export class Role extends BaseEntity {
   @Column('varchar', {
     primary: true,

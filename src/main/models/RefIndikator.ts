@@ -1,6 +1,6 @@
 import { BaseEntity, Column, Entity } from 'typeorm'
 
-@Entity('ref_indikator')
+@Entity({ name: 'ref_indikator' })
 export class RefIndikator extends BaseEntity {
   @Column('numeric', {
     primary: true,

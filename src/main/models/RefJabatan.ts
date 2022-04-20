@@ -1,7 +1,7 @@
 import { BaseEntity, Column, Entity, Index } from 'typeorm'
 
 @Index('FK_PARENT_JABATAN_FK', ['refJabatanId'], {})
-@Entity('ref_jabatan')
+@Entity({ name: 'ref_jabatan' })
 export class RefJabatan extends BaseEntity {
   @Column('numeric', {
     primary: true,

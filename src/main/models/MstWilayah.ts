@@ -3,7 +3,7 @@ import { BaseEntity, Column, Entity, Index } from 'typeorm'
 @Index('PARENT_WILAYAH_FK', ['mstKodeWilayah'], {})
 @Index('LEVEL_WILAYAH_FK', ['idLevelWilayah'], {})
 @Index('PROPINSI_NEGARA_FK', ['negaraId'], {})
-@Entity('mst_wilayah')
+@Entity({ name: 'mst_wilayah' })
 export class MstWilayah extends BaseEntity {
   @Column('varchar', {
     primary: true,

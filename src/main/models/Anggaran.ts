@@ -1,7 +1,7 @@
 import { BaseEntity, Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
 import { MstSekolah } from './MstSekolah'
 
-@Entity('anggaran')
+@Entity({ name: 'anggaran' })
 export class Anggaran extends BaseEntity {
   @Column('varchar', {
     primary: true,

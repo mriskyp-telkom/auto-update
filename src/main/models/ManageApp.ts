@@ -2,7 +2,7 @@ import { BaseEntity, Column, Entity, Index } from 'typeorm'
 
 @Index('FK_APP_MANAGE_FK', ['appId'], {})
 @Index('FK_PENGGUNA_MANAGE_FK', ['penggunaId'], {})
-@Entity('manage_app')
+@Entity({ name: 'manage_app' })
 export class ManageApp extends BaseEntity {
   @Column('varchar', {
     primary: true,

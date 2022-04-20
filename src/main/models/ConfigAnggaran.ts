@@ -1,6 +1,6 @@
 import { BaseEntity, Column, Entity } from 'typeorm'
 
-@Entity('config_anggaran')
+@Entity({ name: 'config_anggaran' })
 export class ConfigAnggaran extends BaseEntity {
   @Column('uuid', { primary: true, name: 'sekolah_id' })
   sekolahId: NonNullable<unknown>

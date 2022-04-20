@@ -22,7 +22,7 @@ beforeEach(async () => {
     dropSchema: true,
     entities: [Rapbs, RapbsPeriode, RapbsPtk, AppConfig],
     synchronize: false,
-    logging: true,
+    logging: process.env.NODE_ENV === 'development' ? true : false,
   })
 
   await Migrate(db, cfg)

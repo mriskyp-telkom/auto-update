@@ -10,7 +10,7 @@ import { InstansiPengguna } from './InstansiPengguna'
 
 @Index('FK_USER_ROLE_FK', ['roleId'], {})
 @Index('FK_PENGGUNA_ROLE_FK', ['instansiPenggunaId'], {})
-@Entity('user_role')
+@Entity({ name: 'user_role' })
 export class UserRole extends BaseEntity {
   @Column('varchar', {
     primary: true,

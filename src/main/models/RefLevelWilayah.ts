@@ -1,6 +1,6 @@
 import { BaseEntity, Column, Entity } from 'typeorm'
 
-@Entity('ref_level_wilayah')
+@Entity({ name: 'ref_level_wilayah' })
 export class RefLevelWilayah extends BaseEntity {
   @Column('smallint', { primary: true, name: 'id_level_wilayah', unique: true })
   idLevelWilayah: number

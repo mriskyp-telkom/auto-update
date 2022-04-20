@@ -2,7 +2,7 @@ import { BaseEntity, Column, Entity, Index } from 'typeorm'
 
 @Index('FK_TOKEN_APP_FK', ['appId'], {})
 @Index('FK_TOKEN_HISTORYJAB_FK', ['userroleId'], {})
-@Entity('token')
+@Entity({ name: 'token' })
 export class Token extends BaseEntity {
   @Column('varchar', {
     primary: true,

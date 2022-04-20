@@ -11,7 +11,7 @@ import { MstWilayah } from './MstWilayah'
 
 @Index('FK_PARENT_INSTANSI_FK', ['insInstansiId'], {})
 @Index('FK_INSTANSI_LEVELINSTANSI_FK', ['jenisInstansiId'], {})
-@Entity('instansi')
+@Entity({ name: 'instansi' })
 export class Instansi extends BaseEntity {
   @Column('varchar', {
     primary: true,

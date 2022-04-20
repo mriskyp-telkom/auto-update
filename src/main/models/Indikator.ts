@@ -2,7 +2,7 @@ import { BaseEntity, Column, Entity, Index } from 'typeorm'
 
 @Index('REL_RKA_INDIKATOR_FK', ['idRka'], {})
 @Index('REL_REF_INDIKATOR_FK', ['idRefIndikator'], {})
-@Entity('indikator')
+@Entity({ name: 'indikator' })
 export class Indikator extends BaseEntity {
   @Column('varchar', {
     primary: true,

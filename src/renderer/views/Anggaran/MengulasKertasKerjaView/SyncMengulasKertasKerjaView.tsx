@@ -49,6 +49,7 @@ const stepApi = [
 
 const SyncMengulasKertasKerjaView: FC = () => {
   const { q_id_anggaran } = useParams()
+
   // ambil rapbs dari id anggaran
   const idAnggaran = decodeURIComponent(q_id_anggaran)
 

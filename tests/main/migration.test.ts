@@ -13,7 +13,7 @@ test('MigrationRun', async () => {
     database: ':memory:',
     dropSchema: true,
     synchronize: false,
-    logging: false,
+    logging: process.env.NODE_ENV === 'development' ? true : false,
   })
 
   await Migrate(db, cfg)

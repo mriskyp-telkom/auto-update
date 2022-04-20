@@ -1,6 +1,6 @@
 import { BaseEntity, Column, Entity } from 'typeorm'
 
-@Entity('ref_bku')
+@Entity({ name: 'ref_bku' })
 export class RefBku extends BaseEntity {
   @Column('int', { primary: true, name: 'id_ref_bku', unique: true })
   idRefBku: number

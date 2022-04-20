@@ -1,6 +1,6 @@
 import { BaseEntity, Column, Entity } from 'typeorm'
 
-@Entity('ref_tahun_anggaran')
+@Entity({ name: 'ref_tahun_anggaran' })
 export class RefTahunAnggaran extends BaseEntity {
   @Column('numeric', {
     primary: true,
