@@ -23,20 +23,20 @@ const PanduanMenyusunKKView: FC = () => {
         <ul className="list font-normal text-base text-gray-900 ml-7">
           <li>
             <span>
-              Anda harus menghabiskan seluruh anggaran untuk bisa mengajukan
-              pengesahan.
+              Sebelum membuat anggaran, ketahui daftar kode barang dan SSH yang
+              ada di daerah Anda. <a>Lihat Daftar Barang</a>
             </span>
           </li>
           <li>
             <span>
-              Pastikan Anda membuat anggaran berdasarkan juknis yang berlaku.
+              Pastikan Anda membuat anggaran berdasarkan juknis yang berlaku.{' '}
               <a>Lihat Juknis</a>
             </span>
           </li>
           <li>
             <span>
-              Dalam membuat rencana anggaran sebaiknya juga memperhatikan
-              prioritas kegiatan daerah. <a>Lihat Prioritas Daerah</a>
+              Anda harus menghabiskan seluruh anggaran untuk bisa mengajukan
+              pengesahan.
             </span>
           </li>
         </ul>
