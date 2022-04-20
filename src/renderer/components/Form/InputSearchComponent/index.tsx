@@ -107,12 +107,7 @@ const InputSearchComponent: FC<InputSearchProps> = (
     value: string,
     defaultValue: string
   ) => {
-    if (id !== '') {
-      setQuery(value)
-    }
-    if (id === '') {
-      setQuery('')
-    }
+    setQuery(value)
     const sendData = {
       id: id,
       name: name,
