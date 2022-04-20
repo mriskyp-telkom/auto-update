@@ -20,6 +20,7 @@ export const connDB = async (): Promise<Connection> => {
         db.pragma(`cipher='sqlcipher'`)
         db.pragma(`legacy=4`)
         db.pragma(`key='K3md1kbudRIS3n4yan'`)
+        db.pragma('journal_mode = WAL')
       },
       entities: entitiesDB,
       synchronize: await getSynchronizeConfig(),

@@ -88,6 +88,11 @@ export async function getLoggerConfig(): Promise<boolean> {
   return process.env.NODE_ENV === 'development' ? true : false
 }
 
+export async function getLoggerConfigLocal(): Promise<boolean> {
+  // set this in order to specify logger
+  return process.env.NODE_ENV === 'development' ? true : false
+}
+
 export async function getPrepareDatabase(): Promise<boolean> {
   // set prepare database
   return true
