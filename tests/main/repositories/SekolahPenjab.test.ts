@@ -7,6 +7,10 @@ import {
 } from 'main/repositories/SekolahPenjab'
 import { createConnection, getConnection } from 'typeorm'
 import { cfg, Migrate } from '../migration'
+import {
+  getLoggerConfigLocal,
+  getSynchronizeConfigUnitTest,
+} from '../../../src/dbConfig'
 
 beforeAll(async () => {
   process.env.NODE_ENV = 'testing'
@@ -18,8 +22,8 @@ beforeEach(async () => {
     database: ':memory:',
     dropSchema: false,
     entities: [SekolahPenjab],
-    synchronize: false,
-    logging: process.env.NODE_ENV === 'development' ? true : false,
+    synchronize: getSynchronizeConfigUnitTest(),
+    logging: getLoggerConfigLocal(),
   })
 
   await Migrate(db, cfg)

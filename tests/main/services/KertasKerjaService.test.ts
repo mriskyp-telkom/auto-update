@@ -6,6 +6,10 @@ import { GetDetailKegiatan } from 'main/services/KertasKerjaService'
 import { DetailAnggaranKegiatan } from 'main/types/Anggaran'
 import { createConnection, getConnection } from 'typeorm'
 import { cfg, Migrate } from '../migration'
+import {
+  getLoggerConfigLocal,
+  getSynchronizeConfigUnitTest,
+} from '../../../src/dbConfig'
 
 beforeEach(async () => {
   const db = await createConnection({
@@ -13,8 +17,8 @@ beforeEach(async () => {
     database: ':memory:',
     dropSchema: true,
     entities: [Rapbs, RapbsPeriode, RapbsPtk, AppConfig],
-    synchronize: false,
-    logging: process.env.NODE_ENV === 'development' ? true : false,
+    synchronize: getSynchronizeConfigUnitTest(),
+    logging: getLoggerConfigLocal(),
   })
 
   await Migrate(db, cfg)

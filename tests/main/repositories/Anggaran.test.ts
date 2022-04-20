@@ -18,6 +18,10 @@ import {
   UpdateIsPengesahan,
 } from 'main/repositories/Anggaran'
 import { cfg, Migrate } from '../migration'
+import {
+  getLoggerConfigLocal,
+  getSynchronizeConfigUnitTest,
+} from '../../../src/dbConfig'
 
 beforeAll(async () => {
   process.env.NODE_ENV = 'testing'
@@ -29,8 +33,8 @@ beforeEach(async () => {
     database: ':memory:',
     dropSchema: false,
     entities: [Anggaran, MstSekolah, AppConfig, RefSumberDana, Rapbs],
-    synchronize: false,
-    logging: process.env.NODE_ENV === 'development' ? true : false,
+    synchronize: getSynchronizeConfigUnitTest(),
+    logging: getLoggerConfigLocal(),
   })
 
   await Migrate(db, cfg)

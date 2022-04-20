@@ -16,6 +16,10 @@ import { GetConfig } from 'main/repositories/Config'
 import CommonUtils from 'main/utils/CommonUtils'
 import { createConnection, getConnection, getRepository } from 'typeorm'
 import { cfg, Migrate } from '../migration'
+import {
+  getLoggerConfigLocal,
+  getSynchronizeConfigUnitTest,
+} from '../../../src/dbConfig'
 
 beforeAll(async () => {
   process.env.NODE_ENV = 'testing'
@@ -36,8 +40,8 @@ beforeEach(async () => {
       Anggaran,
       AppConfig,
     ],
-    synchronize: false,
-    logging: true,
+    synchronize: getSynchronizeConfigUnitTest(),
+    logging: getLoggerConfigLocal(),
   })
 
   await Migrate(db, cfg)

@@ -23,8 +23,8 @@ export const connDB = async (): Promise<Connection> => {
         db.pragma('journal_mode = WAL')
       },
       entities: entitiesDB,
-      synchronize: await getSynchronizeConfig(),
-      logging: await getLoggerConfig(),
+      synchronize: getSynchronizeConfig(),
+      logging: getLoggerConfig(),
     }
     const c = await createConnection(config)
     await checkExistsTable()

@@ -3,6 +3,10 @@ import { CreateToken, ExpiryToken } from 'main/repositories/Token'
 import { createConnection, getConnection } from 'typeorm'
 import { cfg, Migrate } from '../migration'
 import CommonUtils from 'main/utils/CommonUtils'
+import {
+  getLoggerConfigLocal,
+  getSynchronizeConfigUnitTest,
+} from '../../../src/dbConfig'
 
 beforeAll(async () => {
   process.env.NODE_ENV = 'testing'
@@ -14,8 +18,8 @@ beforeEach(async () => {
     database: ':memory:',
     dropSchema: false,
     entities: [Token],
-    synchronize: false,
-    logging: process.env.NODE_ENV === 'development' ? true : false,
+    synchronize: getSynchronizeConfigUnitTest(),
+    logging: getLoggerConfigLocal(),
   })
 
   await Migrate(db, cfg)

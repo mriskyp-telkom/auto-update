@@ -78,22 +78,32 @@ export const entitiesDB = [
   UserRole,
 ]
 
-export async function getSynchronizeConfig(): Promise<boolean> {
+// do not use this on unit test
+export function getSynchronizeConfig(): boolean {
   // return true to modified table and entity
   return true
 }
 
-export async function getLoggerConfig(): Promise<boolean> {
+// do not use this on setupdb
+export function getSynchronizeConfigUnitTest(): boolean {
+  // return true to modified table and entity
+  return false
+}
+
+// do not use this on unit test
+export function getLoggerConfig(): boolean {
   // set this in order to specify logger
   return process.env.NODE_ENV === 'development' ? true : false
 }
 
-export async function getLoggerConfigLocal(): Promise<boolean> {
+// do not use this on setupdb
+export function getLoggerConfigLocal(): boolean {
   // set this in order to specify logger
   return process.env.NODE_ENV === 'development' ? true : false
 }
 
-export async function getPrepareDatabase(): Promise<boolean> {
+// do not use this on unit test
+export function getPrepareDatabase(): boolean {
   // set prepare database
   return true
 }

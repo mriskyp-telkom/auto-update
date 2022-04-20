@@ -7,6 +7,10 @@ import {
 import { createConnection, getConnection } from 'typeorm'
 import { cfg, Migrate } from '../migration'
 import { AnggaranKegiatan } from 'main/types/Anggaran'
+import {
+  getLoggerConfigLocal,
+  getSynchronizeConfigUnitTest,
+} from '../../../src/dbConfig'
 
 beforeEach(async () => {
   const db = await createConnection({
@@ -14,8 +18,8 @@ beforeEach(async () => {
     database: ':memory:',
     dropSchema: false,
     entities: [Rapbs],
-    synchronize: false,
-    logging: process.env.NODE_ENV === 'development' ? true : false,
+    synchronize: getSynchronizeConfigUnitTest(),
+    logging: getLoggerConfigLocal(),
   })
 
   await Migrate(db, cfg)

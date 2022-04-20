@@ -610,8 +610,8 @@ async function createDBLocal(appDataPath: string): Promise<void> {
       statementCacheSize: 120,
       database: arkasDb,
       entities: entitiesDB,
-      synchronize: await getSynchronizeConfig(),
-      logging: await getLoggerConfig(),
+      synchronize: getSynchronizeConfig(),
+      logging: getLoggerConfig(),
     })
 
     await addApp()

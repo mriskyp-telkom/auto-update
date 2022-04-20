@@ -8,6 +8,10 @@ import { Pengguna } from 'main/models/Pengguna'
 import { Token } from 'main/models/Token'
 import { UserRole } from 'main/models/UserRole'
 import CommonUtils from 'main/utils/CommonUtils'
+import {
+  getLoggerConfigLocal,
+  getSynchronizeConfigUnitTest,
+} from '../../../src/dbConfig'
 
 import {
   CheckUser,
@@ -41,8 +45,8 @@ beforeEach(async () => {
       Token,
       UserRole,
     ],
-    synchronize: false,
-    logging: process.env.NODE_ENV === 'development' ? true : false,
+    synchronize: getSynchronizeConfigUnitTest(),
+    logging: getLoggerConfigLocal(),
   })
 
   await Migrate(db, cfg)
