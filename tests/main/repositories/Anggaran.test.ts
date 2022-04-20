@@ -32,7 +32,7 @@ beforeEach(async () => {
     type: 'better-sqlite3',
     database: ':memory:',
     dropSchema: false,
-    entities: [Anggaran, MstSekolah, AppConfig, RefSumberDana, Rapbs],
+    entities: [Anggaran, AppConfig, MstSekolah, Rapbs, RefSumberDana],
     synchronize: getSynchronizeConfigUnitTest(),
     logging: getLoggerConfigLocal(),
   })

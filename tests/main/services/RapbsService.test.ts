@@ -24,7 +24,7 @@ beforeEach(async () => {
     type: 'better-sqlite3',
     database: ':memory:',
     dropSchema: true,
-    entities: [Rapbs, RapbsPeriode, RapbsPtk, AppConfig],
+    entities: [AppConfig, Rapbs, RapbsPeriode, RapbsPtk],
     synchronize: getSynchronizeConfigUnitTest(),
     logging: getLoggerConfigLocal(),
   })

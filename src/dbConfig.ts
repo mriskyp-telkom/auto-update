@@ -111,11 +111,13 @@ export function getPrepareDatabase(): boolean {
 export async function checkExistsTable(): Promise<any> {
   for (let i = 0; i < entitiesDB.length; i++) {
     try {
-      const metadata = await getConnection().hasMetadata(entitiesDB[i])
       // use this to check entities
-      // const find = await getConnection().manager.find(entitiesDB[i])
-
+      const metadata = await getConnection().hasMetadata(entitiesDB[i])
       console.warn('metadata ' + entitiesDB[i] + ' exists ' + metadata)
+
+      // use this to check entities and objects
+      // const find = await getConnection().manager.find(entitiesDB[i])
+      // console.warn('object ' + entitiesDB[i] + ':' + find)
     } catch (err) {
       console.error('catch err ', err)
     }
