@@ -93,15 +93,6 @@ export async function getPrepareDatabase(): Promise<boolean> {
   return true
 }
 
-export async function getDBPragma(db: any): Promise<any> {
-  // set prepare database
-  db.pragma(`cipher='sqlcipher'`)
-  db.pragma(`legacy=4`)
-  db.pragma("rekey='K3md1kbudRIS3n4yan'")
-
-  return db
-}
-
 export async function checkExistsTable(): Promise<any> {
   for (let i = 0; i < entitiesDB.length; i++) {
     try {

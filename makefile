@@ -43,3 +43,11 @@ repair-yarn:
 add-server-connection-alive:
 	echo 'ServerAliveInterval 30' | tee -a ~/.ssh/config
 	echo 'ServerAliveCountMax 1200' | tee -a ~/.ssh/config
+
+# if you found error on unit test
+# was compiled against a different Node.js version using
+#    NODE_MODULE_VERSION 99. This version of Node.js requires
+#    NODE_MODULE_VERSION 93. Please try re-compiling or re-installing
+.PHONY: rebuild
+rebuild:
+	npm rebuild
