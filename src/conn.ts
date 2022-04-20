@@ -2,7 +2,12 @@ import path from 'path'
 import { Connection, createConnection } from 'typeorm'
 import { BetterSqlite3ConnectionOptions } from 'typeorm/driver/better-sqlite3/BetterSqlite3ConnectionOptions'
 import { getAppData } from './pathConfig'
-import { checkExistsTable, entitiesDB } from './dbConfig'
+import {
+  checkExistsTable,
+  entitiesDB,
+  getLoggerConfig,
+  getSynchronizeConfig,
+} from './dbConfig'
 
 // for make sure connection db
 export const connDB = async (): Promise<Connection> => {
@@ -17,7 +22,8 @@ export const connDB = async (): Promise<Connection> => {
         db.pragma(`key='K3md1kbudRIS3n4yan'`)
       },
       entities: entitiesDB,
-      synchronize: true,
+      synchronize: await getSynchronizeConfig(),
+      logging: await getLoggerConfig(),
     }
     const c = await createConnection(config)
     await checkExistsTable()
