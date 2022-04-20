@@ -58,6 +58,13 @@ const initialFormDisable = {
   harga_per_month: true,
 }
 
+const initialDefaultValue = {
+  kegiatan: '',
+  rekening_belanja: '',
+  uraian: '',
+  harga_satuan: '',
+}
+
 const ipcRenderer = window.require('electron').ipcRenderer
 
 const InputUraian = (props: any) => {
@@ -88,6 +95,10 @@ const FormKertasKerjaView: FC = () => {
   const [openModalConfirmCancel, setOpenModalConfirmCancel] = useState(false)
 
   const [formDisable, setFormDisable] = useState(initialFormDisable)
+  const [formDefaultValue, setFormDefaultValue] = useState({
+    ...initialDefaultValue,
+    satuan: '',
+  })
 
   const [headerPopupUraian, setHeaderPopupUraian] = useState(headerUraian)
   const [optionsKegiatan, setOptionsKegiatan] = useState([])
@@ -122,10 +133,7 @@ const FormKertasKerjaView: FC = () => {
     mode: 'onSubmit',
     reValidateMode: 'onBlur',
     defaultValues: {
-      kegiatan: '',
-      rekening_belanja: '',
-      uraian: '',
-      harga_satuan: '',
+      ...initialDefaultValue,
       anggaran_bulan: [
         {
           id_bulan: DATA_BULAN[0]?.id,
@@ -218,17 +226,42 @@ const FormKertasKerjaView: FC = () => {
     setFormDisable(initialFormDisable)
   }
 
+  const handleDefaultValue = (name: string, value: string) => {
+    if (name.includes('anggaran_bulan')) {
+      setFormDefaultValue({
+        ...formDefaultValue,
+        satuan: value,
+      })
+    } else {
+      setFormDefaultValue({
+        ...formDefaultValue,
+        [name]: value,
+      })
+    }
+  }
+
   const handleClick = (data: {
     id: string | number
     name: FormIsiKertasKerjaType
     value: string
+    defaultValue: string
   }) => {
-    setValue(data.name, data.value, { shouldDirty: true })
-
-    if (data.id.toString() === '' || data.value === '') {
+    if (data.id.toString() === '' && data.value !== '') {
+      setValue(data.name, data.defaultValue, { shouldDirty: true })
+      handleDefaultValue(data.name, data.defaultValue)
       setFocus(data.name)
       return
     }
+
+    if (data.id.toString() === '' && data.value === '') {
+      setValue(data.name, '', { shouldDirty: true })
+      handleDefaultValue(data.name, '')
+      setFocus(data.name)
+      return
+    }
+
+    handleDefaultValue(data.name, data.value)
+    setValue(data.name, data.value, { shouldDirty: true })
 
     clearErrors(data.name)
 
@@ -405,22 +438,28 @@ const FormKertasKerjaView: FC = () => {
       uraian.uraian = anggaran.uraian
       setSelectedUraian(uraian)
 
-      reset({
-        kegiatan: anggaran.kegiatan,
-        rekening_belanja: anggaran.rekeningBelanja,
-        uraian: anggaran.uraian,
-        harga_satuan: anggaran.hargaSatuan.toString(),
-      })
-
-      periode.map((per: any, index: number) => {
+      const anggaran_bulan: AnggaranBulanData[] = []
+      periode.map((per: any) => {
         const idx = DATA_BULAN.findIndex((b) => b.id == per.periode)
-        update(index, {
+        anggaran_bulan.push({
           id_bulan: per.periode,
           jumlah: per.jumlah,
           satuan: per.satuan,
           bulan: DATA_BULAN[idx].name,
         })
       })
+
+      const defaultValue = {
+        ...formDefaultValue,
+        kegiatan: anggaran.kegiatan,
+        rekening_belanja: anggaran.rekeningBelanja,
+        uraian: anggaran.uraian,
+        harga_satuan: anggaran.hargaSatuan.toString(),
+        anggaran_bulan: anggaran_bulan,
+      }
+
+      reset(defaultValue)
+      setFormDefaultValue(defaultValue)
 
       setFormDisable({
         kegiatan: false,
@@ -508,8 +547,10 @@ const FormKertasKerjaView: FC = () => {
                 register={register}
                 registerOption={{
                   onChange: (e) => {
-                    const jumlah = e.target.value
-                    countTotal(jumlah)
+                    const value = e.target.value
+                    const replaced = value.replace(/\D/g, '')
+                    setValue(`anggaran_bulan.${props.index}.jumlah`, replaced)
+                    countTotal(replaced)
                   },
                 }}
                 required={true}
@@ -521,6 +562,7 @@ const FormKertasKerjaView: FC = () => {
                 width={255}
                 name={`anggaran_bulan.${props.index}.satuan`}
                 placeholder="Satuan"
+                defaultValue={formDefaultValue.satuan}
                 errors={errors}
                 register={register}
                 onClick={handleClick}
@@ -573,8 +615,10 @@ const FormKertasKerjaView: FC = () => {
             </div>
             <InputSearchComponent
               width={888}
+              height={250}
               name="kegiatan"
               placeholder="Apa kegiatan yang ingin Anda anggarkan?"
+              defaultValue={formDefaultValue.kegiatan}
               errors={errors}
               register={register}
               onClick={handleClick}
@@ -589,8 +633,10 @@ const FormKertasKerjaView: FC = () => {
             </div>
             <InputSearchComponent
               width={888}
+              height={250}
               name="rekening_belanja"
               placeholder="Apa jenis rekening belanja yang ingin Anda anggarkan untuk kegiatan tersebut?"
+              defaultValue={formDefaultValue.rekening_belanja}
               errors={errors}
               register={register}
               onClick={handleClick}
@@ -608,8 +654,10 @@ const FormKertasKerjaView: FC = () => {
                 </div>
                 <InputUraian
                   width={543}
+                  height={150}
                   name="uraian"
                   placeholder="Apa detail barang atau jasanya? (mis. papan tulis, honor narasumber)"
+                  defaultValue={formDefaultValue.uraian}
                   errors={errors}
                   register={register}
                   onClick={handleClick}

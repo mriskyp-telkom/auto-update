@@ -5,7 +5,6 @@ table.searchTable {
 
 table.searchTable > tbody {
   overflow-y: scroll;
-  height: 100px;
   width: 100%;
   display: block;
 }

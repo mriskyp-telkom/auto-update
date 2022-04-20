@@ -29,6 +29,7 @@ const createWindow = (): void => {
     height: 1024,
     width: 1440,
     show: false,
+    resizable: false,
     autoHideMenuBar: true,
     icon: path.join(
       __dirname,
