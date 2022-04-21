@@ -101,10 +101,15 @@ const MenyusunKertasKerjaView: FC = () => {
   const setPagu = (idAnggaran: string) => {
     const getPagu = syncToIPCMain(IPC_ANGGARAN.getPagu, idAnggaran)
     const dataAnggaran = syncToIPCMain(IPC_ANGGARAN.getAnggaranById, idAnggaran)
-    let response: ResponseMengulas = null
-    if (getPagu.total > 0 && dataAnggaran.isPengesahan === 2) {
-      response = RESPONSE_PENGESAHAN.error_sisa_dana as ResponseMengulas
+    let response: ResponseMengulas = responseMengulas
+    if (dataAnggaran.isPengesahan === 2) {
+      if (getPagu.total > 0) {
+        response = RESPONSE_PENGESAHAN.error_sisa_dana as ResponseMengulas
+      } else {
+        response = null
+      }
     }
+
     setResponseMengulas(response)
     setJumlahPagu(getPagu.pagu)
     setTotal(getPagu.total)
