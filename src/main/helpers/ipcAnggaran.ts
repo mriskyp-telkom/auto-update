@@ -26,9 +26,10 @@ module.exports = {
     const listTahun = Array.from({ length: 3 }, (_, i) => tahunAktif - i)
     const dataAnggaran = await GetAnggaran(idSumberDana, listTahun)
     const listAnggaran = []
-
+    const notApproveStatus = [2, 3]
     for (let tahun = tahunAktif; tahun > tahunAktif - 3; tahun--) {
       const data = dataAnggaran.find((a: any) => a.tahun === tahun)
+
       const anggaran = {
         id_anggaran: '',
         tahun: `${tahun}`,
@@ -58,6 +59,7 @@ module.exports = {
         if (
           data.tanggal_pengajuan == null &&
           data.tanggal_pengesahan == null &&
+          data.is_pengesahan === 0 &&
           (data.alasan_penolakan == null || data.alasan_penolakan == '')
         ) {
           anggaran.status = STATUS_KERTAS_KERJA.draft
@@ -81,8 +83,8 @@ module.exports = {
             anggaran.type = VERSI_ANGGARAN.pergeseran.code //'Pergeseran'
           }
         } else if (
-          data.alasan_penolakan != null &&
-          data.alasan_penolakan !== ''
+          (data.alasan_penolakan != null && data.alasan_penolakan !== '') ||
+          notApproveStatus.includes(data.is_pengesahan)
         ) {
           anggaran.status = STATUS_KERTAS_KERJA.not_approved
         }
