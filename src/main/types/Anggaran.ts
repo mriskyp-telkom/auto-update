@@ -19,6 +19,7 @@ export interface AnggaranKegiatan {
   hargaSatuan: number
   total: number
   isHonor: number
+  errorReferensi: number
 }
 
 export interface DetailAnggaranKegiatan {

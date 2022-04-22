@@ -31,12 +31,15 @@ export const GetRapbsBulan = async (
         'r.id_ref_kode as idRefKode',
         'r.kode_rekening as kodeRekening',
         'r.id_barang as idBarang',
+        'case when rk.expired_date is not null OR rr.expired_date is not null OR ' +
+          "(rab.id_barang is not null AND rab.id_barang <> '' AND rab.expired_date is not null ) then 1 else 0 end as errorReferensi",
       ])
       .innerJoin('rapbs_periode', 'rp', 'r.id_rapbs = rp.id_rapbs')
       .innerJoin('ref_kode', 'rk', 'r.id_ref_kode = rk.id_ref_kode')
       .innerJoin('ref_kode', 'rk2', 'rk.parent_kode = rk2.id_ref_kode')
       .innerJoin('ref_kode', 'rk3', 'rk2.parent_kode = rk3.id_ref_kode')
       .innerJoin('ref_rekening', 'rr', 'r.kode_rekening = rr.kode_rekening')
+      .leftJoin('ref_acuan_barang', 'rab', 'rab.id_barang = r.id_barang')
       .where(
         ' r.soft_delete = 0' +
           ' AND rp.soft_delete = 0' +
