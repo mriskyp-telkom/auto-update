@@ -4,8 +4,6 @@ import { Anggaran as AnggaranData } from 'renderer/types/AnggaranType'
 import {
   AddAnggaran,
   DelAnggaran,
-  GetAnggaran,
-  GetAnggaranById,
   GetAnggaranBefore,
   GetPagu,
   CopyAnggaran,
@@ -15,94 +13,22 @@ import {
 } from 'main/repositories/Anggaran'
 import { GetConfig } from 'main/repositories/Config'
 import CommonUtils from 'main/utils/CommonUtils'
+import {
+  GetAnggaranList,
+  GetDetailAnggaran,
+} from 'main/services/AnggaranService'
 
-import { STATUS_KERTAS_KERJA, VERSI_ANGGARAN } from 'global/constants'
 import { IPC_ANGGARAN } from 'global/ipc'
 
 module.exports = {
   getAnggaran: ipcMain.on('anggaran:getAnggaran', async (e, idSumberDana) => {
-    const configTahunAktif = await GetConfig('tahun_aktif')
-    const tahunAktif = parseInt(configTahunAktif)
-    const listTahun = Array.from({ length: 3 }, (_, i) => tahunAktif - i)
-    const dataAnggaran = await GetAnggaran(idSumberDana, listTahun)
-    const listAnggaran = []
-    const notApproveStatus = [2, 3]
-    for (let tahun = tahunAktif; tahun > tahunAktif - 3; tahun--) {
-      const data = dataAnggaran.find((a: any) => a.tahun === tahun)
-
-      const anggaran = {
-        id_anggaran: '',
-        tahun: `${tahun}`,
-        status: '',
-        tenggat_waktu: `${tahun}-12-30`,
-        status_updated_at: '',
-        type: '',
-        tanggal_pengesahan: '',
-        id_sumber_dana: idSumberDana,
-      }
-      if (data != null) {
-        anggaran.id_anggaran = data.id_anggaran
-        anggaran.tanggal_pengesahan =
-          data.tanggal_pengesahan != null
-            ? CommonUtils.formatDateToString(
-                data.tanggal_pengesahan,
-                'YYYY-MM-DD HH:mm'
-              )
-            : ''
-        anggaran.status_updated_at =
-          data.last_update != null
-            ? CommonUtils.formatDateToString(
-                data.last_update,
-                'YYYY-MM-DD HH:mm'
-              )
-            : ''
-        if (
-          data.tanggal_pengajuan == null &&
-          data.tanggal_pengesahan == null &&
-          data.is_pengesahan === 0 &&
-          (data.alasan_penolakan == null || data.alasan_penolakan == '')
-        ) {
-          anggaran.status = STATUS_KERTAS_KERJA.draft
-        } else if (
-          data.tanggal_pengajuan != null &&
-          data.tanggal_pengesahan == null &&
-          (data.alasan_penolakan == null || data.alasan_penolakan == '')
-        ) {
-          anggaran.status = STATUS_KERTAS_KERJA.waiting_approval
-        } else if (
-          data.tanggal_pengesahan != null &&
-          (data.alasan_penolakan == null || data.alasan_penolakan == '')
-        ) {
-          const countPerubahan = Math.floor(data.is_revisi / 100)
-          const pergeseran = data.is_revisi % 100
-          anggaran.status = STATUS_KERTAS_KERJA.approved
-          if (countPerubahan >= 1) {
-            anggaran.type = VERSI_ANGGARAN.perubahan.code //'Perubahan'
-          }
-          if (pergeseran > 0) {
-            anggaran.type = VERSI_ANGGARAN.pergeseran.code //'Pergeseran'
-          }
-        } else if (
-          (data.alasan_penolakan != null && data.alasan_penolakan !== '') ||
-          notApproveStatus.includes(data.is_pengesahan)
-        ) {
-          anggaran.status = STATUS_KERTAS_KERJA.not_approved
-        }
-      } else {
-        anggaran.status = STATUS_KERTAS_KERJA.not_created
-        if (tahun < tahunAktif) {
-          anggaran.status = STATUS_KERTAS_KERJA.disabled
-        }
-      }
-      listAnggaran.push(anggaran)
-    }
-    e.returnValue = listAnggaran
+    e.returnValue = await GetAnggaranList(idSumberDana)
   }),
 
   getAnggaranById: ipcMain.on(
     IPC_ANGGARAN.getAnggaranById,
     async (e, idAnggaran) => {
-      e.returnValue = await GetAnggaranById(idAnggaran)
+      e.returnValue = await GetDetailAnggaran(idAnggaran)
     }
   ),
 

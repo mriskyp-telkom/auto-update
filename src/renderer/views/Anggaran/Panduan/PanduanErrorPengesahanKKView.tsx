@@ -4,7 +4,7 @@ import CardPanduanAnggaranView from 'renderer/views/Anggaran/CardPanduanAnggaran
 
 import { Icon } from '@wartek-id/icon'
 
-const PanduanErrorDataSentralKKView: FC = () => {
+const PanduanErrorPengesahanKKView: FC = () => {
   return (
     <CardPanduanAnggaranView type="failed">
       <>
@@ -18,19 +18,19 @@ const PanduanErrorDataSentralKKView: FC = () => {
           >
             cancel
           </Icon>
-          RKAS Butuh Disesuaikan
+          RKAS Belum Disetujui
         </div>
         <ul className="list font-normal text-base text-gray-900 ml-7">
           <li>
             <span>
-              Anda belum dapat mengajukan pengesahan karena ada perubahan data
-              referensi barang/jasa yang Anda gunakan.
+              RKAS Anda belum bisa disetujui karena ada beberapa revisi yang
+              perlu dilakukan.
             </span>
           </li>
           <li>
             <span>
-              Silakan sesuaikan pembelian Anda berdasarkan data referensi
-              terbaru.
+              Silakan lihat catatan dari dinas dan lakukan revisi. Lihat Catatan
+              Revisi.
             </span>
           </li>
         </ul>
@@ -39,4 +39,4 @@ const PanduanErrorDataSentralKKView: FC = () => {
   )
 }
 
-export default PanduanErrorDataSentralKKView
+export default PanduanErrorPengesahanKKView
