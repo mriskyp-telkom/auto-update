@@ -4,39 +4,39 @@ import CardPanduanAnggaranView from 'renderer/views/Anggaran/CardPanduanAnggaran
 
 import { Icon } from '@wartek-id/icon'
 
-const PanduanMenyusunKKView: FC = () => {
+const PanduanSuccessPengesahanKKView: FC = () => {
   return (
-    <CardPanduanAnggaranView type="info">
+    <CardPanduanAnggaranView type="success">
       <>
         <div className="mb-2 font-semibold">
           <Icon
             as="i"
             color="default"
             fontSize="small"
-            style={{ fontSize: '14px' }}
+            style={{ fontSize: '14px', color: '#4ca375' }}
             className="mr-[10px]"
           >
-            info
+            check_circle
           </Icon>
-          Panduan
+          RKAS Berhasil Disahkan!
         </div>
         <ul className="list font-normal text-base text-gray-900 ml-7">
           <li>
             <span>
-              Sebelum membuat anggaran, ketahui daftar kode barang dan SSH yang
-              ada di daerah Anda. <a>Lihat Daftar Barang</a>
+              Sekarang Anda bisa langsung melakukan pembelanjaan setelah
+              menerima penyaluran dana.
             </span>
           </li>
           <li>
             <span>
-              Pastikan Anda membuat anggaran berdasarkan juknis yang berlaku.{' '}
-              <a>Lihat Juknis</a>
+              Jika Anda perlu mengubah anggaran dalam satu jenis belanja, Anda
+              boleh melakukan pergeseran dengan klik <b>“Geser”</b>.
             </span>
           </li>
           <li>
             <span>
-              Anda harus menghabiskan seluruh anggaran untuk bisa mengajukan
-              pengesahan.
+              Jika Anda perlu mengubah anggaran lintas jenis belanja, Anda boleh
+              melakukan perubahan dengan klik <b>“Ubah”</b>.
             </span>
           </li>
         </ul>
@@ -45,4 +45,4 @@ const PanduanMenyusunKKView: FC = () => {
   )
 }
 
-export default PanduanMenyusunKKView
+export default PanduanSuccessPengesahanKKView

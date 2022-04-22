@@ -11,6 +11,7 @@ import ButtonCariComponent from 'renderer/components/ButtonCariComponent'
 import TabelMengulasKertasKerjaView from './TabelMengulasKertasKerjaView'
 import PanduanMengulasKKView from 'renderer/views/Anggaran/Panduan/PanduanMengulasKKView'
 import PanduanCekStatusKKView from 'renderer/views/Anggaran/Panduan/PanduanCekStatusKKView'
+import PanduanSuccessPengesahanKKView from 'renderer/views/Anggaran/Panduan/PanduanSuccessPengesahanKKView'
 
 import { Icon } from '@wartek-id/icon'
 import { Button } from '@wartek-id/button'
@@ -18,6 +19,7 @@ import { Tabs, TabList, Tab, TabPanels, TabPanel } from '@wartek-id/tabs'
 
 import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
 
+import { STATUS_KERTAS_KERJA } from 'global/constants'
 import {
   RESPONSE_PENGESAHAN,
   ALERT_MENGULAS,
@@ -25,7 +27,7 @@ import {
   LABEL_MODE_MENGULAS,
 } from 'renderer/constants/anggaran'
 
-const ipcRenderer = window.require('electron').ipcRenderer
+import syncToIPCMain from 'renderer/configs/ipc'
 
 import { AlertType } from 'renderer/types/ComponentType'
 import { IPC_ANGGARAN } from 'global/ipc'
@@ -70,7 +72,7 @@ const MengulasKertasKerjaView: FC = () => {
   }
 
   useEffect(() => {
-    const pagu = ipcRenderer.sendSync(IPC_ANGGARAN.getPagu, idAnggaran)
+    const pagu = syncToIPCMain(IPC_ANGGARAN.getPagu, idAnggaran)
     setSisaDana(pagu?.sisa)
     setTotalAnggaran(pagu?.total)
     setTahun(pagu.tahun_anggaran)
@@ -80,11 +82,10 @@ const MengulasKertasKerjaView: FC = () => {
     if (modeMengulas != '') {
       if (modeMengulas === MODE_MENGULAS.tahap) {
         setTahap(1)
-        const anggaran = ipcRenderer.sendSync(
-          IPC_ANGGARAN.getTotalAnggaran,
-          1,
-          idAnggaran
-        )
+        const anggaran = syncToIPCMain(IPC_ANGGARAN.getTotalAnggaran, {
+          id_tahap: 1,
+          id_anggaran: idAnggaran,
+        })
         setAnggaran(anggaran?.total ?? 0)
       }
     }
@@ -93,20 +94,23 @@ const MengulasKertasKerjaView: FC = () => {
   const handleChangeTabs = (index: number) => {
     const selectedTahap = index + 1
     setTahap(selectedTahap)
-    const anggaran = ipcRenderer.sendSync(
-      IPC_ANGGARAN.getTotalAnggaran,
-      selectedTahap,
-      idAnggaran
-    )
+    const anggaran = syncToIPCMain(IPC_ANGGARAN.getTotalAnggaran, {
+      id_tahap: selectedTahap,
+      id_anggaran: idAnggaran,
+    })
     setAnggaran(anggaran?.total ?? 0)
   }
 
   const getPanduan = () => {
-    if (responseMengulas === null) {
+    const dataAnggaran = syncToIPCMain(IPC_ANGGARAN.getAnggaranById, idAnggaran)
+    if (dataAnggaran.status === STATUS_KERTAS_KERJA.draft) {
       return <PanduanMengulasKKView />
     }
-    if (responseMengulas === RESPONSE_PENGESAHAN.success) {
+    if (dataAnggaran.status === STATUS_KERTAS_KERJA.waiting_approval) {
       return <PanduanCekStatusKKView />
+    }
+    if (dataAnggaran.status === STATUS_KERTAS_KERJA.approved) {
+      return <PanduanSuccessPengesahanKKView />
     }
   }
 

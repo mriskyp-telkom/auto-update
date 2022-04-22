@@ -34,7 +34,7 @@ const CardPanduanAnggaranView: FC<CardPanduanAnggaranProps> = (
       className={clsx(
         styles.pointKertasKerja,
         cardColor(),
-        'border rounded p-6 w-[860px]'
+        'border rounded py-6 pl-6 pr-4 w-[860px]'
       )}
     >
       {props.children}
