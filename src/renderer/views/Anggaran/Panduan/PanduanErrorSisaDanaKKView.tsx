@@ -8,7 +8,7 @@ const PanduanErrorSisaDanaKKView: FC = () => {
   return (
     <CardPanduanAnggaranView type="failed">
       <>
-        <div className="mb-2">
+        <div className="mb-2 font-semibold">
           <Icon
             as="i"
             color="default"

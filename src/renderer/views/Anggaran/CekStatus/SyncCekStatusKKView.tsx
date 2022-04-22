@@ -111,16 +111,20 @@ const SyncCekStatusKKView: FC = () => {
     setApi(stepApi[0])
   }
 
-  const handleBtnAlert = () => {
-    if (
-      statusKK === RESPONSE_CEK_STATUS.in_progress ||
-      statusKK === RESPONSE_CEK_STATUS.approved
-    ) {
+  const handleBtnSubmitAlert = () => {
+    if (statusKK === RESPONSE_CEK_STATUS.in_progress) {
       navigate(`mengulas/${q_id_anggaran}`)
     }
     if (statusKK === RESPONSE_CEK_STATUS.declined) {
       navigate(`menyusun/update/${q_id_anggaran}`)
     }
+  }
+
+  const handleBtnCancelAlert = () => {
+    if (statusKK === RESPONSE_CEK_STATUS.approved) {
+      navigate(`mengulas/${q_id_anggaran}`)
+    }
+    closeModal()
   }
 
   useEffect(() => {
@@ -217,8 +221,8 @@ const SyncCekStatusKKView: FC = () => {
           isOpen={isAlert}
           btnCancelText={ALERT_CEK_STATUS[statusKK].btnCancelText}
           btnActionText={ALERT_CEK_STATUS[statusKK].btnActionText}
-          onCancel={closeModal}
-          onSubmit={handleBtnAlert}
+          onCancel={handleBtnCancelAlert}
+          onSubmit={handleBtnSubmitAlert}
         />
       )}
       <AlertFailedSyncData onSubmit={handleSync} onCancel={closeModal} />

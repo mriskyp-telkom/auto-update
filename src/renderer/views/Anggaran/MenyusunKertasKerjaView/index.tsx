@@ -8,6 +8,7 @@ import SyncDialogComponent from 'renderer/components/Dialog/SyncDialogComponent'
 import PanduanMenyusunKKView from 'renderer/views/Anggaran/Panduan/PanduanMenyusunKKView'
 import PanduanErrorDataSentralKKView from 'renderer/views/Anggaran/Panduan/PanduanErrorDataSentralKKView'
 import PanduanErrorSisaDanaKKView from 'renderer/views/Anggaran/Panduan/PanduanErrorSisaDanaKKView'
+import PanduanErrorPengesahanKKView from 'renderer/views/Anggaran/Panduan/PanduanErrorPengesahanKKView'
 
 import TabelMenyusunKertasKerjaView from './TabelMenyusunKertasKerjaView'
 import syncToIPCMain from 'renderer/configs/ipc'
@@ -19,6 +20,7 @@ import { Button } from '@wartek-id/button'
 import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
 
 import { IPC_ANGGARAN, IPC_KK } from 'global/ipc'
+import { STATUS_KERTAS_KERJA } from 'global/constants'
 import { DATA_BULAN } from 'renderer/constants/general'
 import {
   RESPONSE_PENGESAHAN,
@@ -29,7 +31,6 @@ import { APP_CONFIG } from 'renderer/constants/appConfig'
 
 import { AlertType } from 'renderer/types/ComponentType'
 import { formatDateTimeStatus } from 'renderer/utils/date-formatting'
-import { ResponseMengulas } from 'renderer/types/AnggaranType'
 
 const MenyusunKertasKerjaView: FC = () => {
   const navigate = useNavigate()
@@ -47,6 +48,7 @@ const MenyusunKertasKerjaView: FC = () => {
   const [penggunaId, setPenggunaId] = useState('')
   const [idAnggaran, setIdAnggaran] = useState(null)
   const [lastUpdate, setLastUpdate] = useState(null)
+  const [anggaranDetail, setAnggaranDetail] = useState(null)
 
   const alertMengulas = useAnggaranStore(
     (state: AnggaranStates) => state.alertMengulas
@@ -58,10 +60,6 @@ const MenyusunKertasKerjaView: FC = () => {
 
   const responseMengulas = useAnggaranStore(
     (state: AnggaranStates) => state.responseMengulas
-  )
-
-  const setResponseMengulas = useAnggaranStore(
-    (state: AnggaranStates) => state.setResponseMengulas
   )
 
   const penanggungJawab = useAnggaranStore(
@@ -101,16 +99,7 @@ const MenyusunKertasKerjaView: FC = () => {
   const setPagu = (idAnggaran: string) => {
     const getPagu = syncToIPCMain(IPC_ANGGARAN.getPagu, idAnggaran)
     const dataAnggaran = syncToIPCMain(IPC_ANGGARAN.getAnggaranById, idAnggaran)
-    let response: ResponseMengulas = responseMengulas
-    if (dataAnggaran.isPengesahan === 2) {
-      if (getPagu.total > 0) {
-        response = RESPONSE_PENGESAHAN.error_sisa_dana as ResponseMengulas
-      } else {
-        response = null
-      }
-    }
-
-    setResponseMengulas(response)
+    setAnggaranDetail(dataAnggaran)
     setJumlahPagu(getPagu.pagu)
     setTotal(getPagu.total)
     setSisa(getPagu.sisa)
@@ -178,16 +167,32 @@ const MenyusunKertasKerjaView: FC = () => {
     navigate('/anggaran')
   }
 
-  const getPanduan = () => {
-    if (responseMengulas === null) {
-      return <PanduanMenyusunKKView />
+  const getPanduan = (): any => {
+    if (anggaranDetail !== null) {
+      // Panduan untuk status draft
+      if (anggaranDetail.status === STATUS_KERTAS_KERJA.draft) {
+        return <PanduanMenyusunKKView />
+      }
+      // Panduan untuk status perlu revisi (error sisa dana)
+      if (
+        anggaranDetail.status === STATUS_KERTAS_KERJA.not_approved &&
+        anggaranDetail.isPengesahan === 2
+      ) {
+        return <PanduanErrorSisaDanaKKView />
+      }
+      // Panduan untuk status perlu revisi (error data central)
+      if (
+        anggaranDetail.status === STATUS_KERTAS_KERJA.not_approved &&
+        anggaranDetail.isPengesahan === 3
+      ) {
+        return <PanduanErrorDataSentralKKView />
+      }
+      // Panduan untuk status perlu revisi (error pengesahan ditolak)
+      if (anggaranDetail.status === STATUS_KERTAS_KERJA.not_approved) {
+        return <PanduanErrorPengesahanKKView />
+      }
     }
-    if (responseMengulas === RESPONSE_PENGESAHAN.error_sisa_dana) {
-      return <PanduanErrorSisaDanaKKView />
-    }
-    if (responseMengulas === RESPONSE_PENGESAHAN.error_data_sentral) {
-      return <PanduanErrorDataSentralKKView />
-    }
+    return null
   }
 
   useEffect(() => {
@@ -334,7 +339,9 @@ const MenyusunKertasKerjaView: FC = () => {
               />
               <AmountCardComponent
                 type={
-                  responseMengulas === RESPONSE_PENGESAHAN.error_sisa_dana
+                  anggaranDetail?.status === STATUS_KERTAS_KERJA.not_approved &&
+                  anggaranDetail?.isPengesahan === 2 &&
+                  sisa !== 0
                     ? 'warning'
                     : 'default'
                 }
