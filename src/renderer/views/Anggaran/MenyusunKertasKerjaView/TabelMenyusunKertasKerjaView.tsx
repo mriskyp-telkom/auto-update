@@ -112,7 +112,7 @@ const TabelMenyusunKertasKerjaView: FC<TabelMenyusunKertasKerjaProps> = (
               onClick={(e) => handleClickRow(e, row)}
               className={
                 // flag error per row
-                row.error ? 'text-red-600' : ''
+                row.errorReferensi ? 'text-red-600' : ''
               }
             >
               {headerKertasKerja.map((col) => {
