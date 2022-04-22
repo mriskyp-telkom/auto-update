@@ -174,7 +174,9 @@ module.exports = {
 
   getTotalAnggaran: ipcMain.on(
     IPC_ANGGARAN.getTotalAnggaran,
-    async (e, id_tahap: number, id_anggaran: string) => {
+    async (e, data) => {
+      const id_tahap = data.id_tahap
+      const id_anggaran = data.id_anggaran
       e.returnValue = await GetTotalAnggaran(id_tahap, id_anggaran)
     }
   ),

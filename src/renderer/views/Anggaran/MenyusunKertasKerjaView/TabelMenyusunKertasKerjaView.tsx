@@ -8,7 +8,6 @@ import { numberUtils } from '@wartek-id/fe-toolbox'
 import { FormTableKertasKerjaData } from 'renderer/types/forms/AnggaranType'
 
 import { headerKertasKerja } from 'renderer/constants/table'
-import { RESPONSE_PENGESAHAN } from 'renderer/constants/anggaran'
 
 import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
 
@@ -32,11 +31,8 @@ const TabelMenyusunKertasKerjaView: FC<TabelMenyusunKertasKerjaProps> = (
 ) => {
   const location = useLocation()
   const navigate = useNavigate()
-  const [data, setData] = useState([])
 
-  const responseMengulas = useAnggaranStore(
-    (state: AnggaranStates) => state.responseMengulas
-  )
+  const [data, setData] = useState([])
 
   const setTempDetailKertasKerja = useAnggaranStore(
     (state: AnggaranStates) => state.setTempDetailKertasKerja
@@ -115,9 +111,8 @@ const TabelMenyusunKertasKerjaView: FC<TabelMenyusunKertasKerjaProps> = (
               key={indexRow}
               onClick={(e) => handleClickRow(e, row)}
               className={
-                responseMengulas === RESPONSE_PENGESAHAN.error_data_sentral
-                  ? 'text-red-600'
-                  : ''
+                // flag error per row
+                row.error ? 'text-red-600' : ''
               }
             >
               {headerKertasKerja.map((col) => {
