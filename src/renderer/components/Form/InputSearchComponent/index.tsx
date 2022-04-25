@@ -59,6 +59,9 @@ const InputSearchComponent: FC<InputSearchProps> = (
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
+    if (!open) {
+      setOpen(true)
+    }
     setQuery(value)
   }
 

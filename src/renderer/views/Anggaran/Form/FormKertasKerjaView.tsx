@@ -41,14 +41,17 @@ import { numberUtils } from '@wartek-id/fe-toolbox'
 
 import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
 
+import { IPC_ANGGARAN, IPC_KK, IPC_PTK, IPC_REFERENSI } from 'global/ipc'
+
+import { btnFormDisabled } from 'renderer/utils/form-validation'
+
+import differenceWith from 'lodash/differenceWith'
+import isEqual from 'lodash/isEqual'
+import isEmpty from 'lodash/isEmpty'
+
 import styles from './index.module.css'
 
 import clsx from 'clsx'
-
-import { IPC_ANGGARAN, IPC_KK, IPC_PTK, IPC_REFERENSI } from 'global/ipc'
-import { btnFormDisabled } from 'renderer/utils/form-validation'
-import differenceWith from 'lodash/differenceWith'
-import isEqual from 'lodash/isEqual'
 
 const initialFormDisable = {
   kegiatan: false,
@@ -149,6 +152,10 @@ const FormKertasKerjaView: FC = () => {
     control,
     name: 'anggaran_bulan',
   })
+
+  const handleClearError = (name: FormIsiKertasKerjaType) => {
+    clearErrors(name)
+  }
 
   const constructData = () => {
     const data = {} as DetailKegiatan
@@ -512,6 +519,22 @@ const FormKertasKerjaView: FC = () => {
       setTotalPerMonth(harga_satuan * jumlah)
     }
 
+    const getError = () => {
+      /* eslint-disable */
+      if (!isEmpty(errors?.anggaran_bulan)) {
+        if (errors?.anggaran_bulan.hasOwnProperty(props.index)) {
+          return {
+            [`anggaran_bulan.${props.index}.jumlah`]:
+              errors.anggaran_bulan[props.index].jumlah,
+            [`anggaran_bulan.${props.index}.satuan`]:
+              errors.anggaran_bulan[props.index].satuan,
+          }
+        }
+        return {}
+      }
+      return {}
+    }
+
     useEffect(() => {
       const jumlah = getValues(`anggaran_bulan.${props.index}.jumlah`)
       countTotal(jumlah)
@@ -543,7 +566,8 @@ const FormKertasKerjaView: FC = () => {
                 type="text"
                 name={`anggaran_bulan.${props.index}.jumlah`}
                 placeholder="Jumlah"
-                errors={errors}
+                errors={getError()}
+                handleClearError={handleClearError}
                 register={register}
                 registerOption={{
                   onChange: (e) => {
@@ -563,7 +587,7 @@ const FormKertasKerjaView: FC = () => {
                 name={`anggaran_bulan.${props.index}.satuan`}
                 placeholder="Satuan"
                 defaultValue={formDefaultValue.satuan}
-                errors={errors}
+                errors={getError()}
                 register={register}
                 onClick={handleClick}
                 required={true}
@@ -660,6 +684,7 @@ const FormKertasKerjaView: FC = () => {
                   defaultValue={formDefaultValue.uraian}
                   errors={errors}
                   register={register}
+                  handleClearError={handleClearError}
                   onClick={handleClick}
                   required={true}
                   isDisabled={formDisable.uraian}
@@ -688,6 +713,7 @@ const FormKertasKerjaView: FC = () => {
                   placeholder="Berapa perkiraan harganya?"
                   errors={errors}
                   register={register}
+                  handleClearError={handleClearError}
                   required={true}
                   isDisabled={formDisable.harga_satuan}
                   headers={headerHarga}
