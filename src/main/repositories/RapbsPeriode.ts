@@ -26,7 +26,9 @@ export const GetRapbsPeriode = async (
 export const GetManyRapbsPeriode = async (
   idRapbs: string
 ): Promise<RapbsPeriode[]> => {
-  return await getRepository(RapbsPeriode).find({ idRapbs: idRapbs })
+  return await getRepository(RapbsPeriode).find({
+    where: { idRapbs: idRapbs, softDelete: 0 },
+  })
 }
 
 /**
