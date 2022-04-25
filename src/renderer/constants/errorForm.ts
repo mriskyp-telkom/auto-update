@@ -2,11 +2,15 @@ export const ERROR_REQUIRED = 'Wajib Diisi'
 export const ERROR_NUMBER_ONLY = 'Isi dengan format angka'
 export const ERROR_ALPHABET_ONLY = 'Isi dengan format huruf'
 
+/* Nama */
+export const NAMA_ERROR_VALIDATION =
+  'Hanya huruf dan simbol . , - _ yang diperbolehkan'
+
 /* Email */
 export const EMAIL_ERROR_FORMAT =
   'Masukkan email dengan contoh format arini@yahoo.com'
 export const EMAIL_ERROR_VALIDATION =
-  ' Hanya huruf, angka, dan simbol . , - _ yang diperbolehkan'
+  'Hanya huruf, angka, dan simbol . , - _ yang diperbolehkan'
 export const EMAIL_ERROR_REGISTERED =
   'Email sudah terdaftar. Silakan gunakan email lain.'
 export const EMAIL_ERROR_NOT_REGISTERED = 'Email tidak terdaftar'
