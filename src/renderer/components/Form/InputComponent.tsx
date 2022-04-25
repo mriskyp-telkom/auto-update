@@ -7,10 +7,12 @@ import {
   isFormatEmailValid,
   isEmailValid,
   isOnlyAlphabet,
+  isNameValid,
 } from 'renderer/utils/form-validation'
 
 import {
   ERROR_REQUIRED,
+  NAMA_ERROR_VALIDATION,
   EMAIL_ERROR_FORMAT,
   EMAIL_ERROR_VALIDATION,
   EMAIL_ERROR_REGISTERED,
@@ -24,7 +26,7 @@ import {
 import includes from 'lodash/includes'
 
 interface InputProps {
-  type: 'text' | 'email' | 'alphabet'
+  type: 'text' | 'email' | 'alphabet' | 'name'
   required: boolean
   isDisabled?: boolean
   name: string
@@ -166,6 +168,38 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
         props.registerOption?.onChange(e)
         if (errors[name]?.message === ERROR_ALPHABET_ONLY) {
           if (value !== '' && isOnlyAlphabet(value)) {
+            props.handleClearError(name)
+            return
+          }
+        }
+      },
+    }
+  }
+
+  if (type === 'name') {
+    validation = {
+      ...validation,
+      validate: {
+        allowChar: (v) => isNameValid(v) || NAMA_ERROR_VALIDATION,
+      },
+      onBlur: (e) => {
+        const value = e.target.value
+        if (value !== '' && !isNameValid(value)) {
+          setError(name, {
+            type: 'manual',
+            message: NAMA_ERROR_VALIDATION,
+          })
+          return
+        }
+        props.handleClearError(name)
+      },
+      onChange: (e) => {
+        const value = e.target.value
+        clearErrorRequired(value)
+        clearErrorServer(value)
+        props.registerOption?.onChange(e)
+        if (errors[name]?.message === NAMA_ERROR_VALIDATION) {
+          if (value !== '' && isNameValid(value)) {
             props.handleClearError(name)
             return
           }

@@ -221,7 +221,7 @@ const FormPenanggungJawabView: FC = () => {
                 Nama Kepala Sekolah
               </div>
               <InputComponent
-                type="alphabet"
+                type="name"
                 name="nama_kepala_sekolah"
                 placeholder="Masukkan nama kepala sekolah"
                 errors={errors}
@@ -236,7 +236,7 @@ const FormPenanggungJawabView: FC = () => {
                 Nama Bendahara
               </div>
               <InputComponent
-                type="alphabet"
+                type="name"
                 name="nama_bendahara"
                 placeholder="Masukkan nama bendahara"
                 errors={errors}

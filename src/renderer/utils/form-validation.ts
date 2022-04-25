@@ -3,6 +3,7 @@ import { FieldErrors } from 'react-hook-form'
 import {
   emailFormatRegex,
   emailValidationRegex,
+  nameValidationRegex,
   onlyNumberRegex,
   onlyAlphabetWithSpaceRegex,
 } from 'renderer/constants/regex'
@@ -32,6 +33,13 @@ export const isOnlyNumber = (value: string) => {
 
 export const isOnlyAlphabet = (value: string) => {
   if (onlyAlphabetWithSpaceRegex.test(value)) {
+    return true
+  }
+  return false
+}
+
+export const isNameValid = (value: string) => {
+  if (nameValidationRegex.test(value)) {
     return true
   }
   return false
