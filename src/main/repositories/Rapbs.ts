@@ -1,5 +1,6 @@
 import { ERROR } from 'global/constants'
 import { Rapbs } from 'main/models/Rapbs'
+import { RefAcuanBarang } from 'main/models/RefAcuanBarang'
 import { AnggaranKegiatan } from 'main/types/Anggaran'
 import { err, ok, Result } from 'neverthrow'
 import {
@@ -31,8 +32,13 @@ export const GetRapbsBulan = async (
         'r.id_ref_kode as idRefKode',
         'r.kode_rekening as kodeRekening',
         'r.id_barang as idBarang',
-        'case when rk.expired_date is not null OR rr.expired_date is not null OR ' +
-          "(rab.id_barang is not null AND rab.id_barang <> '' AND rab.expired_date is not null ) then 1 else 0 end as errorReferensi",
+        'case when rk.expired_date is not null then 1 ' +
+          ' when rr.expired_date is not null then 1  ' +
+          ' when rab.expired_date is not null then 1 ' +
+          " when rab.id_barang is null and case when r.id_barang = '' then null else r.id_barang end is not null then 1 " +
+          " when rbx.jumlah_barang > 0 and ifnull(r.id_barang,'') = '' and substr(rk.id_kode,4,2) <> '12' then 1 " +
+          " when substr(r.kode_rekening,1,3) = '5.2' and ifnull(r.id_barang,'') = '' then 1 " +
+          ' else 0 end as errorReferensi',
       ])
       .innerJoin('rapbs_periode', 'rp', 'r.id_rapbs = rp.id_rapbs')
       .innerJoin('ref_kode', 'rk', 'r.id_ref_kode = rk.id_ref_kode')
@@ -40,6 +46,17 @@ export const GetRapbsBulan = async (
       .innerJoin('ref_kode', 'rk3', 'rk2.parent_kode = rk3.id_ref_kode')
       .innerJoin('ref_rekening', 'rr', 'r.kode_rekening = rr.kode_rekening')
       .leftJoin('ref_acuan_barang', 'rab', 'rab.id_barang = r.id_barang')
+      .leftJoin(
+        (qb) =>
+          qb
+            .select(['kode_rekening', 'count(1) as jumlah_barang'])
+            .from(RefAcuanBarang, 'r')
+            .where('expired_date is null')
+            .andWhere('kode_rekening is not null')
+            .groupBy('kode_rekening'),
+        'rbx',
+        'rbx.kode_rekening = r.kode_rekening '
+      )
       .where(
         ' r.soft_delete = 0' +
           ' AND rp.soft_delete = 0' +
@@ -47,9 +64,7 @@ export const GetRapbsBulan = async (
           ' AND rp.id_periode = :idPeriode',
         { idAnggaran, idPeriode }
       )
-
     const data = await query.getRawMany()
-
     return ok(<AnggaranKegiatan[]>data)
   } catch (error) {
     return err(new Error(error))
@@ -77,12 +92,34 @@ export const GetOneRapbsBulan = async (
         'r.id_ref_kode as idRefKode',
         'r.kode_rekening as kodeRekening',
         'r.id_barang as idBarang',
+        'case ' +
+          ' when rk.expired_date is not null then 1 else 0 end as errorKegiatan ',
+        'case ' +
+          ' when rr.expired_date is not null then 1 else 0 end as errorRekening ',
+        'case ' +
+          ' when rab.expired_date is not null then 1 ' +
+          " when rab.id_barang is null and case when r.id_barang = '' then null else r.id_barang end is not null then 1 " +
+          " when rbx.jumlah_barang > 0 and ifnull(r.id_barang,'') = '' and substr(rk.id_kode,4,2) <> '12' then 1 " +
+          " when substr(r.kode_rekening,1,3) = '5.2' and ifnull(r.id_barang,'') = '' then 1 " +
+          ' else 0 end as errorUraian',
       ])
       .innerJoin('rapbs_periode', 'rp', 'r.id_rapbs = rp.id_rapbs')
       .innerJoin('ref_kode', 'rk', 'r.id_ref_kode = rk.id_ref_kode')
       .innerJoin('ref_kode', 'rk2', 'rk.parent_kode = rk2.id_ref_kode')
       .innerJoin('ref_kode', 'rk3', 'rk2.parent_kode = rk3.id_ref_kode')
       .innerJoin('ref_rekening', 'rr', 'r.kode_rekening = rr.kode_rekening')
+      .leftJoin('ref_acuan_barang', 'rab', 'rab.id_barang = r.id_barang')
+      .leftJoin(
+        (qb) =>
+          qb
+            .select(['kode_rekening', 'count(1) as jumlah_barang'])
+            .from(RefAcuanBarang, 'r')
+            .where('expired_date is null')
+            .andWhere('kode_rekening is not null')
+            .groupBy('kode_rekening'),
+        'rbx',
+        'rbx.kode_rekening = r.kode_rekening '
+      )
       .where(
         ' r.soft_delete = 0' +
           ' AND rp.soft_delete = 0' +

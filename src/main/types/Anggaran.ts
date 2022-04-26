@@ -20,6 +20,9 @@ export interface AnggaranKegiatan {
   total: number
   isHonor: number
   errorReferensi: number
+  errorKegiatan: number
+  errorRekening: number
+  errorUraian: number
 }
 
 export interface DetailAnggaranKegiatan {
