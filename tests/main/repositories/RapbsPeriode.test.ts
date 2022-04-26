@@ -1,6 +1,10 @@
 import { Rapbs } from 'main/models/Rapbs'
 import { RapbsPeriode } from 'main/models/RapbsPeriode'
-import { GetDetailListRapbs } from 'main/repositories/RapbsPeriode'
+import {
+  GetDetailListRapbs,
+  GetListValidasiReferensiPeriode,
+} from 'main/repositories/RapbsPeriode'
+import { ValidasiReferensiPeriode } from 'main/types/RapbsPeriode'
 import { createConnection, getConnection } from 'typeorm'
 import { cfg, Migrate } from '../migration'
 
@@ -56,4 +60,12 @@ test('GetDetailKegiatan', async () => {
 
   expect(data[0].rekening_belanja[0].bulan[3].total).toBe(3000000)
   expect(data[0].total).toBe(6200000)
+})
+
+test('GetListValidasiReferensiPeriode', async () => {
+  const data = await GetListValidasiReferensiPeriode('apQwiAb-9EWxv74iwMY6aQ')
+  const list = data.unwrapOr(<ValidasiReferensiPeriode[]>[])
+  expect(data.isOk()).toBe(true)
+  expect(list[0].idPeriode).toBe(92)
+  expect(list[0].isValidate).toBe(2)
 })

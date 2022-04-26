@@ -7,8 +7,10 @@ import {
   Bulan,
   BulanDetail,
   RapbsSummary,
-} from 'main/types/RapbsPeriodeDetail'
+  ValidasiReferensiPeriode,
+} from 'main/types/RapbsPeriode'
 import CommonUtils from 'main/utils/CommonUtils'
+import { err, ok, Result } from 'neverthrow'
 import {
   UpdateResult,
   getManager,
@@ -568,4 +570,62 @@ export async function BulkUpsertByRapbsId(
   }
 
   await AddBulkRapbsPeriode(data)
+}
+
+export async function GetListValidasiReferensiPeriode(
+  idAnggaran: string
+): Promise<Result<ValidasiReferensiPeriode[], Error>> {
+  try {
+    const query = `
+    select id_periode as idPeriode, max(validasi_referensi) as isValidate from (
+      select 
+             b.id_rapbs
+             ,rp.id_periode
+             ,case 
+                   when r.expired_date is not null then 1
+                   when rb.expired_date is not null then 2
+                   when rb.id_barang is null and case when b.id_barang = '' then null else b.id_barang end is not null then 2
+                   when rbx.jumlah_barang > 0 and ifnull(b.id_barang,'') = '' and substr(k3.id_kode,4,2) <> '12' then 2
+                   when substr(b.kode_rekening,1,3) = '5.2' and ifnull(b.id_barang,'') = '' then 2
+                   when k3.expired_date is not null then 3
+                   else 0
+             end as validasi_referensi
+      from 
+           rapbs as b     
+           join anggaran as a     
+                on b.id_anggaran = a.id_anggaran
+           join ref_kode as k3 
+                on b.id_ref_kode = k3.id_ref_kode
+           join ref_kode as k2 
+                on k3.parent_kode = k2.id_ref_kode
+           join ref_kode as k1 
+                on k2.parent_kode = k1.id_ref_kode
+           join ref_rekening as r 
+                on b.kode_rekening=r.kode_rekening
+           left join ref_acuan_barang rb     
+                on b.id_barang = rb.id_barang           
+           left join (select kode_rekening,count(1)jumlah_barang from ref_acuan_barang where expired_date is null and kode_rekening is not null group by kode_rekening)rbx     
+                on rbx.kode_rekening = b.kode_rekening
+           join rapbs_periode rp 
+                on rp.id_rapbs = b.id_rapbs
+      where 
+            b.id_anggaran=:id_anggaran
+            and b.soft_delete=0
+      order by 
+           rp.id_periode
+      ) group by id_periode;
+    `
+
+    const entityManager = getManager()
+    const result = await entityManager
+      .query(query, [{ id_anggaran: idAnggaran }])
+      .catch((e) => {
+        console.error('Error when fetching query:', e)
+        return err(new Error(e))
+      })
+
+    return ok(<ValidasiReferensiPeriode[]>result)
+  } catch (error) {
+    return err(new Error(error))
+  }
 }

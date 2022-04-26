@@ -1,0 +1,17 @@
+CREATE TABLE [ref_acuan_barang] (
+  [id_barang] varchar(40) NOT NULL, 
+  [kode_rekening] varchar(20), 
+  [nama_barang] varchar(255) NOT NULL, 
+  [satuan] varchar(30), 
+  [blok_id] varchar(6) NOT NULL, 
+  [kode_belanja] varchar(4), 
+  [harga_barang] numeric, 
+  [batas_bawah] numeric, 
+  [batas_atas] numeric, 
+  [kategori_id] varchar(20), 
+  [hs_code] varchar(20), 
+  [kbki] varchar(20), 
+  [create_date] datetime NOT NULL, 
+  [last_update] datetime NOT NULL, 
+  [expired_date] datetime, 
+  CONSTRAINT [sqlite_autoindex_ref_acuan_barang_1] PRIMARY KEY ([id_barang]));
