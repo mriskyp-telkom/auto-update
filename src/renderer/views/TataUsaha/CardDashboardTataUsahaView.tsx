@@ -48,7 +48,7 @@ const CardBulan: FC<CardBulanProps> = (props: CardBulanProps) => {
     <div
       className={clsx(
         color,
-        'rounded shadow-custom1 py-3 px-5 w-[177px] capitalize-first'
+        'rounded shadow-card py-3 px-5 w-[177px] capitalize-first'
       )}
     >
       <div className="flex justify-center mb-3">

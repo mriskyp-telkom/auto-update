@@ -721,6 +721,14 @@ const FormKertasKerjaView: FC = () => {
                   height={150}
                   name="uraian"
                   placeholder="Apa detail barang atau jasanya? (mis. papan tulis, honor narasumber)"
+                  customNotFound={(query: string) => {
+                    return (
+                      <div className="p-4 bg-gray-5 shadow-inputSearch">
+                        “{query}” tidak ditemukan. Hubungi dinas setempat untuk
+                        menambah barang/jasa ini ke daftar kode barang.
+                      </div>
+                    )
+                  }}
                   defaultValue={formDefaultValue.uraian}
                   errors={errors}
                   register={register}

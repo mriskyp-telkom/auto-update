@@ -32,7 +32,8 @@ module.exports = {
       },
       boxShadow: {
         DEFAULT: 'inset 0px -1px 0px #c9cbcf',
-        custom1: '0px 1px 4px rgba(0, 22, 10, 0.2)',
+        card: '0px 1px 4px rgba(0, 22, 10, 0.2)',
+        inputSearch: 'box-shadow: 0px 8px 20px rgb(37 40 43 / 20%)',
       },
     },
   },
