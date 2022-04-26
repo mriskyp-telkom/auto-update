@@ -1,3 +1,4 @@
+import { ReferensiSatuan } from 'main/types/Referensi'
 import { createQueryBuilder, getRepository, InsertResult } from 'typeorm'
 import { RefSatuan } from '../models/RefSatuan'
 
@@ -13,13 +14,18 @@ export const getRefSatuanLastUpdate = async (): Promise<Date> => {
   }
 }
 
-export const getRefSatuan = async (): Promise<RefSatuan> => {
+export const getRefSatuan = async (): Promise<ReferensiSatuan[]> => {
   try {
-    const data = await createQueryBuilder(RefSatuan, 'rs')
+    return await createQueryBuilder(RefSatuan, 'rs')
+      .select([
+        'ref_satuan_id as id',
+        'satuan',
+        'unit',
+        'created_date AS createDate',
+        'last_update AS lastUpdate',
+      ])
       .where('rs.expired_date is null')
       .getRawMany()
-    const getResult = data as unknown as Promise<RefSatuan>
-    return getResult
   } catch (e) {
     throw new Error(e)
   }
