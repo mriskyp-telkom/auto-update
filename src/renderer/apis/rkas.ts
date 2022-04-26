@@ -14,12 +14,13 @@ import {
   ParamRkasPtkType,
   ParamRkasDetailType,
 } from 'renderer/types/apis/RkasType'
+import { AnyKindOfDictionary } from 'lodash'
 
 export function useAPIRKASSync(
-  params: ParamRkasType,
-  queryOpts?: UseQueryOptions<AxiosResponse>
+  params: ParamRkasType[],
+  queryOpts?: UseQueryOptions<AxiosResponse<any>>
 ) {
-  return useQuery<AxiosResponse>(
+  const result = useQuery<AxiosResponse<any>>(
     ['rkas', params],
     () =>
       api().post(API_POST_RKAS, params, {
@@ -29,13 +30,16 @@ export function useAPIRKASSync(
       }),
     queryOpts
   )
+  //  do not delete this
+  // console.log('rkas axios ', result)
+  return result
 }
 
 export function useAPIRKASPenjabSync(
-  params: ParamRkasPenjabType,
-  queryOpts?: UseQueryOptions<AxiosResponse>
+  params: ParamRkasPenjabType[],
+  queryOpts?: UseQueryOptions<AxiosResponse<any>>
 ) {
-  return useQuery<AxiosResponse>(
+  const result = useQuery<AxiosResponse<any>>(
     ['rkas_penjab', params],
     () =>
       api().post(API_POST_RKAS_PENJAB, params, {
@@ -45,13 +49,16 @@ export function useAPIRKASPenjabSync(
       }),
     queryOpts
   )
+  //  do not delete this
+  // console.log('rkas penjab axios ', result)
+  return result
 }
 
 export function useAPIRKASPtkSync(
-  params: ParamRkasPtkType,
-  queryOpts?: UseQueryOptions<AxiosResponse>
+  params: ParamRkasPtkType[],
+  queryOpts?: UseQueryOptions<AxiosResponse<AnyKindOfDictionary>>
 ) {
-  return useQuery<AxiosResponse>(
+  const result = useQuery<AxiosResponse<any>>(
     ['rkas_ptk', params],
     () =>
       api().post(API_POST_RKAS_PTK, params, {
@@ -61,13 +68,16 @@ export function useAPIRKASPtkSync(
       }),
     queryOpts
   )
+  //  do not delete this
+  // console.log('rkas ptk axios ', result)
+  return result
 }
 
 export function useAPIRKASDetailSync(
-  params: ParamRkasDetailType,
-  queryOpts?: UseQueryOptions<AxiosResponse>
+  params: ParamRkasDetailType[],
+  queryOpts?: UseQueryOptions<AxiosResponse<any>>
 ) {
-  return useQuery<AxiosResponse>(
+  const result = useQuery<AxiosResponse<any>>(
     ['rkas_detail', params],
     () =>
       api().post(API_POST_RKAS_DETAIL, params, {
@@ -77,13 +87,16 @@ export function useAPIRKASDetailSync(
       }),
     queryOpts
   )
+  //  do not delete this
+  // console.log('rkas detail axios ', result)
+  return result
 }
 
 export function useAPIRKASFinalSync(
   params: null,
-  queryOpts?: UseQueryOptions<AxiosResponse>
+  queryOpts?: UseQueryOptions<AxiosResponse<any>>
 ) {
-  return useQuery<AxiosResponse>(
+  const result = useQuery<AxiosResponse<any>>(
     ['rkas_final', params],
     () =>
       api().post(API_POST_RKAS_FINAL, params, {
@@ -93,4 +106,7 @@ export function useAPIRKASFinalSync(
       }),
     queryOpts
   )
+  //  do not delete this
+  // console.log('rkas final axios ', result)
+  return result
 }

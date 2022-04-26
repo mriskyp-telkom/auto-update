@@ -7,8 +7,8 @@ export interface ParamAnggaranType {
   jumlah: number
   sisa_anggaran: number
   is_pengesahan: number
-  tanggal_pengajuan: number
-  tanggal_pengesahan: number
+  tanggal_pengajuan: string
+  tanggal_pengesahan: string
   is_approve: number
   is_revisi: number
   alasan_penolakan: string

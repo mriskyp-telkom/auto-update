@@ -139,6 +139,44 @@ export const GetRapbs = async (idRapbs: string): Promise<Rapbs> => {
   return await getRepository(Rapbs).findOne({ idRapbs: idRapbs })
 }
 
+// one to many
+export const GetRapbsByAnggaranId = async (
+  idAnggaran: string
+): Promise<Rapbs[]> => {
+  const data = await createQueryBuilder(Rapbs, 'r')
+    .select([
+      'r.id_rapbs as idRapbs',
+      'r.sekolah_id as sekolahId',
+      'r.id_anggaran as idAnggaran',
+      'r.id_ref_kode as idRefKode',
+      'r.id_ref_tahun_anggaran as idRefTahunAnggaran',
+      'r.kode_rekening as kodeRekening',
+      'r.id_barang as idBarang',
+      'r.urutan as urutan',
+      'r.uraian as uraian',
+      'r.uraian_text as uraianText',
+      'r.volume as volume',
+      'r.satuan as satuan',
+      'r.harga_satuan as hargaSatuan',
+      'r.jumlah as jumlah',
+      'r.v1 as v1',
+      'r.s1 as s1',
+      'r.v2 as v2',
+      'r.s2 as s2',
+      'r.v3 as v3',
+      'r.s3 as s3',
+      'r.v4 as v4',
+      'r.s4 as s4',
+      'r.keterangan as keterangan',
+      'r.soft_delete as softDelete',
+      'r.updater_id as updaterId',
+    ])
+    .where('r.soft_delete = 0')
+    .andWhere('r.id_anggaran = :idAnggaran', { idAnggaran })
+    .getRawMany()
+  return data
+}
+
 export async function GetLatestUrutan(
   idAnggaran: string,
   idRefKode: string,

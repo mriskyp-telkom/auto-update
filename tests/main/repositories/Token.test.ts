@@ -30,7 +30,7 @@ afterEach(async () => {
 test('CreateToken', async () => {
   const tokenData = new Token()
 
-  tokenData.tokenId = CommonUtils.encodeUUID(CommonUtils.uuid())
+  tokenData.tokenId = CommonUtils.encodeUUIDFromV4()
   tokenData.userroleId = '2idmFXmV9kuKH1qUVOrIdg'
   tokenData.appId = 'CNhMM6obP06_yBqZAw2PZg'
   tokenData.ipaddr = ''

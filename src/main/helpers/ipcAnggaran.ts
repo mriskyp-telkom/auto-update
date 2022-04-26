@@ -10,6 +10,7 @@ import {
   GetTotalAnggaran,
   UpsertAnggaran,
   UpdateIsPengesahan,
+  UpdateTanggalPengajuan,
 } from 'main/repositories/Anggaran'
 import { GetConfig } from 'main/repositories/Config'
 import CommonUtils from 'main/utils/CommonUtils'
@@ -42,7 +43,7 @@ module.exports = {
         id_penjab:
         tahun:
     */
-    const idAnggaran = CommonUtils.encodeUUID(CommonUtils.uuid())
+    const idAnggaran = CommonUtils.encodeUUIDFromV4()
     const dataAnggaran = new Anggaran()
     dataAnggaran.idAnggaran = idAnggaran
     dataAnggaran.idRefSumberDana = data.id_ref_sumber_dana
@@ -100,6 +101,16 @@ module.exports = {
     IPC_ANGGARAN.updateIsPengesahan,
     async (e, idAnggaran, isPengesahan) => {
       e.returnValue = await UpdateIsPengesahan(idAnggaran, isPengesahan)
+    }
+  ),
+
+  UpdateTanggalPengajuan: ipcMain.on(
+    IPC_ANGGARAN.UpdateTanggalPengajuan,
+    async (e, idAnggaran, anggaranTanggalPengajuan) => {
+      e.returnValue = await UpdateTanggalPengajuan(
+        idAnggaran,
+        anggaranTanggalPengajuan
+      )
     }
   ),
 

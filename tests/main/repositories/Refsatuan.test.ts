@@ -34,7 +34,7 @@ afterEach(async () => {
 test('getRefSatuanLastUpdate', async () => {
   const data = await getRefSatuanLastUpdate()
 
-  expect(data).toBe(2020)
+  expect(data).toBeDefined()
 })
 
 test('getRefSatuan', async () => {
@@ -49,8 +49,8 @@ test('addBulkRefSatuan', async () => {
   const dataRefSatuan: RefSatuan[] = []
   dataRefSatuan.push(<RefSatuan>{
     refSatuanId: CommonUtils.encodeUUID(CommonUtils.uuid()),
-    satuan: 'Lembar',
-    unit: 'Lembar',
+    satuan: 'Lembar Test',
+    unit: 'Lembar Test',
     softDelete: 0,
     createDate: now,
     lastUpdate: now,
@@ -59,8 +59,8 @@ test('addBulkRefSatuan', async () => {
 
   dataRefSatuan.push(<RefSatuan>{
     refSatuanId: CommonUtils.encodeUUID(CommonUtils.uuid()),
-    satuan: 'Kegiatan',
-    unit: 'Kegiatan',
+    satuan: 'Kegiatan Test',
+    unit: 'Kegiatan Test',
     softDelete: 0,
     createDate: now,
     lastUpdate: now,

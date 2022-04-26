@@ -1,4 +1,5 @@
 import { RapbsPeriode } from 'main/models/RapbsPeriode'
+import { err, ok, Result } from 'neverthrow'
 import {
   Kegiatan,
   RapbsDetail,
@@ -10,7 +11,6 @@ import {
   ValidasiReferensiPeriode,
 } from 'main/types/RapbsPeriode'
 import CommonUtils from 'main/utils/CommonUtils'
-import { err, ok, Result } from 'neverthrow'
 import {
   UpdateResult,
   getManager,
@@ -557,7 +557,7 @@ export async function BulkUpsertByRapbsId(
 
     const v = mapPeriode.get(periode.idPeriode)
     if (v === undefined) {
-      periode.idRapbsPeriode = CommonUtils.encodeUUID(CommonUtils.uuid())
+      periode.idRapbsPeriode = CommonUtils.encodeUUIDFromV4()
       periode.createDate = now
       periode.lastUpdate = now
     } else {
@@ -570,6 +570,44 @@ export async function BulkUpsertByRapbsId(
   }
 
   await AddBulkRapbsPeriode(data)
+}
+
+export const GetListRapbsPeriodeByListRapbsId = async (
+  listIdRapbs: string[]
+): Promise<Result<RapbsPeriode[], Error>> => {
+  try {
+    const query = createQueryBuilder(RapbsPeriode)
+      .select([
+        'id_rapbs_periode AS idRapbsPeriode',
+        'id_rapbs AS idRapbs',
+        'id_periode AS idPeriode',
+        'volume',
+        'satuan',
+        'harga_satuan AS hargaSatuan',
+        'jumlah',
+        'v1',
+        's1',
+        'v2',
+        's2',
+        'v3',
+        's3',
+        'v4',
+        's4',
+        'create_date AS createDate',
+        'last_update AS lastUpdate',
+        'updater_id AS updaterId',
+      ])
+      .where('soft_delete = 0')
+      .andWhere('id_rapbs IN (:...listIdRapbs)', { listIdRapbs })
+
+    const data = await query.getRawMany()
+    // do not remove this
+    // console.log("query RapbsPeriode ",(await query.getSql()))
+
+    return ok(data)
+  } catch (error) {
+    return err(new Error(error))
+  }
 }
 
 export async function GetListValidasiReferensiPeriode(

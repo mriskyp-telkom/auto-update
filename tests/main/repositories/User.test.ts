@@ -96,7 +96,7 @@ test('GetPenggunaByEmail', async () => {
 })
 
 test('GetPenggunaByToken', async () => {
-  const tokenId = CommonUtils.encodeUUID(CommonUtils.uuid())
+  const tokenId = CommonUtils.encodeUUIDFromV4()
   const data = await GetPenggunaByToken(tokenId)
 
   expect(data).toBe(undefined)

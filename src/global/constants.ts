@@ -111,3 +111,8 @@ export const CONST_ACCOUNT = {
   wLoginByEmailSekolah: 'Masukkan email yang terdaftar di sekolah',
   wDeviceAlreadyUsed: 'Akun anda teridentifikasi pada perangkat lain',
 }
+
+export const STATUS_INVALID_PENGESAHAN = {
+  invalidSisaDana: 2,
+  invalidDataCentral: 3,
+}

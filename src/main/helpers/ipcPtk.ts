@@ -1,5 +1,7 @@
 import { ipcMain } from 'electron'
 import { AddBulkPtk, GetLastUpdate, GetPtk } from 'main/repositories/Ptk'
+
+import { GetRapbsPtkHonor } from 'main/repositories/RapbsPtk'
 import CommonUtils from 'main/utils/CommonUtils'
 import { IPC_PTK } from 'global/ipc'
 import { GetConfig } from 'main/repositories/Config'
@@ -45,4 +47,11 @@ module.exports = {
     const tahunAktif = await GetConfig('tahun_aktif')
     e.returnValue = await GetPtk(parseInt(tahunAktif))
   }),
+
+  GetRapbsPtkHonor: ipcMain.on(
+    IPC_PTK.GetRapbsPtkHonor,
+    async (e, listIdRapbs) => {
+      e.returnValue = await GetRapbsPtkHonor(listIdRapbs)
+    }
+  ),
 }

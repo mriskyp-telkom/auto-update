@@ -28,7 +28,7 @@ export class RefSatuan extends BaseEntity {
   })
   softDelete: number | null
 
-  @Column('datetime', { name: 'created_date' })
+  @Column('datetime', { name: 'create_date' })
   createDate: Date
 
   @Column('datetime', { name: 'last_update' })

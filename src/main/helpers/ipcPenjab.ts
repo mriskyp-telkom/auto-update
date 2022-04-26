@@ -35,7 +35,8 @@ module.exports = {
       dataPenjab.updaterId = data.updater_id
       const idPenjab =
         (await findSekolahPenjabId(dataPenjab)) ??
-        CommonUtils.encodeUUID(CommonUtils.uuid())
+        CommonUtils.encodeUUIDFromV4()
+
       dataPenjab.idPenjab = idPenjab
       await addSekolahPenjab(dataPenjab)
       e.returnValue = idPenjab
