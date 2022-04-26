@@ -13,9 +13,15 @@ table.tableKertasKerja > tbody tr {
   box-shadow: inset 0px -1px 0px #c9cbcf;
 }
 
+@media screen and (min-height: 1024px) {
+  table.tableKertasKerja > tbody {
+    max-height: 420px !important;
+  }
+}
+
 table.tableKertasKerja > tbody {
   overflow-y: scroll;
-  max-height: 260px;
+  max-height: 210px;
   width: 100%;
   display: block;
 }
