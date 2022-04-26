@@ -3,11 +3,8 @@ const { test, expect } = require('@playwright/test');
 
 // add helper
 import { 
-  clickMenuItemById, 
   findLatestBuild, 
-  ipcMainCallFirstListener, 
-  ipcRendererCallFirstListener, 
-  parseElectronApp,
+  parseElectronApp
 } from 'electron-playwright-helpers'
 
 import jimp from 'jimp'
@@ -27,70 +24,47 @@ test.beforeAll(async () => {
     args: [appInfo.main],
     executablePath: appInfo.executable
   })
+
+})
+
+test('input arkas credentials', async () => {
   electronApp.on('window', async (page) => {
+    // debug only
     const filename = page.url()?.split('/').pop()
     console.log(`Window opened: ${filename}`)
 
+    // fill NPSN and Activation code
+    const elementNPSN = await page.$('#npsn');
+    await elementNPSN.type('88888888');
+    await elementNPSN.press('Enter');
+    // or :
+    // await page.click("#npsn")
+    // await page.fill('#npsn', '88888888');
+
+    await page.click("#activation_code")
+    await page.fill('#activation_code', 'loremIpsum');
+
+    await page.click('text=Daftar');
+
+    await expect(page.locator('.Input-module_helper__1kt7W')).toHaveText('NPSN tidak terdaftar di Dapodik. Silakan periksa kembali.');
+
     // capture errors
     page.on('pageerror', (error) => {
-      console.error(error)
+    console.error(error)
     })
     // capture console messages
     page.on('console', (msg) => {
-      console.log(msg.text())
+    console.log(msg.text())
     })
   })
-
+  await sleep(5000)
 })
 
 test.afterAll(async () => {
-  await electronApp.close()
-})
+    await electronApp.close()
+  })
 
-let page: Page
-
+// Please move to helper
 function sleep(m: number): Promise<unknown> {
     return new Promise(r => setTimeout(r, m));
 }
-
-test('renders the first page', async () => {
-  page = await electronApp.firstWindow()
-
-  page.on('console', console.log);
-
-  const filename = page.url()?.split('/').pop()
-  console.log(`Window opened: ${filename}`)
-  await sleep(3000)
-
-  const windowState: {
-    isVisible: boolean;
-    isDevToolsOpened: boolean;
-    isCrashed: boolean;
-  } = await electronApp.evaluate(async ({ BrowserWindow }) => {
-    const mainWindow = BrowserWindow.getAllWindows()[0];
-
-    const getState = () => ({
-      isVisible: mainWindow.isVisible(),
-      isDevToolsOpened: mainWindow.webContents.isDevToolsOpened(),
-      isCrashed: mainWindow.webContents.isCrashed(),
-    });
-
-    return new Promise((resolve) => {
-      if (mainWindow.isVisible()) {
-        resolve(getState());
-      } else {
-        mainWindow.once("ready-to-show", () =>
-          setTimeout(() => resolve(getState()), 0)
-        );
-      }
-    });
-  });
-
-  expect(windowState.isVisible).toBeTruthy();
-  expect(windowState.isDevToolsOpened).toBeFalsy();
-  expect(windowState.isCrashed).toBeFalsy();
-
-  // still not able to interact with UI. #todo
-  const button = await page.$('npsn');
-  await button.click();
-})
