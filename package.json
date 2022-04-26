@@ -4,6 +4,9 @@
   "version": "4.0.0",
   "description": "Aplikasi Rencana Kegiatan dan Anggaran Sekolah, selanjutnya disingkat Aplikasi RKAS merupakan sistem informasi yang memanfaatkan teknologi informasi dan komunikasi untuk mengfasilitasi penganggaran, pelaksanaan dan penatausahaan serta pertanggungjawaban dana bantuan operasional sekolah di satuan pendidikan dasar dan menengah secara nasional.",
   "main": ".webpack/main",
+  "rules": {
+    "no-console": "off"
+  },
   "scripts": {
     "start": "cross-env BUILD=false electron-forge start",
     "package": "cross-env BUILD=true electron-forge package",
@@ -16,7 +19,8 @@
     "format": "prettier --write . ",
     "test": "jest",
     "test-coverage": "jest --coverage",
-    "test:ci": "jest --config ./jest.config.js --collectCoverage --coverageDirectory=\"./coverage\" --ci --reporters=default --reporters=jest-junit --watchAll=false"
+    "test:ci": "jest --config ./jest.config.js --collectCoverage --coverageDirectory=\"./coverage\" --ci --reporters=default --reporters=jest-junit --watchAll=false",
+    "test:playwright": "playwright test"
   },
   "keywords": [],
   "license": "MIT",
@@ -80,6 +84,7 @@
     "@electron-forge/maker-squirrel": "^6.0.0-beta.61",
     "@electron-forge/maker-zip": "^6.0.0-beta.61",
     "@electron-forge/plugin-webpack": "6.0.0-beta.61",
+    "@playwright/test": "^1.21.1",
     "@popperjs/core": "^2.11.2",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^12.1.0",
@@ -92,6 +97,7 @@
     "@typescript-eslint/eslint-plugin": "^4.0.1",
     "@typescript-eslint/parser": "^4.0.1",
     "@vercel/webpack-asset-relocator-loader": "1.7.0",
+    "asar": "^3.1.0",
     "autoprefixer": "^10.4.2",
     "babel-jest": "^27.5.1",
     "check-code-coverage": "^1.10.0",
@@ -101,14 +107,18 @@
     "css-loader": "^6.0.0",
     "dotenv": "^11.0.0",
     "electron": "16.0.6",
+    "electron-playwright-helpers": "^1.0.3",
     "eslint": "^7.6.0",
     "eslint-plugin-import": "^2.20.0",
     "fork-ts-checker-webpack-plugin": "^6.0.1",
     "husky": "^7.0.4",
     "jest": "^27.5.1",
     "jest-junit": "^13.1.0",
+    "jimp": "^0.16.1",
     "lint-staged": ">=10",
     "node-loader": "^2.0.0",
+    "playwright": "^1.18.0",
+    "playwright-core": "^1.18.0",
     "postcss-loader": "^6.2.1",
     "prettier": "2.5.1",
     "style-loader": "^3.0.0",
@@ -157,5 +167,7 @@
     "uuid": "^8.3.2",
     "uuid-base64-ts": "^1.0.2",
     "zustand": "^3.5.10"
-  }
+  },
+  "repository": "git@gitlab.com:wartek-id/sds/arkas-desktop.git",
+  "author": "damarre <damare.ananta@gmail.com>"
 }

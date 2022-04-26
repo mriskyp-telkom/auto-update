@@ -43,3 +43,6 @@ wercker.yml
 
 # misc
 *.md
+
+# playwright
+!@playwright/test/**
