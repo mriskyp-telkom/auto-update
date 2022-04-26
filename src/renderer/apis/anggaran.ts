@@ -4,12 +4,12 @@ import { api } from 'renderer/configs/api'
 import { API_ANGGARAN, API_POST_ANGGARAN } from 'renderer/constants/api'
 import { ParamAnggaranType } from 'renderer/types/apis/AnggaranType'
 
-export function useAPISync(
-  params: ParamAnggaranType,
-  queryOpts?: UseQueryOptions<AxiosResponse>
+export function useAPIAnggaranSync(
+  params: ParamAnggaranType[],
+  queryOpts?: UseQueryOptions<AxiosResponse<any>>
 ) {
-  return useQuery<AxiosResponse>(
-    ['sync', params],
+  const result = useQuery<AxiosResponse<any>>(
+    ['anggaran', params],
     () =>
       api().post(API_POST_ANGGARAN, params, {
         headers: {
@@ -18,6 +18,8 @@ export function useAPISync(
       }),
     queryOpts
   )
+  // console.log('anggaran axios ', result)
+  return result
 }
 
 export function useAPIGetAnggaran(

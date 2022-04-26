@@ -151,6 +151,20 @@ export const UpdateIsPengesahan = async (
     .execute()
 }
 
+export const UpdateTanggalPengajuan = async (
+  idAnggaran: string,
+  anggaranTanggalPengajuan: string
+): Promise<UpdateResult> => {
+  return await createQueryBuilder()
+    .update(Anggaran)
+    .set({
+      tanggalPengajuan: anggaranTanggalPengajuan,
+      lastUpdate: new Date(),
+    })
+    .where('id_anggaran = :idAnggaran', { idAnggaran })
+    .execute()
+}
+
 export const DelAnggaran = async (
   idAnggaran: string
 ): Promise<UpdateResult> => {
@@ -186,7 +200,7 @@ export const CopyAnggaran = async (
   await queryRunner.startTransaction()
 
   try {
-    const idAnggaranNew = CommonUtils.encodeUUID(CommonUtils.uuid())
+    const idAnggaranNew = CommonUtils.encodeUUIDFromV4()
     const dataAnggaran = new Anggaran()
     dataAnggaran.idAnggaran = idAnggaranNew
     dataAnggaran.idRefSumberDana = idRefSumberDana
@@ -255,7 +269,7 @@ export const CopyAnggaran = async (
 
       if (refKode > 0 && refRek > 0 && refBarang > 0) {
         const originalIdRapbs = rapbs.idRapbs
-        idRapbsNew = CommonUtils.encodeUUID(CommonUtils.uuid())
+        idRapbsNew = CommonUtils.encodeUUIDFromV4()
         rapbs.idAnggaran = idAnggaranNew
         rapbs.idRapbs = idRapbsNew
         rapbs.idRefTahunAnggaran = tahun

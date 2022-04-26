@@ -14,6 +14,8 @@
     "resolveJsonModule": true,
     "experimentalDecorators": true,
     "paths": {
+      "crypto": ["node_modules/crypto-js", "./node_modules/crypto-browserify"],
+      "stream": ["node_modules/stream-browserify"],
       "*": ["node_modules/*"],
       "main/*": ["src/main/*"],
       "renderer/*": ["src/renderer/*"],

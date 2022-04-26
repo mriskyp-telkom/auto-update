@@ -5,6 +5,7 @@ export const REFERENSI = 'referensi'
 export const KK = 'kk'
 export const CONFIG = 'config'
 export const SEKOLAH = 'sekolah'
+export const RAPBS = 'rapbs'
 
 export const IPC_ANGGARAN = {
   getAnggaranById: `${ANGGARAN}:getAnggaranById`,
@@ -13,6 +14,7 @@ export const IPC_ANGGARAN = {
   addAnggaran: `${ANGGARAN}:addAnggaran`,
   upsertAnggaran: `${ANGGARAN}:upsertAnggaran`,
   updateIsPengesahan: `${ANGGARAN}:updateIsPengesahan`,
+  UpdateTanggalPengajuan: `${ANGGARAN}:UpdateTanggalPengajuan`,
 }
 
 export const IPC_PENJAB = {
@@ -21,6 +23,7 @@ export const IPC_PENJAB = {
 
 export const IPC_PTK = {
   getPtk: `${PTK}:getPtk`,
+  GetRapbsPtkHonor: `${PTK}:GetRapbsPtkHonor`,
 }
 
 export const IPC_REFERENSI = {
@@ -52,4 +55,9 @@ export const IPC_CONFIG = {
 
 export const IPC_SEKOLAH = {
   getSekolah: `${SEKOLAH}:getSekolah`,
+}
+
+export const IPC_RAPBS = {
+  GetListRapbsPeriodeByListRapbsId: `${RAPBS}:GetListRapbsPeriodeByListRapbsId`,
+  GetRapbsByAnggaranId: `${RAPBS}:GetRapbsByAnggaranId`,
 }

@@ -46,7 +46,7 @@ module.exports = {
   }),
 
   addRapbs: ipcMain.on('kk:addRapbs', async (e, data) => {
-    const idRapbs = CommonUtils.encodeUUID(CommonUtils.uuid())
+    const idRapbs = CommonUtils.encodeUUIDFromV4()
     const dataRapbs = new Rapbs()
     dataRapbs.idRapbs = idRapbs
     dataRapbs.idAnggaran = data.idAnggaran

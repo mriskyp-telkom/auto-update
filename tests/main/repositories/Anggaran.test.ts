@@ -16,6 +16,7 @@ import {
   CopyAnggaran,
   GetTotalAnggaran,
   UpdateIsPengesahan,
+  UpdateTanggalPengajuan,
 } from 'main/repositories/Anggaran'
 import { cfg, Migrate } from '../migration'
 
@@ -55,7 +56,7 @@ test('AddAnggaran', async () => {
     id_penjab: '343',
   }
 
-  const idAnggaran = CommonUtils.encodeUUID(CommonUtils.uuid())
+  const idAnggaran = CommonUtils.encodeUUIDFromV4()
   const dataAnggaran = new Anggaran()
   dataAnggaran.idAnggaran = idAnggaran
   dataAnggaran.idRefSumberDana = data.id_ref_sumber_dana
@@ -226,4 +227,15 @@ test('UpdateIsPengesahan', async () => {
 
   const anggaran = await GetAnggaranById(idAnggaran)
   expect(anggaran.isPengesahan).toBe(3)
+})
+
+test('UpdateTanggalPengajuan', async () => {
+  const idAnggaran = 'ODMMS_baREyJzOtKTDHEdw'
+
+  // date param from renderer, this repositories set by param renderer
+  const anggaran = await UpdateTanggalPengajuan(
+    idAnggaran,
+    '2022-03-16 16:55:09.000'
+  )
+  expect(anggaran.affected).toBe(1)
 })

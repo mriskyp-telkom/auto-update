@@ -39,7 +39,7 @@ export async function AddDetailKegiatan(
   data: DetailKegiatan
 ): Promise<Result<ResultAddDetailKegiatan, Error>> {
   const now = new Date()
-  const idRapbs = CommonUtils.encodeUUID(CommonUtils.uuid())
+  const idRapbs = CommonUtils.encodeUUIDFromV4()
   const idBarang = data.idBarang == '' ? null : data.idBarang
   const penggunaId = await GetPenggunaID()
   const sekolahId = await GetConfig(CONFIG.sekolahId)
