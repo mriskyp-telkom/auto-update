@@ -92,6 +92,7 @@ app.on('ready', async () => {
         require('./main/helpers/ipcReferensiKode')
         require('./main/helpers/ipcReferensiRekening')
         require('./main/helpers/ipcReferensiBarang')
+        require('./main/helpers/ipcReferensiSatuan')
         require('./main/helpers/ipcPengguna')
         require('./main/helpers/ipcSekolah')
         require('./main/helpers/ipcReferensiWilayah')
