@@ -32,9 +32,13 @@ import {
 } from 'renderer/constants/table'
 import {
   ERROR_REQUIRED,
+  HARGA_SATUAN_ERROR_DATA_SENTRAL,
   HARGA_SATUAN_ERROR_LENGTH,
   HARGA_SATUAN_ERROR_LESS_THAN,
   HARGA_SATUAN_ERROR_MORE_THAN,
+  KEGIATAN_ERROR_DATA_SENTRAL,
+  REKENING_BELANJA_ERROR_DATA_SENTRAL,
+  URAIAN_ERROR_DATA_SENTRAL,
 } from 'renderer/constants/errorForm'
 
 import { numberUtils } from '@wartek-id/fe-toolbox'
@@ -475,6 +479,29 @@ const FormKertasKerjaView: FC = () => {
         harga_satuan: false,
         harga_per_month: false,
       })
+
+      if (anggaran.errorKegiatan === 1) {
+        setError('kegiatan', {
+          type: 'manual',
+          message: KEGIATAN_ERROR_DATA_SENTRAL,
+        })
+      }
+      if (anggaran.errorRekening === 1) {
+        setError('rekening_belanja', {
+          type: 'manual',
+          message: REKENING_BELANJA_ERROR_DATA_SENTRAL,
+        })
+      }
+      if (anggaran.errorUraian === 1) {
+        setError('uraian', {
+          type: 'manual',
+          message: URAIAN_ERROR_DATA_SENTRAL,
+        })
+        setError('harga_satuan', {
+          type: 'manual',
+          message: HARGA_SATUAN_ERROR_DATA_SENTRAL,
+        })
+      }
     }
   }, [])
 
