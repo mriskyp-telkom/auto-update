@@ -166,7 +166,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
     if (response === RESPONSE_PENGESAHAN.success) {
       closeModal()
     } else {
-      navigate(`/anggaran/menyusun/update/${q_id_anggaran}`)
+      navigate(`/anggaran/menyusun/update/${encodeURIComponent(q_id_anggaran)}`)
     }
   }
 
