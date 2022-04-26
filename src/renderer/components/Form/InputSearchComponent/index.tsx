@@ -97,11 +97,13 @@ const InputSearchComponent: FC<InputSearchProps> = (
 
   const handleClick = (event: any) => {
     const id = event.target.dataset.id
-    const fieldShow = filter(props.headers, ['show', true])[0].key
-    const value = filter(props.dataOptions, ['id', parseInt(id) || id])[0][
-      fieldShow
-    ]
+    const value = event.target.dataset.value
     handleSendData(id, name, value, defaultValue)
+  }
+
+  const getValueDisplay = (data: any) => {
+    const fieldShow = filter(props.headers, ['show', true])[0].key
+    return data[fieldShow]
   }
 
   const handleSendData = (
@@ -199,6 +201,7 @@ const InputSearchComponent: FC<InputSearchProps> = (
                       __html: makeBold(data[header.key]),
                     }}
                     data-id={data.id}
+                    data-value={getValueDisplay(data)}
                     style={{ width: header.width }}
                   ></td>
                 ))}

@@ -104,7 +104,7 @@ const TabelMenyusunKertasKerjaView: FC<TabelMenyusunKertasKerjaProps> = (
           ))}
         </tr>
       </thead>
-      <tbody>
+      <tbody className="scrollBar overflow-y-scroll">
         {data.map((row, indexRow) => {
           return (
             <tr
