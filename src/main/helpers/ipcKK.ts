@@ -12,6 +12,7 @@ import {
   GetRapbsPeriode,
   GetDetailListRapbs,
   GetRapbsSummary,
+  GetListValidasiReferensiPeriode,
 } from 'main/repositories/RapbsPeriode'
 import CommonUtils from 'main/utils/CommonUtils'
 import { IPC_KK } from 'global/ipc'
@@ -193,4 +194,11 @@ module.exports = {
       e.returnValue = null
     }
   }),
+
+  getListValidasiReferensiPeriode: ipcMain.on(
+    IPC_KK.getListValidasiReferensiPeriode,
+    async (e, idAnggaran) => {
+      e.returnValue = await GetListValidasiReferensiPeriode(idAnggaran)
+    }
+  ),
 }

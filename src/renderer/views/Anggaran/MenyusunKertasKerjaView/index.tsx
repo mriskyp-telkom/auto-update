@@ -49,6 +49,7 @@ const MenyusunKertasKerjaView: FC = () => {
   const [idAnggaran, setIdAnggaran] = useState(null)
   const [lastUpdate, setLastUpdate] = useState(null)
   const [anggaranDetail, setAnggaranDetail] = useState(null)
+  const [validasiFlagPeriode, setvalidasiFlagPeriode] = useState(new Map())
 
   const alertMengulas = useAnggaranStore(
     (state: AnggaranStates) => state.alertMengulas
@@ -228,6 +229,35 @@ const MenyusunKertasKerjaView: FC = () => {
     }
   }, [tahunAktif, idAnggaranBefore, penggunaId])
 
+  useEffect(() => {
+    if (q_id_anggaran !== '') {
+      const res = syncToIPCMain(
+        IPC_KK.getListValidasiReferensiPeriode,
+        decodeURIComponent(q_id_anggaran)
+      )
+      const m = new Map()
+      if (res?.error) {
+        // TODO: should display error modal
+      } else {
+        if (res?.value) {
+          for (const v of res.value) {
+            m.set(v.idPeriode, v.isValidate)
+            setvalidasiFlagPeriode(m)
+          }
+        }
+      }
+    }
+  }, [])
+
+  const checkFlag = (id: number): boolean => {
+    const v = validasiFlagPeriode.get(id)
+    if (v !== undefined && v > 0) {
+      return true
+    }
+
+    return false
+  }
+
   return (
     <div>
       <div className="flex justify-between pt-10 pb-5 px-10 bg-gray-0">
@@ -356,7 +386,14 @@ const MenyusunKertasKerjaView: FC = () => {
           <div className="shadow pt-[14px]">
             <TabList style={{ marginLeft: 0 }}>
               {DATA_BULAN.map((bulan) => (
-                <Tab key={bulan.id} className="capitalize-first">
+                <Tab
+                  key={bulan.id}
+                  className={
+                    checkFlag(bulan.id)
+                      ? 'capitalize-first text-red-600'
+                      : 'capitalize-first'
+                  }
+                >
                   {bulan.name}
                 </Tab>
               ))}

@@ -84,3 +84,8 @@ export interface BulanDetail {
   jumlah: number
   total: number
 }
+
+export interface ValidasiReferensiPeriode {
+  idPeriode: number
+  isValidate: number
+}

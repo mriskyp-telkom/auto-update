@@ -42,6 +42,7 @@ export const IPC_KK = {
   getRapbsLastUpdate: `${KK}:getRapbsLastUpdate`,
   getRapbsSummary: `${KK}:getRapbsSummary`,
   deleteRapbs: `${KK}:deleteRapbs`,
+  getListValidasiReferensiPeriode: `${KK}:getListValidasiReferensiPeriode`,
 }
 
 export const IPC_CONFIG = {
