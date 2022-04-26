@@ -27,7 +27,6 @@ import {
   headerUraian,
   headerPtk,
   headerSatuan,
-  optionsSatuan,
   headerHarga,
 } from 'renderer/constants/table'
 import {
@@ -112,10 +111,12 @@ const FormKertasKerjaView: FC = () => {
   const [optionsRekening, setOptionsRekening] = useState([])
   const [optionsUraian, setOptionsUraian] = useState([])
   const [optionsHarga, setOptionsHarga] = useState([])
+  const [optionsSatuan, setOptionsSatuan] = useState([])
 
   const [selectedKegiatan, setSelectedKegiatan] = useState(null)
   const [selectedRekening, setSelectedRekening] = useState(null)
   const [selectedUraian, setSelectedUraian] = useState(null)
+  const [selectedSatuan, setSelectedSatuan] = useState(null)
 
   const setTempDetailKertasKerja = useAnggaranStore(
     (state: AnggaranStates) => state.setTempDetailKertasKerja
@@ -171,6 +172,7 @@ const FormKertasKerjaView: FC = () => {
     const volume = anggaranBulan.reduce((accumulator, bulan) => {
       return accumulator + parseInt(bulan.jumlah.toString())
     }, 0)
+
     data.idAnggaran = idAnggaran
     data.idRefTahunAnggaran = anggaran.tahunAnggaran
     data.idRefKode = selectedKegiatan.id
@@ -185,6 +187,7 @@ const FormKertasKerjaView: FC = () => {
         .replace(/[^,\d]/g, '')
         .toString()
     )
+
     data.volume = volume
     data.jumlah = volume * data.hargaSatuan
     if (selectedKegiatan?.flag_honor === 1) {
@@ -193,7 +196,8 @@ const FormKertasKerjaView: FC = () => {
       ptk.nama = selectedUraian.uraian
       data.ptk = ptk
     }
-    data.satuan = anggaranBulan[0].satuan
+
+    data.satuan = selectedSatuan?.satuan
     data.periode = []
     anggaranBulan.forEach((bulan) => {
       const periode = {} as Periode
@@ -202,7 +206,7 @@ const FormKertasKerjaView: FC = () => {
       periode.idPeriode = bulan.id_bulan
       periode.volume = jumlah
       periode.jumlah = jumlah * data.hargaSatuan
-      periode.satuan = bulan.satuan
+      periode.satuan = selectedSatuan?.satuan
       data.periode.push(periode)
     })
     return data
@@ -319,6 +323,8 @@ const FormKertasKerjaView: FC = () => {
       })
     }
     if (data.name === 'anggaran_bulan.0.satuan') {
+      const satuanData = optionsSatuan.find((k: any) => k.id === data.id)
+      setSelectedSatuan(satuanData)
       fields.map((field, index) => {
         if (index !== 0) {
           setValue(`anggaran_bulan.${index}.satuan`, data.value)
@@ -415,8 +421,10 @@ const FormKertasKerjaView: FC = () => {
   useEffect(() => {
     const kegiatan = ipcRenderer.sendSync(IPC_REFERENSI.getRefKode)
     const rekening = ipcRenderer.sendSync(IPC_REFERENSI.getRefRekening)
+    const satuan = ipcRenderer.sendSync(IPC_REFERENSI.getRefSatuan)
     setOptionsKegiatan(kegiatan)
     setOptionsRekening(rekening)
+    setOptionsSatuan(satuan)
 
     if (q_mode === 'update') {
       const idRapbs = decodeURIComponent(q_id_rapbs)
@@ -449,13 +457,16 @@ const FormKertasKerjaView: FC = () => {
       uraian.uraian = anggaran.uraian
       setSelectedUraian(uraian)
 
+      const satuanData = satuan.find((k: any) => k.satuan === anggaran.satuan)
+      setSelectedSatuan(satuanData)
+
       const anggaran_bulan: AnggaranBulanData[] = []
       periode.map((per: any) => {
         const idx = DATA_BULAN.findIndex((b) => b.id == per.periode)
         anggaran_bulan.push({
           id_bulan: per.periode,
           jumlah: per.jumlah,
-          satuan: per.satuan,
+          satuan: satuanData?.unit,
           bulan: DATA_BULAN[idx].name,
         })
       })
