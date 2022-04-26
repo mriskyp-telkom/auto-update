@@ -113,16 +113,16 @@ const SyncCekStatusKKView: FC = () => {
 
   const handleBtnSubmitAlert = () => {
     if (statusKK === RESPONSE_CEK_STATUS.in_progress) {
-      navigate(`mengulas/${q_id_anggaran}`)
+      navigate(`/anggaran/mengulas/${encodeURIComponent(q_id_anggaran)}`)
     }
     if (statusKK === RESPONSE_CEK_STATUS.declined) {
-      navigate(`menyusun/update/${q_id_anggaran}`)
+      navigate(`/anggaran/menyusun/update/${encodeURIComponent(q_id_anggaran)}`)
     }
   }
 
   const handleBtnCancelAlert = () => {
     if (statusKK === RESPONSE_CEK_STATUS.approved) {
-      navigate(`mengulas/${q_id_anggaran}`)
+      navigate(`/anggaran/mengulas/${encodeURIComponent(q_id_anggaran)}`)
     }
     closeModal()
   }

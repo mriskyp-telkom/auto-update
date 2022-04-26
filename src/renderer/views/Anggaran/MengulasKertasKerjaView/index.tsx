@@ -64,9 +64,13 @@ const MengulasKertasKerjaView: FC = () => {
     navigate('/anggaran')
   }
 
+  const handleBtnEdit = () => {
+    navigate(`/anggaran/menyusun/update/${encodeURIComponent(q_id_anggaran)}`)
+  }
+
   const handleAjukanPengesahan = () => {
     setOpenModalAjukan(false)
-    navigate(`/sync/anggaran/mengulas/${q_id_anggaran}`, {
+    navigate(`/sync/anggaran/mengulas/${encodeURIComponent(q_id_anggaran)}`, {
       state: { backgroundLocation: location },
     })
   }
@@ -180,9 +184,15 @@ const MengulasKertasKerjaView: FC = () => {
         <span>
           {getPanduan()}
           <div className="flex justify-end pt-5 pb-3">
-            <ButtonCariComponent />
+            {false && <ButtonCariComponent />}
             {responseMengulas === null && (
-              <Button color="white" size="md" variant="solid" className="mr-3">
+              <Button
+                color="white"
+                size="md"
+                variant="solid"
+                className="mr-3"
+                onClick={handleBtnEdit}
+              >
                 <Icon
                   as="i"
                   color="default"
