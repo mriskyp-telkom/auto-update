@@ -130,6 +130,13 @@ const MengulasKertasKerjaView: FC = () => {
     setModeMengulas(value)
   }
 
+  const handleSubmit = () => {
+    setAlertMengulas(false)
+    if (responseMengulas === RESPONSE_PENGESAHAN.success) {
+      navigate('/anggaran')
+    }
+  }
+
   return (
     <div>
       <div className="flex justify-between pt-10 pb-4 px-10 bg-gray-0">
@@ -328,7 +335,7 @@ const MengulasKertasKerjaView: FC = () => {
           btnCancelText={ALERT_MENGULAS[responseMengulas].btnCancelText}
           btnActionText={ALERT_MENGULAS[responseMengulas].btnActionText}
           onCancel={() => setAlertMengulas(false)}
-          onSubmit={() => setAlertMengulas(false)}
+          onSubmit={handleSubmit}
         />
       )}
     </div>
