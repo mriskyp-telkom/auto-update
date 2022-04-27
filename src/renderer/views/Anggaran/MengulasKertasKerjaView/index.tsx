@@ -39,10 +39,12 @@ const MengulasKertasKerjaView: FC = () => {
 
   const { q_id_anggaran } = useParams()
   const idAnggaran = decodeURIComponent(q_id_anggaran)
+
   const [openModalAjukan, setOpenModalAjukan] = useState(false)
   const [modeMengulas, setModeMengulas] = useState(MODE_MENGULAS.tahap)
   const [tahap, setTahap] = useState(1)
   const [anggaran, setAnggaran] = useState(0)
+  const [detailAnggaran, setDetailAnggaran] = useState(null)
   const [totalAnggaran, setTotalAnggaran] = useState(0)
   const [sisaDana, setSisaDana] = useState(0)
   const [tahun, setTahun] = useState(null)
@@ -78,9 +80,11 @@ const MengulasKertasKerjaView: FC = () => {
 
   useEffect(() => {
     const pagu = syncToIPCMain(IPC_ANGGARAN.getPagu, idAnggaran)
+    const dataAnggaran = syncToIPCMain(IPC_ANGGARAN.getAnggaranById, idAnggaran)
     setSisaDana(pagu?.sisa)
     setTotalAnggaran(pagu?.total)
     setTahun(pagu.tahun_anggaran)
+    setDetailAnggaran(dataAnggaran)
   }, [])
 
   useEffect(() => {
@@ -107,23 +111,32 @@ const MengulasKertasKerjaView: FC = () => {
   }
 
   const getPanduan = () => {
-    const dataAnggaran = syncToIPCMain(IPC_ANGGARAN.getAnggaranById, idAnggaran)
-    if (dataAnggaran.status === STATUS_KERTAS_KERJA.draft) {
+    if (detailAnggaran?.status === STATUS_KERTAS_KERJA.draft) {
       return <PanduanMengulasKKView />
     }
-    if (dataAnggaran.status === STATUS_KERTAS_KERJA.waiting_approval) {
+    if (detailAnggaran?.status === STATUS_KERTAS_KERJA.waiting_approval) {
       return (
         <PanduanCekStatusKKView
           tanggalPengajuan={formatDateToString(
-            dataAnggaran.tanggalPengajuan,
+            detailAnggaran?.tanggalPengajuan,
             'DD/MM/YYYY'
           )}
         />
       )
     }
-    if (dataAnggaran.status === STATUS_KERTAS_KERJA.approved) {
+    if (detailAnggaran?.status === STATUS_KERTAS_KERJA.approved) {
       return <PanduanSuccessPengesahanKKView />
     }
+  }
+
+  const showButtonEdit = () => {
+    if (detailAnggaran?.status === STATUS_KERTAS_KERJA.draft) {
+      return true
+    }
+    if (detailAnggaran?.status === STATUS_KERTAS_KERJA.not_approved) {
+      return true
+    }
+    return false
   }
 
   const handleChangeMode = (value: string) => {
@@ -200,7 +213,7 @@ const MengulasKertasKerjaView: FC = () => {
           {getPanduan()}
           <div className="flex justify-end pt-5 pb-3">
             {false && <ButtonCariComponent />}
-            {responseMengulas === null && (
+            {showButtonEdit() && (
               <Button
                 color="white"
                 size="md"
