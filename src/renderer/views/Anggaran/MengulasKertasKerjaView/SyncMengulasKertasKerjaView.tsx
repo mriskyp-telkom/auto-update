@@ -573,6 +573,14 @@ const SyncMengulasKertasKerjaView: FC = () => {
     }
   }
 
+  const failedSyncData = () => {
+    const response = RESPONSE_PENGESAHAN.failed_sync_data as ResponseMengulas
+    directPage(response)
+    setResponseMengulas(response)
+    removeCacheSyncData()
+    setAlertMengulas(true)
+  }
+
   // use renderer when reading from sql lite
   const checkSisaDana = () => {
     const pagu = ipcRenderer.sendSync(IPC_ANGGARAN.getPagu, idAnggaran)
@@ -596,9 +604,12 @@ const SyncMengulasKertasKerjaView: FC = () => {
   useEffect(() => {
     if (!isFirstSyncStep) {
       if (isSuccessStepApi && infoSyncConnection) {
-        // valid step sync api info connection flow
-        if (syncInfoConnectionSuccess && !syncTokenSuccess) {
-          setApiSync(stepSyncApi[1])
+        if (Number(infoSyncConnection.data) === 1) {
+          if (syncInfoConnectionSuccess && !syncTokenSuccess) {
+            setApiSync(stepSyncApi[1])
+          }
+        } else {
+          failedSyncData()
         }
       }
     }
@@ -669,25 +680,26 @@ const SyncMengulasKertasKerjaView: FC = () => {
     if (isSuccessStepApi && syncAnggaranSuccess && !isSuccessSyncAnggaran) {
       if (dataSyncAnggaran !== undefined) {
         setFlagSyncAnggaran(true)
+        if (Number(dataSyncAnggaran.data) === 1) {
+          const penjabData = ipcRenderer.sendSync(
+            IPC_PENJAB.getPenjabById,
+            syncIdPenjab
+          )
 
-        const penjabData = ipcRenderer.sendSync(
-          IPC_PENJAB.getPenjabById,
-          syncIdPenjab
-        )
+          if (penjabData !== undefined && penjabData !== null) {
+            const param: ParamRkasPenjabType[] = []
+            const rkasPenjabParam = SetterRkasPenjabParam(penjabData)
+            param.push(rkasPenjabParam)
 
-        if (penjabData !== undefined && penjabData !== null) {
-          const param: ParamRkasPenjabType[] = []
-          const rkasPenjabParam = SetterRkasPenjabParam(penjabData)
-          param.push(rkasPenjabParam)
-
-          setListSyncRkasPenjab(param)
-          setApiSync(stepSyncApi[4])
+            setListSyncRkasPenjab(param)
+            setApiSync(stepSyncApi[4])
+          } else {
+            // if found undefined
+            setFlagFoundUndefinedStepApi(true)
+          }
         } else {
-          // if found undefined
-          setFlagFoundUndefinedStepApi(true)
+          failedSyncData()
         }
-      } else {
-        //TODO display error
       }
     }
   }, [
@@ -732,7 +744,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
             }
           }
         } else {
-          //TODO display error sync
+          failedSyncData()
         }
       } else {
         // if found undefined
@@ -750,21 +762,27 @@ const SyncMengulasKertasKerjaView: FC = () => {
         setFlagRkas(true)
 
         if (dataSyncRkas !== null) {
-          const rapbsDetailData = ipcRenderer.sendSync(
-            IPC_RAPBS.GetListRapbsPeriodeByListRapbsId,
-            syncListIdRapbs
-          )
-
-          if (rapbsDetailData !== undefined && rapbsDetailData.value != null) {
-            const rkasDetailParam = MapperRkasDetailParam(rapbsDetailData.value)
-            setListSyncRkasDetail(rkasDetailParam)
-            if (syncRkasSuccess && !syncRkasDetailSuccess) {
-              setApiSync(stepSyncApi[6])
+          if (dataSyncRkas.data === 1) {
+            const rapbsDetailData = ipcRenderer.sendSync(
+              IPC_RAPBS.GetListRapbsPeriodeByListRapbsId,
+              syncListIdRapbs
+            )
+            if (
+              rapbsDetailData !== undefined &&
+              rapbsDetailData.value != null
+            ) {
+              const rkasDetailParam = MapperRkasDetailParam(
+                rapbsDetailData.value
+              )
+              setListSyncRkasDetail(rkasDetailParam)
+              if (syncRkasSuccess && !syncRkasDetailSuccess) {
+                setApiSync(stepSyncApi[6])
+              }
+            } else {
+              setFlagFoundUndefinedStepApi(true)
             }
           } else {
-            // if found undefined
-
-            setFlagFoundUndefinedStepApi(true)
+            failedSyncData()
           }
         }
       } else {
@@ -789,21 +807,25 @@ const SyncMengulasKertasKerjaView: FC = () => {
         if (dataSyncRkasDetail !== null) {
           // get rapbs ptk
           // neverthrow
-          const rapbsPtkData = ipcRenderer.sendSync(
-            IPC_PTK.GetRapbsPtkHonor,
-            syncListIdRapbs
-          )
+          if (dataSyncRkasDetail.data === 1) {
+            const rapbsPtkData = ipcRenderer.sendSync(
+              IPC_PTK.GetRapbsPtkHonor,
+              syncListIdRapbs
+            )
 
-          if (rapbsPtkData !== undefined && rapbsPtkData.value != null) {
-            const rkasPtkParam = MapperRkasPtkParam(rapbsPtkData.value)
+            if (rapbsPtkData !== undefined && rapbsPtkData.value != null) {
+              const rkasPtkParam = MapperRkasPtkParam(rapbsPtkData.value)
 
-            setListSyncRkasPtk(rkasPtkParam)
-            if (syncRkasDetailSuccess && !syncRkasPtkSuccess) {
-              setApiSync(stepSyncApi[7])
+              setListSyncRkasPtk(rkasPtkParam)
+              if (syncRkasDetailSuccess && !syncRkasPtkSuccess) {
+                setApiSync(stepSyncApi[7])
+              }
+            } else {
+              // if found undefined
+              setFlagFoundUndefinedStepApi(true)
             }
           } else {
-            // if found undefined
-            setFlagFoundUndefinedStepApi(true)
+            failedSyncData()
           }
         }
       } else {
@@ -832,9 +854,12 @@ const SyncMengulasKertasKerjaView: FC = () => {
       if (dataSyncRkasPtk !== undefined) {
         if (dataSyncRkasPtk !== null) {
           setFlagRkasPtk(true)
-
-          if (!syncRkasFinalSuccess) {
-            setApiSync(stepSyncApi[8])
+          if (dataSyncRkasPtk?.data === 1) {
+            if (!syncRkasFinalSuccess) {
+              setApiSync(stepSyncApi[8])
+            }
+          } else {
+            failedSyncData()
           }
         } else {
           // if found rkas ptk no response
@@ -1090,12 +1115,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
           directPage(response)
           setAlertMengulas(true)
         } else {
-          const response =
-            RESPONSE_PENGESAHAN.failed_sync_data as ResponseMengulas
-          directPage(response)
-          setResponseMengulas(response)
-          removeCacheSyncData()
-          setAlertMengulas(true)
+          failedSyncData()
         }
       }
     }
@@ -1163,7 +1183,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
         }
         const res = ipcRenderer.sendSync(
           IPC_KK.getListValidasiReferensiPeriode,
-          decodeURIComponent(idAnggaran)
+          idAnggaran
         )
         let isErrorDataSentral = false
 
@@ -1171,6 +1191,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
           const data = res.value.filter((r: any) => r.isValidate > 0)
           isErrorDataSentral = data.length > 0
         }
+
         if (isErrorDataSentral) {
           ipcRenderer.sendSync(
             IPC_ANGGARAN.updateIsPengesahan,

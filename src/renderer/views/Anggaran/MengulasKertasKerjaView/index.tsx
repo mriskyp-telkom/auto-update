@@ -31,6 +31,7 @@ import syncToIPCMain from 'renderer/configs/ipc'
 
 import { AlertType } from 'renderer/types/ComponentType'
 import { IPC_ANGGARAN } from 'global/ipc'
+import { formatDateToString } from 'renderer/utils/date-formatting'
 
 const MengulasKertasKerjaView: FC = () => {
   const location = useLocation()
@@ -111,7 +112,14 @@ const MengulasKertasKerjaView: FC = () => {
       return <PanduanMengulasKKView />
     }
     if (dataAnggaran.status === STATUS_KERTAS_KERJA.waiting_approval) {
-      return <PanduanCekStatusKKView />
+      return (
+        <PanduanCekStatusKKView
+          tanggalPengajuan={formatDateToString(
+            dataAnggaran.tanggalPengajuan,
+            'DD/MM/YYYY'
+          )}
+        />
+      )
     }
     if (dataAnggaran.status === STATUS_KERTAS_KERJA.approved) {
       return <PanduanSuccessPengesahanKKView />
