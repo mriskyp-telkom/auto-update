@@ -37,9 +37,9 @@ export const HARGA_SATUAN_ERROR_MORE_THAN = 'Harga melebihi batas atas SSH'
 
 /* Data Sentral */
 export const KEGIATAN_ERROR_DATA_SENTRAL =
-  'Referensi daftar kegiatan berubah. Silakan pilih ulang.'
+  'Daftar kegiatan berubah. Silakan pilih ulang.'
 export const REKENING_BELANJA_ERROR_DATA_SENTRAL =
-  'Referensi daftar rekening belanja berubah. Silakan pilih ulang.'
+  'Daftar rekening belanja berubah. Silakan pilih ulang.'
 export const URAIAN_ERROR_DATA_SENTRAL =
   'Referensi daftar barang/jasa berubah. Silakan pilih ulang.'
 export const HARGA_SATUAN_ERROR_DATA_SENTRAL =
