@@ -182,9 +182,7 @@ export async function GetDetailKegiatan(
 ): Promise<Result<DetailAnggaranKegiatan, Error>> {
   const rapbs = await GetOneRapbsBulan(idRapbs)
   if (rapbs.isErr()) {
-    rapbs.mapErr((e) => {
-      return err(e)
-    })
+    return err(rapbs.error)
   }
 
   const rapbsPeriode = await GetManyRapbsPeriode(idRapbs)

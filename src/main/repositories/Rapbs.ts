@@ -1,6 +1,5 @@
 import { ERROR } from 'global/constants'
 import { Rapbs } from 'main/models/Rapbs'
-import { RefAcuanBarang } from 'main/models/RefAcuanBarang'
 import { AnggaranKegiatan } from 'main/types/Anggaran'
 import { err, ok, Result } from 'neverthrow'
 import {
@@ -25,7 +24,7 @@ export const GetRapbsBulan = async (
         'rr.rekening as rekeningBelanja',
         'r.uraian_text as uraian',
         'rp.volume as jumlah',
-        'rp.satuan as satuan',
+        'case when rs.unit is not null then rs.unit else rp.satuan end as satuan',
         'rp.harga_satuan as hargaSatuan',
         'rp.jumlah as total',
         "case when substr(rk2.id_kode,4,2) = '12' then 1 else 0 end as isHonor",
@@ -50,13 +49,14 @@ export const GetRapbsBulan = async (
         (qb) =>
           qb
             .select(['kode_rekening', 'count(1) as jumlah_barang'])
-            .from(RefAcuanBarang, 'r')
+            .from('ref_acuan_barang', 'r')
             .where('expired_date is null')
             .andWhere('kode_rekening is not null')
             .groupBy('kode_rekening'),
         'rbx',
         'rbx.kode_rekening = r.kode_rekening '
       )
+      .leftJoin('ref_satuan', 'rs', 'rp.satuan = rs.satuan')
       .where(
         ' r.soft_delete = 0' +
           ' AND rp.soft_delete = 0' +
@@ -85,7 +85,7 @@ export const GetOneRapbsBulan = async (
         'rr.rekening as rekeningBelanja',
         'r.uraian_text as uraian',
         'rp.volume as jumlah',
-        'rp.satuan as satuan',
+        'case when rs.unit is not null then rs.unit else rp.satuan end as satuan',
         'rp.harga_satuan as hargaSatuan',
         'rp.jumlah as total',
         "case when substr(rk2.id_kode,4,2) = '12' then 1 else 0 end as isHonor",
@@ -113,13 +113,14 @@ export const GetOneRapbsBulan = async (
         (qb) =>
           qb
             .select(['kode_rekening', 'count(1) as jumlah_barang'])
-            .from(RefAcuanBarang, 'r')
+            .from('ref_acuan_barang', 'r')
             .where('expired_date is null')
             .andWhere('kode_rekening is not null')
             .groupBy('kode_rekening'),
         'rbx',
         'rbx.kode_rekening = r.kode_rekening '
       )
+      .leftJoin('ref_satuan', 'rs', 'rp.satuan = rs.satuan')
       .where(
         ' r.soft_delete = 0' +
           ' AND rp.soft_delete = 0' +
