@@ -21,7 +21,7 @@ export const getRefSatuan = async (): Promise<ReferensiSatuan[]> => {
         'ref_satuan_id as id',
         'satuan',
         'unit',
-        'created_date AS createDate',
+        'create_date AS createDate',
         'last_update AS lastUpdate',
       ])
       .where('rs.expired_date is null')
