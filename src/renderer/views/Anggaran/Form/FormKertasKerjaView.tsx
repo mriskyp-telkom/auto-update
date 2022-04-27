@@ -459,7 +459,15 @@ const FormKertasKerjaView: FC = () => {
       uraian.uraian = anggaran.uraian
       setSelectedUraian(uraian)
 
-      const satuanData = satuan.find((k: any) => k.satuan === anggaran.satuan)
+      let satuanData = satuan.find((k: any) => k.satuan === anggaran.satuan)
+      //case when satuan is not from ref_satuan table
+      if (satuanData == null) {
+        satuanData = {
+          satuan: anggaran.satuan,
+          unit: anggaran.satuan,
+        }
+      }
+
       setSelectedSatuan(satuanData)
 
       const anggaran_bulan: AnggaranBulanData[] = []
