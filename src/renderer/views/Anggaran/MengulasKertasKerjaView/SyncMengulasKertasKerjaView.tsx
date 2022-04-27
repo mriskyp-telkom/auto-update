@@ -45,7 +45,13 @@ import { RESPONSE_PENGESAHAN } from 'renderer/constants/anggaran'
 
 import { ResponseMengulas } from 'renderer/types/AnggaranType'
 
-import { IPC_ANGGARAN, IPC_PENJAB, IPC_PTK, IPC_RAPBS } from 'global/ipc'
+import {
+  IPC_ANGGARAN,
+  IPC_KK,
+  IPC_PENJAB,
+  IPC_PTK,
+  IPC_RAPBS,
+} from 'global/ipc'
 
 import { STATUS_INVALID_PENGESAHAN } from 'global/constants'
 
@@ -1155,22 +1161,35 @@ const SyncMengulasKertasKerjaView: FC = () => {
             dataRefBarang?.data
           )
         }
-
-        // update is pengesahan status
-        ipcRenderer.sendSync(
-          IPC_ANGGARAN.updateIsPengesahan,
-          idAnggaran,
-          STATUS_INVALID_PENGESAHAN.invalidDataCentral
+        const res = ipcRenderer.sendSync(
+          IPC_KK.getListValidasiReferensiPeriode,
+          decodeURIComponent(idAnggaran)
         )
+        let isErrorDataSentral = false
 
-        // hit api referensi, check if resp is not empty, then show dialog
-        //failed step data flow before step sync api
-        const response =
-          RESPONSE_PENGESAHAN.error_data_sentral as ResponseMengulas
-        directPage(response)
-        setResponseMengulas(response)
-        removeCacheData()
-        setAlertMengulas(true)
+        if (res?.value != null && res?.value.length > 0) {
+          const data = res.value.filter((r: any) => r.isValidate > 0)
+          isErrorDataSentral = data.length > 0
+        }
+        if (isErrorDataSentral) {
+          ipcRenderer.sendSync(
+            IPC_ANGGARAN.updateIsPengesahan,
+            idAnggaran,
+            STATUS_INVALID_PENGESAHAN.invalidDataCentral
+          )
+
+          const response =
+            RESPONSE_PENGESAHAN.error_data_sentral as ResponseMengulas
+          directPage(response)
+          setResponseMengulas(response)
+          removeCacheData()
+          setAlertMengulas(true)
+        } else {
+          removeToken()
+          setIsSuccessStepApi(true)
+          setPercentageValidate(1)
+          setApiSync(stepSyncApi[0])
+        }
       } else if (
         // undefined all
         !isDefinedRefKode &&
