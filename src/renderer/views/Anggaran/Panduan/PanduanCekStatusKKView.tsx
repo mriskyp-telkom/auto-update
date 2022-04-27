@@ -5,7 +5,12 @@ import CardPanduanAnggaranView from 'renderer/views/Anggaran/CardPanduanAnggaran
 import { Button } from '@wartek-id/button'
 import { Icon } from '@wartek-id/icon'
 
-const PanduanCekStatusKKView: FC = () => {
+export interface PanduanCekStatusProps {
+  tanggalPengajuan: string
+}
+const PanduanCekStatusKKView: FC<PanduanCekStatusProps> = (
+  props: PanduanCekStatusProps
+) => {
   return (
     <CardPanduanAnggaranView type="warning">
       <>
@@ -21,7 +26,7 @@ const PanduanCekStatusKKView: FC = () => {
           </Icon>
           Menunggu Pengesahan
           <span className="text-tiny font-normal text-red-600 ml-3">
-            Tanggal pengajuan: 09/11/2021
+            Tanggal pengajuan: {props.tanggalPengajuan}
           </span>
         </div>
         <ul className="list font-normal text-base text-gray-900 ml-7">
