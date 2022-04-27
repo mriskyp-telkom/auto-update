@@ -142,6 +142,7 @@ const SyncCekStatusKKView: FC = () => {
 
   useEffect(() => {
     if (dataAnggaran !== undefined) {
+      let status = ''
       if (dataAnggaran.data.length > 0) {
         const anggaran = dataAnggaran.data[0] as Anggaran
 
@@ -163,8 +164,6 @@ const SyncCekStatusKKView: FC = () => {
 
           ipcRenderer.sendSync(IPC_ANGGARAN.upsertAnggaran, updateData)
 
-          let status = ''
-
           if (anggaran.is_approve === 0 || anggaran.tanggal_pengajuan !== '') {
             status = RESPONSE_CEK_STATUS.in_progress
           }
@@ -176,12 +175,19 @@ const SyncCekStatusKKView: FC = () => {
           if (anggaran.alasan_penolakan !== '') {
             status = RESPONSE_CEK_STATUS.approved
           }
-
-          removeCacheData()
-          setStatusKK(status)
-          setIsSync(false)
-          setIsAlert(true)
         }
+      } else {
+        /*
+         sementara set status menunggu pengesahan
+         harusnya munculin error data anggaran gagal di insert
+         */
+        status = RESPONSE_CEK_STATUS.in_progress
+      }
+      if (status !== '') {
+        removeCacheData()
+        setStatusKK(status)
+        setIsSync(false)
+        setIsAlert(true)
       }
     }
   }, [dataAnggaran])
