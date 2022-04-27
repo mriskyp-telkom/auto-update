@@ -46,9 +46,12 @@ const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (
   }
 
   const handleOpen = () => {
-    const link = `/anggaran/menyusun/update/${encodeURIComponent(
+    let link = `/anggaran/menyusun/update/${encodeURIComponent(
       data.id_anggaran
     )}`
+    if (isApproved || isWaitingAproval) {
+      link = `/anggaran/mengulas/${encodeURIComponent(data.id_anggaran)}`
+    }
     navigate(link)
   }
 
