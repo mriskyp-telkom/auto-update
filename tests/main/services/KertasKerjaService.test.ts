@@ -29,6 +29,7 @@ test('GetDetailKegiatan', async () => {
   const res = await GetDetailKegiatan('oscfVRfYC0-MnRVq8OIIbQ')
   const dataTest1 = res.unwrapOr(<DetailAnggaranKegiatan>{})
 
+  expect(res.isErr()).toBe(false)
   expect(dataTest1.anggaran.idAnggaran).toBe('apQwiAb-9EWxv74iwMY6aQ')
   expect(dataTest1.anggaran.idPeriode).toBe(92)
   expect(dataTest1.anggaran.idRapbs).toBe('oscfVRfYC0-MnRVq8OIIbQ')
