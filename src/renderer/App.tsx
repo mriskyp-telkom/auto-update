@@ -11,18 +11,20 @@ import LogoutView from 'renderer/views/Auth/LogoutView'
 import CreateAccountView from 'renderer/views/Auth/CreateAccountView'
 import RegistrationView from 'renderer/views/Auth/RegistrationView'
 
+// Anggaran
 import DashboardAnggaranView from 'renderer/views/Anggaran/DashboardAnggaranView'
 import MenyusunKertasKerjaView from 'renderer/views/Anggaran/MenyusunKertasKerjaView'
 import MengulasKertasKerjaView from 'renderer/views/Anggaran/MengulasKertasKerjaView'
-import SyncMengulasKertasKerjaView from 'renderer/views/Anggaran/MengulasKertasKerjaView/SyncMengulasKertasKerjaView'
-
-import DashboardTataUsahaView from 'renderer/views/TataUsaha/DashboardTataUsahaView'
-import SyncAktivasiBKUView from 'renderer/views/TataUsaha/Aktivasi/SyncAktivasiBKUView'
-
 import FormKertasKerjaView from 'renderer/views/Anggaran/Form/FormKertasKerjaView'
 import FormPenanggungJawabView from 'renderer/views/Anggaran/Form/FormPenanggungJawabView'
 import FormPaguView from 'renderer/views/Anggaran/Form/FormPaguView'
 import SyncCekStatusKKView from './views/Anggaran/CekStatus/SyncCekStatusKKView'
+import SyncMengulasKertasKerjaView from 'renderer/views/Anggaran/MengulasKertasKerjaView/SyncMengulasKertasKerjaView'
+
+// Tata Usaha
+import DashboardTataUsahaView from 'renderer/views/TataUsaha/DashboardTataUsahaView'
+import FormPenerimaanDanaView from 'renderer/views/TataUsaha/Form/FormPenerimaanDanaView'
+import SyncAktivasiBKUView from 'renderer/views/TataUsaha/Aktivasi/SyncAktivasiBKUView'
 
 const ipcRenderer = window.require('electron').ipcRenderer
 
@@ -126,6 +128,11 @@ const App: FC = () => {
                 path="sync/anggaran/cek-status/:q_id_anggaran"
                 element={<SyncCekStatusKKView />}
               />
+              <Route
+                path="form/penerimaan-dana"
+                element={<FormPenerimaanDanaView />}
+              />
+
               <Route
                 path="sync/tata-usaha/aktivasi/:q_sumber_dana"
                 element={<SyncAktivasiBKUView />}
