@@ -27,7 +27,7 @@ import includes from 'lodash/includes'
 
 interface InputProps {
   type: 'text' | 'email' | 'alphabet' | 'name'
-  required: boolean
+  required?: boolean
   isDisabled?: boolean
   name: string
   placeholder: string
@@ -254,6 +254,10 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
       {...register(name, validation)}
     />
   )
+}
+
+InputComponent.defaultProps = {
+  required: false,
 }
 
 export default InputComponent

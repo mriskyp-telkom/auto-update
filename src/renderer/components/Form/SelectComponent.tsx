@@ -10,7 +10,9 @@ import clsx from 'clsx'
 
 interface SelectProps {
   name: string
+  width?: number
   selected?: string
+  border?: boolean
   options: any
   register: (arg0: string, arg1: RegisterOptions) => void
   handleSelect: (value: string) => void
@@ -23,6 +25,8 @@ const SelectComponent: FC<SelectProps> = (props: SelectProps) => {
   const [selectedValue, setSelectedValue] = useState(props.selected)
 
   const { name, register } = props
+
+  const width = props.width ? `w-[${props.width}px]` : 'w-full'
 
   const handleChange = (value: string) => {
     setSelectedValue(value)
@@ -44,7 +48,12 @@ const SelectComponent: FC<SelectProps> = (props: SelectProps) => {
         disabled={props.disabled}
       >
         <Listbox.Button
-          className={clsx(props.disabled && 'cursor-not-allowed', 'w-[88px]')}
+          className={clsx(
+            props.disabled && 'cursor-not-allowed',
+            width,
+            props.border &&
+              'rounded border border-solid border-gray-500 py-3 px-4'
+          )}
         >
           <span className="w-full flex justify-between items-center">
             <span className="capitalize-first">{selectedValue}</span>
@@ -57,7 +66,8 @@ const SelectComponent: FC<SelectProps> = (props: SelectProps) => {
         </Listbox.Button>
         <Listbox.Options
           className={clsx(
-            'w-[88px] absolute bg-white z-10',
+            width,
+            'absolute bg-white z-10',
             'rounded border-gray-500 border-solid',
             'py-1 mt-2',
             'text-base text-gray-900',
@@ -83,6 +93,10 @@ const SelectComponent: FC<SelectProps> = (props: SelectProps) => {
       </Listbox>
     </div>
   )
+}
+
+SelectComponent.defaultProps = {
+  border: true,
 }
 
 export default SelectComponent

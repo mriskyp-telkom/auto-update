@@ -600,6 +600,8 @@ const FormKertasKerjaView: FC = () => {
                 name={`anggaran_bulan.${props.index}.bulan`}
                 options={getMonthOptions().map((b: any) => b.name)}
                 selected={field.bulan}
+                width={88}
+                border={false}
                 register={register}
                 handleSelect={handleSelect}
                 disabled={getMonthOptions().length === 0}

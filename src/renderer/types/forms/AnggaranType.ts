@@ -1,5 +1,9 @@
 import { AnggaranBulanData } from 'renderer/types/datas/AnggaranType'
 
+export interface FormPaguData {
+  nominal: string
+}
+
 export interface FormIsiKertasKerjaData {
   id: number
   program_kegiatan: string

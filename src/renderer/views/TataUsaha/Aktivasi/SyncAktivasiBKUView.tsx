@@ -1,6 +1,6 @@
 import { IPC_CONFIG } from 'global/ipc'
 import React, { FC, useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { useAPIGetToken } from 'renderer/apis/token'
 import { useAPIInfoConnection, useAPISalur } from 'renderer/apis/utils'
 
@@ -20,7 +20,10 @@ const stepApi = {
 
 const SyncAktivasiBKUView: FC = () => {
   const navigate = useNavigate()
+  const location = useLocation()
+
   const { q_sumber_dana } = useParams()
+
   const [api, setApi] = useState('')
   const [tahunAktif, setTahunAktif] = useState(null)
   const [npsn, setNpsn] = useState('')
@@ -98,16 +101,6 @@ const SyncAktivasiBKUView: FC = () => {
     closeModal()
   }
 
-  const calculatePercentage = (api: string) => {
-    if (api !== '') {
-      const idx = Object.keys(stepApi).findIndex((x) => x === api)
-      const percent = Math.floor((idx / Object.keys(stepApi).length) * 100)
-      setPercentage(percent)
-    } else {
-      setPercentage(0)
-    }
-  }
-
   useEffect(() => {
     const tahunAktif = ipcRenderer.sendSync(
       IPC_CONFIG.getConfig,
@@ -118,14 +111,13 @@ const SyncAktivasiBKUView: FC = () => {
     setKoreg(sekolah.kodeRegistrasi)
     setTahunAktif(tahunAktif)
     setApi(stepApi.infoConnection)
-    calculatePercentage(stepApi.infoConnection)
   }, [])
 
   useEffect(() => {
     if (infoConnection !== undefined) {
       if (Number(infoConnection.data) === 1) {
         setApi(stepApi.getToken)
-        calculatePercentage(stepApi.getToken)
+        setPercentage(30)
       } else {
         failedSyncData()
       }
@@ -136,7 +128,7 @@ const SyncAktivasiBKUView: FC = () => {
     if (dataToken !== undefined) {
       setToken(dataToken?.data.access_token)
       setApi(stepApi.salur)
-      calculatePercentage(stepApi.salur)
+      setPercentage(60)
     }
   }, [dataToken])
 
@@ -147,6 +139,7 @@ const SyncAktivasiBKUView: FC = () => {
         dataSalur?.data?.penerimaan.length > 0
       ) {
         //TODO save data into store and use it in another page ( form salur)
+        setPercentage(100)
       } else {
         setIsActivationBKUFailed(true)
         closeModal()
@@ -159,6 +152,17 @@ const SyncAktivasiBKUView: FC = () => {
       failedSyncData()
     }
   }, [isInfoConnError, isTokenError, isSalurError])
+
+  useEffect(() => {
+    if (percentage === 100) {
+      //redirect to form penerimaan dana after 0.5s
+      setTimeout(() => {
+        navigate('/form/penerimaan-dana', {
+          state: location.state,
+        })
+      }, 500)
+    }
+  }, [percentage])
 
   return (
     <SyncDialogComponent

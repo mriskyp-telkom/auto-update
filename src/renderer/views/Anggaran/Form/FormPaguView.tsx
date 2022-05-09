@@ -7,10 +7,10 @@ import { numberUtils } from '@wartek-id/fe-toolbox'
 import FormDialogComponent from 'renderer/components/Dialog/FormDialogComponent'
 import InputComponent from 'renderer/components/Form/InputComponent'
 
-import { KonfirmasiKertasKerjaData } from 'renderer/types/datas/AnggaranType'
+import { FormPaguData } from 'renderer/types/forms/AnggaranType'
 import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
 
-const KonfirmasiPaguView: FC = () => {
+const FormPaguView: FC = () => {
   const navigate = useNavigate()
 
   const [amount, setAmount] = useState(0)
@@ -24,7 +24,7 @@ const KonfirmasiPaguView: FC = () => {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<KonfirmasiKertasKerjaData>({
+  } = useForm<FormPaguData>({
     mode: 'onChange',
   })
 
@@ -95,4 +95,4 @@ const KonfirmasiPaguView: FC = () => {
   )
 }
 
-export default KonfirmasiPaguView
+export default FormPaguView
