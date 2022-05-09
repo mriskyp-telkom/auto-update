@@ -39,6 +39,7 @@ import { App } from './main/models/App'
 import { SekolahPenjab } from './main/models/SekolahPenjab'
 import { ReportBku } from './main/models/ReportBku'
 import { getAppData } from './pathConfig'
+import { AktivasiBku } from 'main/models/AktivasiBku'
 
 // for make sure connection db
 export const connDB = async (): Promise<Connection> => {
@@ -48,6 +49,7 @@ export const connDB = async (): Promise<Connection> => {
       database: path.join(await getAppData(), 'arkas.db'),
       entities: [
         Anggaran,
+        AktivasiBku,
         App,
         AppConfig,
         ConfigAnggaran,

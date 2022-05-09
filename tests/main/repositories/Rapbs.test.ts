@@ -38,7 +38,7 @@ test('GetLatestAndNextUrutan', async () => {
   const v = urutan.unwrapOr('000')
   const nextUrutan = GetNextUrutan(v)
 
-  expect(urutan.isOk()).toBe(false)
+  expect(urutan.isOk()).toBe(true)
   expect(v).toBe('007')
   expect(nextUrutan).toBe('008')
 })

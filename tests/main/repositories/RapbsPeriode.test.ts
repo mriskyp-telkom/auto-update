@@ -31,7 +31,7 @@ afterEach(async () => {
   await con.close()
 })
 
-test('GetDetailKegiatan', async () => {
+test('GetDetailListRapbs', async () => {
   const data = await GetDetailListRapbs(3, '02.', 'apQwiAb-9EWxv74iwMY6aQ')
 
   expect(data[0].rekening_belanja[0].label).toBe(
