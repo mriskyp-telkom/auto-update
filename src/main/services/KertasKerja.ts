@@ -24,10 +24,10 @@ import {
 } from 'main/types/Rapbs'
 import CommonUtils from 'main/utils/CommonUtils'
 import { getConnection } from 'typeorm'
-import { GetPenggunaID } from './UserService'
+import { GetPenggunaID } from './User'
 import { CONFIG } from 'global/constants'
 import { ok, err, Result } from 'neverthrow'
-import { GetMonth } from 'main/utils/Months'
+import { GetMonthName } from 'main/utils/Months'
 import {
   AnggaranKegiatan,
   DetailAnggaranKegiatan,
@@ -205,7 +205,7 @@ export async function GetDetailKegiatan(
 
   for (const v of rapbsPeriode) {
     res.periode.push(<AnggaranPeriode>{
-      bulan: GetMonth(v.idPeriode),
+      bulan: GetMonthName(v.idPeriode),
       periode: v.idPeriode,
       satuan: v.satuan,
       jumlah: v.volume,

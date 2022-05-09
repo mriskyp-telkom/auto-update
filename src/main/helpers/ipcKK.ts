@@ -21,8 +21,13 @@ import {
   DeleteRapbsByRapbsId,
   GetDetailKegiatan,
   UpdateDetailKegiatan,
-} from 'main/services/KertasKerjaService'
+} from 'main/services/KertasKerja'
 import { AnggaranKegiatan } from 'main/types/Anggaran'
+import { BkuService } from 'main/services/Bku'
+import { getConnection } from 'typeorm'
+
+const conn = getConnection()
+const bkuService = new BkuService(conn)
 
 module.exports = {
   /*
@@ -201,4 +206,8 @@ module.exports = {
       e.returnValue = await GetListValidasiReferensiPeriode(idAnggaran)
     }
   ),
+
+  aktivasiBku: ipcMain.on(IPC_KK.aktivasiBku, async (e, req) => {
+    e.returnValue = await bkuService.AktivasiBku(req)
+  }),
 }
