@@ -9,6 +9,7 @@ import { APP_CONFIG } from 'renderer/constants/appConfig'
 import { AppStates, useAppStore } from 'renderer/stores/app'
 
 import { TataUsahaStates, useTataUsahaStore } from 'renderer/stores/tata-usaha'
+import { Penerimaan } from 'renderer/types/apis/UtilType'
 
 const ipcRenderer = window.require('electron').ipcRenderer
 
@@ -38,6 +39,10 @@ const SyncAktivasiBKUView: FC = () => {
 
   const setAlertFailedSyncData = useAppStore(
     (state: AppStates) => state.setAlertFailedSyncData
+  )
+
+  const setPeriodeSalurList = useTataUsahaStore(
+    (state: TataUsahaStates) => state.setPeriodeSalurList
   )
 
   const closeModal = () => {
@@ -138,7 +143,8 @@ const SyncAktivasiBKUView: FC = () => {
         dataSalur?.data?.penerimaan != null &&
         dataSalur?.data?.penerimaan.length > 0
       ) {
-        //TODO save data into store and use it in another page ( form salur)
+        const periodeSalur: Penerimaan[] = dataSalur?.data?.penerimaan
+        setPeriodeSalurList(periodeSalur)
         setPercentage(100)
       } else {
         setIsActivationBKUFailed(true)

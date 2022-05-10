@@ -5,17 +5,16 @@ import { useNavigate } from 'react-router-dom'
 import FormDialogComponent from 'renderer/components/Dialog/FormDialogComponent'
 import InputComponent from 'renderer/components/Form/InputComponent'
 import SelectComponent from 'renderer/components/Form/SelectComponent'
+import { TataUsahaStates, useTataUsahaStore } from 'renderer/stores/tata-usaha'
 
 import { FormPenerimaanDanaData } from 'renderer/types/forms/TataUsahaType'
 
-const periode = [
-  { tahap: 1, label: 'Tahap 1 (Januari - Maret)', tanggal: '', total: 0 },
-  { tahap: 2, label: 'Tahap 2 (April - Agustus)', tanggal: '', total: 0 },
-  { tahap: 3, label: 'Tahap 3 (September - Desember)', tanggal: '', total: 0 },
-]
-
 const FormPenerimaanDanaView: FC = () => {
   const navigate = useNavigate()
+
+  const periodeSalurList = useTataUsahaStore(
+    (state: TataUsahaStates) => state.periodeSalurList
+  )
 
   const {
     register,
@@ -54,9 +53,9 @@ const FormPenerimaanDanaView: FC = () => {
           </div>
           <SelectComponent
             name="periode"
-            options={periode.map((b: any) => b.label)}
+            options={periodeSalurList.map((b: any) => b.label)}
             register={register}
-            selected={periode[0].label}
+            selected={periodeSalurList[0]?.label}
             handleSelect={handleSelectPeriode}
           />
         </div>
