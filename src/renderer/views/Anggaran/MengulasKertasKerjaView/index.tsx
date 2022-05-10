@@ -248,7 +248,7 @@ const MengulasKertasKerjaView: FC = () => {
               </Icon>
               Cetak
             </Button>
-            {responseMengulas === null && (
+            {showButtonEdit() && (
               <Button
                 color="blue"
                 size="md"
@@ -259,7 +259,7 @@ const MengulasKertasKerjaView: FC = () => {
               </Button>
             )}
           </div>
-          {responseMengulas === null && (
+          {showButtonEdit() && (
             <div className="w-full flex text-center justify-end font-normal text-tiny text-blue-700 pb-4">
               <b>“Ajukan Pengesahan”</b> membutuhkan koneksi internet
             </div>
