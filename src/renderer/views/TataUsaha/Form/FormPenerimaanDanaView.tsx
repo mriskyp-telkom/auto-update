@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 
 import FormDialogComponent from 'renderer/components/Dialog/FormDialogComponent'
 import InputComponent from 'renderer/components/Form/InputComponent'
+import DatePickerComponent from 'renderer/components/Form/DatePickerComponent'
 import SelectComponent from 'renderer/components/Form/SelectComponent'
 import { TataUsahaStates, useTataUsahaStore } from 'renderer/stores/tata-usaha'
 
@@ -64,13 +65,7 @@ const FormPenerimaanDanaView: FC = () => {
             <div className="text-base pb-1 font-normal text-gray-900">
               Tanggal Dana Diterima
             </div>
-            <InputComponent
-              type="text"
-              name="nominal"
-              placeholder=""
-              register={register}
-              errors={errors}
-            />
+            <DatePickerComponent />
           </div>
           <div className="flex-grow">
             <div className="text-base pb-1 font-normal text-gray-900">

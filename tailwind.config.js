@@ -10,6 +10,7 @@ module.exports = {
       fontSize: {
         tiny: '.750rem', //12px
         base: '.875rem', //14px
+        form: '15px',
         large: '1rem', //16px
       },
       textColor: {

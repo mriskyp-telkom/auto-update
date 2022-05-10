@@ -52,7 +52,7 @@ const SelectComponent: FC<SelectProps> = (props: SelectProps) => {
             props.disabled && 'cursor-not-allowed',
             width,
             props.border &&
-              'rounded border border-solid border-gray-500 py-3 px-4'
+              'rounded border border-solid border-gray-500 py-3 px-4 text-form'
           )}
         >
           <span className="w-full flex justify-between items-center">
