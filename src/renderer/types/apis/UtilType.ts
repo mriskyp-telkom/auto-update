@@ -23,7 +23,7 @@ export interface Penerimaan {
   tahap: number
   label: string
   tanggal: string
-  ttotal: number
+  total: number
 }
 
 export interface SalurResponse {
