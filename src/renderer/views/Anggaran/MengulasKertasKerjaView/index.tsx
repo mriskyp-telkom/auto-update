@@ -111,7 +111,10 @@ const MengulasKertasKerjaView: FC = () => {
   }
 
   const getPanduan = () => {
-    if (detailAnggaran?.status === STATUS_KERTAS_KERJA.draft) {
+    if (
+      detailAnggaran?.status === STATUS_KERTAS_KERJA.draft ||
+      detailAnggaran?.status === STATUS_KERTAS_KERJA.not_approved
+    ) {
       return <PanduanMengulasKKView />
     }
     if (detailAnggaran?.status === STATUS_KERTAS_KERJA.waiting_approval) {
