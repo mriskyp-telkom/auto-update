@@ -1,3 +1,5 @@
+import { IPC_KK } from 'global/ipc'
+import { SaveBkuRequest } from 'global/types/TataUsahaTypes'
 import React, { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
@@ -6,6 +8,7 @@ import FormDialogComponent from 'renderer/components/Dialog/FormDialogComponent'
 import InputComponent from 'renderer/components/Form/InputComponent'
 import DatePickerComponent from 'renderer/components/Form/DatePickerComponent'
 import SelectComponent from 'renderer/components/Form/SelectComponent'
+import syncToIpcMain from 'renderer/configs/ipc'
 import { TataUsahaStates, useTataUsahaStore } from 'renderer/stores/tata-usaha'
 
 import { FormPenerimaanDanaData } from 'renderer/types/forms/TataUsahaType'
@@ -31,6 +34,19 @@ const FormPenerimaanDanaView: FC = () => {
 
   const onSubmit = async () => {
     //handle onsubmit
+    //TODO pelase fix this payload
+    const saveBkuRequest: SaveBkuRequest = {
+      idAnggaran: '',
+      recieveDate: new Date(),
+      recieveAmount: 123,
+      uraian: '',
+    }
+    const res = syncToIpcMain(IPC_KK.aktivasiBku, saveBkuRequest)
+    if (res?.error) {
+      //TODO display if error occured when save data into local db
+    } else {
+      closeModal()
+    }
   }
 
   const handleSelectPeriode = () => {
