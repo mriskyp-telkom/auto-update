@@ -324,12 +324,7 @@ const MenyusunKertasKerjaView: FC = () => {
               </Button>
             </Link>
             <Link to={`/anggaran/mengulas/${encodeURIComponent(idAnggaran)}`}>
-              <Button
-                color="black"
-                size="md"
-                variant="solid"
-                disabled={responseMengulas !== null}
-              >
+              <Button color="black" size="md" variant="solid">
                 Selesai
               </Button>
             </Link>
