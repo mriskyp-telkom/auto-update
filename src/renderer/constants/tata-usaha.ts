@@ -24,7 +24,7 @@ export const LABEL_STATUS_BKU_PERTAHUN = [
   {
     status: STATUS_BKU_PERTAHUN.temporary_inactive,
     type: 'disabled-with-border',
-    label: 'Non Aktif Sementara',
+    label: 'Nonaktif Sementara',
   },
 ]
 

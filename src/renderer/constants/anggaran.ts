@@ -29,7 +29,7 @@ export const LABEL_STATUS_KERTAS_KERJA = [
   {
     status: STATUS_KERTAS_KERJA.disabled,
     type: 'disabled',
-    label: 'Non Aktif - Lewat Batas',
+    label: 'Nonaktif - Lewat Batas',
   },
 ]
 
