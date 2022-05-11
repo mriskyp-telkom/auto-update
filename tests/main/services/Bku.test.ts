@@ -1,7 +1,8 @@
+import { SaveBkuRequest } from 'global/types/TataUsahaTypes'
 import { AktivasiBku } from 'main/models/AktivasiBku'
 import { AppConfig } from 'main/models/AppConfig'
 import { KasUmum } from 'main/models/KasUmum'
-import { BkuService, SaveBkuRequest } from 'main/services/Bku'
+import { BkuService } from 'main/services/Bku'
 import { createConnection, getConnection, getRepository } from 'typeorm'
 import { cfg, Migrate } from '../migration'
 

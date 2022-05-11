@@ -7,14 +7,7 @@ import { KasUmum } from 'main/models/KasUmum'
 import { GetMonthsRange } from 'main/utils/Months'
 import CommonUtils from 'main/utils/CommonUtils'
 import { GetPenggunaID } from './User'
-
-export interface SaveBkuRequest {
-  idAnggaran: string
-  recieveDate: Date
-  recieveAmount: number
-  uraian: string
-}
-
+import { SaveBkuRequest } from 'global/types/TataUsahaTypes'
 export class BkuService {
   private conn: Connection
   private aktivasiBku: AktivasiBkuRepository
