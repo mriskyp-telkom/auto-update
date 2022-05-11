@@ -12,11 +12,13 @@ import { ID_SUMBER_DANA } from 'renderer/constants/anggaran'
 const bosReguler = [
   {
     tahun: 2022,
+    idAnggaran: 'xxxxx',
     status: 'not_active',
     bulan: [],
   },
   {
     tahun: 2021,
+    idAnggaran: 'yyyyy',
     status: 'active',
     bulan: [
       {
@@ -72,6 +74,7 @@ const bosReguler = [
   {
     tahun: 2020,
     status: 'done',
+    idAnggaran: 'zzzzz',
     bulan: [],
   },
 ]

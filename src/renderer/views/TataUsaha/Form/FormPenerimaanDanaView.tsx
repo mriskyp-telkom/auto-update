@@ -2,7 +2,7 @@ import { IPC_KK } from 'global/ipc'
 import { SaveBkuRequest } from 'global/types/TataUsahaTypes'
 import React, { FC } from 'react'
 import { useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import FormDialogComponent from 'renderer/components/Dialog/FormDialogComponent'
 import InputComponent from 'renderer/components/Form/InputComponent'
@@ -15,7 +15,7 @@ import { FormPenerimaanDanaData } from 'renderer/types/forms/TataUsahaType'
 
 const FormPenerimaanDanaView: FC = () => {
   const navigate = useNavigate()
-
+  const { q_id_anggaran } = useParams()
   const periodeSalurList = useTataUsahaStore(
     (state: TataUsahaStates) => state.periodeSalurList
   )
@@ -34,9 +34,13 @@ const FormPenerimaanDanaView: FC = () => {
 
   const onSubmit = async () => {
     //handle onsubmit
-    //TODO pelase fix this payload
+    //TODO
+    saveBku()
+  }
+
+  const saveBku = () => {
     const saveBkuRequest: SaveBkuRequest = {
-      idAnggaran: '',
+      idAnggaran: q_id_anggaran,
       recieveDate: new Date(),
       recieveAmount: 123,
       uraian: '',

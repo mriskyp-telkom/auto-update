@@ -41,6 +41,7 @@ import { SekolahPenjab } from './main/models/SekolahPenjab'
 import { ReportBku } from './main/models/ReportBku'
 import { createConnection, getRepository } from 'typeorm'
 import { getAppData } from './pathConfig'
+import { AktivasiBku } from 'main/models/AktivasiBku'
 
 async function encryptDB(): Promise<void> {
   const appData = await getAppData()
@@ -627,6 +628,7 @@ async function createDBLocal(appDataPath: string): Promise<void> {
       type: 'better-sqlite3',
       database: path.join(appDataPath, dbFile),
       entities: [
+        AktivasiBku,
         App,
         AppConfig,
         Anggaran,
