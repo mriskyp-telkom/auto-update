@@ -5,6 +5,7 @@ import { useAPIGetToken } from 'renderer/apis/token'
 import { useAPIInfoConnection, useAPISalur } from 'renderer/apis/utils'
 
 import SyncDialogComponent from 'renderer/components/Dialog/SyncDialogComponent'
+import { TIME_DELAY_SCREEN } from 'renderer/constants/app'
 import { APP_CONFIG } from 'renderer/constants/appConfig'
 import { AppStates, useAppStore } from 'renderer/stores/app'
 
@@ -161,12 +162,12 @@ const SyncAktivasiBKUView: FC = () => {
 
   useEffect(() => {
     if (percentage === 100) {
-      //redirect to form penerimaan dana after 0.5s
+      //set delay redirect to form penerimaan dana
       setTimeout(() => {
         navigate(`/form/penerimaan-dana/${encodeURIComponent(q_id_anggaran)}`, {
           state: location.state,
         })
-      }, 500)
+      }, TIME_DELAY_SCREEN)
     }
   }, [percentage])
 
