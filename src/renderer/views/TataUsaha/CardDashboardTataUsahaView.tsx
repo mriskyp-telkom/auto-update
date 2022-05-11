@@ -124,7 +124,10 @@ const CardDashboardTataUsahaView: FC<CardDashboardTataUsahaProps> = (
           <span className="flex">
             {isNotActive && (
               <div className="grid justify-items-end">
-                <AktivasiBKUView sumberDana={sumberDana} />
+                <AktivasiBKUView
+                  sumberDana={sumberDana}
+                  idAnggaran={data.idAnggaran}
+                />
                 <div className="text-blue-700 text-[12px] text-right pt-2">
                   <b>“Aktivasi BKU”</b> membutuhkan koneksi internet
                 </div>

@@ -23,7 +23,7 @@ const SyncAktivasiBKUView: FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const { q_sumber_dana } = useParams()
+  const { q_sumber_dana, q_id_anggaran } = useParams()
 
   const [api, setApi] = useState('')
   const [tahunAktif, setTahunAktif] = useState(null)
@@ -163,7 +163,7 @@ const SyncAktivasiBKUView: FC = () => {
     if (percentage === 100) {
       //redirect to form penerimaan dana after 0.5s
       setTimeout(() => {
-        navigate('/form/penerimaan-dana', {
+        navigate(`/form/penerimaan-dana/${encodeURIComponent(q_id_anggaran)}`, {
           state: location.state,
         })
       }, 500)

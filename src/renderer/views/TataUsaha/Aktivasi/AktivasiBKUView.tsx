@@ -11,11 +11,12 @@ import AlertFailedSyncData from 'renderer/views/AlertFailedSyncData'
 
 interface AktivasiBKUViewProps {
   sumberDana: number
+  idAnggaran: string
 }
 const AktivasiBKUView: FC<AktivasiBKUViewProps> = (
   props: AktivasiBKUViewProps
 ) => {
-  const { sumberDana } = props
+  const { sumberDana, idAnggaran } = props
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -43,9 +44,14 @@ const AktivasiBKUView: FC<AktivasiBKUViewProps> = (
   const handleClickAktivasi = () => {
     setAlertNoConnection(false)
     if (navigator.onLine) {
-      navigate(`/sync/tata-usaha/aktivasi/${sumberDana}`, {
-        state: { backgroundLocation: location },
-      })
+      navigate(
+        `/sync/tata-usaha/aktivasi/${sumberDana}/${encodeURIComponent(
+          idAnggaran
+        )}`,
+        {
+          state: { backgroundLocation: location },
+        }
+      )
     } else {
       setAlertNoConnection(true)
     }

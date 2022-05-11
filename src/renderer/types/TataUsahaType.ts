@@ -6,5 +6,6 @@ export interface BKUCardDashboardBulanType {
 export interface BKUCardDashboardTahunType {
   tahun: number
   status: string
+  idAnggaran: string
   bulan: BKUCardDashboardBulanType[]
 }

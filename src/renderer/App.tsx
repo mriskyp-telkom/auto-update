@@ -129,12 +129,12 @@ const App: FC = () => {
                 element={<SyncCekStatusKKView />}
               />
               <Route
-                path="form/penerimaan-dana"
+                path="form/penerimaan-dana/:q_id_anggaran"
                 element={<FormPenerimaanDanaView />}
               />
 
               <Route
-                path="sync/tata-usaha/aktivasi/:q_sumber_dana"
+                path="sync/tata-usaha/aktivasi/:q_sumber_dana/:q_id_anggaran"
                 element={<SyncAktivasiBKUView />}
               ></Route>
               <Route path="logout" element={<LogoutView />} />
