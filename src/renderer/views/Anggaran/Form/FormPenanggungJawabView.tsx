@@ -119,8 +119,9 @@ const FormPenanggungJawabView: FC = () => {
     return value != null
       ? value
           .replace(/\D/g, '')
-          .replace(/(\d{9})(\d)/, '$1.$2')
-          .replace(/(\d{6})(\d)/, '$1.$2')
+          .replace(/(\d{15})(\d)/, '$1.$2')
+          .replace(/(\d{14})(\d)/, '$1.$2')
+          .replace(/(\d{8})(\d)/, '$1.$2')
       : ''
   }
 
