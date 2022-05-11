@@ -113,7 +113,10 @@ const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (
             <>
               <div className="flex">
                 {isWaitingAproval && (
-                  <CekStatusKKView idAnggaran={data.id_anggaran} />
+                  <CekStatusKKView
+                    idAnggaran={data.id_anggaran}
+                    page="dashboard"
+                  />
                 )}
                 <div className="flex">
                   <div className="ml-6">
