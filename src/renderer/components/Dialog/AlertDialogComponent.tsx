@@ -80,9 +80,11 @@ const AlertDialogComponent: FC<AlertDialogProps> = (
           <DialogTitle className="font-semibold text-[22px] text-gray-900 pb-[12px]">
             {props.title}
           </DialogTitle>
-          <DialogDescription className="font-normal text-[16px] text-gray-900 pb-[40px]">
-            {props.desc}
-          </DialogDescription>
+          {props.desc !== '' && (
+            <DialogDescription className="font-normal text-[16px] text-gray-900 pb-[40px]">
+              {props.desc}
+            </DialogDescription>
+          )}
           <div className="flex justify-end">
             {!props.hideBtnCancel && (
               <DialogCancel
@@ -113,6 +115,10 @@ const AlertDialogComponent: FC<AlertDialogProps> = (
       </DialogContent>
     </Dialog>
   )
+}
+
+AlertDialogComponent.defaultProps = {
+  desc: '',
 }
 
 export default AlertDialogComponent
