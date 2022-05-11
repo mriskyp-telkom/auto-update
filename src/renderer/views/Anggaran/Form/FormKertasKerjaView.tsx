@@ -486,13 +486,15 @@ const FormKertasKerjaView: FC = () => {
         kegiatan: anggaran.kegiatan,
         rekening_belanja: anggaran.rekeningBelanja,
         uraian: anggaran.uraian,
-        harga_satuan: anggaran.hargaSatuan.toString(),
+        harga_satuan: `Rp ${numberUtils.delimit(
+          anggaran.hargaSatuan.toString(),
+          '.'
+        )}`,
         anggaran_bulan: anggaran_bulan,
       }
 
       reset(defaultValue)
       setFormDefaultValue(defaultValue)
-
       setFormDisable({
         kegiatan: false,
         rekening_belanja: false,
