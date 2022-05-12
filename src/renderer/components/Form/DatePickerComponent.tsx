@@ -11,6 +11,7 @@ registerLocale('id', id)
 
 interface DatePickerProps {
   name: string
+  defaultValue: Date
   register: (arg0: string, arg1: RegisterOptions) => void
   handleSelect: (value: Date) => void
 }
@@ -31,7 +32,7 @@ const CustomInput = forwardRef((props: any, ref) => {
 const DatePickerComponent: FC<DatePickerProps> = (props: DatePickerProps) => {
   const { name, register } = props
 
-  const [startDate, setStartDate] = useState(new Date())
+  const [startDate, setStartDate] = useState(null)
 
   const handleChange = (date: Date) => {
     setStartDate(date)
@@ -39,7 +40,8 @@ const DatePickerComponent: FC<DatePickerProps> = (props: DatePickerProps) => {
   }
 
   useEffect(() => {
-    props.handleSelect(new Date())
+    setStartDate(props.defaultValue)
+    props.handleSelect(props.defaultValue)
   }, [])
 
   return (

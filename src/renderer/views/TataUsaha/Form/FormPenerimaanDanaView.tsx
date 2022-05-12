@@ -27,9 +27,11 @@ const FormPenerimaanDanaView: FC = () => {
   // TO DO
   const tahunAnggaran = 2021
 
-  const [openModalForm, setOpenModalForm] = useState(true)
+  const [defaultValue, setDefaultValue] = useState<FormPenerimaanDanaData>(null)
+
   const [openModalConfirmation, setOpenModalConfirmation] = useState(false)
   const [openModalSuccess, setOpenModalSuccess] = useState(false)
+  const [openModalKeluar, setOpenModalKeluar] = useState(false)
 
   const periodeSalurList = useTataUsahaStore(
     (state: TataUsahaStates) => state.periodeSalurList
@@ -40,7 +42,8 @@ const FormPenerimaanDanaView: FC = () => {
     handleSubmit,
     getValues,
     setValue,
-    formState: { errors },
+    reset,
+    formState: { errors, isDirty },
   } = useForm<FormPenerimaanDanaData>({
     mode: 'onSubmit',
   })
@@ -49,21 +52,11 @@ const FormPenerimaanDanaView: FC = () => {
     navigate('/tata-usaha')
   }
 
-  const openModalView = (modal: 'form' | 'confirmation' | 'success') => {
-    if (modal === 'form') {
-      setOpenModalForm(true)
-      setOpenModalConfirmation(false)
-      setOpenModalSuccess(false)
-    }
-    if (modal === 'confirmation') {
-      setOpenModalForm(false)
-      setOpenModalConfirmation(true)
-      setOpenModalSuccess(false)
-    }
-    if (modal === 'success') {
-      setOpenModalForm(false)
-      setOpenModalConfirmation(false)
-      setOpenModalSuccess(true)
+  const handleCloseForm = () => {
+    if (isDirty) {
+      setOpenModalKeluar(true)
+    } else {
+      closeModal()
     }
   }
 
@@ -79,7 +72,7 @@ const FormPenerimaanDanaView: FC = () => {
       idAnggaran: q_id_anggaran,
       recieveDate: data.tanggal_penerimaan,
       recieveAmount: parseInt(data.nominal.replace(/[^,\d]/g, '').toString()),
-      uraian: '',
+      uraian: data.periode,
     }
 
     const res = syncToIpcMain(IPC_KK.aktivasiBku, saveBkuRequest)
@@ -87,7 +80,8 @@ const FormPenerimaanDanaView: FC = () => {
     if (res?.error) {
       //TODO display if error occured when save data into local db
     } else {
-      openModalView('success')
+      setOpenModalConfirmation(false)
+      setOpenModalSuccess(true)
     }
   }
 
@@ -107,16 +101,35 @@ const FormPenerimaanDanaView: FC = () => {
     }
   }, [openModalSuccess])
 
+  useEffect(() => {
+    if (periodeSalurList.length > 0) {
+      let date = new Date(periodeSalurList[0].tanggal)
+      if (periodeSalurList[0].tanggal === '') {
+        date = new Date()
+      }
+
+      // set defaultvalue
+      const data = {
+        periode: periodeSalurList[0].label,
+        tanggal_penerimaan: date,
+        nominal: `Rp ${numberUtils.delimit(periodeSalurList[0].total, '.')}`,
+      }
+
+      setDefaultValue(data)
+      reset(data)
+    }
+  }, [])
+
   return (
     <>
       <FormDialogComponent
         width={720}
         title="Konfirmasi Penerimaan Dana"
         subtitle="Data diambil dari BOS Salur. Pastikan detail sesuai dengan yang tertera di rekening."
-        isOpen={openModalForm}
+        isOpen={true}
         btnSubmitText="Konfirmasi"
-        onCancel={closeModal}
-        onSubmit={handleSubmit(() => openModalView('confirmation'))}
+        onCancel={handleCloseForm}
+        onSubmit={handleSubmit(() => setOpenModalConfirmation(true))}
       >
         <div>
           <div className="pb-5">
@@ -138,6 +151,7 @@ const FormPenerimaanDanaView: FC = () => {
               </div>
               <DatePickerComponent
                 name="tanggal_penerimaan"
+                defaultValue={defaultValue?.tanggal_penerimaan}
                 register={register}
                 handleSelect={handleSelectTanggal}
               />
@@ -172,6 +186,18 @@ const FormPenerimaanDanaView: FC = () => {
         </div>
       </FormDialogComponent>
       <AlertDialogComponent
+        type="failed"
+        icon="exit_to_app"
+        title="Keluar dari halaman ini?"
+        desc="Jika Anda keluar, data yang baru saja Anda isi akan hilang."
+        isOpen={openModalKeluar}
+        btnCancelText="Keluar"
+        btnActionText="Kembali Isi Penerimaan Dana"
+        onCancel={closeModal}
+        onSubmit={() => setOpenModalKeluar(false)}
+        layer={2}
+      />
+      <AlertDialogComponent
         type="warning"
         icon="text_snippet"
         title={`Aktifkan BKU Tahun Anggaran ${tahunAnggaran}?`}
@@ -179,8 +205,9 @@ const FormPenerimaanDanaView: FC = () => {
         isOpen={openModalConfirmation}
         btnCancelText="Kembali"
         btnActionText="Aktifkan BKU"
-        onCancel={() => openModalView('form')}
+        onCancel={() => setOpenModalConfirmation(false)}
         onSubmit={onSubmit}
+        layer={2}
       />
       <AlertDialogComponent
         type="success"
@@ -189,6 +216,7 @@ const FormPenerimaanDanaView: FC = () => {
         isOpen={openModalSuccess}
         hideBtnCancel={true}
         hideBtnAction={true}
+        layer={2}
       />
     </>
   )
