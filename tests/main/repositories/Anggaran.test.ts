@@ -19,6 +19,10 @@ import {
   UpdateTanggalPengajuan,
 } from 'main/repositories/Anggaran'
 import { cfg, Migrate } from '../migration'
+import { RefRekening } from 'main/models/RefRekening'
+import { RefKode } from 'main/models/RefKode'
+import { RefAcuanBarang } from 'main/models/RefAcuanBarang'
+import { RapbsPeriode } from 'main/models/RapbsPeriode'
 
 beforeAll(async () => {
   process.env.NODE_ENV = 'testing'
@@ -29,7 +33,17 @@ beforeEach(async () => {
     type: 'better-sqlite3',
     database: ':memory:',
     dropSchema: false,
-    entities: [Anggaran, MstSekolah, AppConfig, RefSumberDana, Rapbs],
+    entities: [
+      Anggaran,
+      MstSekolah,
+      AppConfig,
+      RefSumberDana,
+      Rapbs,
+      RefRekening,
+      RefKode,
+      RefAcuanBarang,
+      RapbsPeriode,
+    ],
     synchronize: false,
     logging: true,
   })
@@ -184,7 +198,7 @@ test('DelAnggaran', async () => {
 })
 
 test('CopyAnggaran', async () => {
-  const idAnggaranBefore = 'ODMMS_baREyJzOtKTDHEdw',
+  const idAnggaranBefore = 'apQwiAb-9EWxv74iwMY6aQ',
     idRefSumberDana = 1,
     sekolahId = 'XN60oPUuEeC-vv2_lhMTXQ',
     tahun = 2022,
@@ -204,11 +218,15 @@ test('CopyAnggaran', async () => {
     idPenjab
   )
 
-  expect(newIdAnggaran).not.toBeNull()
+  expect(newIdAnggaran.length).toBeGreaterThan(0)
 
   const anggaran = await GetAnggaranById(newIdAnggaran)
-
   expect(anggaran.idAnggaran).toBe(newIdAnggaran)
+
+  const rapbsList = await getRepository(Rapbs).find({
+    idAnggaran: newIdAnggaran,
+  })
+  expect(rapbsList.length).toBeGreaterThan(0)
 })
 
 test('GetTotalAnggaran', async () => {
