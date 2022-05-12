@@ -3,6 +3,7 @@
 
 #define MyAppName "ARKAS"
 #define MyAppVersion "4.00"
+#define MyAppNameShort "ARKAS 4"
 #define MyAppPublisher "Kemdikbudristek"
 #define MyAppURL "http://rkas.kemdikbud.go.id/"
 #define MyAppExeName "arkas_desktop.exe"
@@ -22,19 +23,19 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\{#MyAppName}
 DisableDirPage=yes
 DisableProgramGroupPage=yes
-OutputBaseFilename=Setup-RKAS-4.00
+OutputBaseFilename=Setup-RKAS-{#MyAppVersion}
 OutputDir=..\out\make
 Compression=lzma2/ultra64
 SolidCompression=yes
 DisableStartupPrompt=False
-VersionInfoVersion=4.00
+VersionInfoVersion={#MyAppVersion}
 VersionInfoCompany=Kementerian Pendidikan Kebudayaan Riset dan Teknologi
-VersionInfoDescription=ARKAS 4.00
-VersionInfoTextVersion=4.00
-VersionInfoCopyright=2022 Kemdikbudristek
-VersionInfoProductName=ARKAS
-VersionInfoProductVersion=4.00
-VersionInfoProductTextVersion=4.00
+VersionInfoDescription={#MyAppName} {#MyAppVersion}
+VersionInfoTextVersion={#MyAppVersion}
+VersionInfoCopyright=2022 {#MyAppPublisher}
+VersionInfoProductName={#MyAppName}
+VersionInfoProductVersion={#MyAppVersion}
+VersionInfoProductTextVersion={#MyAppVersion}
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -46,8 +47,8 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Source: "..\out\Arkas-win32-x64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 
 [Icons]
-Name: "{commonprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
-Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
+Name: "{commonprograms}\{#MyAppNameShort}"; Filename: "{app}\{#MyAppExeName}"
+Name: "{commondesktop}\{#MyAppNameShort}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
