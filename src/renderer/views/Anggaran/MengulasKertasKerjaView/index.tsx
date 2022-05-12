@@ -124,6 +124,7 @@ const MengulasKertasKerjaView: FC = () => {
             detailAnggaran?.tanggalPengajuan,
             'DD/MM/YYYY'
           )}
+          idAnggaran={idAnggaran}
         />
       )
     }

@@ -1,13 +1,15 @@
 import React, { FC } from 'react'
 
 import CardPanduanAnggaranView from 'renderer/views/Anggaran/CardPanduanAnggaranView'
+import CekStatusKKView from 'renderer/views/Anggaran/CekStatus/CekStatusKKView'
 
-import { Button } from '@wartek-id/button'
 import { Icon } from '@wartek-id/icon'
 
 export interface PanduanCekStatusProps {
+  idAnggaran: string
   tanggalPengajuan: string
 }
+
 const PanduanCekStatusKKView: FC<PanduanCekStatusProps> = (
   props: PanduanCekStatusProps
 ) => {
@@ -44,15 +46,7 @@ const PanduanCekStatusKKView: FC<PanduanCekStatusProps> = (
           </li>
         </ul>
         <div className="flex mt-2 items-center">
-          <Button
-            color="white"
-            size="sm"
-            variant="solid"
-            className="mr-3"
-            style={{ backgroundColor: 'unset' }}
-          >
-            Cek Status
-          </Button>
+          <CekStatusKKView idAnggaran={props.idAnggaran} page="banner" />
           <span className="text-blue-700 text-[12px] text-right">
             <b>“Cek Status”</b> membutuhkan koneksi internet
           </span>
