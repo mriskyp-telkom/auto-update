@@ -18,6 +18,8 @@ import { FormPenerimaanDanaData } from 'renderer/types/forms/TataUsahaType'
 
 import { TIME_DELAY_SCREEN } from 'renderer/constants/app'
 
+import { numberUtils } from '@wartek-id/fe-toolbox'
+
 const FormPenerimaanDanaView: FC = () => {
   const navigate = useNavigate()
   const { q_id_anggaran } = useParams()
@@ -36,6 +38,8 @@ const FormPenerimaanDanaView: FC = () => {
   const {
     register,
     handleSubmit,
+    getValues,
+    setValue,
     formState: { errors },
   } = useForm<FormPenerimaanDanaData>({
     mode: 'onSubmit',
@@ -65,12 +69,19 @@ const FormPenerimaanDanaView: FC = () => {
 
   const onSubmit = async () => {
     //TODO
+    const data = {
+      periode: getValues('periode'),
+      tanggal_penerimaan: getValues('tanggal_penerimaan'),
+      nominal: getValues('nominal'),
+    }
+
     const saveBkuRequest: SaveBkuRequest = {
       idAnggaran: q_id_anggaran,
-      recieveDate: new Date(),
-      recieveAmount: 123,
+      recieveDate: data.tanggal_penerimaan,
+      recieveAmount: parseInt(data.nominal.replace(/[^,\d]/g, '').toString()),
       uraian: '',
     }
+
     const res = syncToIpcMain(IPC_KK.aktivasiBku, saveBkuRequest)
 
     if (res?.error) {
@@ -80,8 +91,12 @@ const FormPenerimaanDanaView: FC = () => {
     }
   }
 
-  const handleSelectPeriode = () => {
-    // handle
+  const handleSelectPeriode = (value: string) => {
+    setValue('periode', value)
+  }
+
+  const handleSelectTanggal = (value: Date) => {
+    setValue('tanggal_penerimaan', value)
   }
 
   useEffect(() => {
@@ -121,7 +136,11 @@ const FormPenerimaanDanaView: FC = () => {
               <div className="text-base pb-1 font-normal text-gray-900">
                 Tanggal Dana Diterima
               </div>
-              <DatePickerComponent />
+              <DatePickerComponent
+                name="tanggal_penerimaan"
+                register={register}
+                handleSelect={handleSelectTanggal}
+              />
             </div>
             <div className="flex-grow">
               <div className="text-base pb-1 font-normal text-gray-900">
@@ -133,6 +152,20 @@ const FormPenerimaanDanaView: FC = () => {
                 placeholder=""
                 register={register}
                 errors={errors}
+                registerOption={{
+                  onChange: (e: any) => {
+                    const value = e.target.value
+                      .replace(/[^,\d]/g, '')
+                      .toString()
+
+                    if (value !== null) {
+                      setValue(
+                        'nominal',
+                        `Rp ${numberUtils.delimit(value, '.')}`
+                      )
+                    }
+                  },
+                }}
               />
             </div>
           </div>
