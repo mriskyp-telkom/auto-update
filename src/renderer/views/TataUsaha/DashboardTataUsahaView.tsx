@@ -14,12 +14,14 @@ const bosReguler = [
     tahun: 2022,
     idAnggaran: 'xxxxx',
     status: 'not_active',
+    isAnggaranApproved: true,
     bulan: [],
   },
   {
     tahun: 2021,
     idAnggaran: 'yyyyy',
     status: 'active',
+    isAnggaranApproved: true,
     bulan: [
       {
         bulan: 'januari',
@@ -75,6 +77,7 @@ const bosReguler = [
     tahun: 2020,
     status: 'done',
     idAnggaran: 'zzzzz',
+    isAnggaranApproved: true,
     bulan: [],
   },
 ]
