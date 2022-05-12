@@ -32,6 +32,8 @@ import { APP_CONFIG } from 'renderer/constants/appConfig'
 import { AlertType } from 'renderer/types/ComponentType'
 import { formatDateTimeStatus } from 'renderer/utils/date-formatting'
 
+import { copyKertasKerja } from 'renderer/utils/copy-writing'
+
 const MenyusunKertasKerjaView: FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
@@ -278,7 +280,7 @@ const MenyusunKertasKerjaView: FC = () => {
             </span>
           </div>
           <div className="flex items-center text-[22px] font-semibold">
-            Menyusun RKAS
+            Menyusun {copyKertasKerja()}
             <Link
               to={`/form/penanggung-jawab/update/${encodeURIComponent(
                 idAnggaran
@@ -409,11 +411,13 @@ const MenyusunKertasKerjaView: FC = () => {
       <AlertDialogComponent
         type="warning"
         icon="file_copy"
-        title="Salin dari RKAS sebelumnya?"
-        desc="Anda dapat menyalin isi RKAS pada tahun anggaran sebelumnya ke lembar ini atau membuat RKAS baru."
+        title={`Salin dari ${copyKertasKerja()} sebelumnya?`}
+        desc={`Anda dapat menyalin isi ${copyKertasKerja(
+          STATUS_KERTAS_KERJA.approved
+        )} pada tahun anggaran sebelumnya ke lembar ini atau membuat ${copyKertasKerja()} baru.`}
         isOpen={openModalInit}
         btnCancelText="Buat Baru"
-        btnActionText="Salin RKAS"
+        btnActionText={`Salin ${copyKertasKerja()}`}
         onCancel={() => handleCreateKertasKerja(MODE_CREATE_KERTAS_KERJA.new)}
         onSubmit={() => handleCreateKertasKerja(MODE_CREATE_KERTAS_KERJA.salin)}
       />
@@ -432,7 +436,7 @@ const MenyusunKertasKerjaView: FC = () => {
         />
       )}
       <SyncDialogComponent
-        title="Menyalin RKAS..."
+        title={`Menyalin ${copyKertasKerja()}...`}
         subtitle="Mohon tunggu sebentar."
         percentage={50}
         isOpen={isSync}

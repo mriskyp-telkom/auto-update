@@ -4,6 +4,8 @@ import CardPanduanAnggaranView from 'renderer/views/Anggaran/CardPanduanAnggaran
 
 import { Icon } from '@wartek-id/icon'
 
+import { copyKertasKerja } from 'renderer/utils/copy-writing'
+
 const PanduanSuccessPengesahanKKView: FC = () => {
   return (
     <CardPanduanAnggaranView type="success">
@@ -18,7 +20,7 @@ const PanduanSuccessPengesahanKKView: FC = () => {
           >
             check_circle
           </Icon>
-          RKAS Berhasil Disahkan!
+          {copyKertasKerja()} Berhasil Disahkan!
         </div>
         <ul className="list font-normal text-base text-gray-900 ml-7">
           <li>

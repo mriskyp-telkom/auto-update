@@ -1,5 +1,7 @@
 import { STATUS_KERTAS_KERJA } from 'global/constants'
 
+import { copyKertasKerja } from 'renderer/utils/copy-writing'
+
 export const LABEL_STATUS_KERTAS_KERJA = [
   {
     status: STATUS_KERTAS_KERJA.waiting_approval,
@@ -44,7 +46,7 @@ export const ALERT_MENGULAS = {
   [RESPONSE_PENGESAHAN.success]: {
     type: 'success',
     icon: 'done',
-    title: 'RKAS Terkirim!',
+    title: `${copyKertasKerja()} Terkirim!`,
     desc: 'Dinas memerlukan 7-14 hari kerja untuk memeriksa dan melakukan pengesahan. Silakan cek status terbaru secara berkala.',
     btnCancelText: 'Tutup',
     btnActionText: 'Cek Status',
@@ -55,23 +57,23 @@ export const ALERT_MENGULAS = {
     title: 'Gagal Sinkronisasi Data',
     desc: 'Maaf, terjadi gangguan di sistem kami. Silakan coba lagi dalam beberapa saat.',
     btnCancelText: '',
-    btnActionText: 'Revisi RKAS',
+    btnActionText: `Revisi ${copyKertasKerja()}`,
   },
   [RESPONSE_PENGESAHAN.error_data_sentral]: {
     type: 'failed',
     icon: 'close',
-    title: 'Maaf, RKAS perlu disesuaikan',
+    title: `Maaf, ${copyKertasKerja()} perlu disesuaikan`,
     desc: 'Ada perubahan di data referensi barang/jasa yang mempengaruhi anggaran Anda. Mohon sesuaikan berdasarkan panduan dan ajukan pengesahan kembali.',
     btnCancelText: '',
-    btnActionText: 'Revisi RKAS',
+    btnActionText: `Revisi ${copyKertasKerja()}`,
   },
   [RESPONSE_PENGESAHAN.error_sisa_dana]: {
     type: 'failed',
     icon: 'close',
-    title: 'RKAS belum memenuhi syarat',
-    desc: 'Anda masih memiliki sisa dana yang belum dihabiskan. Silakan revisi RKAS Anda dan ajukan pengesahan kembali.',
+    title: `${copyKertasKerja()} belum memenuhi syarat`,
+    desc: `Anda masih memiliki sisa dana yang belum dihabiskan. Silakan revisi ${copyKertasKerja()} Anda dan ajukan pengesahan kembali.`,
     btnCancelText: '',
-    btnActionText: 'Revisi RKAS',
+    btnActionText: `Revisi ${copyKertasKerja()}`,
   },
 }
 
@@ -85,26 +87,28 @@ export const ALERT_CEK_STATUS = {
   [RESPONSE_CEK_STATUS.approved]: {
     type: 'success',
     icon: 'done',
-    title: 'RKAS Sudah Disahkan!',
-    desc: 'Sesuai peraturan yang berlaku, Anda sudah dapat melakukan pembelanjaan setelah menerima dana. Silakan cetak RKAS sebagai pelengkap laporan pembelanjaan.',
+    title: `${copyKertasKerja(STATUS_KERTAS_KERJA.approved)} Sudah Disahkan!`,
+    desc: `Sesuai peraturan yang berlaku, Anda sudah dapat melakukan pembelanjaan setelah menerima dana. Silakan cetak ${copyKertasKerja(
+      STATUS_KERTAS_KERJA.approved
+    )} sebagai pelengkap laporan pembelanjaan.`,
     btnCancelText: 'Tutup',
-    btnActionText: 'Cetak RKAS',
+    btnActionText: `Cetak ${copyKertasKerja(STATUS_KERTAS_KERJA.approved)}`,
   },
   [RESPONSE_CEK_STATUS.in_progress]: {
     type: 'warning',
     icon: 'hourglass_bottom',
-    title: 'RKAS masih dalam proses',
+    title: `${copyKertasKerja()} masih dalam proses`,
     desc: 'Dinas memerlukan 7-14 hari kerja untuk memeriksa dan melakukan pengesahan. Silahkan cek status terbaru secara berkala.',
     btnCancelText: 'Tutup',
-    btnActionText: 'Lihat RKAS',
+    btnActionText: `Lihat ${copyKertasKerja()}`,
   },
   [RESPONSE_CEK_STATUS.declined]: {
     type: 'failed',
     icon: 'close',
-    title: 'Maaf, RKAS belum disetujui',
-    desc: 'Berdasarkan pemeriksaan dinas, ada beberapa hal di RKAS Anda yang belum sesuai dengan peraturan yang berlaku. Silakan lakukan revisi sesuai catatan yang diberikan.',
+    title: `Maaf, ${copyKertasKerja()} belum disetujui`,
+    desc: `Berdasarkan pemeriksaan dinas, ada beberapa hal di ${copyKertasKerja()} Anda yang belum sesuai dengan peraturan yang berlaku. Silakan lakukan revisi sesuai catatan yang diberikan.`,
     btnCancelText: 'Tutup',
-    btnActionText: 'Revisi RKAS',
+    btnActionText: `Revisi ${copyKertasKerja()}`,
   },
 }
 

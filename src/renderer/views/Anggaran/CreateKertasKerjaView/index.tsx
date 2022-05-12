@@ -24,6 +24,8 @@ import { ID_SUMBER_DANA } from 'renderer/constants/anggaran'
 import AlertNoConnection from 'renderer/views/AlertNoConnection'
 import AlertFailedSyncData from 'renderer/views/AlertFailedSyncData'
 
+import { copyKertasKerja } from 'renderer/utils/copy-writing'
+
 const ipcRenderer = window.require('electron').ipcRenderer
 
 const stepApi = [
@@ -365,7 +367,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
       if (dataPagu?.data?.sumber_dana_id === ID_SUMBER_DANA.BOS_REGULER) {
         if (dataPagu?.data?.volume <= 0) {
           setAlertDesc(
-            'Anda tidak bisa membuat RKAS dari sumber dana BOS Reguler karena belum ada pencatatan penerimaan dana dari BOSSalur. Silakan hubungi dinas setempat jika ada kesalahan.'
+            `Anda tidak bisa membuat ${copyKertasKerja()} dari sumber dana BOS Reguler karena belum ada pencatatan penerimaan dana dari BOSSalur. Silakan hubungi dinas setempat jika ada kesalahan.`
           )
           setOpenModalFailed(true)
         } else {
@@ -442,7 +444,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
         >
           add
         </Icon>
-        Buat RKAS
+        Buat {copyKertasKerja()}
       </Button>
       <AlertDialogComponent
         type="failed"

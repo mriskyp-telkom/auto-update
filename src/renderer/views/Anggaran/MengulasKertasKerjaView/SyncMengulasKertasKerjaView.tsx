@@ -57,8 +57,10 @@ import { STATUS_INVALID_PENGESAHAN } from 'global/constants'
 
 import { ParamRkasPenjabType } from 'renderer/types/apis/RkasType'
 
+import { copyKertasKerja } from 'renderer/utils/copy-writing'
+
 // due import crypto utils
-import CommonUtils from '../../../../main/utils/CommonUtils'
+import CommonUtils from 'main/utils/CommonUtils'
 
 const ipcRenderer = window.require('electron').ipcRenderer
 
@@ -1248,7 +1250,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
   ////////////////////////////////////////////////////////////////////////
   return (
     <SyncDialogComponent
-      title="Mengirim RKAS..."
+      title={`Mengirim ${copyKertasKerja()}...`}
       percentage={percentage}
       isOpen={true}
       setIsOpen={closeModal}
