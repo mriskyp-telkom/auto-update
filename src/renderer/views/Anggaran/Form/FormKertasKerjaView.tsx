@@ -101,6 +101,7 @@ const FormKertasKerjaView: FC = () => {
   const [openModalDelete, setOpenModalDelete] = useState(false)
   const [openModalSuccess, setOpenModalSuccess] = useState(false)
   const [openModalConfirmCancel, setOpenModalConfirmCancel] = useState(false)
+  const [openModalFailedDelete, setOpenModalFailedDelete] = useState(false)
 
   const [formDisable, setFormDisable] = useState(initialFormDisable)
   const [formDefaultValue, setFormDefaultValue] = useState({
@@ -345,6 +346,7 @@ const FormKertasKerjaView: FC = () => {
 
   const handleDelete = () => {
     setOpenModalDelete(false)
+    setOpenModalFailedDelete(false)
 
     // before
     const res = ipcRenderer.sendSync(IPC_KK.deleteRapbs, idRapbs)
@@ -358,7 +360,7 @@ const FormKertasKerjaView: FC = () => {
         closeModal()
       }, 3000)
     } else if (res.isError) {
-      // TO DO:
+      setOpenModalFailedDelete(true)
     }
   }
 
@@ -976,10 +978,10 @@ const FormKertasKerjaView: FC = () => {
         icon="delete"
         title="Gagal menghapus kegiatan"
         desc="Maaf, terjadi gangguan di sistem kami. Silakan coba lagi dałam beberapa saat."
-        isOpen={openModalDelete}
+        isOpen={openModalFailedDelete}
         btnCancelText="Tutup"
         btnActionText="Hapus Ulang"
-        onCancel={() => setOpenModalDelete(false)}
+        onCancel={() => setOpenModalFailedDelete(false)}
         onSubmit={handleDelete}
         layer={2}
       />
