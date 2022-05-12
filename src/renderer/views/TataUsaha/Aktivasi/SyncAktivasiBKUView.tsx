@@ -1,4 +1,4 @@
-import { IPC_CONFIG } from 'global/ipc'
+import { IPC_ANGGARAN, IPC_CONFIG, IPC_SEKOLAH } from 'global/ipc'
 import React, { FC, useEffect, useState } from 'react'
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { useAPIGetToken } from 'renderer/apis/token'
@@ -11,8 +11,7 @@ import { AppStates, useAppStore } from 'renderer/stores/app'
 
 import { TataUsahaStates, useTataUsahaStore } from 'renderer/stores/tata-usaha'
 import { Penerimaan } from 'renderer/types/apis/UtilType'
-
-const ipcRenderer = window.require('electron').ipcRenderer
+import syncToIPCMain from 'renderer/configs/ipc'
 
 const stepApi = {
   infoConnection: 'infoConnection',
@@ -28,6 +27,7 @@ const SyncAktivasiBKUView: FC = () => {
 
   const [api, setApi] = useState('')
   const [tahunAktif, setTahunAktif] = useState(null)
+  const [tahunAnggaran, setTahunAnggaran] = useState(null)
   const [npsn, setNpsn] = useState('')
   const [koreg, setKoreg] = useState('')
   const [percentage, setPercentage] = useState(0)
@@ -84,12 +84,12 @@ const SyncAktivasiBKUView: FC = () => {
     remove: removeSalur,
   } = useAPISalur(
     {
-      tahun: 2020,
+      tahun: tahunAnggaran,
       sumberDana: parseInt(q_sumber_dana),
     },
     {
       enabled:
-        tahunAktif != null && q_sumber_dana != null && api == stepApi.salur,
+        tahunAnggaran != null && q_sumber_dana != null && api == stepApi.salur,
       retry: 0,
     }
   )
@@ -108,11 +108,13 @@ const SyncAktivasiBKUView: FC = () => {
   }
 
   useEffect(() => {
-    const tahunAktif = ipcRenderer.sendSync(
+    const tahunAktif = syncToIPCMain(
       IPC_CONFIG.getConfig,
       APP_CONFIG.tahunAktif
     )
-    const sekolah = ipcRenderer.sendSync('sekolah:getSekolah')
+    const anggaran = syncToIPCMain(IPC_ANGGARAN.getAnggaranById, q_id_anggaran)
+    const sekolah = syncToIPCMain(IPC_SEKOLAH.getSekolah)
+    setTahunAnggaran(anggaran.tahunAnggaran)
     setNpsn(sekolah.npsn)
     setKoreg(sekolah.kodeRegistrasi)
     setTahunAktif(tahunAktif)

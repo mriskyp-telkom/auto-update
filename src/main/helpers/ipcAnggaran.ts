@@ -28,7 +28,7 @@ module.exports = {
 
   getAnggaranById: ipcMain.on(
     IPC_ANGGARAN.getAnggaranById,
-    async (e, idAnggaran) => {
+    async (e: any, idAnggaran: string) => {
       e.returnValue = await GetDetailAnggaran(idAnggaran)
     }
   ),
