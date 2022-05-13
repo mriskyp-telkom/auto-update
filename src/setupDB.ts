@@ -42,6 +42,7 @@ import { ReportBku } from './main/models/ReportBku'
 import { createConnection, getRepository } from 'typeorm'
 import { getAppData } from './pathConfig'
 import { AktivasiBku } from 'main/models/AktivasiBku'
+import { KasUmumPajak } from 'main/models/KasUmumPajak'
 
 async function encryptDB(): Promise<void> {
   const appData = await getAppData()
@@ -666,6 +667,7 @@ async function createDBLocal(appDataPath: string): Promise<void> {
         SekolahPenjab,
         Token,
         UserRole,
+        KasUmumPajak,
       ],
       synchronize: true,
     })
