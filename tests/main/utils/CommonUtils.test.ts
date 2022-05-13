@@ -7,16 +7,40 @@ test('uuid', async () => {
   expect(isValid).toBe(true)
 })
 
-test('encodeUUID', async () => {
-  const uuid = 'f02ac478-2ff5-e011-84d1-cfdbd42bda04'
+test('encodeUUID - SMP NEGERI 1 PURWOSARI', async () => {
+  const uuid = 'A0B4DE5C-2EF5-E011-BEBE-FDBF9613135D'
   const encoded = CommonUtils.encodeUUID(uuid)
-  expect(encoded).toBe('8CrEeC_14BGE0c_b1CvaBA')
+  expect(encoded).toBe('XN60oPUuEeC-vv2_lhMTXQ')
 })
 
-test('decodeUUID', async () => {
-  const decoded = '8CrEeC_14BGE0c_b1CvaBA'
+test('decodeUUID - SMP NEGERI 1 PURWOSARI', async () => {
+  const decoded = 'XN60oPUuEeC-vv2_lhMTXQ'
   const decode = CommonUtils.decodeUUID(decoded)
-  expect(decode).toBe('f02ac478-2ff5-e011-84d1-cfdbd42bda04')
+  expect(decode).toBe('A0B4DE5C-2EF5-E011-BEBE-FDBF9613135D'.toLowerCase())
+})
+
+test('encodeUUID - SDN Ngepoh Semin', async () => {
+  const uuid = '20B6975C-2EF5-E011-A69A-0D1100F91E59'
+  const encoded = CommonUtils.encodeUUID(uuid)
+  expect(encoded).toBe('XJe2IPUuEeCmmg0RAPkeWQ')
+})
+
+test('decodeUUID - SDN Ngepoh Semin', async () => {
+  const decoded = 'XJe2IPUuEeCmmg0RAPkeWQ'
+  const decode = CommonUtils.decodeUUID(decoded)
+  expect(decode).toBe('20B6975C-2EF5-E011-A69A-0D1100F91E59'.toLowerCase())
+})
+
+test('encodeUUID - SDN GEDANGAN KARANGMOJO', async () => {
+  const uuid = 'A0A1955C-2EF5-E011-8DD8-0999FF6556B8'
+  const encoded = CommonUtils.encodeUUID(uuid)
+  expect(encoded).toBe('XJWhoPUuEeCN2AmZ_2VWuA')
+})
+
+test('decodeUUID - SDN GEDANGAN KARANGMOJO', async () => {
+  const decoded = 'XJWhoPUuEeCN2AmZ_2VWuA'
+  const decode = CommonUtils.decodeUUID(decoded)
+  expect(decode).toBe('A0A1955C-2EF5-E011-8DD8-0999FF6556B8'.toLowerCase())
 })
 
 test('getMD5', async () => {
