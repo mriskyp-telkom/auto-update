@@ -10,8 +10,6 @@ export const SetterAnggaranParam = (data: Anggaran): ParamAnggaranType => {
   const sisaAnggaran = ConvertUtils.convertIntoNumber(data?.sisaAnggaran)
   const jumlah = ConvertUtils.convertIntoNumber(data?.jumlah)
 
-  const tanggalPengajuan = new Date()
-
   const dataParamAnggaran = <ParamAnggaranType>{}
   dataParamAnggaran.id_anggaran = CommonUtils.decodeUUID(data?.idAnggaran)
   dataParamAnggaran.id_ref_sumber_dana = data?.idRefSumberDana
@@ -24,7 +22,7 @@ export const SetterAnggaranParam = (data: Anggaran): ParamAnggaranType => {
 
   // due from db tanggal_pengajuan null, and wants to create pengajuan, then create a tanggal
   const tanggalPengajuanFormatted = CommonUtils.formatDateToString(
-    tanggalPengajuan,
+    data.tanggalPengajuan != null ? data.tanggalPengajuan : new Date(),
     'YYYY-MM-DD HH:mm:ss'
   )
 
