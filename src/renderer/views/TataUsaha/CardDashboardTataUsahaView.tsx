@@ -127,6 +127,7 @@ const CardDashboardTataUsahaView: FC<CardDashboardTataUsahaProps> = (
                 <AktivasiBKUView
                   sumberDana={sumberDana}
                   idAnggaran={data.idAnggaran}
+                  isAnggaranApproved={data.isAnggaranApproved}
                 />
                 <div className="text-blue-700 text-[12px] text-right pt-2">
                   <b>“Aktivasi BKU”</b> membutuhkan koneksi internet
