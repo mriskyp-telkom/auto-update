@@ -16,7 +16,7 @@ interface SelectProps {
   options: any
   register: (arg0: string, arg1: RegisterOptions) => void
   handleSelect: (value: string) => void
-  disabled?: boolean
+  isDisabled?: boolean
 }
 
 const SelectComponent: FC<SelectProps> = (props: SelectProps) => {
@@ -45,19 +45,20 @@ const SelectComponent: FC<SelectProps> = (props: SelectProps) => {
       <Listbox
         value={selectedValue}
         onChange={handleChange}
-        disabled={props.disabled}
+        disabled={props.isDisabled}
       >
         <Listbox.Button
           className={clsx(
-            props.disabled && 'cursor-not-allowed',
-            width,
-            props.border &&
-              'rounded border border-solid border-gray-500 py-3 px-4 text-form'
+            props.border && 'rounded border border-solid py-3 px-4 text-form',
+            props.border && props.isDisabled
+              ? 'bg-gray-10 border-gray-200 text-gray-500 cursor-not-allowed'
+              : 'border-gray-500',
+            width
           )}
         >
           <span className="w-full flex justify-between items-center">
             <span className="capitalize-first">{selectedValue}</span>
-            {!props.disabled && (
+            {!props.isDisabled && (
               <Icon as="i" color="default" fontSize="default">
                 arrow_drop_down
               </Icon>
