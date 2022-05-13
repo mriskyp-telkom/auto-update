@@ -11,6 +11,8 @@ import syncToIPCMain from 'renderer/configs/ipc'
 
 import { IPC_ANGGARAN } from 'global/ipc'
 
+import { copyKertasKerja } from 'renderer/utils/copy-writing'
+
 const PanduanErrorPengesahanKKView: FC = () => {
   const { q_id_anggaran } = useParams()
 
@@ -38,13 +40,13 @@ const PanduanErrorPengesahanKKView: FC = () => {
             >
               cancel
             </Icon>
-            RKAS Belum Disetujui
+            {copyKertasKerja()} Belum Disetujui
           </div>
           <ul className="list font-normal text-base text-gray-900 ml-7">
             <li>
               <span>
-                RKAS Anda belum bisa disetujui karena ada beberapa revisi yang
-                perlu dilakukan.
+                {copyKertasKerja()} Anda belum bisa disetujui karena ada
+                beberapa revisi yang perlu dilakukan.
               </span>
             </li>
             <li>

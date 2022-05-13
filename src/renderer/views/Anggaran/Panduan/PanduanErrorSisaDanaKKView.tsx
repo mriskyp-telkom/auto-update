@@ -4,6 +4,8 @@ import CardPanduanAnggaranView from 'renderer/views/Anggaran/CardPanduanAnggaran
 
 import { Icon } from '@wartek-id/icon'
 
+import { copyKertasKerja } from 'renderer/utils/copy-writing'
+
 const PanduanErrorSisaDanaKKView: FC = () => {
   return (
     <CardPanduanAnggaranView type="failed">
@@ -18,13 +20,13 @@ const PanduanErrorSisaDanaKKView: FC = () => {
           >
             cancel
           </Icon>
-          RKAS Belum Memenuhi Syarat
+          {copyKertasKerja()} Belum Memenuhi Syarat
         </div>
         <ul className="list font-normal text-base text-gray-900 ml-7">
           <li>
             <span>
-              Anda belum dapat mengajukan pengesahan karena RKAS Anda masih
-              memiliki sisa dana.
+              Anda belum dapat mengajukan pengesahan karena {copyKertasKerja()}{' '}
+              Anda masih memiliki sisa dana.
             </span>
           </li>
           <li>

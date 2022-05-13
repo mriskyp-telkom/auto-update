@@ -33,6 +33,8 @@ import { AlertType } from 'renderer/types/ComponentType'
 import { IPC_ANGGARAN } from 'global/ipc'
 import { formatDateToString } from 'renderer/utils/date-formatting'
 
+import { copyKertasKerja } from 'renderer/utils/copy-writing'
+
 const MengulasKertasKerjaView: FC = () => {
   const location = useLocation()
   const navigate = useNavigate()
@@ -174,7 +176,7 @@ const MengulasKertasKerjaView: FC = () => {
             </span>
           </div>
           <div className="flex items-center text-[22px] font-semibold">
-            Mengulas RKAS
+            Mengulas {copyKertasKerja('draft')}
           </div>
           <div
             className="text-base font-semibold text-gray-600 mb-[57px]"
@@ -333,8 +335,8 @@ const MengulasKertasKerjaView: FC = () => {
       <AlertDialogComponent
         type="warning"
         icon="send"
-        title="Ajukan pengesahan RKAS?"
-        desc="RKAS Anda akan dikirim ke dinas setempat dan diperiksa kesesuaiannya dengan peraturan yang berlaku. Setelah pengajuan dikirim, RKAS tidak bisa diedit."
+        title={`Ajukan pengesahan ${copyKertasKerja()}?`}
+        desc={`${copyKertasKerja()} Anda akan dikirim ke dinas setempat dan diperiksa kesesuaiannya dengan peraturan yang berlaku. Setelah pengajuan dikirim, ${copyKertasKerja()} tidak bisa diedit.`}
         isOpen={openModalAjukan}
         btnCancelText="Batal"
         btnActionText="Kirim Pengajuan"

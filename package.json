@@ -1,162 +1,165 @@
 {
-    "name": "arkas-desktop",
-    "productName": "Arkas",
-    "version": "4.0.0",
-    "description": "Aplikasi Rencana Kegiatan dan Anggaran Sekolah, selanjutnya disingkat Aplikasi RKAS merupakan sistem informasi yang memanfaatkan teknologi informasi dan komunikasi untuk mengfasilitasi penganggaran, pelaksanaan dan penatausahaan serta pertanggungjawaban dana bantuan operasional sekolah di satuan pendidikan dasar dan menengah secara nasional.",
-    "main": ".webpack/main",
-    "scripts": {
-        "start": "cross-env BUILD=false electron-forge start",
-        "package": "cross-env BUILD=true electron-forge package",
-        "make": "cross-env BUILD=true electron-forge make",
-        "makewin": "ts-node installer-win/installer-win.ts",
-        "make-win32": "cross-env BUILD=true electron-forge make && yarn makewin",
-        "publish": "electron-forge publish",
-        "lint:script": "eslint . --ext ts,tsx,js --fix --max-warnings=0",
-        "postinstall": "husky install",
-        "format": "prettier --write . ",
-        "test": "jest",
-        "test-coverage": "jest --coverage",
-        "test:ci": "jest --config ./jest.config.js --collectCoverage --coverageDirectory=\"./coverage\" --ci --reporters=default --reporters=jest-junit --watchAll=false"
-    },
-    "keywords": [],
-    "license": "MIT",
-    "config": {
-        "forge": {
-            "packagerConfig": {
-                "executableName": "arkas_desktop",
-                "icon": "public/assets/icons/arkas.ico"
-            },
-            "makers": [{
-                    "name": "@electron-forge/maker-deb",
-                    "config": {
-                        "options": {
-                            "bin": "arkas_desktop",
-                            "maintainer": "Kemendikbudristek",
-                            "homepage": "https://rkas.kemdikbud.go.id"
-                        }
-                    }
-                },
-                {
-                    "name": "@electron-forge/maker-dmg",
-                    "config": {
-                        "format": "ULFO"
-                    }
-                },
-                {
-                    "name": "@electron-forge/maker-zip"
-                }
-            ],
-            "plugins": [
-                [
-                    "@electron-forge/plugin-webpack",
-                    {
-                        "mainConfig": "./webpack.main.config.js",
-                        "devContentSecurityPolicy": "script-src 'self' https://www.google-analytics.com 'unsafe-eval'",
-                        "renderer": {
-                            "config": "./webpack.renderer.config.js",
-                            "entryPoints": [{
-                                "html": "./src/renderer/index.html",
-                                "js": "./src/renderer/renderer.tsx",
-                                "name": "main_window"
-                            }]
-                        }
-                    }
-                ]
-            ]
+  "name": "arkas-desktop",
+  "productName": "Arkas",
+  "version": "4.0.0",
+  "description": "Aplikasi Rencana Kegiatan dan Anggaran Sekolah, selanjutnya disingkat Aplikasi RKAS merupakan sistem informasi yang memanfaatkan teknologi informasi dan komunikasi untuk mengfasilitasi penganggaran, pelaksanaan dan penatausahaan serta pertanggungjawaban dana bantuan operasional sekolah di satuan pendidikan dasar dan menengah secara nasional.",
+  "main": ".webpack/main",
+  "scripts": {
+    "start": "cross-env BUILD=false electron-forge start",
+    "package": "cross-env BUILD=true electron-forge package",
+    "make": "cross-env BUILD=true electron-forge make",
+    "makewin": "ts-node installer-win/installer-win.ts",
+    "make-win32": "cross-env BUILD=true electron-forge make && yarn makewin",
+    "publish": "electron-forge publish",
+    "lint:script": "eslint . --ext ts,tsx,js --fix --max-warnings=0",
+    "postinstall": "husky install",
+    "format": "prettier --write . ",
+    "test": "jest",
+    "test-coverage": "jest --coverage",
+    "test:ci": "jest --config ./jest.config.js --collectCoverage --coverageDirectory=\"./coverage\" --ci --reporters=default --reporters=jest-junit --watchAll=false"
+  },
+  "keywords": [],
+  "license": "MIT",
+  "config": {
+    "forge": {
+      "packagerConfig": {
+        "executableName": "arkas_desktop",
+        "icon": "public/assets/icons/arkas.ico"
+      },
+      "makers": [
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {
+            "options": {
+              "bin": "arkas_desktop",
+              "maintainer": "Kemendikbudristek",
+              "homepage": "https://rkas.kemdikbud.go.id"
+            }
+          }
+        },
+        {
+          "name": "@electron-forge/maker-dmg",
+          "config": {
+            "format": "ULFO"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip"
         }
-    },
-    "devDependencies": {
-        "@babel/core": "^7.17.9",
-        "@babel/preset-env": "^7.16.11",
-        "@babel/preset-react": "^7.16.7",
-        "@babel/preset-typescript": "^7.16.7",
-        "@electron-forge/cli": "^6.0.0-beta.61",
-        "@electron-forge/maker-deb": "^6.0.0-beta.61",
-        "@electron-forge/maker-dmg": "^6.0.0-beta.63",
-        "@electron-forge/maker-rpm": "^6.0.0-beta.61",
-        "@electron-forge/maker-squirrel": "^6.0.0-beta.61",
-        "@electron-forge/maker-zip": "^6.0.0-beta.61",
-        "@electron-forge/plugin-webpack": "6.0.0-beta.61",
-        "@popperjs/core": "^2.11.2",
-        "@testing-library/jest-dom": "^5.16.4",
-        "@testing-library/react": "^12.1.0",
-        "@types/axios": "^0.14.0",
-        "@types/jest": "^27.4.1",
-        "@types/lodash": "^4.14.179",
-        "@types/react": "^17.0.38",
-        "@types/react-datepicker": "^4.4.1",
-        "@types/react-dom": "^17.0.11",
-        "@types/uuid": "^8.3.4",
-        "@typescript-eslint/eslint-plugin": "^4.0.1",
-        "@typescript-eslint/parser": "^4.0.1",
-        "@vercel/webpack-asset-relocator-loader": "1.7.0",
-        "autoprefixer": "^10.4.2",
-        "babel-jest": "^27.5.1",
-        "check-code-coverage": "^1.10.0",
-        "clsx": "^1.1.1",
-        "copy-webpack-plugin": "^10.2.0",
-        "cross-env": "^7.0.3",
-        "css-loader": "^6.0.0",
-        "dotenv": "^11.0.0",
-        "electron": "16.0.6",
-        "eslint": "^7.6.0",
-        "eslint-plugin-import": "^2.20.0",
-        "fork-ts-checker-webpack-plugin": "^6.0.1",
-        "husky": "^7.0.4",
-        "jest": "^27.5.1",
-        "jest-junit": "^13.1.0",
-        "lint-staged": ">=10",
-        "node-loader": "^2.0.0",
-        "postcss-loader": "^6.2.1",
-        "prettier": "2.5.1",
-        "style-loader": "^3.0.0",
-        "tailwindcss": "^2.2.19",
-        "ts-jest": "^27.1.3",
-        "ts-loader": "^9.2.2",
-        "ts-node": "^10.7.0",
-        "typescript": "^4.0.2",
-        "unit-coverage": "^4.0.3"
-    },
-    "dependencies": {
-        "@electron/remote": "^2.0.8",
-        "@headlessui/react": "^1.5.0",
-        "@wartek-id/avatar": "^1.1.4",
-        "@wartek-id/badge": "^1.0.0",
-        "@wartek-id/button": "^1.1.1",
-        "@wartek-id/design-tokens": "^1.4.1",
-        "@wartek-id/dialog": "^0.2.1",
-        "@wartek-id/fe-toolbox": "^1.0.1",
-        "@wartek-id/header-bar": "^1.3.3",
-        "@wartek-id/icon": "^1.0.0",
-        "@wartek-id/input": "^1.1.2",
-        "@wartek-id/tabs": "^1.0.2",
-        "@wartek-id/tailwind-config": "^0.7.0",
-        "@wartek-id/tooltip": "^1.1.2",
-        "axios": "^0.26.0",
-        "better-sqlite3": "^7.5.1",
-        "better-sqlite3-multiple-ciphers": "^7.5.0",
-        "coverage": "^0.4.1",
-        "crypto-browserify": "^3.12.0",
-        "electron-find": "^1.0.7",
-        "electron-ga-uuid": "^1.0.2",
-        "electron-squirrel-startup": "^1.0.0",
-        "loadash": "^1.0.0",
-        "moment": "^2.29.1",
-        "neverthrow": "^4.3.1",
-        "node-machine-id": "^1.1.12",
-        "npm": "^8.5.0",
-        "query-string": "^7.1.1",
-        "react": "^17.0.2",
-        "react-datepicker": "^4.7.0",
-        "react-dom": "^17.0.2",
-        "react-hook-form": "^7.27.1",
-        "react-popper": "^2.2.5",
-        "react-query": "^3.34.15",
-        "react-router-dom": "^6.2.2",
-        "stream-browserify": "^3.0.0",
-        "typeorm": "^0.2.42",
-        "uuid": "^8.3.2",
-        "uuid-base64-ts": "^1.0.2",
-        "zustand": "^3.5.10"
+      ],
+      "plugins": [
+        [
+          "@electron-forge/plugin-webpack",
+          {
+            "mainConfig": "./webpack.main.config.js",
+            "devContentSecurityPolicy": "script-src 'self' https://www.google-analytics.com 'unsafe-eval'",
+            "renderer": {
+              "config": "./webpack.renderer.config.js",
+              "entryPoints": [
+                {
+                  "html": "./src/renderer/index.html",
+                  "js": "./src/renderer/renderer.tsx",
+                  "name": "main_window"
+                }
+              ]
+            }
+          }
+        ]
+      ]
     }
+  },
+  "devDependencies": {
+    "@babel/core": "^7.17.9",
+    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-react": "^7.16.7",
+    "@babel/preset-typescript": "^7.16.7",
+    "@electron-forge/cli": "^6.0.0-beta.61",
+    "@electron-forge/maker-deb": "^6.0.0-beta.61",
+    "@electron-forge/maker-dmg": "^6.0.0-beta.63",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.61",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.61",
+    "@electron-forge/maker-zip": "^6.0.0-beta.61",
+    "@electron-forge/plugin-webpack": "6.0.0-beta.61",
+    "@popperjs/core": "^2.11.2",
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^12.1.0",
+    "@types/axios": "^0.14.0",
+    "@types/jest": "^27.4.1",
+    "@types/lodash": "^4.14.179",
+    "@types/react": "^17.0.38",
+    "@types/react-datepicker": "^4.4.1",
+    "@types/react-dom": "^17.0.11",
+    "@types/uuid": "^8.3.4",
+    "@typescript-eslint/eslint-plugin": "^4.0.1",
+    "@typescript-eslint/parser": "^4.0.1",
+    "@vercel/webpack-asset-relocator-loader": "1.7.0",
+    "autoprefixer": "^10.4.2",
+    "babel-jest": "^27.5.1",
+    "check-code-coverage": "^1.10.0",
+    "clsx": "^1.1.1",
+    "copy-webpack-plugin": "^10.2.0",
+    "cross-env": "^7.0.3",
+    "css-loader": "^6.0.0",
+    "dotenv": "^11.0.0",
+    "electron": "16.0.6",
+    "eslint": "^7.6.0",
+    "eslint-plugin-import": "^2.20.0",
+    "fork-ts-checker-webpack-plugin": "^6.0.1",
+    "husky": "^7.0.4",
+    "jest": "^27.5.1",
+    "jest-junit": "^13.1.0",
+    "lint-staged": ">=10",
+    "node-loader": "^2.0.0",
+    "postcss-loader": "^6.2.1",
+    "prettier": "2.5.1",
+    "style-loader": "^3.0.0",
+    "tailwindcss": "^2.2.19",
+    "ts-jest": "^27.1.3",
+    "ts-loader": "^9.2.2",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.0.2",
+    "unit-coverage": "^4.0.3"
+  },
+  "dependencies": {
+    "@electron/remote": "^2.0.8",
+    "@headlessui/react": "^1.5.0",
+    "@wartek-id/avatar": "^1.1.4",
+    "@wartek-id/badge": "^1.0.0",
+    "@wartek-id/button": "^1.1.1",
+    "@wartek-id/design-tokens": "^1.4.1",
+    "@wartek-id/dialog": "^0.2.1",
+    "@wartek-id/fe-toolbox": "^1.0.1",
+    "@wartek-id/header-bar": "^1.3.3",
+    "@wartek-id/icon": "^1.0.0",
+    "@wartek-id/input": "^1.1.2",
+    "@wartek-id/tabs": "^1.0.2",
+    "@wartek-id/tailwind-config": "^0.7.0",
+    "@wartek-id/tooltip": "^1.1.2",
+    "axios": "^0.26.0",
+    "better-sqlite3": "^7.5.1",
+    "better-sqlite3-multiple-ciphers": "^7.5.0",
+    "coverage": "^0.4.1",
+    "crypto-browserify": "^3.12.0",
+    "electron-find": "^1.0.7",
+    "electron-ga-uuid": "^1.0.2",
+    "electron-squirrel-startup": "^1.0.0",
+    "loadash": "^1.0.0",
+    "moment": "^2.29.1",
+    "neverthrow": "^4.3.1",
+    "node-machine-id": "^1.1.12",
+    "npm": "^8.5.0",
+    "query-string": "^7.1.1",
+    "react": "^17.0.2",
+    "react-datepicker": "^4.7.0",
+    "react-dom": "^17.0.2",
+    "react-hook-form": "^7.27.1",
+    "react-popper": "^2.2.5",
+    "react-query": "^3.34.15",
+    "react-router-dom": "^6.2.2",
+    "stream-browserify": "^3.0.0",
+    "typeorm": "^0.2.42",
+    "uuid": "^8.3.2",
+    "uuid-base64-ts": "^1.0.2",
+    "zustand": "^3.5.10"
+  }
 }

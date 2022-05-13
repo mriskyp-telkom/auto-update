@@ -4,6 +4,8 @@ import CardPanduanAnggaranView from 'renderer/views/Anggaran/CardPanduanAnggaran
 
 import { Icon } from '@wartek-id/icon'
 
+import { copyKertasKerja } from 'renderer/utils/copy-writing'
+
 const PanduanErrorDataSentralKKView: FC = () => {
   return (
     <CardPanduanAnggaranView type="failed">
@@ -18,7 +20,7 @@ const PanduanErrorDataSentralKKView: FC = () => {
           >
             cancel
           </Icon>
-          RKAS Butuh Disesuaikan
+          {copyKertasKerja()} Butuh Disesuaikan
         </div>
         <ul className="list font-normal text-base text-gray-900 ml-7">
           <li>
