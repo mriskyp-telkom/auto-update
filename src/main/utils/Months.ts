@@ -1,6 +1,6 @@
 const mapMonth = new Map()
   .set(81, <Month>{ id: 81, name: 'januari', monthNumber: 0 })
-  .set(82, <Month>{ id: 82, name: 'febuari', monthNumber: 1 })
+  .set(82, <Month>{ id: 82, name: 'februari', monthNumber: 1 })
   .set(83, <Month>{ id: 83, name: 'maret', monthNumber: 2 })
   .set(84, <Month>{ id: 84, name: 'april', monthNumber: 3 })
   .set(85, <Month>{ id: 85, name: 'mei', monthNumber: 4 })
