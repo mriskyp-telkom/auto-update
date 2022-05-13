@@ -28,6 +28,7 @@ const FormPenerimaanDanaView: FC = () => {
   const tahunAnggaran = 2021
 
   const [defaultValue, setDefaultValue] = useState<FormPenerimaanDanaData>(null)
+  const [formDisable, setFormDisable] = useState(true)
 
   const [openModalConfirmation, setOpenModalConfirmation] = useState(false)
   const [openModalSuccess, setOpenModalSuccess] = useState(false)
@@ -106,6 +107,7 @@ const FormPenerimaanDanaView: FC = () => {
       let date = new Date(periodeSalurList[0].tanggal)
       if (periodeSalurList[0].tanggal === '') {
         date = new Date()
+        setFormDisable(false)
       }
 
       // set defaultvalue
@@ -125,7 +127,11 @@ const FormPenerimaanDanaView: FC = () => {
       <FormDialogComponent
         width={720}
         title="Konfirmasi Penerimaan Dana"
-        subtitle="Data diambil dari BOS Salur. Pastikan detail sesuai dengan yang tertera di rekening."
+        subtitle={
+          formDisable
+            ? 'Data diambil secara otomatis dari BOS Salur.'
+            : 'Masukkan detail sesuai dengan yang tertera di rekening.'
+        }
         isOpen={true}
         btnSubmitText="Konfirmasi"
         onCancel={handleCloseForm}
@@ -142,6 +148,7 @@ const FormPenerimaanDanaView: FC = () => {
               register={register}
               selected={periodeSalurList[0]?.label}
               handleSelect={handleSelectPeriode}
+              isDisabled={formDisable}
             />
           </div>
           <div className="flex">
@@ -154,6 +161,7 @@ const FormPenerimaanDanaView: FC = () => {
                 defaultValue={defaultValue?.tanggal_penerimaan}
                 register={register}
                 handleSelect={handleSelectTanggal}
+                isDisabled={formDisable}
               />
             </div>
             <div className="flex-grow">
@@ -166,6 +174,7 @@ const FormPenerimaanDanaView: FC = () => {
                 placeholder=""
                 register={register}
                 errors={errors}
+                isDisabled={formDisable}
                 registerOption={{
                   onChange: (e: any) => {
                     const value = e.target.value

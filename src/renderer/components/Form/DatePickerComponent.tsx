@@ -6,12 +6,14 @@ import { Input, InputGroup, InputRightAddon } from '@wartek-id/input'
 import { Icon } from '@wartek-id/icon'
 
 import id from 'date-fns/locale/id'
+import clsx from 'clsx'
 
 registerLocale('id', id)
 
 interface DatePickerProps {
   name: string
   defaultValue: Date
+  isDisabled: boolean
   register: (arg0: string, arg1: RegisterOptions) => void
   handleSelect: (value: Date) => void
 }
@@ -46,13 +48,20 @@ const DatePickerComponent: FC<DatePickerProps> = (props: DatePickerProps) => {
 
   return (
     <DatePicker
+      className={clsx(props.isDisabled && 'cursor-not-allowed')}
       id={name}
       name={name}
       dateFormat="d MMM yyyy"
       locale="id"
       selected={startDate}
       onChange={handleChange}
-      customInput={<CustomInput register={register(name, {})} />}
+      disabled={props.isDisabled}
+      customInput={
+        <CustomInput
+          register={register(name, {})}
+          isDisabled={props.isDisabled}
+        />
+      }
     />
   )
 }

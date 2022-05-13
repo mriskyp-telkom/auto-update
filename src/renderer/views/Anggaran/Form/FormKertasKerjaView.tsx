@@ -608,7 +608,7 @@ const FormKertasKerjaView: FC = () => {
                 border={false}
                 register={register}
                 handleSelect={handleSelect}
-                disabled={getMonthOptions().length === 0}
+                isDisabled={getMonthOptions().length === 0}
               />
             </span>
             <span>Rp {numberUtils.delimit(totalPerMonth, '.')}</span>

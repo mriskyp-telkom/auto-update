@@ -25,6 +25,8 @@ import {
 
 import includes from 'lodash/includes'
 
+import clsx from 'clsx'
+
 interface InputProps {
   type: 'text' | 'email' | 'alphabet' | 'name'
   required?: boolean
@@ -244,7 +246,10 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
   return (
     <Input
       type="text"
-      className={props.className}
+      className={clsx(
+        props.isDisabled && 'cursor-not-allowed',
+        props.className
+      )}
       placeholder={placeholder}
       isDisabled={isDisabled}
       id={name}
