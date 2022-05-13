@@ -116,3 +116,19 @@ export const STATUS_INVALID_PENGESAHAN = {
   invalidSisaDana: 2,
   invalidDataCentral: 3,
 }
+
+export const STATUS_BKU_PERBULAN = {
+  not_created: 'not_created',
+  done: 'done',
+  request_to_edit: 'request_to_edit',
+  request_to_delete: 'request_to_delete',
+  not_reported_tax: 'not_reported_tax',
+  draft: 'draft',
+}
+
+export const STATUS_BKU_PERTAHUN = {
+  not_active: 'not_active',
+  active: 'active',
+  done: 'done',
+  temporary_inactive: 'temporary_inactive',
+}

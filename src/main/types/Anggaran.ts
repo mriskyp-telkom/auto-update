@@ -56,6 +56,7 @@ export interface AnggaranDTO {
   tanggal_pengesahan: Date
   is_revisi: number
   is_pengesahan: number
+  is_approve: number
   create_date: Date
   last_update: Date
   alasan_penolakan: string

@@ -9,11 +9,10 @@ import { Icon } from '@wartek-id/icon'
 
 import { DATA_BULAN } from 'renderer/constants/general'
 import {
-  STATUS_BKU_PERTAHUN,
   LABEL_STATUS_BKU_PERTAHUN,
-  STATUS_BKU_PERBULAN,
   LABEL_STATUS_BKU_PERBULAN,
 } from 'renderer/constants/tata-usaha'
+import { STATUS_BKU_PERBULAN, STATUS_BKU_PERTAHUN } from 'global/constants'
 
 import {
   BKUCardDashboardTahunType,

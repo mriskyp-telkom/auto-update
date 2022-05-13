@@ -13,4 +13,12 @@ export class AktivasiBkuRepository {
       .getRepository(AktivasiBku)
       .upsert(bku, ['idAnggaran', 'idPeriode'])
   }
+
+  async GetListbyIDs(ids: string[]): Promise<AktivasiBku[]> {
+    return await this.conn
+      .getRepository(AktivasiBku)
+      .createQueryBuilder()
+      .where('id_anggaran IN (:...ids)', { ids })
+      .getMany()
+  }
 }
