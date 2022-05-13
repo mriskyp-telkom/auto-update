@@ -15,6 +15,8 @@ import syncToIPCMain from 'renderer/configs/ipc'
 import { STATUS_KERTAS_KERJA } from 'global/constants'
 import { IPC_ANGGARAN } from 'global/ipc'
 
+import { copyKertasKerja } from 'renderer/utils/copy-writing'
+
 import includes from 'lodash/includes'
 
 interface AktivasiBKUViewProps {
@@ -113,10 +115,10 @@ const AktivasiBKUView: FC<AktivasiBKUViewProps> = (
         type="warning"
         icon="priority_high"
         title="BKU Belum Dapat Diaktifkan"
-        desc="Untuk mengaktifkan BKU, Kertas Kerja Anda harus sudah disahkan dinas."
+        desc={`Untuk mengaktifkan BKU, ${copyKertasKerja()} Anda harus sudah disahkan dinas.`}
         isOpen={openModaWarning}
         hideBtnCancel={true}
-        btnActionText="Lihat Kertas Kerja"
+        btnActionText={`Lihat ${copyKertasKerja()}`}
         onSubmit={handleBtnAlertSubmit}
       />
       <AlertDialogComponent
