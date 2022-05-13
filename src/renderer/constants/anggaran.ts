@@ -98,7 +98,7 @@ export const ALERT_CEK_STATUS = {
     type: 'warning',
     icon: 'hourglass_bottom',
     title: `${copyKertasKerja()} masih dalam proses`,
-    desc: 'Dinas memerlukan 7-14 hari kerja untuk memeriksa dan melakukan pengesahan. Silahkan cek status terbaru secara berkala.',
+    desc: 'Dinas memerlukan 7-14 hari kerja untuk memeriksa dan melakukan pengesahan. Silakan cek status terbaru secara berkala.',
     btnCancelText: 'Tutup',
     btnActionText: `Lihat ${copyKertasKerja()}`,
   },
