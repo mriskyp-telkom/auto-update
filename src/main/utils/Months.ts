@@ -12,7 +12,7 @@ const mapMonth = new Map()
   .set(91, <Month>{ id: 91, name: 'november', monthNumber: 10 })
   .set(92, <Month>{ id: 92, name: 'desember', monthNumber: 11 })
 
-const monthList: Month[] = [
+export const MonthList: Month[] = [
   mapMonth.get(81),
   mapMonth.get(82),
   mapMonth.get(83),
@@ -24,6 +24,7 @@ const monthList: Month[] = [
   mapMonth.get(89),
   mapMonth.get(90),
   mapMonth.get(91),
+  mapMonth.get(92),
 ]
 
 export function GetMonthName(id: number): string {
@@ -67,7 +68,7 @@ export function GetMonthsRange(month: number): Month[] {
 
   const months: Month[] = []
   for (let i = 0; i < month; i++) {
-    months.push(monthList[i])
+    months.push(MonthList[i])
   }
 
   return months

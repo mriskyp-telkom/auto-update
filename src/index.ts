@@ -106,6 +106,7 @@ app.on('ready', async () => {
         require('./main/helpers/ipcPenjab')
         require('./main/helpers/ipcRapbs')
         require('./main/helpers/ipcUtils')
+        require('./main/helpers/ipcTataUsaha')
 
         setTimeout(function () {
           splashWindow.close()

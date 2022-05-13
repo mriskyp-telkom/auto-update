@@ -9,7 +9,6 @@ import {
 import { Rapbs } from 'main/models/Rapbs'
 import { RapbsPeriode } from 'main/models/RapbsPeriode'
 import { Anggaran } from 'main/models/Anggaran'
-import { RefSumberDana } from 'main/models/RefSumberDana'
 import CommonUtils from 'main/utils/CommonUtils'
 import { AnggaranTotal, AnggaranDTO, PaguDTO } from 'main/types/Anggaran'
 
@@ -27,6 +26,7 @@ export const GetAnggaran = async (
       'a.tanggal_pengajuan',
       'a.tanggal_pengesahan',
       'a.is_revisi',
+      'a.is_approve',
       'a.is_pengesahan',
       'a.create_date',
       'a.last_update',
@@ -44,7 +44,7 @@ export const GetAnggaran = async (
       'a.is_revisi = b.is_revisi and a.tahun_anggaran = b.tahun_anggaran'
     )
     .innerJoin(
-      RefSumberDana,
+      'ref_sumber_dana',
       'r',
       'r.id_ref_sumber_dana = a.id_ref_sumber_dana'
     )
