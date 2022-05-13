@@ -40,6 +40,7 @@ import { SekolahPenjab } from './main/models/SekolahPenjab'
 import { ReportBku } from './main/models/ReportBku'
 import { getAppData } from './pathConfig'
 import { AktivasiBku } from 'main/models/AktivasiBku'
+import { KasUmumPajak } from 'main/models/KasUmumPajak'
 
 // for make sure connection db
 export const connDB = async (): Promise<Connection> => {
@@ -86,6 +87,7 @@ export const connDB = async (): Promise<Connection> => {
         Token,
         SekolahPenjab,
         UserRole,
+        KasUmumPajak,
       ],
       driver: require('better-sqlite3-multiple-ciphers'),
       prepareDatabase: (db) => {
