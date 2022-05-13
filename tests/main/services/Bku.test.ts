@@ -84,7 +84,7 @@ test('AktivasiBku', async () => {
     '2022-01-01T00:00:00.000Z'
   )
 
-  // kas umum bulan febuari
+  // kas umum bulan februari
   expect(kasUmumList[4].tanggalTransaksi.toISOString()).toBe(
     '2022-02-28T23:59:59.000Z'
   )
@@ -124,7 +124,7 @@ test('AktivasiBku', async () => {
   expect(aktivasiBkuList[0].saldoAkhirBankSisa).toBe(0)
   expect(aktivasiBkuList[0].saldoAkhirTunaiSisa).toBe(0)
 
-  // bulan febuari
+  // bulan februari
   expect(aktivasiBkuList[1].idPeriode).toBe(82)
   expect(aktivasiBkuList[1].tanggalAktivasi.toISOString()).toBe(
     '2022-02-01T00:00:00.000Z'

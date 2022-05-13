@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 
 import PageLayout from 'renderer/views/Layout/PageLayout'
 
@@ -8,81 +8,24 @@ import { Tabs, TabList, Tab, TabPanels, TabPanel } from '@wartek-id/tabs'
 
 import { BKUCardDashboardTahunType } from 'renderer/types/TataUsahaType'
 import { ID_SUMBER_DANA } from 'renderer/constants/anggaran'
+import syncToIpcMain from 'renderer/configs/ipc'
 
-const bosReguler = [
-  {
-    tahun: 2022,
-    idAnggaran: 'xxxxx',
-    status: 'not_active',
-    isAnggaranApproved: true,
-    bulan: [],
-  },
-  {
-    tahun: 2021,
-    idAnggaran: 'yyyyy',
-    status: 'active',
-    isAnggaranApproved: true,
-    bulan: [
-      {
-        bulan: 'januari',
-        status: 'done',
-      },
-      {
-        bulan: 'februari',
-        status: 'done',
-      },
-      {
-        bulan: 'maret',
-        status: 'done',
-      },
-      {
-        bulan: 'april',
-        status: 'done',
-      },
-      {
-        bulan: 'mei',
-        status: 'done',
-      },
-      {
-        bulan: 'juni',
-        status: 'done',
-      },
-      {
-        bulan: 'juli',
-        status: 'done',
-      },
-      {
-        bulan: 'agustus',
-        status: 'done',
-      },
-      {
-        bulan: 'september',
-        status: 'done',
-      },
-      {
-        bulan: 'oktober',
-        status: 'done',
-      },
-      {
-        bulan: 'november',
-        status: 'done',
-      },
-      {
-        bulan: 'desember',
-        status: 'done',
-      },
-    ],
-  },
-  {
-    tahun: 2020,
-    status: 'done',
-    idAnggaran: 'zzzzz',
-    isAnggaranApproved: true,
-    bulan: [],
-  },
-]
+import { IPC_TATA_USAHA } from 'global/ipc'
 
 const DashboardTataUsahaView: FC = () => {
+  const [bosReguler, setBosReguler] = useState([])
+
+  useEffect(() => {
+    const bkuBOSReguler = syncToIpcMain(
+      IPC_TATA_USAHA.getListAnggaran,
+      ID_SUMBER_DANA.BOS_REGULER
+    )
+    if (bkuBOSReguler?.error) {
+      //an error occured when fetch data from local database
+    } else {
+      setBosReguler(bkuBOSReguler?.value)
+    }
+  }, [])
   return (
     <PageLayout>
       <div className="flex w-[980px] bg-white rounded-[10px] mt-[45px] mx-auto">
@@ -99,7 +42,7 @@ const DashboardTataUsahaView: FC = () => {
           </div>
           <TabPanels>
             <TabPanel className="mt-6 mb-[2px] mr-3 grid justify-items-center max-h-[550px] scrollBar overflow-y-scroll">
-              {bosReguler.map(
+              {bosReguler?.map(
                 (item: BKUCardDashboardTahunType, index: number) => {
                   return (
                     <CardDashboardTataUsahaView

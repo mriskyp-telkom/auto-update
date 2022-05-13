@@ -64,7 +64,7 @@ test('GetListAnggaran', async () => {
   for (const bulan of data[0].bulan) {
     expect(bulan.bulan).toBe(GetMonthName(bulan.idPeriode))
 
-    if (bulan.bulan === 'febuari') {
+    if (bulan.bulan === 'februari') {
       expect(bulan.status).toBe(STATUS_BKU_PERBULAN.draft)
     } else {
       expect(bulan.status).toBe(STATUS_BKU_PERBULAN.not_created)
@@ -79,7 +79,7 @@ test('GetListAnggaran', async () => {
   for (const bulan of data[1].bulan) {
     expect(bulan.bulan).toBe(GetMonthName(bulan.idPeriode))
 
-    if (bulan.bulan === 'januari' || bulan.bulan === 'febuari') {
+    if (bulan.bulan === 'januari' || bulan.bulan === 'februari') {
       expect(bulan.status).toBe(STATUS_BKU_PERBULAN.draft)
     } else {
       expect(bulan.status).toBe(STATUS_BKU_PERBULAN.not_created)
