@@ -158,8 +158,11 @@ const FormPenerimaanDanaView: FC = () => {
               </div>
               <DatePickerComponent
                 name="tanggal_penerimaan"
+                placeholder="Pilih tanggal"
+                required={true}
                 defaultValue={defaultValue?.tanggal_penerimaan}
                 register={register}
+                errors={errors}
                 handleSelect={handleSelectTanggal}
                 isDisabled={formDisable}
               />
@@ -171,8 +174,9 @@ const FormPenerimaanDanaView: FC = () => {
               <InputComponent
                 type="text"
                 name="nominal"
-                placeholder=""
+                placeholder="Masukkan nominal"
                 register={register}
+                required={true}
                 errors={errors}
                 isDisabled={formDisable}
                 registerOption={{
