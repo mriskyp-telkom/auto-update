@@ -38,6 +38,10 @@ const FormPenerimaanDanaView: FC = () => {
     (state: TataUsahaStates) => state.periodeSalurList
   )
 
+  const setIsFocused = useTataUsahaStore(
+    (state: TataUsahaStates) => state.setIsFocused
+  )
+
   const {
     register,
     handleSubmit,
@@ -97,6 +101,7 @@ const FormPenerimaanDanaView: FC = () => {
   useEffect(() => {
     if (openModalSuccess) {
       setTimeout(() => {
+        setIsFocused(true)
         closeModal()
       }, TIME_DELAY_SCREEN)
     }
