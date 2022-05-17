@@ -199,8 +199,8 @@ const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (
                 <CreateKertasKerjaView idSumberDana={data.id_sumber_dana} />
               </div>
               <div className="text-blue-700 text-[12px] text-right pt-4">
-                <b>“Buat {copyKertasKerja(data.status)}”</b> membutuhkan koneksi
-                internet
+                <b>“Aktivasi {copyKertasKerja(data.status)}”</b> membutuhkan
+                koneksi internet
               </div>
             </>
           )}
