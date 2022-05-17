@@ -37,6 +37,10 @@ const CardBulan: FC<CardBulanProps> = (props: CardBulanProps) => {
 
   const isDisabled = data.status === undefined
 
+  const showStatus =
+    props.status_pertahun === STATUS_BKU_PERTAHUN.active ||
+    props.status_pertahun === STATUS_BKU_PERTAHUN.done
+
   const status = isDisabled ? STATUS_BKU_PERBULAN.not_created : data.status
 
   const color = isDisabled ? 'bg-gray-10 text-gray-500' : 'bg-white'
@@ -50,7 +54,7 @@ const CardBulan: FC<CardBulanProps> = (props: CardBulanProps) => {
         'rounded shadow-card py-3 px-5 w-[177px] capitalize-first'
       )}
     >
-      <div className="flex justify-center mb-3">
+      <div className="flex justify-center">
         {data.status === STATUS_BKU_PERBULAN.done && (
           <Icon as="i" className="mr-2" color="default" fontSize="default">
             done
@@ -58,18 +62,20 @@ const CardBulan: FC<CardBulanProps> = (props: CardBulanProps) => {
         )}
         {data.bulan}
       </div>
-      <div className="flex justify-center">
-        {LABEL_STATUS_BKU_PERBULAN.filter((item) => item.status === status).map(
-          (status, index) => (
+      {showStatus && (
+        <div className="flex justify-center mt-3">
+          {LABEL_STATUS_BKU_PERBULAN.filter(
+            (item) => item.status === status
+          ).map((status, index) => (
             <BadgeComponent
               key={index}
               type={isDisabled ? 'custom' : (status.type as BadgeType)}
               label={status.label}
               class={classStatus}
             />
-          )
-        )}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
@@ -84,7 +90,7 @@ const CardDashboardTataUsahaView: FC<CardDashboardTataUsahaProps> = (
   const isActive = data.status === STATUS_BKU_PERTAHUN.active
   const isTempInactive = data.status === STATUS_BKU_PERTAHUN.temporary_inactive
 
-  const showBulan = data.bulan.length > 0
+  const showBulan = true
   const showBtnList = !isNotActive && showBulan
   const showBtnCetak = isDone || isActive
 
