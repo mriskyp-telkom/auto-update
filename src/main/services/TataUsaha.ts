@@ -9,8 +9,8 @@ import { GetAnggaran } from 'main/repositories/Anggaran'
 import { AktivasiBkuRepository } from 'main/repositories/AktivasiBku'
 import { Anggaran, Bku } from 'main/types/TataUsaha'
 import { AktivasiBku } from 'main/models/AktivasiBku'
-import { STATUS_BKU_PERBULAN, STATUS_BKU_PERTAHUN } from 'global/constants'
-import { GetMonthName, MonthList } from 'main/utils/Months'
+import { STATUS_BKU_PERTAHUN } from 'global/constants'
+import { GetMonthName } from 'main/utils/Months'
 import { GetStatusAktivasiBku, GetStatusAnggaran } from 'global/status'
 import { Anggaran as AnggaranEntity } from 'main/models/Anggaran'
 
@@ -51,20 +51,6 @@ export class TataUsahaService {
     }
 
     for (const [key, anggaran] of mapAnggaran) {
-      for (const month of MonthList) {
-        const bku = bkuList.find(
-          (bku) => bku.idPeriode === month.id && bku.idAnggaran === key
-        )
-        if (bku === undefined) {
-          anggaran.bkuList.push(<Bku>{
-            idPeriode: month.id,
-            monthName: month.name,
-            bku: null,
-            status: STATUS_BKU_PERBULAN.not_created,
-          })
-        }
-      }
-
       anggaran.bkuList.sort((a, b) => a.idPeriode - b.idPeriode)
 
       const populate = this.populateAnggaranStatus(anggaran)

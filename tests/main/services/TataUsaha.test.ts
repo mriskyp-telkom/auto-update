@@ -90,11 +90,7 @@ test('GetListAnggaran', async () => {
   expect(data[2].idAnggaran).toBe('pUe9yWUZHkmYezDiz7DTDA')
   expect(data[2].status).toBe(STATUS_BKU_PERTAHUN.not_active)
   expect(data[2].isAnggaranApproved).toBe(false)
-
-  for (const bulan of data[2].bulan) {
-    expect(bulan.bulan).toBe(GetMonthName(bulan.idPeriode))
-    expect(bulan.status).toBe(STATUS_BKU_PERBULAN.not_created)
-  }
+  expect(data[2].bulan.length).toBe(0)
 
   expect(data[3].tahun).toBe(2019)
   expect(data[3].idAnggaran).toBe('3GIqBvF91Em6K_VasjmhTw')
