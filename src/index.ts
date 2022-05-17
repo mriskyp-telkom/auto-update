@@ -90,6 +90,7 @@ app.on('ready', async () => {
     connDB().then(() => {
       machineId(true).then((id) => {
         SetConfig('hdd_vol', id)
+
         // will improve later
         require('./main/ipcs/ipcAnggaran')
         require('./main/ipcs/ipcConfig')

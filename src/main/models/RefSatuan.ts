@@ -19,7 +19,7 @@ export class RefSatuan extends BaseEntity {
   @Column('varchar', { name: 'unit', length: 30 })
   unit: string
 
-  @Column('datetime', { name: 'created_date' })
+  @Column('datetime', { name: 'create_date' })
   createDate: Date
 
   @Column('datetime', { name: 'last_update' })
