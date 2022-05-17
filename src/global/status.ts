@@ -22,6 +22,7 @@ export function GetStatusAktivasiBku(aktivasiBku: AktivasiBku | null): string {
 }
 
 export function GetStatusAnggaran(
+  activeYear: number,
   anggaran: Anggaran,
   aktivasiBkuList: AktivasiBku[]
 ): string {
@@ -50,6 +51,10 @@ export function GetStatusAnggaran(
 
   if (finished === 12) {
     return STATUS_BKU_PERTAHUN.done
+  }
+
+  if (anggaran.tahunAnggaran < activeYear) {
+    return STATUS_BKU_PERTAHUN.date_over
   }
 
   if (

@@ -21,6 +21,11 @@ export const LABEL_STATUS_BKU_PERTAHUN = [
     type: 'disabled-with-border',
     label: 'Nonaktif Sementara',
   },
+  {
+    status: STATUS_BKU_PERTAHUN.date_over,
+    type: 'disabled',
+    label: 'Nonaktif - Lewat Batas',
+  },
 ]
 
 export const LABEL_STATUS_BKU_PERBULAN = [

@@ -16,6 +16,7 @@ export const CONFIG = {
   sekolahId: 'sekolah_id',
   penggunaId: 'pengguna_id',
   sessionId: 'sessionId',
+  tahunAktif: 'tahun_aktif',
 }
 
 export const ERROR = {
@@ -131,4 +132,5 @@ export const STATUS_BKU_PERTAHUN = {
   active: 'active',
   done: 'done',
   temporary_inactive: 'temporary_inactive',
+  date_over: 'date_over',
 }
