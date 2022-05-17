@@ -8,6 +8,9 @@ import { Tabs, TabList, Tab, TabPanels, TabPanel } from '@wartek-id/tabs'
 
 import { BKUCardDashboardTahunType } from 'renderer/types/TataUsahaType'
 import { ID_SUMBER_DANA } from 'renderer/constants/anggaran'
+
+import { TataUsahaStates, useTataUsahaStore } from 'renderer/stores/tata-usaha'
+
 import syncToIpcMain from 'renderer/configs/ipc'
 
 import { IPC_TATA_USAHA } from 'global/ipc'
@@ -15,7 +18,15 @@ import { IPC_TATA_USAHA } from 'global/ipc'
 const DashboardTataUsahaView: FC = () => {
   const [bosReguler, setBosReguler] = useState([])
 
-  useEffect(() => {
+  const isFocused = useTataUsahaStore(
+    (state: TataUsahaStates) => state.isFocused
+  )
+
+  const setIsFocused = useTataUsahaStore(
+    (state: TataUsahaStates) => state.setIsFocused
+  )
+
+  const fetchData = () => {
     const bkuBOSReguler = syncToIpcMain(
       IPC_TATA_USAHA.getListAnggaran,
       ID_SUMBER_DANA.BOS_REGULER
@@ -25,7 +36,19 @@ const DashboardTataUsahaView: FC = () => {
     } else {
       setBosReguler(bkuBOSReguler?.value)
     }
+  }
+
+  useEffect(() => {
+    if (isFocused) {
+      fetchData()
+      setIsFocused(false)
+    }
+  }, [isFocused])
+
+  useEffect(() => {
+    fetchData()
   }, [])
+
   return (
     <PageLayout>
       <div className="flex w-[980px] bg-white rounded-[10px] mt-[45px] mx-auto">
