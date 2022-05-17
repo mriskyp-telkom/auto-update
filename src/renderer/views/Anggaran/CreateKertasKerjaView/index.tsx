@@ -2,7 +2,6 @@ import React, { FC, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { Button } from '@wartek-id/button'
-import { Icon } from '@wartek-id/icon'
 
 import AlertDialogComponent from 'renderer/components/Dialog/AlertDialogComponent'
 import SyncDialogComponent from 'renderer/components/Dialog/SyncDialogComponent'
@@ -436,15 +435,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
         variant="solid"
         onClick={onClickCreate}
       >
-        <Icon
-          as="i"
-          color="default"
-          fontSize="default"
-          style={{ color: '#ffffff' }}
-        >
-          add
-        </Icon>
-        Buat {copyKertasKerja()}
+        Aktivasi {copyKertasKerja()}
       </Button>
       <AlertDialogComponent
         type="failed"
