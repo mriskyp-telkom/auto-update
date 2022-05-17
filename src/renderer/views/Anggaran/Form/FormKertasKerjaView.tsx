@@ -289,6 +289,7 @@ const FormKertasKerjaView: FC = () => {
       setValue('uraian', '')
       setValue('harga_satuan', '')
       setFocus('rekening_belanja')
+      setSelectedUraian(null)
       setFormDisable({
         ...formDisable,
         rekening_belanja: false,

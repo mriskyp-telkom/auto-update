@@ -24,7 +24,6 @@ import {
 } from 'main/types/Rapbs'
 import CommonUtils from 'main/utils/CommonUtils'
 import { getConnection } from 'typeorm'
-import { GetPenggunaID } from './User'
 import { CONFIG } from 'global/constants'
 import { ok, err, Result } from 'neverthrow'
 import { GetMonthName } from 'main/utils/Months'
@@ -41,7 +40,6 @@ export async function AddDetailKegiatan(
   const now = new Date()
   const idRapbs = CommonUtils.encodeUUIDFromV4()
   const idBarang = data.idBarang == '' ? null : data.idBarang
-  const penggunaId = await GetPenggunaID()
   const sekolahId = await GetConfig(CONFIG.sekolahId)
   const res = <ResultAddDetailKegiatan>{
     idRapbs: idRapbs,
@@ -83,7 +81,7 @@ export async function AddDetailKegiatan(
     softDelete: 0,
     createDate: now,
     lastUpdate: now,
-    updaterId: penggunaId,
+    updaterId: sekolahId,
   }
 
   const rapbsPeriodes: RapbsPeriode[] = []
@@ -104,7 +102,7 @@ export async function AddDetailKegiatan(
       softDelete: 0,
       createDate: now,
       lastUpdate: now,
-      updaterId: penggunaId,
+      updaterId: sekolahId,
     })
   })
 
@@ -222,7 +220,6 @@ export async function UpdateDetailKegiatan(
 ): Promise<Result<boolean, Error>> {
   const now = new Date()
   const idBarang = data.idBarang == '' ? null : data.idBarang
-  const penggunaId = await GetPenggunaID()
   const sekolahId = await GetConfig(CONFIG.sekolahId)
   const idRapbs = data.idRapbs
 
@@ -271,7 +268,7 @@ export async function UpdateDetailKegiatan(
     softDelete: 0,
     createDate: currentRapbs.createDate,
     lastUpdate: now,
-    updaterId: penggunaId,
+    updaterId: sekolahId,
   }
 
   const rapbsPeriodes: RapbsPeriode[] = []
@@ -286,7 +283,7 @@ export async function UpdateDetailKegiatan(
       v1: periode.volume,
       s1: periode.satuan,
       softDelete: 0,
-      updaterId: penggunaId,
+      updaterId: sekolahId,
     })
   })
 
