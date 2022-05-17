@@ -25,14 +25,20 @@ const PanduanErrorSisaDanaKKView: FC = () => {
         <ul className="list font-normal text-base text-gray-900 ml-7">
           <li>
             <span>
-              Anda belum dapat mengajukan pengesahan karena {copyKertasKerja()}{' '}
-              Anda masih memiliki sisa dana.
+              Anda belum dapat mengajukan pengesahan karena masih memiliki
+              kekurangan atau kelebihan sisa dana.
             </span>
           </li>
           <li>
             <span>
               Silakan sesuaikan kembali anggaran pembelanjaan Anda hingga sisa
               dana habis.
+            </span>
+          </li>
+          <li>
+            <span>
+              Setelah Kertas Kerja disesuaikan, pastikan Anda ajukan pengesahan
+              kembali.
             </span>
           </li>
         </ul>

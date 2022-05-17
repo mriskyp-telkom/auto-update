@@ -47,23 +47,21 @@ test('addBulkRefSatuan', async () => {
   const now = new Date()
 
   const dataRefSatuan: RefSatuan[] = []
-  dataRefSatuan.push(<RefSatuan>{
-    refSatuanId: CommonUtils.encodeUUID(CommonUtils.uuid()),
-    satuan: 'Lembar Test',
-    unit: 'Lembar Test',
-    createDate: now,
-    lastUpdate: now,
-    expiredDate: null,
-  })
+  const ref = new RefSatuan()
+  ref.refSatuanId = CommonUtils.encodeUUID(CommonUtils.uuid())
+  ref.satuan = 'Lembar Test'
+  ref.unit = 'Lembar Test'
+  ref.createDate = now
+  ref.lastUpdate = now
+  dataRefSatuan.push(ref)
 
-  dataRefSatuan.push(<RefSatuan>{
-    refSatuanId: CommonUtils.encodeUUID(CommonUtils.uuid()),
-    satuan: 'Kegiatan Test',
-    unit: 'Kegiatan Test',
-    createDate: now,
-    lastUpdate: now,
-    expiredDate: null,
-  })
+  const ref2 = new RefSatuan()
+  ref2.refSatuanId = CommonUtils.encodeUUID(CommonUtils.uuid())
+  ref2.satuan = 'Kertas Test'
+  ref2.unit = 'Kertas Test'
+  ref2.createDate = now
+  ref2.lastUpdate = now
+  dataRefSatuan.push(ref2)
 
   const InsertResult = await addBulkRefSatuan(dataRefSatuan)
 
