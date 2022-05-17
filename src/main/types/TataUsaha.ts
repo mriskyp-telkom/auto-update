@@ -2,7 +2,7 @@ import { AktivasiBku } from 'main/models/AktivasiBku'
 import { AnggaranDTO } from './Anggaran'
 
 export interface Anggaran {
-  anggaran: AnggaranDTO
+  anggaran: AnggaranDTO | null
   status: string
   isAnggaranApproved: boolean
   bkuList: Bku[]

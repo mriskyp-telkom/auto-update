@@ -9,10 +9,13 @@ import { GetAnggaran } from 'main/repositories/Anggaran'
 import { AktivasiBkuRepository } from 'main/repositories/AktivasiBku'
 import { Anggaran, Bku } from 'main/types/TataUsaha'
 import { AktivasiBku } from 'main/models/AktivasiBku'
-import { STATUS_BKU_PERTAHUN } from 'global/constants'
+import { CONFIG, STATUS_BKU_PERTAHUN } from 'global/constants'
 import { GetMonthName } from 'main/utils/Months'
 import { GetStatusAktivasiBku, GetStatusAnggaran } from 'global/status'
 import { Anggaran as AnggaranEntity } from 'main/models/Anggaran'
+import { GetConfig } from 'main/repositories/Config'
+import CommonUtils from 'main/utils/CommonUtils'
+import { AnggaranDTO } from 'main/types/Anggaran'
 
 export class TataUsahaService {
   private conn: Connection
@@ -29,16 +32,30 @@ export class TataUsahaService {
     const result: AnggaranData[] = []
     const mapAnggaran = new Map<string, Anggaran>()
     const anggaranList = await GetAnggaran(req.idSumberDana, req.tahunAnggaran)
+    const activeYearCfg = await GetConfig(CONFIG.tahunAktif)
+    const activeYear = parseInt(activeYearCfg)
 
     const anggaranIDs = []
-    for (const anggaran of anggaranList) {
-      mapAnggaran.set(anggaran.id_anggaran, <Anggaran>{
-        anggaran: anggaran,
-        status: STATUS_BKU_PERTAHUN.not_active,
-        bkuList: [],
-      })
+    for (const year of req.tahunAnggaran) {
+      const anggaran = anggaranList.find((anggaran) => anggaran.tahun === year)
 
-      anggaranIDs.push(anggaran.id_anggaran)
+      if (anggaran === undefined) {
+        mapAnggaran.set(CommonUtils.encodeUUIDFromV4(), <Anggaran>{
+          anggaran: <AnggaranDTO>{
+            tahun: year,
+          },
+          status: STATUS_BKU_PERTAHUN.not_active,
+          bkuList: [],
+        })
+      } else {
+        mapAnggaran.set(anggaran.id_anggaran, <Anggaran>{
+          anggaran: anggaran,
+          status: STATUS_BKU_PERTAHUN.not_active,
+          bkuList: [],
+        })
+
+        anggaranIDs.push(anggaran.id_anggaran)
+      }
     }
 
     const bkuList = await this.aktivasiBkuRepo.GetListbyIDs(anggaranIDs)
@@ -46,18 +63,20 @@ export class TataUsahaService {
       const populate = this.populateBkuStatus(bku)
       const anggaran = mapAnggaran.get(bku.idAnggaran)
 
-      anggaran.bkuList.push(populate)
-      mapAnggaran.set(bku.idAnggaran, anggaran)
+      if (anggaran !== undefined) {
+        anggaran.bkuList.push(populate)
+        mapAnggaran.set(bku.idAnggaran, anggaran)
+      }
     }
 
     for (const [key, anggaran] of mapAnggaran) {
       anggaran.bkuList.sort((a, b) => a.idPeriode - b.idPeriode)
 
-      const populate = this.populateAnggaranStatus(anggaran)
+      const populate = this.populateAnggaranStatus(activeYear, anggaran)
       mapAnggaran.set(key, populate)
     }
 
-    for (const [key, a] of mapAnggaran) {
+    for (const [, a] of mapAnggaran) {
       const bkuList: AktivasiData[] = []
       for (const bku of a.bkuList) {
         bkuList.push(<AktivasiData>{
@@ -69,13 +88,14 @@ export class TataUsahaService {
 
       result.push(<AnggaranData>{
         tahun: a.anggaran.tahun,
-        idAnggaran: key,
+        idAnggaran: a.anggaran.id_anggaran,
         status: a.status,
         isAnggaranApproved: a.isAnggaranApproved,
         bulan: bkuList,
       })
     }
 
+    result.sort((a, b) => b.tahun - a.tahun)
     return ok(result)
   }
 
@@ -88,7 +108,7 @@ export class TataUsahaService {
     }
   }
 
-  private populateAnggaranStatus(a: Anggaran): Anggaran {
+  private populateAnggaranStatus(activeYear: number, a: Anggaran): Anggaran {
     a.isAnggaranApproved =
       a.anggaran.is_approve > 0 || a.anggaran.tanggal_pengesahan !== null
 
@@ -104,8 +124,9 @@ export class TataUsahaService {
     anggaran.tanggalPengesahan = a.anggaran.tanggal_pengesahan
     anggaran.isApprove = a.anggaran.is_approve
     anggaran.isRevisi = a.anggaran.is_revisi
+    anggaran.tahunAnggaran = a.anggaran.tahun
 
-    a.status = GetStatusAnggaran(anggaran, aktivasiBkuList)
+    a.status = GetStatusAnggaran(activeYear, anggaran, aktivasiBkuList)
     return a
   }
 }

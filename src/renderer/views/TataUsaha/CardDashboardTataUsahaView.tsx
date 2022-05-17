@@ -21,6 +21,7 @@ import {
 
 import filter from 'lodash/filter'
 import clsx from 'clsx'
+import { formatDateToString } from 'renderer/utils/date-formatting'
 
 interface CardBulanProps {
   data: BKUCardDashboardBulanType
@@ -89,6 +90,7 @@ const CardDashboardTataUsahaView: FC<CardDashboardTataUsahaProps> = (
   const isDone = data.status === STATUS_BKU_PERTAHUN.done
   const isActive = data.status === STATUS_BKU_PERTAHUN.active
   const isTempInactive = data.status === STATUS_BKU_PERTAHUN.temporary_inactive
+  const isDateOver = data.status === STATUS_BKU_PERTAHUN.date_over
 
   const showBulan = true
   const showBtnList = !isNotActive && showBulan
@@ -171,6 +173,15 @@ const CardDashboardTataUsahaView: FC<CardDashboardTataUsahaProps> = (
             text="BKU terkunci karena sedang dalam proses perubahan/pergeseran"
             class="mt-4"
           />
+        )}
+        {isDateOver && (
+          <div
+            style={{ padding: 'unset', paddingTop: '20px', textAlign: 'right' }}
+            className="text-gray-500 text-tiny place-self-end"
+          >
+            BKU tidak dapat dibuat karena melewati tenggat{' '}
+            {formatDateToString(new Date(data.tahun + '-12-30'))}
+          </div>
         )}
       </div>
       {showBulan && (

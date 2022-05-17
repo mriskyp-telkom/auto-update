@@ -12,7 +12,7 @@ export interface GetListAnggaranRequest {
 
 export interface Anggaran {
   tahun: number
-  idAnggaran: string
+  idAnggaran: string | null
   status: string
   isAnggaranApproved: boolean
   bulan: AktivasiBku[]
