@@ -52,7 +52,11 @@ export function GetStatusAnggaran(
     return STATUS_BKU_PERTAHUN.done
   }
 
-  if (anggaran.tanggalPengesahan === null || notCreated === 12) {
+  if (
+    anggaran.tanggalPengesahan === null ||
+    notCreated === 12 ||
+    aktivasiBkuList.length === 0
+  ) {
     return STATUS_BKU_PERTAHUN.not_active
   }
 
