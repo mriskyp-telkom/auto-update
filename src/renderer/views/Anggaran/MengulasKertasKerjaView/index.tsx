@@ -65,6 +65,12 @@ const MengulasKertasKerjaView: FC = () => {
     (state: AnggaranStates) => state.responseMengulas
   )
 
+  const isFocused = useAnggaranStore((state: AnggaranStates) => state.isFocused)
+
+  const setIsFocused = useAnggaranStore(
+    (state: AnggaranStates) => state.setIsFocused
+  )
+
   const handleBackToBeranda = () => {
     navigate('/anggaran')
   }
@@ -79,28 +85,6 @@ const MengulasKertasKerjaView: FC = () => {
       state: { backgroundLocation: location },
     })
   }
-
-  useEffect(() => {
-    const pagu = syncToIPCMain(IPC_ANGGARAN.getPagu, idAnggaran)
-    const dataAnggaran = syncToIPCMain(IPC_ANGGARAN.getAnggaranById, idAnggaran)
-    setSisaDana(pagu?.sisa)
-    setTotalAnggaran(pagu?.total)
-    setTahun(pagu.tahun_anggaran)
-    setDetailAnggaran(dataAnggaran)
-  }, [])
-
-  useEffect(() => {
-    if (modeMengulas != '') {
-      if (modeMengulas === MODE_MENGULAS.tahap) {
-        setTahap(1)
-        const anggaran = syncToIPCMain(IPC_ANGGARAN.getTotalAnggaran, {
-          id_tahap: 1,
-          id_anggaran: idAnggaran,
-        })
-        setAnggaran(anggaran?.total ?? 0)
-      }
-    }
-  }, [modeMengulas])
 
   const handleChangeTabs = (index: number) => {
     const selectedTahap = index + 1
@@ -155,6 +139,44 @@ const MengulasKertasKerjaView: FC = () => {
       navigate('/anggaran')
     }
   }
+
+  const handleTutupModal = () => {
+    setAlertMengulas(false)
+    setIsFocused(true)
+  }
+
+  const fetchData = () => {
+    const pagu = syncToIPCMain(IPC_ANGGARAN.getPagu, idAnggaran)
+    const dataAnggaran = syncToIPCMain(IPC_ANGGARAN.getAnggaranById, idAnggaran)
+    setSisaDana(pagu?.sisa)
+    setTotalAnggaran(pagu?.total)
+    setTahun(pagu.tahun_anggaran)
+    setDetailAnggaran(dataAnggaran)
+    setIsFocused(false)
+  }
+
+  useEffect(() => {
+    if (modeMengulas != '') {
+      if (modeMengulas === MODE_MENGULAS.tahap) {
+        setTahap(1)
+        const anggaran = syncToIPCMain(IPC_ANGGARAN.getTotalAnggaran, {
+          id_tahap: 1,
+          id_anggaran: idAnggaran,
+        })
+        setAnggaran(anggaran?.total ?? 0)
+      }
+    }
+  }, [modeMengulas])
+
+  useEffect(() => {
+    if (isFocused) {
+      fetchData()
+    }
+  }, [isFocused])
+
+  useEffect(() => {
+    fetchData()
+  }, [])
 
   return (
     <div>
@@ -353,7 +375,7 @@ const MengulasKertasKerjaView: FC = () => {
           hideBtnCancel={responseMengulas !== RESPONSE_PENGESAHAN.success}
           btnCancelText={ALERT_MENGULAS[responseMengulas].btnCancelText}
           btnActionText={ALERT_MENGULAS[responseMengulas].btnActionText}
-          onCancel={() => setAlertMengulas(false)}
+          onCancel={handleTutupModal}
           onSubmit={handleSubmit}
         />
       )}
