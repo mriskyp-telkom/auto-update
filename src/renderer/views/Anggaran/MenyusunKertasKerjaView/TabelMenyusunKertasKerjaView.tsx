@@ -86,7 +86,7 @@ const TabelMenyusunKertasKerjaView: FC<TabelMenyusunKertasKerjaProps> = (
         {
           <div style={{ width: props.width }}>
             <span
-              className={clsx(styles.spanBreakWord, 'width:{props.text}')}
+              className={clsx(styles.spanBreakWord, 'width:{props.width}')}
               data-tip
               data-for={props.idx}
             >
