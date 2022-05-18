@@ -88,12 +88,19 @@ const TabelMenyusunKertasKerjaView: FC<TabelMenyusunKertasKerjaProps> = (
             <span
               className={clsx(styles.spanBreakWord, 'width:{props.width}')}
               data-tip
+              // to capture srollhide
+              data-iscapture="true"
               data-for={props.idx}
             >
               {props.text}
             </span>
 
-            <ReactTooltip id={props.idx} scrollHide={true} place="top">
+            <ReactTooltip
+              id={props.idx}
+              resizeHide={true}
+              scrollHide={true}
+              place="top"
+            >
               <span className="cursor-pointer">{props.text}</span>
             </ReactTooltip>
           </div>
