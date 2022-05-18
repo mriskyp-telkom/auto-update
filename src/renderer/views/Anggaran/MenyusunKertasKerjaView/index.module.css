@@ -47,8 +47,8 @@ table.tableKertasKerja tbody td span {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23808489' stroke-width='1' stroke-dasharray='8 8' stroke-dashoffset='5' linecap='square'/%3e%3c/svg%3e");
 }
 
-.spanBreakWord { 
-  display:inline-block;
+.spanBreakWord {
+  display: inline-block;
   max-width: 23ch;
-  word-wrap:break-word;
+  word-wrap: break-word;
 }
