@@ -73,6 +73,9 @@ test('GetDetailKegiatan', async () => {
   expect(dataTest2.anggaran.uraian).toBe(
     'Belanja makan minum Workshop Peningkatan Kapasitas Guru'
   )
+  expect(dataTest2.anggaran.errorUraian).toBe(0)
+  expect(dataTest2.anggaran.errorKegiatan).toBe(0)
+  expect(dataTest2.anggaran.errorRekening).toBe(0)
 
   expect(dataTest2.periode[0].bulan).toBe('desember')
   expect(dataTest2.periode[0].periode).toBe(92)
