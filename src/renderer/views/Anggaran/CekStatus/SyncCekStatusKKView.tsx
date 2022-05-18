@@ -173,7 +173,7 @@ const SyncCekStatusKKView: FC = () => {
           }
 
           if (anggaran.alasan_penolakan !== '') {
-            status = RESPONSE_CEK_STATUS.approved
+            status = RESPONSE_CEK_STATUS.declined
           }
         }
       } else {
