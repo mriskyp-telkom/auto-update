@@ -34,8 +34,8 @@ export const GetRapbsBulan = async (
         'case when rk.expired_date is not null then 1 ' +
           ' when rr.expired_date is not null then 1  ' +
           ' when rab.expired_date is not null then 1 ' +
-          " when rab.id_barang is null and case when r.id_barang = '' then null else r.id_barang end is not null then 1 " +
-          " when rbx.jumlah_barang > 0 and ifnull(r.id_barang,'') = '' and substr(rk.id_kode,4,2) <> '12' then 1 " +
+          " when rab.id_barang is null and case when r.id_barang = '' then null else r.id_barang end is not null and substr(rk2.id_kode,4,2) <> '12' then 1 " +
+          " when rbx.jumlah_barang > 0 and ifnull(r.id_barang,'') = '' and substr(rk2.id_kode,4,2) <> '12' then 1 " +
           " when substr(r.kode_rekening,1,3) = '5.2' and ifnull(r.id_barang,'') = '' then 1 " +
           ' else 0 end as errorReferensi',
       ])
@@ -98,8 +98,8 @@ export const GetOneRapbsBulan = async (
           ' when rr.expired_date is not null then 1 else 0 end as errorRekening ',
         'case ' +
           ' when rab.expired_date is not null then 1 ' +
-          " when rab.id_barang is null and case when r.id_barang = '' then null else r.id_barang end is not null then 1 " +
-          " when rbx.jumlah_barang > 0 and ifnull(r.id_barang,'') = '' and substr(rk.id_kode,4,2) <> '12' then 1 " +
+          " when rab.id_barang is null and case when r.id_barang = '' then null else r.id_barang end is not null and substr(rk2.id_kode,4,2) <> '12' then 1 " +
+          " when rbx.jumlah_barang > 0 and ifnull(r.id_barang,'') = '' and substr(rk2.id_kode,4,2) <> '12' then 1 " +
           " when substr(r.kode_rekening,1,3) = '5.2' and ifnull(r.id_barang,'') = '' then 1 " +
           ' else 0 end as errorUraian',
       ])
