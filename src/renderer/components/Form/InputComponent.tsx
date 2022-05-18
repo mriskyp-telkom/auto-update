@@ -2,6 +2,9 @@ import React, { FC } from 'react'
 import { FieldErrors, FieldError, RegisterOptions } from 'react-hook-form'
 
 import { Input } from '@wartek-id/input'
+import { numberUtils } from '@wartek-id/fe-toolbox'
+
+import { InputType } from 'renderer/types/ComponentType'
 
 import {
   isFormatEmailValid,
@@ -21,6 +24,7 @@ import {
   KODE_AKTIVASI_ERROR_WRONG,
   NPSN_ERROR_LENGTH,
   NPSN_ERROR_NOT_REGISTERED,
+  HARGA_SATUAN_ERROR_LENGTH,
 } from 'renderer/constants/errorForm'
 
 import includes from 'lodash/includes'
@@ -28,7 +32,7 @@ import includes from 'lodash/includes'
 import clsx from 'clsx'
 
 interface InputProps {
-  type: 'text' | 'email' | 'alphabet' | 'name'
+  type: InputType
   required?: boolean
   isDisabled?: boolean
   name: string
@@ -37,6 +41,7 @@ interface InputProps {
   register: (arg0: string, arg1: RegisterOptions) => void
   setError?: (name: string, error: FieldError) => void
   handleClearError?: (name: string) => void
+  setValue?: (name: string, value: string) => void
   registerOption?: RegisterOptions
   className?: string
 }
@@ -58,6 +63,7 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
     errors,
     setError,
     register,
+    setValue,
   } = props
 
   const clearErrorRequired = (value: string) => {
@@ -208,6 +214,52 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
             props.handleClearError(name)
             return
           }
+        }
+      },
+    }
+  }
+
+  if (type === 'nominal') {
+    validation = {
+      ...validation,
+      validate: {
+        minLength: (v: any) => {
+          const value = v.replace(/[^,\d]/g, '').toString()
+
+          return value >= 10 || HARGA_SATUAN_ERROR_LENGTH
+        },
+      },
+      onBlur: (e) => {
+        const value = e.target.value.replace(/[^,\d]/g, '').toString()
+
+        if (value < 10) {
+          setError(name, {
+            type: 'manual',
+            message: HARGA_SATUAN_ERROR_LENGTH,
+          })
+          return
+        }
+        props.handleClearError(name)
+        props.registerOption?.onBlur(e)
+      },
+      onChange: (e) => {
+        const value = e.target.value.replace(/[^,\d]/g, '').toString()
+        const maxDigit = value.replace(/\D/g, '').replace(/(\d{12})(\d)/, '$1')
+        const format = `Rp ${numberUtils.delimit(maxDigit, '.')}`
+
+        if (value !== null) {
+          setValue(name, format)
+        }
+
+        clearErrorRequired(value)
+        clearErrorServer(value)
+        props.registerOption?.onChange(e)
+        if (
+          value >= 10 &&
+          errors[name]?.message === HARGA_SATUAN_ERROR_LENGTH
+        ) {
+          props.handleClearError(name)
+          return
         }
       },
     }

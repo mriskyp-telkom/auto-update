@@ -14,7 +14,10 @@ import syncToIpcMain from 'renderer/configs/ipc'
 
 import { TataUsahaStates, useTataUsahaStore } from 'renderer/stores/tata-usaha'
 
-import { FormPenerimaanDanaData } from 'renderer/types/forms/TataUsahaType'
+import {
+  FormPenerimaanDanaData,
+  FormPenanggungJawabType,
+} from 'renderer/types/forms/TataUsahaType'
 
 import { TIME_DELAY_SCREEN } from 'renderer/constants/app'
 
@@ -48,10 +51,17 @@ const FormPenerimaanDanaView: FC = () => {
     getValues,
     setValue,
     reset,
+    setError,
+    clearErrors,
     formState: { errors, isDirty },
   } = useForm<FormPenerimaanDanaData>({
     mode: 'onSubmit',
+    reValidateMode: 'onBlur',
   })
+
+  const handleClearError = (name: FormPenanggungJawabType) => {
+    clearErrors(name)
+  }
 
   const closeModal = () => {
     navigate('/tata-usaha')
@@ -177,27 +187,16 @@ const FormPenerimaanDanaView: FC = () => {
                 Nominal Dana Diterima
               </div>
               <InputComponent
-                type="text"
+                type="nominal"
                 name="nominal"
                 placeholder="Masukkan nominal"
                 register={register}
                 required={true}
                 errors={errors}
                 isDisabled={formDisable}
-                registerOption={{
-                  onChange: (e: any) => {
-                    const value = e.target.value
-                      .replace(/[^,\d]/g, '')
-                      .toString()
-
-                    if (value !== null) {
-                      setValue(
-                        'nominal',
-                        `Rp ${numberUtils.delimit(value, '.')}`
-                      )
-                    }
-                  },
-                }}
+                handleClearError={handleClearError}
+                setError={setError}
+                setValue={setValue}
               />
             </div>
           </div>
