@@ -5,7 +5,12 @@ import DatePicker, { registerLocale } from 'react-datepicker'
 import { Input, InputGroup, InputRightAddon } from '@wartek-id/input'
 import { Icon } from '@wartek-id/icon'
 
+import { DATA_BULAN } from 'renderer/constants/general'
+
+import { formatDateToString } from 'renderer/utils/date-formatting'
+
 import id from 'date-fns/locale/id'
+
 import clsx from 'clsx'
 
 registerLocale('id', id)
@@ -21,6 +26,8 @@ interface DatePickerProps {
   handleSelect: (value: Date) => void
 }
 
+const months = DATA_BULAN.map((b: any) => b.name)
+
 const CustomInput = forwardRef((props: any, ref) => {
   return (
     <InputGroup>
@@ -33,6 +40,54 @@ const CustomInput = forwardRef((props: any, ref) => {
     </InputGroup>
   )
 })
+
+const CustomHeader = (props: any) => {
+  const { date, changeMonth, decreaseMonth, increaseMonth } = props
+
+  const getMonth = () => {
+    return formatDateToString(date, 'MMMM')
+  }
+
+  const getYear = () => {
+    return formatDateToString(date, 'Y')
+  }
+
+  return (
+    <div className="flex justify-between items-center mx-[0.4rem]">
+      <span>
+        <select
+          className="capitalize-first"
+          value={getMonth().toLowerCase()}
+          onChange={({ target: { value } }) =>
+            changeMonth(months.indexOf(value))
+          }
+          style={{
+            background: '#f0f0f0',
+          }}
+        >
+          {months.map((option) => (
+            <option className="capitalize-first" key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+        <span className="ml-4">{getYear()}</span>
+      </span>
+      <span>
+        <button type="button" className="mr-4" onClick={decreaseMonth}>
+          <Icon as="i" color="default" fontSize="small">
+            chevron_left
+          </Icon>
+        </button>
+        <button type="button" onClick={increaseMonth}>
+          <Icon as="i" color="default" fontSize="small">
+            chevron_right
+          </Icon>
+        </button>
+      </span>
+    </div>
+  )
+}
 
 const DatePickerComponent: FC<DatePickerProps> = (props: DatePickerProps) => {
   const { name, register, required, errors } = props
@@ -76,6 +131,19 @@ const DatePickerComponent: FC<DatePickerProps> = (props: DatePickerProps) => {
           errorMessage={errors[name]?.message}
         />
       }
+      renderCustomHeader={({
+        date,
+        changeMonth,
+        decreaseMonth,
+        increaseMonth,
+      }) => (
+        <CustomHeader
+          date={date}
+          changeMonth={changeMonth}
+          decreaseMonth={decreaseMonth}
+          increaseMonth={increaseMonth}
+        />
+      )}
     />
   )
 }
