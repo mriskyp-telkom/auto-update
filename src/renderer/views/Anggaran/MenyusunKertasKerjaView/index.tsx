@@ -34,11 +34,14 @@ import { formatDateTimeStatus } from 'renderer/utils/date-formatting'
 
 import { copyKertasKerja } from 'renderer/utils/copy-writing'
 
+import findIndex from 'lodash/findIndex'
+
 const MenyusunKertasKerjaView: FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const { q_mode, q_id_anggaran } = useParams()
 
+  const [indexTab, setIndexTab] = useState(2)
   const [isSync, setIsSync] = useState(false)
   const [openModalInit, setOpenModalInit] = useState(false)
   const [jumlahPagu, setJumlahPagu] = useState(0)
@@ -237,15 +240,22 @@ const MenyusunKertasKerjaView: FC = () => {
         IPC_KK.getListValidasiReferensiPeriode,
         decodeURIComponent(q_id_anggaran)
       )
+
       const m = new Map()
       if (res?.error) {
         // TODO: should display error modal
       } else {
         if (res?.value) {
+          let isSet = false
           for (const v of res.value) {
             m.set(v.idPeriode, v.isValidate)
-            setvalidasiFlagPeriode(m)
+            if (v.isValidate && !isSet) {
+              const index = findIndex(DATA_BULAN, ['id', v.idPeriode])
+              isSet = true
+              setIndexTab(index)
+            }
           }
+          setvalidasiFlagPeriode(m)
         }
       }
     }
@@ -379,7 +389,7 @@ const MenyusunKertasKerjaView: FC = () => {
             </div>
           </span>
         </div>
-        <Tabs className="w-full">
+        <Tabs className="w-full" defaultIndex={indexTab}>
           <div className="shadow pt-[14px]">
             <TabList style={{ marginLeft: 0 }}>
               {DATA_BULAN.map((bulan) => (
