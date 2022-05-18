@@ -88,7 +88,7 @@ test('GetListAnggaran', async () => {
 
   expect(data[2].tahun).toBe(2020)
   expect(data[2].idAnggaran).toBe('pUe9yWUZHkmYezDiz7DTDA')
-  expect(data[2].status).toBe(STATUS_BKU_PERTAHUN.not_active)
+  expect(data[2].status).toBe(STATUS_BKU_PERTAHUN.date_over)
   expect(data[2].isAnggaranApproved).toBe(false)
   expect(data[2].bulan.length).toBe(0)
 
