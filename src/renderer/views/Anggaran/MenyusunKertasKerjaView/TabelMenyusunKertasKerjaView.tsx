@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
-import { Tooltip } from '@wartek-id/tooltip'
+import ReactTooltip from 'react-tooltip'
 
 import { numberUtils } from '@wartek-id/fe-toolbox'
 
@@ -75,17 +75,29 @@ const TabelMenyusunKertasKerjaView: FC<TabelMenyusunKertasKerjaProps> = (
     fetchData()
   }, [])
 
-  const TDTable = (props: { text: string; width: string }) => {
+  // use effect to rebuild react tooltip generator
+  useEffect(() => {
+    ReactTooltip.rebuild()
+  })
+
+  const TDTable = (props: { idx: string; text: string; width: string }) => {
     return (
       <td style={{ width: props.width }}>
-        <Tooltip
-          content={props.text}
-          placement="top"
-          strategy="fixed"
-          trigger="hover"
-        >
-          <span className="cursor-pointer">{props.text}</span>
-        </Tooltip>
+        {
+          <div style={{ width: props.width }}>
+            <span
+              className={clsx(styles.spanBreakWord, 'width:{props.text}')}
+              data-tip
+              data-for={props.idx}
+            >
+              {props.text}
+            </span>
+
+            <ReactTooltip id={props.idx} scrollHide={true} place="top">
+              <span className="cursor-pointer">{props.text}</span>
+            </ReactTooltip>
+          </div>
+        }
       </td>
     )
   }
@@ -122,6 +134,7 @@ const TabelMenyusunKertasKerjaView: FC<TabelMenyusunKertasKerjaProps> = (
                       key={col.key}
                       text={(indexRow + 1).toString()}
                       width={col.width}
+                      idx={col.key + (indexRow + 1)}
                     />
                   )
                 } else if (col.key === 'total' || col.key === 'hargaSatuan') {
@@ -130,6 +143,7 @@ const TabelMenyusunKertasKerjaView: FC<TabelMenyusunKertasKerjaProps> = (
                       key={col.key}
                       text={`Rp ${numberUtils.delimit(row[col.key], '.')}`}
                       width={col.width}
+                      idx={col.key + (indexRow + 1)}
                     />
                   )
                 } else if (col.key === 'jumlah') {
@@ -138,6 +152,7 @@ const TabelMenyusunKertasKerjaView: FC<TabelMenyusunKertasKerjaProps> = (
                       key={col.key}
                       text={numberUtils.delimit(row.jumlah, '.')}
                       width={col.width}
+                      idx={col.key + (indexRow + 1)}
                     />
                   )
                 } else {
@@ -148,6 +163,7 @@ const TabelMenyusunKertasKerjaView: FC<TabelMenyusunKertasKerjaProps> = (
                         row[col.key as keyof FormTableKertasKerjaData] as string
                       }
                       width={col.width}
+                      idx={col.key + (indexRow + 1)}
                     />
                   )
                 }
