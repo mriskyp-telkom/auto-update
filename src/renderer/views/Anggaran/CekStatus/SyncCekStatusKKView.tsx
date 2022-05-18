@@ -123,6 +123,7 @@ const SyncCekStatusKKView: FC = () => {
   const handleBtnCancelAlert = () => {
     if (statusKK === RESPONSE_CEK_STATUS.approved) {
       navigate(`/anggaran/mengulas/${encodeURIComponent(q_id_anggaran)}`)
+      return
     }
     closeModal()
   }
