@@ -3,3 +3,8 @@ export interface FormPenerimaanDanaData {
   tanggal_penerimaan: Date
   nominal: string
 }
+
+export type FormPenanggungJawabType =
+  | 'periode'
+  | 'tanggal_penerimaan'
+  | 'nominal'
