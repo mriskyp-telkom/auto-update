@@ -67,6 +67,7 @@ module.exports = {
 
   upsertAnggaran: ipcMain.on(IPC_ANGGARAN.upsertAnggaran, async (e, data) => {
     const d = <AnggaranData>data
+    const now = new Date()
 
     const anggaran = new Anggaran()
     anggaran.idAnggaran = d.id_anggaran
@@ -77,12 +78,13 @@ module.exports = {
     anggaran.hargaSatuan = d.harga_satuan
     anggaran.jumlah = d.jumlah
     anggaran.sisaAnggaran = d.sisa_anggaran
+    anggaran.isPengesahan = d.is_pengesahan
     anggaran.isApprove = d.is_approve
     anggaran.isRevisi = d.is_revisi
+    anggaran.alasanPenolakan = d.alasan_penolakan
     anggaran.isAktif = d.is_aktif
     anggaran.softDelete = 0
-    anggaran.createDate = new Date(d.create_date)
-    anggaran.lastUpdate = new Date()
+    anggaran.lastUpdate = now
     anggaran.updaterId = await GetConfig('pengguna_id')
     anggaran.idPenjab = d.id_penjab
 
@@ -92,6 +94,12 @@ module.exports = {
 
     if (d.tanggal_pengesahan !== '') {
       anggaran.tanggalPengesahan = new Date(d.tanggal_pengesahan)
+    }
+
+    if (d.create_date !== '') {
+      anggaran.createDate = new Date(d.create_date)
+    } else {
+      anggaran.createDate = now
     }
 
     e.returnValue = await UpsertAnggaran(anggaran)
