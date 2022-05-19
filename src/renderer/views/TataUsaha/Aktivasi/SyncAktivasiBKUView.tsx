@@ -42,6 +42,14 @@ const SyncAktivasiBKUView: FC = () => {
     (state: AppStates) => state.setAlertFailedSyncData
   )
 
+  const setAlertNoConnection = useAppStore(
+    (state: AppStates) => state.setAlertNoConnection
+  )
+
+  const setAlertLostConnection = useAppStore(
+    (state: AppStates) => state.setAlertLostConnection
+  )
+
   const setPeriodeSalurList = useTataUsahaStore(
     (state: TataUsahaStates) => state.setPeriodeSalurList
   )
@@ -103,8 +111,21 @@ const SyncAktivasiBKUView: FC = () => {
   const failedSyncData = () => {
     setApi('')
     removeCacheData()
+    setAlertNoConnection(false)
+    setAlertLostConnection(false)
     setAlertFailedSyncData(true)
     closeModal()
+  }
+
+  const lostConnectionSyncData = () => {
+    setApi('')
+    removeCacheData()
+    closeModal()
+
+    // lost connection
+    setAlertFailedSyncData(false)
+    setAlertNoConnection(false)
+    setAlertLostConnection(true)
   }
 
   useEffect(() => {
@@ -158,7 +179,11 @@ const SyncAktivasiBKUView: FC = () => {
 
   useEffect(() => {
     if (isInfoConnError || isTokenError || isSalurError) {
-      failedSyncData()
+      if (!navigator.onLine) {
+        lostConnectionSyncData()
+      } else {
+        failedSyncData()
+      }
     }
   }, [isInfoConnError, isTokenError, isSalurError])
 
@@ -170,6 +195,7 @@ const SyncAktivasiBKUView: FC = () => {
           state: location.state,
         })
       }, TIME_DELAY_SCREEN)
+      // }, 5000)
     }
   }, [percentage])
 

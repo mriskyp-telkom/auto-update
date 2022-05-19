@@ -3,6 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom'
 
 import AlertDialogComponent from 'renderer/components/Dialog/AlertDialogComponent'
 import AlertNoConnection from 'renderer/views/AlertNoConnection'
+import AlertLostConnection from 'renderer/views/AlertLostConnection'
+
 import AlertFailedSyncData from 'renderer/views/AlertFailedSyncData'
 
 import { Button } from '@wartek-id/button'
@@ -33,7 +35,7 @@ const AktivasiBKUView: FC<AktivasiBKUViewProps> = (
 
   const { sumberDana, idAnggaran } = props
 
-  const [openModaWarning, setOpenModaWarning] = useState(false)
+  const [openModalWarning, setOpenModalWarning] = useState(false)
 
   const isActivationBKUFailed = useTataUsahaStore(
     (state: TataUsahaStates) => state.isActivationBKUFailed
@@ -47,6 +49,10 @@ const AktivasiBKUView: FC<AktivasiBKUViewProps> = (
     (state: AppStates) => state.setAlertNoConnection
   )
 
+  const setAlertLostConnection = useAppStore(
+    (state: AppStates) => state.setAlertLostConnection
+  )
+
   const setAlertFailedSyncData = useAppStore(
     (state: AppStates) => state.setAlertFailedSyncData
   )
@@ -58,12 +64,14 @@ const AktivasiBKUView: FC<AktivasiBKUViewProps> = (
 
   const handleClickAktivasi = () => {
     if (!props.isAnggaranApproved) {
-      setOpenModaWarning(true)
+      setOpenModalWarning(true)
       return
     }
 
-    setOpenModaWarning(false)
+    setOpenModalWarning(false)
     setAlertNoConnection(false)
+    setAlertLostConnection(false)
+    setAlertFailedSyncData(false)
     if (navigator.onLine) {
       navigate(
         `/sync/tata-usaha/aktivasi/${sumberDana}/${encodeURIComponent(
@@ -116,7 +124,7 @@ const AktivasiBKUView: FC<AktivasiBKUViewProps> = (
         icon="priority_high"
         title="BKU Belum Dapat Diaktifkan"
         desc={`Untuk mengaktifkan BKU, ${copyKertasKerja()} Anda harus sudah disahkan dinas.`}
-        isOpen={openModaWarning}
+        isOpen={openModalWarning}
         hideBtnCancel={true}
         btnActionText={`Lihat ${copyKertasKerja()}`}
         onSubmit={handleBtnAlertSubmit}
@@ -134,6 +142,10 @@ const AktivasiBKUView: FC<AktivasiBKUViewProps> = (
       <AlertNoConnection
         onSubmit={handleClickAktivasi}
         onCancel={() => setAlertNoConnection(false)}
+      />
+      <AlertLostConnection
+        onSubmit={handleClickAktivasi}
+        onCancel={() => setAlertLostConnection(false)}
       />
       <AlertFailedSyncData
         onSubmit={handleClickAktivasi}
