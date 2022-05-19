@@ -1,8 +1,8 @@
-import { IPC_ANGGARAN, IPC_KK } from 'global/ipc'
-import { SaveBkuRequest } from 'global/types/TataUsaha'
 import React, { FC, useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { FormProvider, useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
+
+import { numberUtils } from '@wartek-id/fe-toolbox'
 
 import FormDialogComponent from 'renderer/components/Dialog/FormDialogComponent'
 import InputComponent from 'renderer/components/Form/InputComponent'
@@ -10,18 +10,19 @@ import DatePickerComponent from 'renderer/components/Form/DatePickerComponent'
 import SelectComponent from 'renderer/components/Form/SelectComponent'
 import AlertDialogComponent from 'renderer/components/Dialog/AlertDialogComponent'
 
-import syncToIpcMain from 'renderer/configs/ipc'
-
 import { TataUsahaStates, useTataUsahaStore } from 'renderer/stores/tata-usaha'
 
 import {
   FormPenerimaanDanaData,
   FormPenanggungJawabType,
 } from 'renderer/types/forms/TataUsahaType'
+import { SaveBkuRequest } from 'global/types/TataUsaha'
 
 import { TIME_DELAY_SCREEN } from 'renderer/constants/app'
 
-import { numberUtils } from '@wartek-id/fe-toolbox'
+import syncToIpcMain from 'renderer/configs/ipc'
+
+import { IPC_ANGGARAN, IPC_KK } from 'global/ipc'
 
 const FormPenerimaanDanaView: FC = () => {
   const navigate = useNavigate()
@@ -32,7 +33,7 @@ const FormPenerimaanDanaView: FC = () => {
 
   const [openModalConfirmation, setOpenModalConfirmation] = useState(false)
   const [openModalSuccess, setOpenModalSuccess] = useState(false)
-  const [openModalKeluar, setOpenModalKeluar] = useState(false)
+
   const [tahunAnggaran, setTahunAnggaran] = useState('')
 
   const periodeSalurList = useTataUsahaStore(
@@ -43,6 +44,11 @@ const FormPenerimaanDanaView: FC = () => {
     (state: TataUsahaStates) => state.setIsFocused
   )
 
+  const formMethods = useForm<FormPenerimaanDanaData>({
+    mode: 'onSubmit',
+    reValidateMode: 'onBlur',
+  })
+
   const {
     register,
     handleSubmit,
@@ -51,11 +57,8 @@ const FormPenerimaanDanaView: FC = () => {
     reset,
     setError,
     clearErrors,
-    formState: { errors, isDirty },
-  } = useForm<FormPenerimaanDanaData>({
-    mode: 'onSubmit',
-    reValidateMode: 'onBlur',
-  })
+    formState: { errors },
+  } = formMethods
 
   const handleClearError = (name: FormPenanggungJawabType) => {
     clearErrors(name)
@@ -63,14 +66,6 @@ const FormPenerimaanDanaView: FC = () => {
 
   const closeModal = () => {
     navigate('/tata-usaha')
-  }
-
-  const handleCloseForm = () => {
-    if (isDirty) {
-      setOpenModalKeluar(true)
-    } else {
-      closeModal()
-    }
   }
 
   const onSubmit = async () => {
@@ -142,81 +137,72 @@ const FormPenerimaanDanaView: FC = () => {
 
   return (
     <>
-      <FormDialogComponent
-        width={720}
-        title="Konfirmasi Penerimaan Dana"
-        subtitle={
-          formDisable
-            ? 'Data diambil secara otomatis dari BOS Salur.'
-            : 'Masukkan detail sesuai dengan yang tertera di rekening.'
-        }
-        isOpen={true}
-        btnSubmitText="Konfirmasi"
-        onCancel={handleCloseForm}
-        onSubmit={handleSubmit(() => setOpenModalConfirmation(true))}
-      >
-        <div>
-          <div className="pb-5">
-            <div className="text-base pb-1 font-normal text-gray-900">
-              Periode Penerimaan
-            </div>
-            <SelectComponent
-              name="periode"
-              options={periodeSalurList.map((b: any) => b.label)}
-              register={register}
-              selected={periodeSalurList[0]?.label}
-              handleSelect={handleSelectPeriode}
-              isDisabled={formDisable}
-            />
-          </div>
-          <div className="flex">
-            <div className="flex-grow pr-6">
+      <FormProvider {...formMethods}>
+        <FormDialogComponent
+          width={720}
+          title="Konfirmasi Penerimaan Dana"
+          subtitle={
+            formDisable
+              ? 'Data diambil secara otomatis dari BOS Salur.'
+              : 'Masukkan detail sesuai dengan yang tertera di rekening.'
+          }
+          isOpen={true}
+          btnAlertSubmitText="Kembali Isi Penerimaan Dana"
+          btnSubmitText="Konfirmasi"
+          onCancel={closeModal}
+          onSubmit={handleSubmit(() => setOpenModalConfirmation(true))}
+        >
+          <div>
+            <div className="pb-5">
               <div className="text-base pb-1 font-normal text-gray-900">
-                Tanggal Dana Diterima
+                Periode Penerimaan
               </div>
-              <DatePickerComponent
-                name="tanggal_penerimaan"
-                placeholder="Pilih tanggal"
-                required={true}
-                defaultValue={defaultValue?.tanggal_penerimaan}
+              <SelectComponent
+                name="periode"
+                options={periodeSalurList.map((b: any) => b.label)}
                 register={register}
-                errors={errors}
-                handleSelect={handleSelectTanggal}
+                selected={periodeSalurList[0]?.label}
+                handleSelect={handleSelectPeriode}
                 isDisabled={formDisable}
               />
             </div>
-            <div className="flex-grow">
-              <div className="text-base pb-1 font-normal text-gray-900">
-                Nominal Dana Diterima
+            <div className="flex">
+              <div className="flex-grow pr-6">
+                <div className="text-base pb-1 font-normal text-gray-900">
+                  Tanggal Dana Diterima
+                </div>
+                <DatePickerComponent
+                  name="tanggal_penerimaan"
+                  placeholder="Pilih tanggal"
+                  required={true}
+                  defaultValue={defaultValue?.tanggal_penerimaan}
+                  register={register}
+                  errors={errors}
+                  handleSelect={handleSelectTanggal}
+                  isDisabled={formDisable}
+                />
               </div>
-              <InputComponent
-                type="nominal"
-                name="nominal"
-                placeholder="Masukkan nominal"
-                register={register}
-                required={true}
-                errors={errors}
-                isDisabled={formDisable}
-                handleClearError={handleClearError}
-                setError={setError}
-                setValue={setValue}
-              />
+              <div className="flex-grow">
+                <div className="text-base pb-1 font-normal text-gray-900">
+                  Nominal Dana Diterima
+                </div>
+                <InputComponent
+                  type="nominal"
+                  name="nominal"
+                  placeholder="Masukkan nominal"
+                  register={register}
+                  required={true}
+                  errors={errors}
+                  isDisabled={formDisable}
+                  handleClearError={handleClearError}
+                  setError={setError}
+                  setValue={setValue}
+                />
+              </div>
             </div>
           </div>
-        </div>
-      </FormDialogComponent>
-      <AlertDialogComponent
-        type="failed"
-        icon="exit_to_app"
-        title="Keluar dari halaman ini?"
-        desc="Jika Anda keluar, data yang baru saja Anda isi akan hilang."
-        isOpen={openModalKeluar}
-        btnCancelText="Keluar"
-        btnActionText="Kembali Isi Penerimaan Dana"
-        onCancel={closeModal}
-        onSubmit={() => setOpenModalKeluar(false)}
-        layer={2}
-      />
+        </FormDialogComponent>
+      </FormProvider>
       <AlertDialogComponent
         type="warning"
         icon="text_snippet"
