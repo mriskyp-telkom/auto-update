@@ -1,6 +1,6 @@
 import { ipcMain } from 'electron'
 import { Anggaran } from 'main/models/Anggaran'
-import { Anggaran as AnggaranData } from 'renderer/types/AnggaranType'
+import { Anggaran as AnggaranData } from 'global/types/Anggaran'
 import {
   AddAnggaran,
   DelAnggaran,
@@ -8,7 +8,6 @@ import {
   GetPagu,
   CopyAnggaran,
   GetTotalAnggaran,
-  UpsertAnggaran,
   UpdateIsPengesahan,
   UpdateTanggalPengajuan,
 } from 'main/repositories/Anggaran'
@@ -17,7 +16,8 @@ import CommonUtils from 'main/utils/CommonUtils'
 import {
   GetAnggaranList,
   GetDetailAnggaran,
-} from 'main/services/AnggaranService'
+  IPCUpsertAnggaran,
+} from 'main/services/Anggaran'
 
 import { IPC_ANGGARAN } from 'global/ipc'
 
@@ -67,42 +67,7 @@ module.exports = {
 
   upsertAnggaran: ipcMain.on(IPC_ANGGARAN.upsertAnggaran, async (e, data) => {
     const d = <AnggaranData>data
-    const now = new Date()
-
-    const anggaran = new Anggaran()
-    anggaran.idAnggaran = d.id_anggaran
-    anggaran.idRefSumberDana = d.id_ref_sumber_dana
-    anggaran.sekolahId = d.sekolah_id
-    anggaran.tahunAnggaran = d.tahun_anggaran
-    anggaran.volume = d.volume
-    anggaran.hargaSatuan = d.harga_satuan
-    anggaran.jumlah = d.jumlah
-    anggaran.sisaAnggaran = d.sisa_anggaran
-    anggaran.isPengesahan = d.is_pengesahan
-    anggaran.isApprove = d.is_approve
-    anggaran.isRevisi = d.is_revisi
-    anggaran.alasanPenolakan = d.alasan_penolakan
-    anggaran.isAktif = d.is_aktif
-    anggaran.softDelete = 0
-    anggaran.lastUpdate = now
-    anggaran.updaterId = await GetConfig('pengguna_id')
-    anggaran.idPenjab = d.id_penjab
-
-    if (d.tanggal_pengajuan !== '') {
-      anggaran.tanggalPengajuan = new Date(d.tanggal_pengajuan)
-    }
-
-    if (d.tanggal_pengesahan !== '') {
-      anggaran.tanggalPengesahan = new Date(d.tanggal_pengesahan)
-    }
-
-    if (d.create_date !== '') {
-      anggaran.createDate = new Date(d.create_date)
-    } else {
-      anggaran.createDate = now
-    }
-
-    e.returnValue = await UpsertAnggaran(anggaran)
+    e.returnValue = await IPCUpsertAnggaran(d)
   }),
 
   updateIsPengesahan: ipcMain.on(

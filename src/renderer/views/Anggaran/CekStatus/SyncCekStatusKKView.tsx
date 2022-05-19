@@ -15,7 +15,7 @@ import {
 } from 'renderer/constants/anggaran'
 import { APP_CONFIG } from 'renderer/constants/appConfig'
 
-import { Anggaran } from 'renderer/types/AnggaranType'
+import { Anggaran } from 'global/types/Anggaran'
 import { AlertType } from 'renderer/types/ComponentType'
 
 import { IPC_ANGGARAN, IPC_SEKOLAH } from 'global/ipc'
@@ -165,15 +165,26 @@ const SyncCekStatusKKView: FC = () => {
 
           ipcRenderer.sendSync(IPC_ANGGARAN.upsertAnggaran, updateData)
 
-          if (anggaran.is_approve === 0 || anggaran.tanggal_pengajuan !== '') {
+          if (
+            anggaran.is_approve === 0 ||
+            (anggaran.tanggal_pengajuan !== '' &&
+              anggaran.tanggal_pengajuan !== null)
+          ) {
             status = RESPONSE_CEK_STATUS.in_progress
           }
 
-          if (anggaran.is_approve === 1 || anggaran.tanggal_pengesahan !== '') {
+          if (
+            anggaran.is_approve === 1 ||
+            (anggaran.tanggal_pengesahan !== '' &&
+              anggaran.tanggal_pengesahan !== null)
+          ) {
             status = RESPONSE_CEK_STATUS.approved
           }
 
-          if (anggaran.alasan_penolakan !== '') {
+          if (
+            anggaran.alasan_penolakan !== '' &&
+            anggaran.alasan_penolakan !== null
+          ) {
             status = RESPONSE_CEK_STATUS.declined
           }
         }
