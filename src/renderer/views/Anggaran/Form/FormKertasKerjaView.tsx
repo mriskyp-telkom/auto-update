@@ -332,6 +332,7 @@ const FormKertasKerjaView: FC = () => {
       fields.map((field, index) => {
         if (index !== 0) {
           setValue(`anggaran_bulan.${index}.satuan`, data.value)
+          clearErrors(`anggaran_bulan.${index}.satuan`)
         }
       })
     }
