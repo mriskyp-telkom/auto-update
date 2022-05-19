@@ -1,4 +1,4 @@
-import React, { FC, useState, useRef } from 'react'
+import React, { FC, useState, useRef, useEffect } from 'react'
 import { RegisterOptions } from 'react-hook-form'
 
 import { Listbox } from '@headlessui/react'
@@ -22,7 +22,7 @@ interface SelectProps {
 const SelectComponent: FC<SelectProps> = (props: SelectProps) => {
   const ref = useRef(null)
 
-  const [selectedValue, setSelectedValue] = useState(props.selected)
+  const [selectedValue, setSelectedValue] = useState(null)
 
   const { name, register } = props
 
@@ -32,6 +32,10 @@ const SelectComponent: FC<SelectProps> = (props: SelectProps) => {
     setSelectedValue(value)
     props.handleSelect(value)
   }
+
+  useEffect(() => {
+    setSelectedValue(props.selected)
+  }, [])
 
   return (
     <div ref={ref}>
@@ -67,14 +71,16 @@ const SelectComponent: FC<SelectProps> = (props: SelectProps) => {
         </Listbox.Button>
         <Listbox.Options
           className={clsx(
-            width,
             'absolute bg-white z-10',
             'rounded border-gray-500 border-solid',
             'py-1 mt-2',
             'text-base text-gray-900',
             'overflow-y-scroll max-h-[194px]'
           )}
-          style={{ boxShadow: '0px 8px 20px rgba(37, 40, 43, 0.2)' }}
+          style={{
+            width: `${ref.current?.clientWidth}px`,
+            boxShadow: '0px 8px 20px rgba(37, 40, 43, 0.2)',
+          }}
         >
           {props.options.map((option: any, index: number) => (
             <Listbox.Option
