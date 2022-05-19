@@ -4,7 +4,7 @@ import {
   GetListAnggaranRequest,
   Anggaran as AnggaranData,
   AktivasiBku as AktivasiData,
-} from 'global/types/TataUsahaTypes'
+} from 'global/types/TataUsaha'
 import { GetAnggaran } from 'main/repositories/Anggaran'
 import { AktivasiBkuRepository } from 'main/repositories/AktivasiBku'
 import { Anggaran, Bku } from 'main/types/TataUsaha'

@@ -1,5 +1,5 @@
 import { IPC_ANGGARAN, IPC_KK } from 'global/ipc'
-import { SaveBkuRequest } from 'global/types/TataUsahaTypes'
+import { SaveBkuRequest } from 'global/types/TataUsaha'
 import React, { FC, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'

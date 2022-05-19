@@ -2,7 +2,7 @@ import { STATUS_BKU_PERBULAN, STATUS_BKU_PERTAHUN } from 'global/constants'
 import {
   GetListAnggaranRequest,
   Anggaran as AnggaranData,
-} from 'global/types/TataUsahaTypes'
+} from 'global/types/TataUsaha'
 import { AktivasiBku } from 'main/models/AktivasiBku'
 import { Anggaran } from 'main/models/Anggaran'
 import { AppConfig } from 'main/models/AppConfig'
