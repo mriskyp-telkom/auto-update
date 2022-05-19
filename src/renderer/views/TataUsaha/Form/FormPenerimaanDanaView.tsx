@@ -1,4 +1,4 @@
-import { IPC_KK } from 'global/ipc'
+import { IPC_ANGGARAN, IPC_KK } from 'global/ipc'
 import { SaveBkuRequest } from 'global/types/TataUsahaTypes'
 import React, { FC, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -27,15 +27,13 @@ const FormPenerimaanDanaView: FC = () => {
   const navigate = useNavigate()
   const { q_id_anggaran } = useParams()
 
-  // TO DO
-  const tahunAnggaran = 2021
-
   const [defaultValue, setDefaultValue] = useState<FormPenerimaanDanaData>(null)
   const [formDisable, setFormDisable] = useState(true)
 
   const [openModalConfirmation, setOpenModalConfirmation] = useState(false)
   const [openModalSuccess, setOpenModalSuccess] = useState(false)
   const [openModalKeluar, setOpenModalKeluar] = useState(false)
+  const [tahunAnggaran, setTahunAnggaran] = useState('')
 
   const periodeSalurList = useTataUsahaStore(
     (state: TataUsahaStates) => state.periodeSalurList
@@ -119,6 +117,11 @@ const FormPenerimaanDanaView: FC = () => {
 
   useEffect(() => {
     if (periodeSalurList.length > 0) {
+      const anggaran = syncToIpcMain(
+        IPC_ANGGARAN.getAnggaranById,
+        q_id_anggaran
+      )
+      setTahunAnggaran(anggaran?.tahunAnggaran)
       let date = new Date(periodeSalurList[0].tanggal)
       if (periodeSalurList[0].tanggal === '') {
         date = new Date()
