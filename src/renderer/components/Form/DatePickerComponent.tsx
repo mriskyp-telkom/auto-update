@@ -1,11 +1,12 @@
-import React, { FC, useState, forwardRef, useEffect } from 'react'
-import { FieldErrors, RegisterOptions } from 'react-hook-form'
+import React, { FC, useState, useEffect, forwardRef } from 'react'
+import { useFormContext } from 'react-hook-form'
 import DatePicker, { registerLocale } from 'react-datepicker'
 
 import { Input, InputGroup, InputRightAddon } from '@wartek-id/input'
 import { Icon } from '@wartek-id/icon'
 
 import { DATA_BULAN } from 'renderer/constants/general'
+import { ERROR_REQUIRED } from 'renderer/constants/errorForm'
 
 import { formatDateToString } from 'renderer/utils/date-formatting'
 
@@ -21,9 +22,6 @@ interface DatePickerProps {
   required?: boolean
   defaultValue: Date
   isDisabled: boolean
-  errors: FieldErrors
-  register: (arg0: string, arg1: RegisterOptions) => void
-  handleSelect: (value: Date) => void
 }
 
 const months = DATA_BULAN.map((b: any) => b.name)
@@ -31,7 +29,7 @@ const months = DATA_BULAN.map((b: any) => b.name)
 const CustomInput = forwardRef((props: any, ref) => {
   return (
     <InputGroup>
-      <Input type="text" {...props} ref={ref} />
+      <Input {...props} type="text" ref={ref} />
       <InputRightAddon>
         <Icon as="i" color="default" fontSize="default">
           date_range
@@ -90,25 +88,38 @@ const CustomHeader = (props: any) => {
 }
 
 const DatePickerComponent: FC<DatePickerProps> = (props: DatePickerProps) => {
-  const { name, register, required, errors } = props
-
   const [startDate, setStartDate] = useState(null)
+
+  const { name, required } = props
+
+  const {
+    register,
+    setValue,
+    clearErrors,
+    formState: { errors },
+  } = useFormContext()
 
   let validation = {}
   if (required) {
     validation = {
-      required: 'Wajib diisi',
+      ...validation,
+      required: ERROR_REQUIRED,
     }
   }
 
   const handleChange = (date: Date) => {
     setStartDate(date)
-    props.handleSelect(date)
+    setValue(name, date)
+
+    if (required && date !== null && errors[name]?.message === ERROR_REQUIRED) {
+      clearErrors(name)
+      return
+    }
   }
 
   useEffect(() => {
     setStartDate(props.defaultValue)
-    props.handleSelect(props.defaultValue)
+    setValue(name, props.defaultValue)
   }, [])
 
   return (
