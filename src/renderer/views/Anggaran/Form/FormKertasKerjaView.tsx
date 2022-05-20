@@ -57,6 +57,7 @@ import isEmpty from 'lodash/isEmpty'
 import styles from './index.module.css'
 
 import clsx from 'clsx'
+import { TIME_DELAY_SUCCESS_SCREEN } from 'renderer/constants/app'
 
 const initialFormDisable = {
   kegiatan: false,
@@ -348,7 +349,7 @@ const FormKertasKerjaView: FC = () => {
         setOpenModalSuccess(false)
         setIsFocused(true)
         closeModal()
-      }, 3000)
+      }, TIME_DELAY_SUCCESS_SCREEN)
     } else if (res.isError) {
       setOpenModalFailedDelete(true)
     }
