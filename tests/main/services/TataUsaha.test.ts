@@ -2,6 +2,7 @@ import { STATUS_BKU_PERBULAN, STATUS_BKU_PERTAHUN } from 'global/constants'
 import {
   GetListAnggaranRequest,
   Anggaran as AnggaranData,
+  GetTotalSaldoRequest,
 } from 'global/types/TataUsaha'
 import { AktivasiBku } from 'main/models/AktivasiBku'
 import { Anggaran } from 'main/models/Anggaran'
@@ -10,6 +11,7 @@ import { KasUmum } from 'main/models/KasUmum'
 import { MstSekolah } from 'main/models/MstSekolah'
 import { GetConfig } from 'main/repositories/Config'
 import { TataUsahaService } from 'main/services/TataUsaha'
+import { Saldo } from 'main/types/KasUmum'
 import { GetMonthName } from 'main/utils/Months'
 import { createConnection, getConnection } from 'typeorm'
 import { cfg, Migrate } from '../migration'
@@ -101,4 +103,19 @@ test('GetListAnggaran', async () => {
     expect(bulan.bulan).toBe(GetMonthName(bulan.idPeriode))
     expect(bulan.status).toBe(STATUS_BKU_PERBULAN.done)
   }
+})
+
+test('GetTotalSaldo', async () => {
+  const conn = getConnection()
+  const tataUsahaService = new TataUsahaService(conn)
+  const request = <GetTotalSaldoRequest>{
+    idAnggaran: '-ywMrrqE30Ck6P0p08Uj2w',
+    startDate: '2021-01-01',
+    endDate: '2021-12-30',
+  }
+
+  const res = await tataUsahaService.GetTotalSaldo(request)
+  const saldo = res.unwrapOr(<Saldo>{})
+  expect(saldo.sisaBank).toBe(50)
+  expect(saldo.sisaTunai).toBe(25)
 })

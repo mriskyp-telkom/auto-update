@@ -2,7 +2,10 @@ import { ipcMain } from 'electron'
 import { IPC_TATA_USAHA } from 'global/ipc'
 import { getConnection } from 'typeorm'
 import { TataUsahaService } from 'main/services/TataUsaha'
-import { GetListAnggaranRequest } from 'global/types/TataUsaha'
+import {
+  GetListAnggaranRequest,
+  GetTotalSaldoRequest,
+} from 'global/types/TataUsaha'
 import { GetConfig } from 'main/repositories/Config'
 
 const conn = getConnection()
@@ -29,6 +32,12 @@ module.exports = {
       )
 
       e.returnValue = await tataUsahaService.GetListAnggaran(request)
+    }
+  ),
+  getTotalSaldo: ipcMain.on(
+    IPC_TATA_USAHA.getTotalSaldo,
+    async (e, request: GetTotalSaldoRequest) => {
+      e.returnValue = await tataUsahaService.GetTotalSaldo(request)
     }
   ),
 }
