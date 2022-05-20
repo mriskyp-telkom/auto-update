@@ -64,6 +64,10 @@ export const GetAnggaranList = async (idSumberDana: number) => {
 
 export const GetDetailAnggaran = async (idAnggaran: string) => {
   const dataAnggaran = await GetAnggaranById(idAnggaran)
+  if (dataAnggaran === undefined) {
+    return
+  }
+
   const restructured = {
     ...dataAnggaran,
     tanggal_pengajuan: dataAnggaran.tanggalPengajuan,

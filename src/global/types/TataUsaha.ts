@@ -23,3 +23,9 @@ export interface AktivasiBku {
   bulan: string
   status: string
 }
+
+export interface GetTotalSaldoRequest {
+  idAnggaran: string
+  startDate: string
+  endDate: string
+}

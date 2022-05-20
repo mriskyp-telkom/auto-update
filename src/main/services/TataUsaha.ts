@@ -4,9 +4,11 @@ import {
   GetListAnggaranRequest,
   Anggaran as AnggaranData,
   AktivasiBku as AktivasiData,
+  GetTotalSaldoRequest,
 } from 'global/types/TataUsaha'
 import { GetAnggaran } from 'main/repositories/Anggaran'
 import { AktivasiBkuRepository } from 'main/repositories/AktivasiBku'
+import { KasUmumRepository } from 'main/repositories/KasUmum'
 import { Anggaran, Bku } from 'main/types/TataUsaha'
 import { AktivasiBku } from 'main/models/AktivasiBku'
 import { CONFIG, STATUS_BKU_PERTAHUN } from 'global/constants'
@@ -16,14 +18,15 @@ import { Anggaran as AnggaranEntity } from 'main/models/Anggaran'
 import { GetConfig } from 'main/repositories/Config'
 import CommonUtils from 'main/utils/CommonUtils'
 import { AnggaranDTO } from 'main/types/Anggaran'
+import { Saldo } from 'main/types/KasUmum'
 
 export class TataUsahaService {
-  private conn: Connection
   private aktivasiBkuRepo: AktivasiBkuRepository
+  private kasUmumRepo: KasUmumRepository
 
   constructor(conn: Connection) {
-    this.conn = conn
     this.aktivasiBkuRepo = new AktivasiBkuRepository(conn)
+    this.kasUmumRepo = new KasUmumRepository(conn)
   }
 
   async GetListAnggaran(
@@ -43,6 +46,7 @@ export class TataUsahaService {
         mapAnggaran.set(CommonUtils.encodeUUIDFromV4(), <Anggaran>{
           anggaran: <AnggaranDTO>{
             tahun: year,
+            id_anggaran: null,
           },
           status: STATUS_BKU_PERTAHUN.not_active,
           bkuList: [],
@@ -128,5 +132,27 @@ export class TataUsahaService {
 
     a.status = GetStatusAnggaran(activeYear, anggaran, aktivasiBkuList)
     return a
+  }
+
+  async GetTotalSaldo(
+    request: GetTotalSaldoRequest
+  ): Promise<Result<Saldo, Error>> {
+    const now = new Date()
+    let startDate = now
+    let endDate = now
+
+    if (request.startDate !== '') {
+      startDate = new Date(request.startDate)
+    }
+
+    if (request.endDate !== '') {
+      endDate = new Date(request.endDate)
+    }
+
+    return await this.kasUmumRepo.GetTotalSaldo(
+      request.idAnggaran,
+      startDate,
+      endDate
+    )
   }
 }
