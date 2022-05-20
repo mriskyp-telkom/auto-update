@@ -97,10 +97,6 @@ const FormPenerimaanDanaView: FC = () => {
     setValue('periode', value)
   }
 
-  const handleSelectTanggal = (value: Date) => {
-    setValue('tanggal_penerimaan', value)
-  }
-
   useEffect(() => {
     if (openModalSuccess) {
       setTimeout(() => {
@@ -176,9 +172,6 @@ const FormPenerimaanDanaView: FC = () => {
                   placeholder="Pilih tanggal"
                   required={true}
                   defaultValue={defaultValue?.tanggal_penerimaan}
-                  register={register}
-                  errors={errors}
-                  handleSelect={handleSelectTanggal}
                   isDisabled={formDisable}
                 />
               </div>
