@@ -18,7 +18,7 @@ import {
 } from 'renderer/types/forms/TataUsahaType'
 import { SaveBkuRequest } from 'global/types/TataUsaha'
 
-import { TIME_DELAY_SCREEN } from 'renderer/constants/app'
+import { TIME_DELAY_SUCCESS_SCREEN } from 'renderer/constants/app'
 
 import syncToIpcMain from 'renderer/configs/ipc'
 
@@ -102,7 +102,7 @@ const FormPenerimaanDanaView: FC = () => {
       setTimeout(() => {
         setIsFocused(true)
         closeModal()
-      }, TIME_DELAY_SCREEN)
+      }, TIME_DELAY_SUCCESS_SCREEN)
     }
   }, [openModalSuccess])
 
