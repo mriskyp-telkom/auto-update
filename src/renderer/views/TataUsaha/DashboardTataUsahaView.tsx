@@ -7,15 +7,18 @@ import CardDashboardTataUsahaView from './CardDashboardTataUsahaView'
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from '@wartek-id/tabs'
 
 import { BKUCardDashboardTahunType } from 'renderer/types/TataUsahaType'
+
 import { ID_SUMBER_DANA } from 'renderer/constants/anggaran'
+import { APP_CONFIG } from 'renderer/constants/appConfig'
 
 import { TataUsahaStates, useTataUsahaStore } from 'renderer/stores/tata-usaha'
 
 import syncToIpcMain from 'renderer/configs/ipc'
 
-import { IPC_TATA_USAHA } from 'global/ipc'
+import { IPC_TATA_USAHA, IPC_CONFIG } from 'global/ipc'
 
 const DashboardTataUsahaView: FC = () => {
+  const [tahunAktif, setTahunAktif] = useState('')
   const [bosReguler, setBosReguler] = useState([])
 
   const isFocused = useTataUsahaStore(
@@ -36,6 +39,12 @@ const DashboardTataUsahaView: FC = () => {
     } else {
       setBosReguler(bkuBOSReguler?.value)
     }
+
+    const tahunAktif = syncToIpcMain(
+      IPC_CONFIG.getConfig,
+      APP_CONFIG.tahunAktif
+    )
+    setTahunAktif(tahunAktif)
   }
 
   useEffect(() => {
@@ -72,6 +81,7 @@ const DashboardTataUsahaView: FC = () => {
                       key={index}
                       data={item}
                       sumberDana={ID_SUMBER_DANA.BOS_REGULER}
+                      tahunAktif={parseInt(tahunAktif)}
                     />
                   )
                 }

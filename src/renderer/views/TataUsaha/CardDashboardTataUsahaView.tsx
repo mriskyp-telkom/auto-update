@@ -31,6 +31,7 @@ interface CardBulanProps {
 interface CardDashboardTataUsahaProps {
   data: BKUCardDashboardTahunType
   sumberDana: number
+  tahunAktif: number
 }
 
 const CardBulan: FC<CardBulanProps> = (props: CardBulanProps) => {
@@ -84,7 +85,7 @@ const CardBulan: FC<CardBulanProps> = (props: CardBulanProps) => {
 const CardDashboardTataUsahaView: FC<CardDashboardTataUsahaProps> = (
   props: CardDashboardTataUsahaProps
 ) => {
-  const { data, sumberDana } = props
+  const { data, sumberDana, tahunAktif } = props
 
   const isNotActive = data.status === STATUS_BKU_PERTAHUN.not_active
   const isDone = data.status === STATUS_BKU_PERTAHUN.done
@@ -92,7 +93,7 @@ const CardDashboardTataUsahaView: FC<CardDashboardTataUsahaProps> = (
   const isTempInactive = data.status === STATUS_BKU_PERTAHUN.temporary_inactive
   const isDateOver = data.status === STATUS_BKU_PERTAHUN.date_over
 
-  const showBulan = true
+  const showBulan = isActive || data.tahun === tahunAktif
   const showBtnList = !isNotActive && showBulan
   const showBtnCetak = isDone || isActive
 
