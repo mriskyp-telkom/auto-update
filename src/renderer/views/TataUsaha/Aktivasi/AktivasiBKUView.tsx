@@ -63,11 +63,11 @@ const AktivasiBKUView: FC<AktivasiBKUViewProps> = (
    Silakan periksa website BOS Salur secara berkala untuk melihat status penerimaan dana.'
 
   const handleClickAktivasi = () => {
-    if (idAnggaran === undefined || idAnggaran === null) {
-      return
-    }
-
-    if (!props.isAnggaranApproved) {
+    if (
+      idAnggaran === undefined ||
+      idAnggaran === null ||
+      !props.isAnggaranApproved
+    ) {
       setOpenModalWarning(true)
       return
     }
@@ -104,7 +104,10 @@ const AktivasiBKUView: FC<AktivasiBKUViewProps> = (
       STATUS_KERTAS_KERJA.draft,
     ]
 
-    if (includes(directToDashboard, dataAnggaran?.status)) {
+    if (
+      dataAnggaran == null ||
+      includes(directToDashboard, dataAnggaran?.status)
+    ) {
       navigate('/anggaran')
     }
 
