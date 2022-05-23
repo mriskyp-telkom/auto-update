@@ -25,6 +25,7 @@ import SyncMengulasKertasKerjaView from 'renderer/views/Anggaran/MengulasKertasK
 import DashboardTataUsahaView from 'renderer/views/TataUsaha/DashboardTataUsahaView'
 import FormPenerimaanDanaView from 'renderer/views/TataUsaha/Form/FormPenerimaanDanaView'
 import SyncAktivasiBKUView from 'renderer/views/TataUsaha/Aktivasi/SyncAktivasiBKUView'
+import DetailTataUsahaView from 'renderer/views/TataUsaha/Detail/DetailTataUsahaView'
 
 const ipcRenderer = window.require('electron').ipcRenderer
 
@@ -97,6 +98,7 @@ const App: FC = () => {
             </Route>
             <Route path="tata-usaha">
               <Route index={true} element={<DashboardTataUsahaView />} />
+              <Route path="detail" element={<DetailTataUsahaView />} />
             </Route>
           </Route>
         </Routes>
