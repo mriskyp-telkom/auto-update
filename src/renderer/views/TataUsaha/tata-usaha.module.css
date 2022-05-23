@@ -1,0 +1,44 @@
+table.tableTataUsaha thead th {
+  padding-top: 1.5rem;
+  padding-bottom: 1rem;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+table.tableTataUsaha > thead tr,
+table.tableTataUsaha > tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  box-shadow: inset 0px -1px 0px #c9cbcf;
+}
+
+@media screen and (min-height: 1024px) {
+  table.tableTataUsaha > tbody {
+    max-height: 420px !important;
+  }
+}
+
+@media screen and (min-height: 900px) {
+  table.tableTataUsaha > tbody {
+    max-height: 320px !important;
+  }
+}
+
+table.tableTataUsaha > tbody {
+  max-height: 220px;
+  width: 100%;
+  display: block;
+}
+
+table.tableTataUsaha tbody tr {
+  height: 52px;
+}
+
+table.tableTataUsaha tbody td span {
+  padding-left: 10px;
+  padding-right: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
