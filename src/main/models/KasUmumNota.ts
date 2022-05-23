@@ -30,7 +30,7 @@ export class KasUmumNota extends BaseEntity {
   npwp: string | null
 
   @Column('numeric', { name: 'total', nullable: true })
-  total: NonNullable<unknown> | null
+  total: NonNullable<number> | null
 
   @Column('varchar', { name: 'kode_rekening', nullable: true, length: 20 })
   kodeRekening: string | null

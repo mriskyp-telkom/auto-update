@@ -25,10 +25,10 @@ export class RefRekening extends BaseEntity {
   blokid: number
 
   @Column('numeric', { name: 'batas_atas', nullable: true })
-  batasAtas: NonNullable<unknown> | null
+  batasAtas: NonNullable<number> | null
 
   @Column('numeric', { name: 'batas_bawah', nullable: true })
-  batasBawah: NonNullable<unknown> | null
+  batasBawah: NonNullable<number> | null
 
   @Column('varchar', { name: 'validasi_type', nullable: true, length: 1 })
   validasiType: NonNullable<unknown> | null

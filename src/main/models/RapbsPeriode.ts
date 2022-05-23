@@ -25,10 +25,10 @@ export class RapbsPeriode extends BaseEntity {
   satuan: string
 
   @Column('numeric', { name: 'harga_satuan' })
-  hargaSatuan: NonNullable<unknown>
+  hargaSatuan: NonNullable<number>
 
   @Column('numeric', { name: 'jumlah' })
-  jumlah: NonNullable<unknown>
+  jumlah: NonNullable<number>
 
   @Column('numeric', { name: 'v1', nullable: true, precision: 4, scale: 0 })
   v1: number | null
