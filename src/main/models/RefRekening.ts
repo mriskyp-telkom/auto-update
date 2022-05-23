@@ -25,13 +25,13 @@ export class RefRekening extends BaseEntity {
   blokid: number
 
   @Column('numeric', { name: 'batas_atas', nullable: true })
-  batasAtas: NonNullable<unknown> | null
+  batasAtas: number | null
 
   @Column('numeric', { name: 'batas_bawah', nullable: true })
-  batasBawah: NonNullable<unknown> | null
+  batasBawah: number | null
 
   @Column('varchar', { name: 'validasi_type', nullable: true, length: 1 })
-  validasiType: NonNullable<unknown> | null
+  validasiType: string | null
 
   @Column('numeric', {
     name: 'is_ppn',
@@ -88,7 +88,7 @@ export class RefRekening extends BaseEntity {
   isSspd: number | null
 
   @Column('varchar', { name: 'bhp', nullable: true, length: 5 })
-  bhp: NonNullable<unknown> | null
+  bhp: string | null
 
   @Column('numeric', {
     name: 'is_custom_pajak_1',

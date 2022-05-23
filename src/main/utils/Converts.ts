@@ -5,4 +5,8 @@ export default class ConvertUtils {
   static convertIntoString(val: any): string {
     return <string>(<unknown>val)
   }
+
+  static convertIntoBoolean(val: any): boolean {
+    return <boolean>(<unknown>val)
+  }
 }
