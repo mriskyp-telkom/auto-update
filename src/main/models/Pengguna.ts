@@ -27,7 +27,7 @@ export class Pengguna extends BaseEntity {
   tanggalLahir: Date
 
   @Column('varchar', { name: 'jenis_kelamin', length: 1 })
-  jenisKelamin: NonNullable<unknown>
+  jenisKelamin: NonNullable<string>
 
   @Column('varchar', { name: 'alamat', nullable: true, length: 50 })
   alamat: string | null
@@ -51,7 +51,7 @@ export class Pengguna extends BaseEntity {
   nip: string | null
 
   @Column('varchar', { name: 'kode_wilayah', nullable: true, length: 8 })
-  kodeWilayah: NonNullable<unknown> | null
+  kodeWilayah: string | null
 
   @Column('varchar', { name: 'email', length: 50 })
   email: string

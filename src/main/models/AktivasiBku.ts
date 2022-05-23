@@ -20,28 +20,28 @@ export class AktivasiBku extends BaseEntity {
   tanggalFinish: Date | null
 
   @Column('numeric', { name: 'saldo_awal_bank', nullable: true })
-  saldoAwalBank: NonNullable<unknown> | null
+  saldoAwalBank: number | null
 
   @Column('numeric', { name: 'saldo_awal_tunai', nullable: true })
-  saldoAwalTunai: NonNullable<unknown> | null
+  saldoAwalTunai: number | null
 
   @Column('numeric', { name: 'saldo_akhir_bank', nullable: true })
-  saldoAkhirBank: NonNullable<unknown> | null
+  saldoAkhirBank: number | null
 
   @Column('numeric', { name: 'saldo_akhir_tunai', nullable: true })
-  saldoAkhirTunai: NonNullable<unknown> | null
+  saldoAkhirTunai: number | null
 
   @Column('numeric', { name: 'saldo_awal_bank_sisa', nullable: true })
-  saldoAwalBankSisa: NonNullable<unknown> | null
+  saldoAwalBankSisa: number | null
 
   @Column('numeric', { name: 'saldo_awal_tunai_sisa', nullable: true })
-  saldoAwalTunaiSisa: NonNullable<unknown> | null
+  saldoAwalTunaiSisa: number | null
 
   @Column('numeric', { name: 'saldo_akhir_bank_sisa', nullable: true })
-  saldoAkhirBankSisa: NonNullable<unknown> | null
+  saldoAkhirBankSisa: number | null
 
   @Column('numeric', { name: 'saldo_akhir_tunai_sisa', nullable: true })
-  saldoAkhirTunaiSisa: NonNullable<unknown> | null
+  saldoAkhirTunaiSisa: number | null
 
   @Column('numeric', {
     name: 'soft_delete',

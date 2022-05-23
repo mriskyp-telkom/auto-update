@@ -15,7 +15,7 @@ export class Ptk extends BaseEntity {
   nama: string
 
   @Column('varchar', { name: 'jenis_kelamin', length: 1 })
-  jenisKelamin: NonNullable<unknown>
+  jenisKelamin: NonNullable<string>
 
   @Column('int', { name: 'masa_kerja_tahun' })
   masaKerjaTahun: number

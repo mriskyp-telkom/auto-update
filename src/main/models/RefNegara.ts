@@ -8,7 +8,7 @@ export class RefNegara extends BaseEntity {
     length: 2,
     unique: true,
   })
-  negaraId: NonNullable<unknown>
+  negaraId: NonNullable<string>
 
   @Column('varchar', { name: 'nama', length: 80 })
   nama: string
