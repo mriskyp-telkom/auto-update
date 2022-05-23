@@ -30,8 +30,8 @@ import {
 import { APP_CONFIG } from 'renderer/constants/appConfig'
 
 import { AlertType } from 'renderer/types/ComponentType'
-import { formatDateTimeStatus } from 'renderer/utils/date-formatting'
 
+import { formatDateTimeStatus } from 'renderer/utils/date-formatting'
 import { copyKertasKerja } from 'renderer/utils/copy-writing'
 
 import findIndex from 'lodash/findIndex'
