@@ -4,11 +4,11 @@ import PanduanCardComponent from 'renderer/components/Card/PanduanCardComponent'
 
 import { Icon } from '@wartek-id/icon'
 
-const PanduanMengulasKKView: FC = () => {
+const PanduanTutupBKUView: FC = () => {
   return (
     <PanduanCardComponent type="info">
       <>
-        <div className="mb-2">
+        <div className="mb-2 font-semibold">
           <Icon
             as="i"
             color="default"
@@ -23,20 +23,20 @@ const PanduanMengulasKKView: FC = () => {
         <ul className="list font-normal text-base text-gray-900 ml-7">
           <li>
             <span>
-              Di halaman ini Anda bisa memeriksa kembali anggaran belanja
-              sekolah yang telah dibuat.
+              Anda harus mencatat pembelanjaan baik secara tunai maupun nontunai
+              secara kronologis.
             </span>
           </li>
           <li>
             <span>
-              Jika ada yang ingin diganti, klik tombol <b>“Edit”</b> untuk
-              melakukan edit.
+              Pastikan Anda telah mencatat penarikan tunai sebelum memasukkan
+              pembelanjaan tunai.
             </span>
           </li>
           <li>
             <span>
-              Jika sudah sesuai, klik tombol <b>“Ajukan Pengesahan”</b>
-              untuk mengajukan pengesahan.
+              Untuk menutup BKU, Anda akan diminta untuk memasukkan bunga dan
+              pajak bunga bank/giro di bulan terkait.
             </span>
           </li>
         </ul>
@@ -45,4 +45,4 @@ const PanduanMengulasKKView: FC = () => {
   )
 }
 
-export default PanduanMengulasKKView
+export default PanduanTutupBKUView

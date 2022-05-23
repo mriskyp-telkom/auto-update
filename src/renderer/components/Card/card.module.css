@@ -1,8 +1,8 @@
-.pointKertasKerja ul {
+.point ul {
   list-style: disc inside;
 }
 
-.pointKertasKerja ul li span {
+.point ul li span {
   position: relative;
   left: -6px;
 }

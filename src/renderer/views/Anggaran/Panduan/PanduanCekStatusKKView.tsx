@@ -1,6 +1,7 @@
 import React, { FC } from 'react'
 
-import CardPanduanAnggaranView from 'renderer/views/Anggaran/CardPanduanAnggaranView'
+import PanduanCardComponent from 'renderer/components/Card/PanduanCardComponent'
+
 import CekStatusKKView from 'renderer/views/Anggaran/CekStatus/CekStatusKKView'
 
 import { Icon } from '@wartek-id/icon'
@@ -14,7 +15,7 @@ const PanduanCekStatusKKView: FC<PanduanCekStatusProps> = (
   props: PanduanCekStatusProps
 ) => {
   return (
-    <CardPanduanAnggaranView type="warning">
+    <PanduanCardComponent type="warning">
       <>
         <div className="mb-2">
           <Icon
@@ -52,7 +53,7 @@ const PanduanCekStatusKKView: FC<PanduanCekStatusProps> = (
           </span>
         </div>
       </>
-    </CardPanduanAnggaranView>
+    </PanduanCardComponent>
   )
 }
 

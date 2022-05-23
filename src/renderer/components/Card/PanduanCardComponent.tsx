@@ -1,18 +1,18 @@
 import React, { FC } from 'react'
 
-import styles from './anggaran.module.css'
+import styles from './card.module.css'
 
 import { AlertType } from 'renderer/types/ComponentType'
 
 import clsx from 'clsx'
 
-interface CardPanduanAnggaranProps {
+interface PanduanCardProps {
   type: AlertType
   children: React.ReactNode
 }
 
-const CardPanduanAnggaranView: FC<CardPanduanAnggaranProps> = (
-  props: CardPanduanAnggaranProps
+const PanduanCardComponent: FC<PanduanCardProps> = (
+  props: PanduanCardProps
 ) => {
   const cardColor = () => {
     if (props.type === 'info') {
@@ -32,7 +32,7 @@ const CardPanduanAnggaranView: FC<CardPanduanAnggaranProps> = (
   return (
     <div
       className={clsx(
-        styles.pointKertasKerja,
+        styles.point,
         cardColor(),
         'border rounded py-6 pl-6 pr-4 w-[860px]'
       )}
@@ -42,4 +42,4 @@ const CardPanduanAnggaranView: FC<CardPanduanAnggaranProps> = (
   )
 }
 
-export default CardPanduanAnggaranView
+export default PanduanCardComponent

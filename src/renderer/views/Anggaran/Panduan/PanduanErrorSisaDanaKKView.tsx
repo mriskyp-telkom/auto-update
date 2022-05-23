@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 
-import CardPanduanAnggaranView from 'renderer/views/Anggaran/CardPanduanAnggaranView'
+import PanduanCardComponent from 'renderer/components/Card/PanduanCardComponent'
 
 import { Icon } from '@wartek-id/icon'
 
@@ -8,7 +8,7 @@ import { copyKertasKerja } from 'renderer/utils/copy-writing'
 
 const PanduanErrorSisaDanaKKView: FC = () => {
   return (
-    <CardPanduanAnggaranView type="failed">
+    <PanduanCardComponent type="failed">
       <>
         <div className="mb-2 font-semibold">
           <Icon
@@ -43,7 +43,7 @@ const PanduanErrorSisaDanaKKView: FC = () => {
           </li>
         </ul>
       </>
-    </CardPanduanAnggaranView>
+    </PanduanCardComponent>
   )
 }
 

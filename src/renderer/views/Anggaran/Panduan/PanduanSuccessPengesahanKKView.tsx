@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 
-import CardPanduanAnggaranView from 'renderer/views/Anggaran/CardPanduanAnggaranView'
+import PanduanCardComponent from 'renderer/components/Card/PanduanCardComponent'
 
 import { Icon } from '@wartek-id/icon'
 
@@ -8,7 +8,7 @@ import { copyKertasKerja } from 'renderer/utils/copy-writing'
 
 const PanduanSuccessPengesahanKKView: FC = () => {
   return (
-    <CardPanduanAnggaranView type="success">
+    <PanduanCardComponent type="success">
       <>
         <div className="mb-2 font-semibold">
           <Icon
@@ -43,7 +43,7 @@ const PanduanSuccessPengesahanKKView: FC = () => {
           </li>
         </ul>
       </>
-    </CardPanduanAnggaranView>
+    </PanduanCardComponent>
   )
 }
 

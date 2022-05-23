@@ -1,13 +1,17 @@
 import React, { FC } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import InformationCardComponent from 'renderer/components/Card/InformationCardComponent'
 import BadgeComponent, { BadgeType } from 'renderer/components/BadgeComponent'
 import AktivasiBKUView from 'renderer/views/TataUsaha/Aktivasi/AktivasiBKUView'
 
+import { formatDateToString } from 'renderer/utils/date-formatting'
+
 import { Button } from '@wartek-id/button'
 import { Icon } from '@wartek-id/icon'
 
 import { DATA_BULAN } from 'renderer/constants/general'
+import { DETAIL_BKU_PAGE_URL } from 'renderer/constants/routes'
 import {
   LABEL_STATUS_BKU_PERTAHUN,
   LABEL_STATUS_BKU_PERBULAN,
@@ -20,8 +24,8 @@ import {
 } from 'renderer/types/TataUsahaType'
 
 import filter from 'lodash/filter'
+
 import clsx from 'clsx'
-import { formatDateToString } from 'renderer/utils/date-formatting'
 
 interface CardBulanProps {
   data: BKUCardDashboardBulanType
@@ -35,6 +39,7 @@ interface CardDashboardTataUsahaProps {
 }
 
 const CardBulan: FC<CardBulanProps> = (props: CardBulanProps) => {
+  const navigate = useNavigate()
   const { data } = props
 
   const isDisabled = data.status === undefined
@@ -49,12 +54,17 @@ const CardBulan: FC<CardBulanProps> = (props: CardBulanProps) => {
 
   const classStatus = color + ' border-gray-500'
 
+  const handleClick = () => {
+    navigate(DETAIL_BKU_PAGE_URL)
+  }
+
   return (
     <div
       className={clsx(
         color,
-        'rounded shadow-card py-3 px-5 w-[177px] capitalize-first'
+        'rounded shadow-card py-3 px-5 w-[177px] capitalize-first cursor-pointer'
       )}
+      onClick={handleClick}
     >
       <div className="flex justify-center">
         {data.status === STATUS_BKU_PERBULAN.done && (

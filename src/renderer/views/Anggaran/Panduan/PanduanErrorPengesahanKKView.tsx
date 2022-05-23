@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 
 import InfoDialogComponent from 'renderer/components/Dialog/InfoDialogComponent'
 
-import CardPanduanAnggaranView from 'renderer/views/Anggaran/CardPanduanAnggaranView'
+import PanduanCardComponent from 'renderer/components/Card/PanduanCardComponent'
 
 import { Icon } from '@wartek-id/icon'
 
@@ -28,7 +28,7 @@ const PanduanErrorPengesahanKKView: FC = () => {
 
   return (
     <>
-      <CardPanduanAnggaranView type="failed">
+      <PanduanCardComponent type="failed">
         <>
           <div className="mb-2 font-semibold">
             <Icon
@@ -62,7 +62,7 @@ const PanduanErrorPengesahanKKView: FC = () => {
             </li>
           </ul>
         </>
-      </CardPanduanAnggaranView>
+      </PanduanCardComponent>
       <InfoDialogComponent
         title="Catatan Revisi Dinas"
         text={alasanPenolakan}
