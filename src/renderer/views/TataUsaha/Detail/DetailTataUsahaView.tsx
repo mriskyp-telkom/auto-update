@@ -1,16 +1,23 @@
 import React, { FC } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import TabelTataUsahaView from './TabelTataUsahaView'
+import CardTotalDanaView from './CardTotalDanaView'
+
+import PanduanTutupBKUView from 'renderer/views/TataUsaha/Panduan/PanduanTutupBKUView'
+
 import { Icon } from '@wartek-id/icon'
 import { Button } from '@wartek-id/button'
 
-import PanduanTutupBKUView from 'renderer/views/TataUsaha/Panduan/PanduanTutupBKUView'
-import TabelTataUsahaView from './TabelTataUsahaView'
-
 import { DASHBOARD_BKU_PAGE_URL } from 'renderer/constants/routes'
+
+import { formatDateTimeStatus } from 'renderer/utils/date-formatting'
+import clsx from 'clsx'
 
 const DetailTataUsahaView: FC = () => {
   const navigate = useNavigate()
+
+  const lastUpdate = new Date()
 
   const handleBackToBeranda = () => {
     navigate(DASHBOARD_BKU_PAGE_URL)
@@ -73,6 +80,26 @@ const DetailTataUsahaView: FC = () => {
         </span>
       </div>
       <div className="bg-white px-10 h-full">
+        <div
+          className={clsx(
+            'w-full flex text-center justify-end',
+            'font-normal text-tiny text-blue-700 pb-4 pt-[14px]'
+          )}
+        >
+          <Icon
+            as="i"
+            color="default"
+            fontSize="default"
+            className="ml-[6px]"
+            style={{ fontSize: '18px', color: '#0B5FEF' }}
+          >
+            done
+          </Icon>
+          Tersimpan otomatis {formatDateTimeStatus(new Date(lastUpdate))}
+        </div>
+        <div className="pb-6">
+          <CardTotalDanaView />
+        </div>
         <TabelTataUsahaView />
       </div>
     </div>
