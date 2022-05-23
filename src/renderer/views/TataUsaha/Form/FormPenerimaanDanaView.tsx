@@ -94,7 +94,28 @@ const FormPenerimaanDanaView: FC = () => {
   }
 
   const handleSelectPeriode = (value: string) => {
-    setValue('periode', value)
+    const selectedPeriode = periodeSalurList.find((s) => s.label === value)
+    if (selectedPeriode != null) {
+      let date = new Date()
+      if (selectedPeriode.tanggal != null && selectedPeriode.tanggal !== '') {
+        date = new Date(selectedPeriode.tanggal)
+      }
+
+      const data = {
+        periode: selectedPeriode.label,
+        tanggal_penerimaan: date,
+        nominal: `Rp ${numberUtils.delimit(selectedPeriode.total, '.')}`,
+      }
+
+      //TODO
+      setDefaultValue(data)
+      setValue('periode', selectedPeriode.label, { shouldDirty: true })
+      setValue(
+        'nominal',
+        `Rp ${numberUtils.delimit(selectedPeriode.total, '.')}`,
+        { shouldDirty: true }
+      )
+    }
   }
 
   useEffect(() => {

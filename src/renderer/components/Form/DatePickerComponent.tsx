@@ -120,7 +120,7 @@ const DatePickerComponent: FC<DatePickerProps> = (props: DatePickerProps) => {
   useEffect(() => {
     setStartDate(props.defaultValue)
     setValue(name, props.defaultValue)
-  }, [])
+  }, [props.defaultValue])
 
   return (
     <DatePicker
