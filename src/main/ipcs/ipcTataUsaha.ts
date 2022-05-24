@@ -1,7 +1,7 @@
 import { ipcMain } from 'electron'
 import { IPC_TATA_USAHA } from 'global/ipc'
 import { getConnection } from 'typeorm'
-import { TataUsahaService } from 'main/services/TataUsaha'
+import { TataUsahaService } from 'main/services/TataUsahaService'
 import {
   GetListAnggaranRequest,
   GetTotalSaldoDibelanjakanRequest,

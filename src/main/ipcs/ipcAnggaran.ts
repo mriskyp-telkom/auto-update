@@ -17,7 +17,7 @@ import {
   GetAnggaranList,
   GetDetailAnggaran,
   IPCUpsertAnggaran,
-} from 'main/services/Anggaran'
+} from 'main/services/AnggaranService'
 
 import { IPC_ANGGARAN } from 'global/ipc'
 

@@ -21,9 +21,9 @@ import {
   DeleteRapbsByRapbsId,
   GetDetailKegiatan,
   UpdateDetailKegiatan,
-} from 'main/services/KertasKerja'
+} from 'main/services/KertasKerjaService'
 import { AnggaranKegiatan } from 'main/types/Anggaran'
-import { BkuService } from 'main/services/Bku'
+import { BkuService } from 'main/services/BkuService'
 import { getConnection } from 'typeorm'
 
 const conn = getConnection()
