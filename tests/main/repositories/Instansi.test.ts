@@ -41,7 +41,7 @@ test('AddInstansi', async () => {
     'Dinas Pendidikan dan Pemuda Olahraga Kabupaten Gunung Kidul'
   datainstansi.alamat = 'Jl. Pemuda'
   datainstansi.kodePos = 0
-  datainstansi.kodeWilayah = 0
+  datainstansi.kodeWilayah = '040304'
   datainstansi.lintang = 0
   datainstansi.bujur = 0
   datainstansi.email = ''
