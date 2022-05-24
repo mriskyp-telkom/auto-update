@@ -1,5 +1,5 @@
 import { Anggaran } from 'main/models/Anggaran'
-import { IPCUpsertAnggaran } from 'main/services/Anggaran'
+import { IPCUpsertAnggaran } from 'main/services/AnggaranService'
 import { createConnection, getConnection } from 'typeorm'
 import { cfg, Migrate } from '../migration'
 import { Anggaran as AnggaranData } from 'global/types/Anggaran'

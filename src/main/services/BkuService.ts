@@ -6,7 +6,7 @@ import { AktivasiBku } from 'main/models/AktivasiBku'
 import { KasUmum } from 'main/models/KasUmum'
 import { GetMonthsRange } from 'main/utils/Months'
 import CommonUtils from 'main/utils/CommonUtils'
-import { GetPenggunaID } from './User'
+import { GetPenggunaID } from './UserService'
 import { SaveBkuRequest } from 'global/types/TataUsaha'
 export class BkuService {
   private conn: Connection

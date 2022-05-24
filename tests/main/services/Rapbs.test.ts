@@ -5,7 +5,7 @@ import { RapbsPtk } from 'main/models/RapbsPtk'
 import {
   AddDetailKegiatan,
   UpdateDetailKegiatan,
-} from 'main/services/KertasKerja'
+} from 'main/services/KertasKerjaService'
 import {
   DetailKegiatan,
   Periode,

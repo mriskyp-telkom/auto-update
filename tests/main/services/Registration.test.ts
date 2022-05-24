@@ -1,7 +1,7 @@
 import { Anggaran } from 'main/models/Anggaran'
 import { AppConfig } from 'main/models/AppConfig'
 import { Instansi } from 'main/models/Instansi'
-import { Register } from 'main/services/Registration'
+import { Register } from 'main/services/RegistrationService'
 import { MstSekolah } from 'main/models/MstSekolah'
 import { MstWilayah } from 'main/models/MstWilayah'
 import { InstansiPengguna } from 'main/models/InstansiPengguna'
