@@ -1,5 +1,5 @@
 import { KasUmum } from 'main/models/KasUmum'
-import { KasUmumRepository } from 'main/repositories/KasUmum'
+import { KasUmumRepository } from 'main/repositories/KasUmumRepository'
 import CommonUtils from 'main/utils/CommonUtils'
 import { createConnection, getConnection, getRepository } from 'typeorm'
 import { cfg, Migrate } from '../migration'

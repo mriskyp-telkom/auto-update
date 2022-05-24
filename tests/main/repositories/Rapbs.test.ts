@@ -4,7 +4,7 @@ import {
   GetNextUrutan,
   GetRapbsBulan,
   GetRapbsByAnggaranId,
-} from 'main/repositories/Rapbs'
+} from 'main/repositories/RapbsRepository'
 import { createConnection, getConnection } from 'typeorm'
 import { cfg, Migrate } from '../migration'
 import { AnggaranKegiatan } from 'main/types/Anggaran'

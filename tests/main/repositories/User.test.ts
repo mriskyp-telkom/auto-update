@@ -17,7 +17,7 @@ import {
   GetPenggunaByEmail,
   GetPenggunaByToken,
   AddPengguna,
-} from 'main/repositories/User'
+} from 'main/repositories/UserRepository'
 import { createConnection, getConnection } from 'typeorm'
 import { cfg, Migrate } from '../migration'
 

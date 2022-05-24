@@ -4,7 +4,7 @@ import {
   DeleteRapbsPtk,
   GetRapbsPtk,
   GetRapbsPtkHonor,
-} from 'main/repositories/RapbsPtk'
+} from 'main/repositories/RapbsPtkRepository'
 import { createConnection, getConnection } from 'typeorm'
 import { cfg, Migrate } from '../migration'
 

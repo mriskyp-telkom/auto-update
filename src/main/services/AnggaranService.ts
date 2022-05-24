@@ -2,8 +2,8 @@ import {
   GetAnggaran,
   GetAnggaranById,
   UpsertAnggaran,
-} from 'main/repositories/Anggaran'
-import { GetConfig } from 'main/repositories/Config'
+} from 'main/repositories/AnggaranRepository'
+import { GetConfig } from 'main/repositories/ConfigRepository'
 
 import CommonUtils from 'main/utils/CommonUtils'
 

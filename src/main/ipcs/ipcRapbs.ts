@@ -1,8 +1,8 @@
 import { ipcMain } from 'electron'
 
-import { GetListRapbsPeriodeByListRapbsId } from 'main/repositories/RapbsPeriode'
+import { GetListRapbsPeriodeByListRapbsId } from 'main/repositories/RapbsPeriodeRepository'
 
-import { GetRapbsByAnggaranId } from 'main/repositories/Rapbs'
+import { GetRapbsByAnggaranId } from 'main/repositories/RapbsRepository'
 
 module.exports = {
   GetListRapbsPeriodeByListRapbsId: ipcMain.on(

@@ -3,7 +3,7 @@ import { InstansiPengguna } from 'main/models/InstansiPengguna'
 import { MstWilayah } from 'main/models/MstWilayah'
 import { Pengguna } from 'main/models/Pengguna'
 import { UserRole } from 'main/models/UserRole'
-import { AddInstansi } from 'main/repositories/Instansi'
+import { AddInstansi } from 'main/repositories/InstansiRepository'
 import { createConnection, getConnection } from 'typeorm'
 import { cfg, Migrate } from '../migration'
 

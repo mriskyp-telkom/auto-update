@@ -3,7 +3,7 @@ import { Pengguna } from 'main/models/Pengguna'
 import { UserRole } from 'main/models/UserRole'
 import { createQueryBuilder, getRepository, InsertResult } from 'typeorm'
 import CommonUtils from 'main/utils/CommonUtils'
-import { GetConfig } from 'main/repositories/Config'
+import { GetConfig } from 'main/repositories/ConfigRepository'
 import { Token } from 'main/models/Token'
 
 export const CheckUser = async (username: string): Promise<boolean> => {

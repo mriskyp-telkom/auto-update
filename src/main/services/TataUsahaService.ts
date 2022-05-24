@@ -8,23 +8,23 @@ import {
   GetTotalSaldoDibelanjakanRequest,
   GetTotalAnggaranPerBulanRequest,
 } from 'global/types/TataUsaha'
-import { GetAnggaran } from 'main/repositories/Anggaran'
-import { AktivasiBkuRepository } from 'main/repositories/AktivasiBku'
+import { GetAnggaran } from 'main/repositories/AnggaranRepository'
+import { AktivasiBkuRepository } from 'main/repositories/AktivasiBkuRepository'
 import {
   KasUmumRepository,
   GetTotalSaldoDibelanjakan,
-} from 'main/repositories/KasUmum'
+} from 'main/repositories/KasUmumRepository'
 import { Anggaran, Bku } from 'main/types/TataUsaha'
 import { AktivasiBku } from 'main/models/AktivasiBku'
 import { CONFIG, STATUS_BKU_PERTAHUN } from 'global/constants'
 import { GetMonthName } from 'main/utils/Months'
 import { GetStatusAktivasiBku, GetStatusAnggaran } from 'global/status'
 import { Anggaran as AnggaranEntity } from 'main/models/Anggaran'
-import { GetConfig } from 'main/repositories/Config'
+import { GetConfig } from 'main/repositories/ConfigRepository'
 import CommonUtils from 'main/utils/CommonUtils'
 import { AnggaranDTO } from 'main/types/Anggaran'
 import { Saldo } from 'main/types/KasUmum'
-import { GetTotalAnggaranPerBulan } from 'main/repositories/Rapbs'
+import { GetTotalAnggaranPerBulan } from 'main/repositories/RapbsRepository'
 
 export class TataUsahaService {
   private aktivasiBkuRepo: AktivasiBkuRepository

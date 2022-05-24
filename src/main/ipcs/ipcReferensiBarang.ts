@@ -3,7 +3,7 @@ import {
   getLastUpdate,
   addBulkRefAcuanBarang,
   getRefBarangRekening,
-} from 'main/repositories/RefAcuanBarang'
+} from 'main/repositories/RefAcuanBarangRepository'
 import CommonUtils from 'main/utils/CommonUtils'
 import { IPC_REFERENSI } from 'global/ipc'
 

@@ -1,7 +1,7 @@
 import {
   getRefSatuan,
   getRefSatuanLastUpdate,
-} from './../repositories/RefSatuan'
+} from '../repositories/RefSatuanRepository'
 import { ipcMain } from 'electron'
 import CommonUtils from 'main/utils/CommonUtils'
 import { IPC_REFERENSI } from 'global/ipc'

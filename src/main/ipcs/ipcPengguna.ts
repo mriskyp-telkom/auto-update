@@ -1,5 +1,5 @@
 import { ipcMain } from 'electron'
-import { GetPengguna } from 'main/repositories/Pengguna'
+import { GetPengguna } from 'main/repositories/PenggunaRepository'
 
 module.exports = {
   getPengguna: ipcMain.on('pengguna:getPengguna', async (e) => {

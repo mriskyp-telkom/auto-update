@@ -4,7 +4,7 @@ import {
   SetConfig,
   DeleteConfig,
   SetBulkConfig,
-} from 'main/repositories/Config'
+} from 'main/repositories/ConfigRepository'
 import { createConnection, getConnection } from 'typeorm'
 import { cfg, Migrate } from '../migration'
 

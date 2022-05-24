@@ -1,5 +1,5 @@
 import { Token } from 'main/models/Token'
-import { CreateToken, ExpiryToken } from 'main/repositories/Token'
+import { CreateToken, ExpiryToken } from 'main/repositories/TokenRepository'
 import { createConnection, getConnection } from 'typeorm'
 import { cfg, Migrate } from '../migration'
 import CommonUtils from 'main/utils/CommonUtils'

@@ -5,7 +5,7 @@ import { MstSekolah } from 'main/models/MstSekolah'
 import { AppConfig } from 'main/models/AppConfig'
 import { RefSumberDana } from 'main/models/RefSumberDana'
 import CommonUtils from 'main/utils/CommonUtils'
-import { GetConfig } from 'main/repositories/Config'
+import { GetConfig } from 'main/repositories/ConfigRepository'
 import {
   AddAnggaran,
   GetAnggaran,
@@ -17,7 +17,7 @@ import {
   GetTotalAnggaran,
   UpdateIsPengesahan,
   UpdateTanggalPengajuan,
-} from 'main/repositories/Anggaran'
+} from 'main/repositories/AnggaranRepository'
 import { cfg, Migrate } from '../migration'
 import { RefRekening } from 'main/models/RefRekening'
 import { RefKode } from 'main/models/RefKode'

@@ -3,7 +3,7 @@ import { RapbsPeriode } from 'main/models/RapbsPeriode'
 import {
   GetDetailListRapbs,
   GetListValidasiReferensiPeriode,
-} from 'main/repositories/RapbsPeriode'
+} from 'main/repositories/RapbsPeriodeRepository'
 import { ValidasiReferensiPeriode } from 'main/types/RapbsPeriode'
 import { createConnection, getConnection } from 'typeorm'
 import { cfg, Migrate } from '../migration'

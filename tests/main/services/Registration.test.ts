@@ -12,7 +12,7 @@ import {
   RegistrationResponse,
   SchoolResponse,
 } from 'main/types/Pengguna'
-import { GetConfig } from 'main/repositories/Config'
+import { GetConfig } from 'main/repositories/ConfigRepository'
 import CommonUtils from 'main/utils/CommonUtils'
 import { createConnection, getConnection, getRepository } from 'typeorm'
 import { cfg, Migrate } from '../migration'
