@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 import TabelTataUsahaView from './TabelTataUsahaView'
 import CardTotalDanaView from './CardTotalDanaView'
+import CardDanaPembelanjaanView from './CardDanaPembelanjaanView'
 
 import PanduanTutupBKUView from 'renderer/views/TataUsaha/Panduan/PanduanTutupBKUView'
 
@@ -12,6 +13,7 @@ import { Button } from '@wartek-id/button'
 import { DASHBOARD_BKU_PAGE_URL } from 'renderer/constants/routes'
 
 import { formatDateTimeStatus } from 'renderer/utils/date-formatting'
+
 import clsx from 'clsx'
 
 const DetailTataUsahaView: FC = () => {
@@ -97,8 +99,9 @@ const DetailTataUsahaView: FC = () => {
           </Icon>
           Tersimpan otomatis {formatDateTimeStatus(new Date(lastUpdate))}
         </div>
-        <div className="pb-6">
-          <CardTotalDanaView />
+        <div className="flex pb-6">
+          <CardTotalDanaView class="mr-4" />
+          <CardDanaPembelanjaanView />
         </div>
         <TabelTataUsahaView />
       </div>
