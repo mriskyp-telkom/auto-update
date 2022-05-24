@@ -3,12 +3,14 @@ import {
   GetListAnggaranRequest,
   Anggaran as AnggaranData,
   GetTotalSaldoRequest,
+  GetTotalAnggaranPerBulanRequest,
 } from 'global/types/TataUsaha'
 import { AktivasiBku } from 'main/models/AktivasiBku'
 import { Anggaran } from 'main/models/Anggaran'
 import { AppConfig } from 'main/models/AppConfig'
 import { KasUmum } from 'main/models/KasUmum'
 import { MstSekolah } from 'main/models/MstSekolah'
+import { Rapbs } from 'main/models/Rapbs'
 import { GetConfig } from 'main/repositories/Config'
 import { TataUsahaService } from 'main/services/TataUsaha'
 import { Saldo } from 'main/types/KasUmum'
@@ -21,7 +23,7 @@ beforeEach(async () => {
     type: 'better-sqlite3',
     database: ':memory:',
     dropSchema: true,
-    entities: [AktivasiBku, AppConfig, KasUmum, Anggaran, MstSekolah],
+    entities: [AktivasiBku, AppConfig, KasUmum, Anggaran, MstSekolah, Rapbs],
     synchronize: false,
     logging: true,
   })
@@ -118,4 +120,16 @@ test('GetTotalSaldo', async () => {
   const saldo = res.unwrapOr(<Saldo>{})
   expect(saldo.sisaBank).toBe(50)
   expect(saldo.sisaTunai).toBe(25)
+})
+
+test('GetTotalAnggaranPerBulan', async () => {
+  const conn = getConnection()
+  const tataUsahaService = new TataUsahaService(conn)
+  const request = <GetTotalAnggaranPerBulanRequest>{
+    idAnggaran: 'apQwiAb-9EWxv74iwMY6aQ',
+    idPeriode: [92],
+  }
+
+  const res = await tataUsahaService.GetTotalAnggaranPerBulan(request)
+  expect(res).toBe(26176000)
 })

@@ -5,6 +5,7 @@ import {
   Anggaran as AnggaranData,
   AktivasiBku as AktivasiData,
   GetTotalSaldoRequest,
+  GetTotalAnggaranPerBulanRequest,
 } from 'global/types/TataUsaha'
 import { GetAnggaran } from 'main/repositories/Anggaran'
 import { AktivasiBkuRepository } from 'main/repositories/AktivasiBku'
@@ -19,6 +20,7 @@ import { GetConfig } from 'main/repositories/Config'
 import CommonUtils from 'main/utils/CommonUtils'
 import { AnggaranDTO } from 'main/types/Anggaran'
 import { Saldo } from 'main/types/KasUmum'
+import { GetTotalAnggaranPerBulan } from 'main/repositories/Rapbs'
 
 export class TataUsahaService {
   private aktivasiBkuRepo: AktivasiBkuRepository
@@ -154,5 +156,11 @@ export class TataUsahaService {
       startDate,
       endDate
     )
+  }
+
+  async GetTotalAnggaranPerBulan(
+    request: GetTotalAnggaranPerBulanRequest
+  ): Promise<number> {
+    return await GetTotalAnggaranPerBulan(request.idAnggaran, request.idPeriode)
   }
 }
