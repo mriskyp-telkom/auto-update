@@ -68,4 +68,5 @@ export const IPC_RAPBS = {
 export const IPC_TATA_USAHA = {
   getListAnggaran: `${TATA_USAHA}:getListAnggaran`,
   getTotalSaldo: `${TATA_USAHA}:getTotalSaldo`,
+  getTotalAnggaranPerBulan: `${TATA_USAHA}:getTotalAnggaranPerBulan`,
 }

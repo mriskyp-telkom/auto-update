@@ -4,6 +4,7 @@ import { getConnection } from 'typeorm'
 import { TataUsahaService } from 'main/services/TataUsaha'
 import {
   GetListAnggaranRequest,
+  GetTotalAnggaranPerBulanRequest,
   GetTotalSaldoRequest,
 } from 'global/types/TataUsaha'
 import { GetConfig } from 'main/repositories/Config'
@@ -38,6 +39,12 @@ module.exports = {
     IPC_TATA_USAHA.getTotalSaldo,
     async (e, request: GetTotalSaldoRequest) => {
       e.returnValue = await tataUsahaService.GetTotalSaldo(request)
+    }
+  ),
+  getTotalAnggaranPerBulan: ipcMain.on(
+    IPC_TATA_USAHA.getTotalAnggaranPerBulan,
+    async (e, request: GetTotalAnggaranPerBulanRequest) => {
+      e.returnValue = await tataUsahaService.GetTotalAnggaranPerBulan(request)
     }
   ),
 }

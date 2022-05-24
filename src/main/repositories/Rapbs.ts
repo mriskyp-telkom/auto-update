@@ -239,3 +239,23 @@ export const DelRapbsByRapbsId = async (
     .where('id_rapbs = :idRapbs', { idRapbs })
     .execute()
 }
+
+export const GetTotalAnggaranPerBulan = async (
+  idAnggaran: string,
+  idPeriode: number[]
+): Promise<number> => {
+  const result = await createQueryBuilder('rapbs', 'r')
+    .select('ifnull(sum(rp.jumlah),0) as totalAnggaranPerBulan')
+    .innerJoin('rapbs_periode', 'rp', 'rp.id_rapbs = r.id_rapbs')
+    .where('r.id_anggaran = :idAnggaran AND rp.id_periode in (:...idPeriode)', {
+      idAnggaran,
+      idPeriode,
+    })
+    .getRawOne()
+
+  if (result !== undefined) {
+    return result.totalAnggaranPerBulan
+  }
+
+  return 0
+}
