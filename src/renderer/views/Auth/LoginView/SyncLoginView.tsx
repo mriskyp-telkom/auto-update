@@ -13,6 +13,7 @@ import { useAPIGetConfigAll } from 'renderer/apis/config'
 import { APP_CONFIG } from 'renderer/constants/appConfig'
 
 import { sendEventLogin } from 'renderer/utils/analytic/auth-util'
+import { SetConfigRequest } from 'global/types/Config'
 
 const stepApi = [
   'infoConnection',
@@ -124,11 +125,11 @@ const SyncLoginView: FC = () => {
       )
       if (hddVolOld === '') {
         hddVolOld = hddVol
-        ipcRenderer.sendSync(
-          'config:setConfig',
-          APP_CONFIG.hddVolOld,
-          hddVolOld
-        )
+        const data: SetConfigRequest = {
+          varname: APP_CONFIG.hddVolOld,
+          varvalue: hddVolOld,
+        }
+        ipcRenderer.sendSync('config:setConfig', data)
       }
       setHddVol(hddVol)
       setHddVolOld(hddVolOld)
@@ -139,13 +140,25 @@ const SyncLoginView: FC = () => {
   useEffect(() => {
     if (dataHDDVol !== undefined) {
       if (Number(dataHDDVol.data) === 1) {
-        ipcRenderer.send('config:setConfig', APP_CONFIG.hddVolOld, hddVol)
-        ipcRenderer.send('config:setConfig', APP_CONFIG.koregInvalid, '0')
+        const configHddVolRequest: SetConfigRequest = {
+          varname: APP_CONFIG.hddVolOld,
+          varvalue: hddVol,
+        }
+        const dataKoreg: SetConfigRequest = {
+          varname: APP_CONFIG.koregInvalid,
+          varvalue: '0',
+        }
+        ipcRenderer.send('config:setConfig', configHddVolRequest)
+        ipcRenderer.send('config:setConfig', dataKoreg)
         setApi(stepApi[3])
       } else {
         removeCacheData()
         setSyncLogin(false)
-        ipcRenderer.send('config:setConfig', APP_CONFIG.koregInvalid, '1')
+        const dataKoregInvalid: SetConfigRequest = {
+          varname: APP_CONFIG.koregInvalid,
+          varvalue: '1',
+        }
+        ipcRenderer.send('config:setConfig', dataKoregInvalid)
         setMultipleDevice(true)
       }
     }

@@ -25,6 +25,7 @@ import AlertNoConnection from 'renderer/views/AlertNoConnection'
 import AlertFailedSyncData from 'renderer/views/AlertFailedSyncData'
 
 import { copyKertasKerja } from 'renderer/utils/copy-writing'
+import { SetConfigRequest } from 'global/types/Config'
 
 const ipcRenderer = window.require('electron').ipcRenderer
 
@@ -258,11 +259,11 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
     )
     if (ipcHddVolOld === '') {
       ipcHddVolOld = ipcHddVol
-      ipcRenderer.sendSync(
-        'config:setConfig',
-        APP_CONFIG.hddVolOld,
-        ipcHddVolOld
-      )
+      const data: SetConfigRequest = {
+        varname: APP_CONFIG.hddVolOld,
+        varvalue: ipcHddVolOld,
+      }
+      ipcRenderer.sendSync('config:setConfig', data)
     }
     setHddVol(ipcHddVol)
     setHddVolOld(ipcHddVolOld)
@@ -300,7 +301,11 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
         setApi('')
         removeCacheData()
         setIsSync(false)
-        ipcRenderer.send('config:setConfig', APP_CONFIG.koregInvalid, '1')
+        const data: SetConfigRequest = {
+          varname: APP_CONFIG.koregInvalid,
+          varvalue: '1',
+        }
+        ipcRenderer.send('config:setConfig', data)
         setMultipleDevice(true)
       }
     }
