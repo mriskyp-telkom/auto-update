@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios'
 import { useQuery, UseQueryOptions } from 'react-query'
 import { api } from 'renderer/configs/api'
-import { API_POST_SYNC_INIT } from 'renderer/constants/api'
+import { API_GET_SYNC_STATUS, API_POST_SYNC_INIT } from 'renderer/constants/api'
 import { ParamSyncType } from 'renderer/types/apis/SyncType'
 import CommonUtils from '../../main/utils/CommonUtils'
 
@@ -34,4 +34,20 @@ export function useAPISync(
     queryOpts
   )
   return result
+}
+
+export function useAPISyncStatus(
+  params: string,
+  queryOpts?: UseQueryOptions<AxiosResponse>
+) {
+  return useQuery<AxiosResponse>(
+    ['checkSync', params],
+    async () =>
+      await api().get(API_GET_SYNC_STATUS(params), {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }),
+    queryOpts
+  )
 }

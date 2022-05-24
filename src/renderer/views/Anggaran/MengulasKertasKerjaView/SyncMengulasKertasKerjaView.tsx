@@ -24,9 +24,9 @@ import {
 } from 'renderer/constants/appConfig'
 
 import { useAPIGetToken } from 'renderer/apis/token'
-import { useAPIInfoConnection } from 'renderer/apis/utils'
+import { useAPICheckHDDVol, useAPIInfoConnection } from 'renderer/apis/utils'
 import { useAPIGetReferensi } from 'renderer/apis/referensi'
-import { useAPISync } from 'renderer/apis/sync'
+import { useAPISyncStatus, useAPISync } from 'renderer/apis/sync'
 import { useAPIAnggaranSync } from 'renderer/apis/anggaran'
 import {
   useAPIRKASDetailSync,
@@ -38,7 +38,11 @@ import {
 
 import SyncDialogComponent from 'renderer/components/Dialog/SyncDialogComponent'
 
-import { RESPONSE_PENGESAHAN } from 'renderer/constants/anggaran'
+import {
+  MAX_RETRY_PENGAJUAN_KK,
+  RESPONSE_PENGESAHAN,
+  TIME_DELAY_SYNC_STATUS,
+} from 'renderer/constants/anggaran'
 
 import { ResponseMengulas } from 'renderer/types/AnggaranType'
 
@@ -61,19 +65,21 @@ import {
 import { TIME_DELAY_SCREEN } from 'renderer/constants/app'
 
 import { copyKertasKerja } from 'renderer/utils/copy-writing'
+import { includes } from 'lodash'
 
 const ipcRenderer = window.require('electron').ipcRenderer
 
 const stepApi = [
   'infoConnection',
   'getToken',
+  'checkHddVol',
   'refKode',
   'refRekening',
   'refBarang',
 ]
 
 const stepSyncApi = [
-  'infoConnection',
+  'infoConnectionSync',
   'getToken',
   'syncInit',
   'anggaran',
@@ -100,6 +106,8 @@ const SyncMengulasKertasKerjaView: FC = () => {
   const setNpsn = useAuthStore((state: AuthStates) => state.setNpsn)
   const setTahunAktif = useAuthStore((state: AuthStates) => state.setTahunAktif)
   const setKoreg = useAuthStore((state: AuthStates) => state.setKoreg)
+  const responseErrorSyncStatus =
+    RESPONSE_PENGESAHAN.error_sync_status as ResponseMengulas
   const setAlertMengulas = useAnggaranStore(
     (state: AnggaranStates) => state.setAlertMengulas
   )
@@ -108,16 +116,32 @@ const SyncMengulasKertasKerjaView: FC = () => {
     (state: AnggaranStates) => state.setResponseMengulas
   )
 
+  const counterRetryPengajuan = useAnggaranStore(
+    (state: AnggaranStates) => state.counterRetryPengajuan
+  )
+
+  const setCounterRetryPengajuan = useAnggaranStore(
+    (state: AnggaranStates) => state.setCounterRetryPengajuan
+  )
+
+  const syncId = useAnggaranStore((state: AnggaranStates) => state.syncId)
+
+  const setSyncId = useAnggaranStore((state: AnggaranStates) => state.setSyncId)
+
   const setToken = useAppStore((state: AppStates) => state.setToken)
 
   const [sekolahId, setSekolahId] = useState(null)
   const [hddVol, setHddVol] = useState(null)
+  const [hddVolOld, setHddVolOld] = useState('')
   const [anggaran, setAnggaran] = useState(null)
   const [percentage, setPercentage] = useState(0)
-
+  const [enableSyncStatus, setEnableSyncStatus] = useState(false)
+  const [enablePreviousSyncStatus, setEnablePreviousSyncStatus] =
+    useState(false)
   const [lastUpdateKode, setLastUpdateKode] = useState('')
   const [lastUpdateRekening, setLastUpdateRekening] = useState('')
   const [lastUpdateBarang, setLastUpdateBarang] = useState('')
+  const [currentSyncId, setCurrentSyncId] = useState('')
 
   const [typeSession, setTypeSession] = useState('')
   const [versi, setVersi] = useState('')
@@ -162,13 +186,28 @@ const SyncMengulasKertasKerjaView: FC = () => {
   )
 
   const {
+    data: dataHDDVol,
+    isError: isCheckHddVolError,
+    remove: removeCheckHddVol,
+  } = useAPICheckHDDVol(
+    {
+      hdd_vol: hddVol,
+      hdd_vol_old: hddVolOld,
+    },
+    {
+      retry: 0,
+      enabled: api === stepApi[2] && hddVol !== '' && hddVolOld !== '',
+    }
+  )
+
+  const {
     data: dataRefKode,
     isError: isGetRefKodeError,
     remove: removeRefKode,
   } = useAPIGetReferensi(
     { referensi: 'kode', lastUpdate: lastUpdateKode },
     {
-      enabled: api === stepApi[2] && lastUpdateKode !== '',
+      enabled: api === stepApi[3] && lastUpdateKode !== '',
       retry: 0,
     }
   )
@@ -179,7 +218,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
   } = useAPIGetReferensi(
     { referensi: 'rekening', lastUpdate: lastUpdateRekening },
     {
-      enabled: api === stepApi[3] && lastUpdateRekening !== '',
+      enabled: api === stepApi[4] && lastUpdateRekening !== '',
     }
   )
 
@@ -189,7 +228,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
     remove: removeRefBarang,
   } = useAPIGetReferensi(
     { referensi: 'barang', lastUpdate: lastUpdateBarang },
-    { enabled: api === stepApi[4] && lastUpdateBarang !== '' }
+    { enabled: api === stepApi[5] && lastUpdateBarang !== '' }
   )
 
   const {
@@ -289,15 +328,38 @@ const SyncMengulasKertasKerjaView: FC = () => {
   const {
     data: dataSyncRkasFinal,
     isError: isSyncRkasFinalError,
-    isSuccess: syncRkasFinalSuccess,
     remove: removeSyncRkasFinal,
   } = useAPIRKASFinalSync(null, {
     retry: 0,
     enabled: apiSync === stepSyncApi[8],
   })
 
+  const {
+    data: dataSyncStatus,
+    isError: isSyncStatusError,
+    remove: removeSyncStatus,
+  } = useAPISyncStatus(currentSyncId, {
+    retry: 0,
+    enabled: currentSyncId !== '' && enableSyncStatus,
+  })
+
+  const {
+    data: dataPreviousSyncStatus,
+    isError: isPreviousSyncStatusError,
+    remove: removePreviousSyncStatus,
+  } = useAPISyncStatus(syncId, {
+    retry: 0,
+    enabled: syncId !== '' && enablePreviousSyncStatus,
+  })
+
   const directPage = (response: ResponseMengulas) => {
-    if (response === RESPONSE_PENGESAHAN.success) {
+    const stayInMengulas = [
+      RESPONSE_PENGESAHAN.success,
+      RESPONSE_PENGESAHAN.error_sync_status,
+      RESPONSE_PENGESAHAN.error_sync_status_final,
+      RESPONSE_PENGESAHAN.error_multiple_device,
+    ]
+    if (includes(stayInMengulas, response)) {
       closeModal()
     } else {
       navigate(`/anggaran/menyusun/update/${encodeURIComponent(q_id_anggaran)}`)
@@ -307,6 +369,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
   const removeCacheData = () => {
     removeInfoConnection()
     removeToken()
+    removeCheckHddVol()
     removeRefKode()
     removeRefRekening()
     removeRefBarang()
@@ -322,17 +385,34 @@ const SyncMengulasKertasKerjaView: FC = () => {
     removeSyncRkasDetail()
     removeSyncRkasPtk()
     removeSyncRkasFinal()
+    removeSyncStatus()
+    removePreviousSyncStatus()
   }
 
-  const failedSyncData = () => {
-    setApi('')
-    setApiSync('')
-    const response = RESPONSE_PENGESAHAN.failed_sync_data as ResponseMengulas
+  const failedPengajuanKK = (response: ResponseMengulas) => {
+    setApi(null)
+    setApiSync(null)
+    setEnableSyncStatus(false)
+    setEnablePreviousSyncStatus(false)
     directPage(response)
     setResponseMengulas(response)
+    setAlertMengulas(true)
+  }
+
+  const displayErrorDialog = () => {
     removeCacheData()
     removeCacheSyncData()
-    setAlertMengulas(true)
+    setCurrentSyncId('')
+    if (counterRetryPengajuan < MAX_RETRY_PENGAJUAN_KK) {
+      setCounterRetryPengajuan(counterRetryPengajuan + 1)
+      failedPengajuanKK(responseErrorSyncStatus)
+    } else {
+      setCounterRetryPengajuan(0)
+      setSyncId('')
+      const response =
+        RESPONSE_PENGESAHAN.error_sync_status_final as ResponseMengulas
+      failedPengajuanKK(response)
+    }
   }
 
   const checkSisaDana = () => {
@@ -350,6 +430,10 @@ const SyncMengulasKertasKerjaView: FC = () => {
     )
 
     const hddVol = ipcRenderer.sendSync('config:getConfig', APP_CONFIG.hddVol)
+    const hddVolOld = ipcRenderer.sendSync(
+      'config:getConfig',
+      APP_CONFIG.hddVolOld
+    )
 
     const sekolahIdDecoded = ipcRenderer.sendSync(
       'utils:decodeUUID',
@@ -360,6 +444,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
     setTahunAktif(tahunAktif)
     setSekolahId(sekolahIdDecoded)
     setHddVol(hddVol)
+    setHddVolOld(hddVolOld)
     setPercentage(8)
     if (checkSisaDana() != 0) {
       ipcRenderer.sendSync(
@@ -372,7 +457,14 @@ const SyncMengulasKertasKerjaView: FC = () => {
       setResponseMengulas(response)
       setAlertMengulas(true)
     } else {
-      setApi(stepApi[0])
+      if (
+        counterRetryPengajuan > 0 &&
+        counterRetryPengajuan < MAX_RETRY_PENGAJUAN_KK
+      ) {
+        setEnablePreviousSyncStatus(true)
+      } else {
+        setApi(stepApi[0])
+      }
     }
   }, [])
 
@@ -382,7 +474,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
         setApi(stepApi[1])
         setPercentage(16)
       } else {
-        failedSyncData()
+        displayErrorDialog()
       }
     }
   }, [infoConnection, api])
@@ -390,15 +482,30 @@ const SyncMengulasKertasKerjaView: FC = () => {
   useEffect(() => {
     if (dataToken !== undefined && api === stepApi[1]) {
       setToken(dataToken?.data.access_token)
-
-      const kodeLastUpdate = ipcRenderer.sendSync(
-        'referensi:getRefKodeLastUpdate'
-      )
-      setLastUpdateKode(kodeLastUpdate)
       setPercentage(32)
       setApi(stepApi[2])
     }
   }, [dataToken, api])
+
+  useEffect(() => {
+    if (dataHDDVol !== undefined) {
+      if (Number(dataHDDVol.data) === 1) {
+        const kodeLastUpdate = ipcRenderer.sendSync(
+          'referensi:getRefKodeLastUpdate'
+        )
+        setLastUpdateKode(kodeLastUpdate)
+        setPercentage(34)
+        setApi(stepApi[3])
+      } else {
+        setApi('')
+        removeCacheData()
+        ipcRenderer.send('config:setConfig', APP_CONFIG.koregInvalid, '1')
+        const response =
+          RESPONSE_PENGESAHAN.error_multiple_device as ResponseMengulas
+        failedPengajuanKK(response)
+      }
+    }
+  }, [dataHDDVol])
 
   useEffect(() => {
     if (dataRefKode !== undefined) {
@@ -406,7 +513,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
         'referensi:getRefRekeningLastUpdate'
       )
       setLastUpdateRekening(rekeningLastUpdate)
-      setApi(stepApi[3])
+      setApi(stepApi[4])
       setPercentage(37)
     }
   }, [dataRefKode])
@@ -417,7 +524,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
         'referensi:getRefBarangLastUpdate'
       )
       setLastUpdateBarang(barangLastUpdate)
-      setApi(stepApi[4])
+      setApi(stepApi[5])
       setPercentage(42)
     }
   }, [dataRefRekening])
@@ -482,7 +589,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
         setApiSync(stepSyncApi[1])
         setPercentage(58)
       } else {
-        failedSyncData()
+        displayErrorDialog()
       }
     }
   }, [infoSyncConnection, apiSync])
@@ -499,6 +606,8 @@ const SyncMengulasKertasKerjaView: FC = () => {
 
   useEffect(() => {
     if (dataSync !== undefined) {
+      setCurrentSyncId(dataSync?.data)
+      setSyncId(dataSync?.data)
       const anggaranData = ipcRenderer.sendSync(
         IPC_ANGGARAN.getAnggaranById,
         idAnggaran
@@ -535,7 +644,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
           setPercentage(80)
         }
       } else {
-        failedSyncData()
+        displayErrorDialog()
       }
     }
   }, [dataSyncAnggaran])
@@ -558,7 +667,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
           setPercentage(86)
         }
       } else {
-        failedSyncData()
+        displayErrorDialog()
       }
     }
   }, [dataSyncRkasPenjab])
@@ -577,7 +686,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
           setPercentage(90)
         }
       } else {
-        failedSyncData()
+        displayErrorDialog()
       }
     }
   }, [dataSyncRkas])
@@ -596,7 +705,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
           setPercentage(94)
         }
       } else {
-        failedSyncData()
+        displayErrorDialog()
       }
     }
   }, [dataSyncRkasDetail])
@@ -604,12 +713,10 @@ const SyncMengulasKertasKerjaView: FC = () => {
   useEffect(() => {
     if (dataSyncRkasPtk !== undefined && dataSyncRkasPtk !== null) {
       if (dataSyncRkasPtk?.data === 1) {
-        if (!syncRkasFinalSuccess) {
-          setApiSync(stepSyncApi[8])
-          setPercentage(98)
-        }
+        setApiSync(stepSyncApi[8])
+        setPercentage(98)
       } else {
-        failedSyncData()
+        displayErrorDialog()
       }
     }
   }, [dataSyncRkasPtk])
@@ -617,12 +724,36 @@ const SyncMengulasKertasKerjaView: FC = () => {
   useEffect(() => {
     if (dataSyncRkasFinal !== undefined) {
       if (Number(dataSyncRkasFinal.data) === 1) {
-        setPercentage(100)
+        setTimeout(() => {
+          setEnableSyncStatus(true)
+        }, TIME_DELAY_SYNC_STATUS)
       } else {
-        failedSyncData()
+        displayErrorDialog()
       }
     }
   }, [tanggalPengajuan, dataSyncRkasFinal])
+
+  useEffect(() => {
+    if (dataSyncStatus !== undefined && enableSyncStatus) {
+      setEnableSyncStatus(false)
+      if (dataSyncStatus?.data?.status === 2) {
+        setPercentage(100)
+      } else {
+        displayErrorDialog()
+      }
+    }
+  }, [dataSyncStatus])
+
+  useEffect(() => {
+    if (dataPreviousSyncStatus !== undefined && enablePreviousSyncStatus) {
+      setEnablePreviousSyncStatus(false)
+      if (dataPreviousSyncStatus?.data?.status === 2) {
+        setPercentage(100)
+      } else {
+        setApiSync(stepSyncApi[0])
+      }
+    }
+  }, [dataPreviousSyncStatus])
 
   useEffect(() => {
     if (percentage === 100) {
@@ -646,6 +777,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
     if (
       isInfoConnError ||
       isTokenError ||
+      isCheckHddVolError ||
       isGetRefBarangError ||
       isGetRefKodeError ||
       isGetRefRekeningError
@@ -659,6 +791,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
   }, [
     isInfoConnError,
     isTokenError,
+    isCheckHddVolError,
     isGetRefBarangError,
     isGetRefKodeError,
     isGetRefRekeningError,
@@ -674,15 +807,11 @@ const SyncMengulasKertasKerjaView: FC = () => {
       isSyncRkasError ||
       isSyncRkasDetailError ||
       isSyncRkasPtkError ||
-      isSyncRkasFinalError
+      isSyncRkasFinalError ||
+      isSyncStatusError ||
+      isPreviousSyncStatusError
     ) {
-      const response = RESPONSE_PENGESAHAN.failed_sync_data as ResponseMengulas
-      setApi('')
-      setApiSync('')
-      directPage(response)
-      setResponseMengulas(response)
-      removeCacheSyncData()
-      setAlertMengulas(true)
+      displayErrorDialog()
     }
   }, [
     isInfoSyncConnError,
@@ -694,6 +823,8 @@ const SyncMengulasKertasKerjaView: FC = () => {
     isSyncRkasDetailError,
     isSyncRkasPtkError,
     isSyncRkasFinalError,
+    isSyncStatusError,
+    isPreviousSyncStatusError,
   ])
 
   return (

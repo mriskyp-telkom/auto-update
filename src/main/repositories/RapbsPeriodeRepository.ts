@@ -622,7 +622,7 @@ export async function GetListValidasiReferensiPeriode(
              ,case 
                    when r.expired_date is not null then 1
                    when rb.expired_date is not null then 2
-                   when rb.id_barang is null and case when b.id_barang = '' then null else b.id_barang end is not null then 2
+                   when rb.id_barang is null and case when b.id_barang = '' then null else b.id_barang end is not null and substr(k2.id_kode,4,2) <> '12' then 2
                    when rbx.jumlah_barang > 0 and ifnull(b.id_barang,'') = '' and substr(k3.id_kode,4,2) <> '12' then 2
                    when substr(b.kode_rekening,1,3) = '5.2' and ifnull(b.id_barang,'') = '' then 2
                    when k3.expired_date is not null then 3

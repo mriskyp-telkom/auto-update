@@ -182,7 +182,8 @@ const FormKertasKerjaView: FC = () => {
     data.idRefTahunAnggaran = anggaran.tahunAnggaran
     data.idRefKode = selectedKegiatan.id
     data.kodeRekening = selectedRekening.kode
-    data.idBarang = selectedUraian?.kode
+    data.idBarang =
+      selectedKegiatan.flag_honor === 1 ? null : selectedUraian?.kode
     data.uraian =
       selectedUraian != null && selectedUraian.uraian != ''
         ? selectedUraian.uraian
