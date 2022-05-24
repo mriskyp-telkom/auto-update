@@ -15,6 +15,8 @@ import {
 import { Icon } from '@wartek-id/icon'
 import { Button } from '@wartek-id/button'
 
+import isEmpty from 'lodash/isEmpty'
+
 import clsx from 'clsx'
 
 interface FormDialogProps {
@@ -40,7 +42,7 @@ const FormDialogComponent: FC<FormDialogProps> = (props: FormDialogProps) => {
   const [openModalConfirmCancel, setOpenModalConfirmCancel] = useState(false)
 
   const {
-    formState: { isDirty },
+    formState: { errors, isDirty },
   } = useFormContext()
 
   const handleCloseForm = () => {
@@ -49,6 +51,13 @@ const FormDialogComponent: FC<FormDialogProps> = (props: FormDialogProps) => {
     } else {
       props.onCancel()
     }
+  }
+
+  const btnFormDisabled = () => {
+    if (!isEmpty(errors)) {
+      return true
+    }
+    return false
   }
 
   return (
@@ -125,7 +134,7 @@ const FormDialogComponent: FC<FormDialogProps> = (props: FormDialogProps) => {
                 variant="solid"
                 className="px-4 py-2"
                 type="submit"
-                disabled={props.isSubmitDisabled}
+                disabled={props.isSubmitDisabled || btnFormDisabled()}
               >
                 {props.icon && (
                   <Icon

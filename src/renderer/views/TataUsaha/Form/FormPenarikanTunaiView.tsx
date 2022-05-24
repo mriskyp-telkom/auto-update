@@ -2,6 +2,8 @@ import React, { FC } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 
+import { numberUtils } from '@wartek-id/fe-toolbox'
+
 import FormDialogComponent from 'renderer/components/Dialog/FormDialogComponent'
 import InputComponent from 'renderer/components/Form/InputComponent'
 import DatePickerComponent from 'renderer/components/Form/DatePickerComponent'
@@ -11,8 +13,13 @@ import {
   FormPenarikanTunaiType,
 } from 'renderer/types/forms/TataUsahaType'
 
+import { NOMINAL_TARIK_TUNAI_ERROR_MORE_THAN } from 'renderer/constants/errorForm'
+
 const FormPenarikanTunaiView: FC = () => {
   const navigate = useNavigate()
+
+  const saldo = 1000000
+  const displaySaldo = `Rp ${numberUtils.delimit(saldo, '.')}`
 
   const formMethods = useForm<FormPenarikanTunaiData>({
     mode: 'onSubmit',
@@ -65,8 +72,11 @@ const FormPenarikanTunaiView: FC = () => {
               />
             </div>
             <div className="flex-grow">
-              <div className="text-base pb-1 font-normal text-gray-900">
-                Nominal Penarikan
+              <div className="flex items-center justify-between text-base pb-1 font-normal">
+                <span className="text-gray-900">Nominal Penarikan</span>
+                <span className="font-semibold text-blue-700">
+                  Saldo : {displaySaldo}
+                </span>
               </div>
               <InputComponent
                 type="nominal"
@@ -78,6 +88,46 @@ const FormPenarikanTunaiView: FC = () => {
                 handleClearError={handleClearError}
                 setError={setError}
                 setValue={setValue}
+                registerOption={{
+                  validate: {
+                    moreThan: (v: any) => {
+                      const value = v.replace(/[^,\d]/g, '').toString()
+
+                      return (
+                        parseInt(value) <= saldo ||
+                        NOMINAL_TARIK_TUNAI_ERROR_MORE_THAN
+                      )
+                    },
+                  },
+                  onBlur: (e: any) => {
+                    const value = e.target.value
+                      .replace(/[^,\d]/g, '')
+                      .toString()
+
+                    if (parseInt(value) > saldo) {
+                      setError('nominal', {
+                        type: 'manual',
+                        message: NOMINAL_TARIK_TUNAI_ERROR_MORE_THAN,
+                      })
+                      return
+                    }
+                    clearErrors('nominal')
+                  },
+                  onChange: (e: any) => {
+                    const value = e.target.value
+                      .replace(/[^,\d]/g, '')
+                      .toString()
+
+                    if (
+                      parseInt(value) <= saldo &&
+                      errors.nominal?.message ===
+                        NOMINAL_TARIK_TUNAI_ERROR_MORE_THAN
+                    ) {
+                      clearErrors('nominal')
+                      return
+                    }
+                  },
+                }}
               />
             </div>
           </div>

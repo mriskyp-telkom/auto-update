@@ -34,7 +34,7 @@ import {
 import {
   ERROR_REQUIRED,
   HARGA_SATUAN_ERROR_DATA_SENTRAL,
-  HARGA_SATUAN_ERROR_LENGTH,
+  ERROR_NOMINAL_MINLENGTH,
   HARGA_SATUAN_ERROR_LESS_THAN,
   HARGA_SATUAN_ERROR_MORE_THAN,
   KEGIATAN_ERROR_DATA_SENTRAL,
@@ -779,7 +779,7 @@ const FormKertasKerjaView: FC = () => {
                         minLength: (v: any) => {
                           const value = v.replace(/[^,\d]/g, '').toString()
 
-                          return value >= 10 || HARGA_SATUAN_ERROR_LENGTH
+                          return value >= 10 || ERROR_NOMINAL_MINLENGTH
                         },
                         lessThan: (v: any) => {
                           if (optionsHarga.length > 0) {
@@ -817,7 +817,7 @@ const FormKertasKerjaView: FC = () => {
                         if (value < 10) {
                           setError('harga_satuan', {
                             type: 'manual',
-                            message: HARGA_SATUAN_ERROR_LENGTH,
+                            message: ERROR_NOMINAL_MINLENGTH,
                           })
                           return
                         }
@@ -868,7 +868,7 @@ const FormKertasKerjaView: FC = () => {
                         if (
                           value >= 10 &&
                           errors.harga_satuan?.message ===
-                            HARGA_SATUAN_ERROR_LENGTH
+                            ERROR_NOMINAL_MINLENGTH
                         ) {
                           clearErrors('harga_satuan')
                           return
