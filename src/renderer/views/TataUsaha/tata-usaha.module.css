@@ -15,18 +15,18 @@ table.tableTataUsaha > tbody tr {
 
 @media screen and (min-height: 1024px) {
   table.tableTataUsaha > tbody {
-    max-height: 420px !important;
+    max-height: 320px !important;
   }
 }
 
 @media screen and (min-height: 900px) {
   table.tableTataUsaha > tbody {
-    max-height: 320px !important;
+    max-height: 220px !important;
   }
 }
 
 table.tableTataUsaha > tbody {
-  max-height: 220px;
+  max-height: 120px;
   width: 100%;
   display: block;
 }

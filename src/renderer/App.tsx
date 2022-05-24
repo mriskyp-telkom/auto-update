@@ -26,6 +26,7 @@ import DashboardTataUsahaView from 'renderer/views/TataUsaha/Dashboard/Dashboard
 import FormPenerimaanDanaView from 'renderer/views/TataUsaha/Form/FormPenerimaanDanaView'
 import SyncAktivasiBKUView from 'renderer/views/TataUsaha/Aktivasi/SyncAktivasiBKUView'
 import DetailTataUsahaView from 'renderer/views/TataUsaha/Detail/DetailTataUsahaView'
+import FormPenarikanTunaiView from 'renderer/views/TataUsaha/Form/FormPenarikanTunaiView'
 
 const ipcRenderer = window.require('electron').ipcRenderer
 
@@ -134,7 +135,10 @@ const App: FC = () => {
                 path="form/penerimaan-dana/:q_id_anggaran"
                 element={<FormPenerimaanDanaView />}
               />
-
+              <Route
+                path="form/penarikan-tunai"
+                element={<FormPenarikanTunaiView />}
+              />
               <Route
                 path="sync/tata-usaha/aktivasi/:q_sumber_dana/:q_id_anggaran"
                 element={<SyncAktivasiBKUView />}

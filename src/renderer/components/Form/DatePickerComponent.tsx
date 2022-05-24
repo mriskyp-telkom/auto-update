@@ -20,8 +20,8 @@ interface DatePickerProps {
   name: string
   placeholder: string
   required?: boolean
-  defaultValue: Date
-  isDisabled: boolean
+  defaultValue?: Date
+  isDisabled?: boolean
 }
 
 const months = DATA_BULAN.map((b: any) => b.name)
@@ -161,6 +161,8 @@ const DatePickerComponent: FC<DatePickerProps> = (props: DatePickerProps) => {
 
 DatePickerComponent.defaultProps = {
   required: false,
+  defaultValue: new Date(),
+  isDisabled: false,
 }
 
 export default DatePickerComponent
