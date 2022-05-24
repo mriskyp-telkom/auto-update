@@ -37,8 +37,8 @@ const PanduanErrorSisaDanaKKView: FC = () => {
           </li>
           <li>
             <span>
-              Setelah Kertas Kerja disesuaikan, pastikan Anda ajukan pengesahan
-              kembali.
+              Setelah {copyKertasKerja()} disesuaikan, pastikan Anda ajukan
+              pengesahan kembali.
             </span>
           </li>
         </ul>

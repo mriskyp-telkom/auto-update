@@ -35,6 +35,12 @@ const PanduanErrorDataSentralKKView: FC = () => {
               terbaru.
             </span>
           </li>
+          <li>
+            <span>
+              Setelah {copyKertasKerja()} disesuaikan, pastikan Anda ajukan
+              pengesahan kembali.
+            </span>
+          </li>
         </ul>
       </>
     </PanduanCardComponent>
