@@ -52,7 +52,7 @@ test('AktivasiBku', async () => {
     if (k.idRefBku === 2) {
       expect(k.idRefBku).toBe(2)
       expect(k.idRapbsPeriode).toBe(null)
-      expect(k.noBukti).toBe('BBU01')
+      expect(k.noBukti).toBe('BBU02')
       expect(k.uraian).toBe(req.uraian)
       expect(k.saldo).toBe(req.recieveAmount)
       expect(k.tanggalTransaksi.toString()).toBe(req.recieveDate.toString())

@@ -84,4 +84,5 @@ VALUES
  ('a5bL2DADH0GWOsK9i7Cutg', 'yAFvhBqPVU-z8b7lA6J9_g', 92, 25, 'Orang', 20000, 500000, 25, '', 0, '', 0, '', 0, '', 0, '2021-11-12 08:29:22.050', '2021-11-12 08:29:22.050', NULL),
  ('UYMe8Xc8PUmDK03xD7xuxw', 'zO2gMYlXSkKKnV91cr3BDQ', 91, 30, 'Buah', 5000, 150000, 30, 'Buah', 0, 'Buah', 0, 'Buah', 0, 'Buah', 1, '2021-10-27 07:46:17.193', '2021-10-30 07:17:10.504', NULL),
  ('jKitzOxKJkKBx23tykjiMg', 'zO2gMYlXSkKKnV91cr3BDQ', 92, 30, 'Buah', 3000, 90000, 30, 'Buah', 0, 'Buah', 0, 'Buah', 0, 'Buah', 0, '2021-10-30 07:17:10.598', '2021-10-30 07:17:10.598', NULL),
- ('oscfVRfYC0-MnRVq8OIIbQ', 'XN60oPUuEeC-vv2_lhMTXQ', 92, 100, 'Orang', 20000, 2000000, 100, '', 0, '', 0, '', 0, '', 0, '2021-11-12 08:26:28.040', '2021-11-12 08:26:28.040', NULL);
+ ('oscfVRfYC0-MnRVq8OIIbQ', 'XN60oPUuEeC-vv2_lhMTXQ', 92, 100, 'Orang', 20000, 2000000, 100, '', 0, '', 0, '', 0, '', 0, '2021-11-12 08:26:28.040', '2021-11-12 08:26:28.040', NULL),
+ ('1DRWybShJk-Ggy0kX5dW9w', '1I5oeZcqoESnHGuS6RjO5Q', 92, 4, 'Jam Pelajaran', 200000, 800000, 4, '', 0, '', 0, '', 0, '', 0, '2021-11-02 10:20:06.072', '2021-11-02 10:20:06.072', NULL);

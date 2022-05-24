@@ -30,6 +30,11 @@ export interface GetTotalSaldoRequest {
   endDate: string
 }
 
+export interface GetTotalSaldoDibelanjakanRequest {
+  idAnggaran: string
+  idPeriode: number[]
+}
+
 export interface GetTotalAnggaranPerBulanRequest {
   idAnggaran: string
   idPeriode: number[]
