@@ -20,6 +20,8 @@ import { IPC_ANGGARAN } from 'global/ipc'
 import { copyKertasKerja } from 'renderer/utils/copy-writing'
 
 import includes from 'lodash/includes'
+import AlertMultipleDevice from 'renderer/views/AlertMultipleDevice'
+import { AuthStates, useAuthStore } from 'renderer/stores/auth'
 
 interface AktivasiBKUViewProps {
   sumberDana: number
@@ -57,6 +59,10 @@ const AktivasiBKUView: FC<AktivasiBKUViewProps> = (
     (state: AppStates) => state.setAlertFailedSyncData
   )
 
+  const setMultipleDevice = useAuthStore(
+    (state: AuthStates) => state.setMultipleDevice
+  )
+
   const alertDesc =
     'Berdasarkan website BOS Salur, sekolah Anda belum menerima \
    dana BOS Reguler tahap ini sehingga belum bisa mengaktifkan BKU. \
@@ -90,6 +96,10 @@ const AktivasiBKUView: FC<AktivasiBKUViewProps> = (
     }
   }
 
+  const handleClickMultipleDevice = () => {
+    setMultipleDevice(false)
+    navigate('/registration')
+  }
   const handleBtnAlertSubmit = () => {
     const dataAnggaran = syncToIPCMain(IPC_ANGGARAN.getAnggaranById, idAnggaran)
 
@@ -157,6 +167,10 @@ const AktivasiBKUView: FC<AktivasiBKUViewProps> = (
       <AlertFailedSyncData
         onSubmit={handleClickAktivasi}
         onCancel={() => setAlertFailedSyncData(false)}
+      />
+      <AlertMultipleDevice
+        onSubmit={handleClickMultipleDevice}
+        onCancel={() => setMultipleDevice(false)}
       />
     </>
   )

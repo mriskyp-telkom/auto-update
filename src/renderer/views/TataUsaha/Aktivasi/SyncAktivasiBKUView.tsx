@@ -2,7 +2,11 @@ import { IPC_ANGGARAN, IPC_CONFIG, IPC_SEKOLAH } from 'global/ipc'
 import React, { FC, useEffect, useState } from 'react'
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { useAPIGetToken } from 'renderer/apis/token'
-import { useAPIInfoConnection, useAPISalur } from 'renderer/apis/utils'
+import {
+  useAPICheckHDDVol,
+  useAPIInfoConnection,
+  useAPISalur,
+} from 'renderer/apis/utils'
 
 import SyncDialogComponent from 'renderer/components/Dialog/SyncDialogComponent'
 import { TIME_DELAY_SCREEN } from 'renderer/constants/app'
@@ -12,9 +16,12 @@ import { AppStates, useAppStore } from 'renderer/stores/app'
 import { TataUsahaStates, useTataUsahaStore } from 'renderer/stores/tata-usaha'
 import { Penerimaan } from 'renderer/types/apis/UtilType'
 import syncToIPCMain from 'renderer/configs/ipc'
+import { SetConfigRequest } from 'global/types/Config'
+import { AuthStates, useAuthStore } from 'renderer/stores/auth'
 
 const stepApi = {
   infoConnection: 'infoConnection',
+  checkHddVol: 'checkHddVol',
   getToken: 'getToken',
   salur: 'salur',
 }
@@ -27,6 +34,8 @@ const SyncAktivasiBKUView: FC = () => {
 
   const [api, setApi] = useState('')
   const [tahunAktif, setTahunAktif] = useState(null)
+  const [hddVol, setHddVol] = useState(null)
+  const [hddVolOld, setHddVolOld] = useState(null)
   const [tahunAnggaran, setTahunAnggaran] = useState(null)
   const [npsn, setNpsn] = useState('')
   const [koreg, setKoreg] = useState('')
@@ -52,6 +61,10 @@ const SyncAktivasiBKUView: FC = () => {
 
   const setPeriodeSalurList = useTataUsahaStore(
     (state: TataUsahaStates) => state.setPeriodeSalurList
+  )
+
+  const setMultipleDevice = useAuthStore(
+    (state: AuthStates) => state.setMultipleDevice
   )
 
   const closeModal = () => {
@@ -87,6 +100,21 @@ const SyncAktivasiBKUView: FC = () => {
   )
 
   const {
+    data: dataHDDVol,
+    isError: isCheckHddVolError,
+    remove: removeCheckHddVol,
+  } = useAPICheckHDDVol(
+    {
+      hdd_vol: hddVol,
+      hdd_vol_old: hddVolOld,
+    },
+    {
+      retry: 0,
+      enabled: api === stepApi.checkHddVol && hddVol !== '' && hddVolOld !== '',
+    }
+  )
+
+  const {
     data: dataSalur,
     isError: isSalurError,
     remove: removeSalur,
@@ -105,6 +133,7 @@ const SyncAktivasiBKUView: FC = () => {
   const removeCacheData = () => {
     removeInfoConnection()
     removeToken()
+    removeCheckHddVol()
     removeSalur()
   }
 
@@ -133,12 +162,16 @@ const SyncAktivasiBKUView: FC = () => {
       IPC_CONFIG.getConfig,
       APP_CONFIG.tahunAktif
     )
+    const hddVol = syncToIPCMain(IPC_CONFIG.getConfig, APP_CONFIG.hddVol)
+    const hddVolOld = syncToIPCMain(IPC_CONFIG.getConfig, APP_CONFIG.hddVolOld)
     const anggaran = syncToIPCMain(IPC_ANGGARAN.getAnggaranById, q_id_anggaran)
     const sekolah = syncToIPCMain(IPC_SEKOLAH.getSekolah)
     setTahunAnggaran(anggaran.tahunAnggaran)
     setNpsn(sekolah.npsn)
     setKoreg(sekolah.kodeRegistrasi)
     setTahunAktif(tahunAktif)
+    setHddVol(hddVol)
+    setHddVolOld(hddVolOld)
     setApi(stepApi.infoConnection)
   }, [])
 
@@ -156,10 +189,29 @@ const SyncAktivasiBKUView: FC = () => {
   useEffect(() => {
     if (dataToken !== undefined) {
       setToken(dataToken?.data.access_token)
-      setApi(stepApi.salur)
+      setApi(stepApi.checkHddVol)
       setPercentage(60)
     }
   }, [dataToken])
+
+  useEffect(() => {
+    if (dataHDDVol !== undefined) {
+      if (Number(dataHDDVol.data) === 1) {
+        setApi(stepApi.salur)
+        setPercentage(80)
+      } else {
+        setApi('')
+        removeCacheData()
+        const dataKoregInvalid: SetConfigRequest = {
+          varname: APP_CONFIG.koregInvalid,
+          varvalue: '1',
+        }
+        syncToIPCMain(IPC_CONFIG.setConfig, dataKoregInvalid)
+        setMultipleDevice(true)
+        closeModal()
+      }
+    }
+  }, [dataHDDVol])
 
   useEffect(() => {
     if (dataSalur !== undefined) {
@@ -178,14 +230,14 @@ const SyncAktivasiBKUView: FC = () => {
   }, [dataSalur])
 
   useEffect(() => {
-    if (isInfoConnError || isTokenError || isSalurError) {
+    if (isInfoConnError || isTokenError || isSalurError || isCheckHddVolError) {
       if (!navigator.onLine) {
         lostConnectionSyncData()
       } else {
         failedSyncData()
       }
     }
-  }, [isInfoConnError, isTokenError, isSalurError])
+  }, [isInfoConnError, isTokenError, isSalurError, isCheckHddVolError])
 
   useEffect(() => {
     if (percentage === 100) {

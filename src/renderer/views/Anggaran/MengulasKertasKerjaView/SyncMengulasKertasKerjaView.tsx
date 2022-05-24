@@ -66,6 +66,7 @@ import { TIME_DELAY_SCREEN } from 'renderer/constants/app'
 
 import { copyKertasKerja } from 'renderer/utils/copy-writing'
 import { includes } from 'lodash'
+import { SetConfigRequest } from 'global/types/Config'
 
 const ipcRenderer = window.require('electron').ipcRenderer
 
@@ -499,7 +500,11 @@ const SyncMengulasKertasKerjaView: FC = () => {
       } else {
         setApi('')
         removeCacheData()
-        ipcRenderer.send('config:setConfig', APP_CONFIG.koregInvalid, '1')
+        const data: SetConfigRequest = {
+          varname: APP_CONFIG.koregInvalid,
+          varvalue: '1',
+        }
+        ipcRenderer.send('config:setConfig', data)
         const response =
           RESPONSE_PENGESAHAN.error_multiple_device as ResponseMengulas
         failedPengajuanKK(response)

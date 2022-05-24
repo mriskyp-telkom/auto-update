@@ -1,4 +1,5 @@
 import { ipcMain } from 'electron'
+import { SetConfigRequest } from 'global/types/Config'
 import {
   SetConfig,
   GetConfig,
@@ -10,9 +11,12 @@ module.exports = {
     e.returnValue = await GetConfig(varname)
   }),
 
-  setConfig: ipcMain.on('config:setConfig', async (e, varname, varvalue) => {
-    e.returnValue = await SetConfig(varname, varvalue)
-  }),
+  setConfig: ipcMain.on(
+    'config:setConfig',
+    async (e, data: SetConfigRequest) => {
+      e.returnValue = await SetConfig(data.varname, data.varvalue)
+    }
+  ),
 
   setBulkConfig: ipcMain.on('config:setBulkConfig', async (e, data) => {
     e.returnValue = await SetBulkConfig(data)
