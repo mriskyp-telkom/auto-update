@@ -24,7 +24,7 @@ import {
   KODE_AKTIVASI_ERROR_WRONG,
   NPSN_ERROR_LENGTH,
   NPSN_ERROR_NOT_REGISTERED,
-  HARGA_SATUAN_ERROR_LENGTH,
+  ERROR_NOMINAL_MINLENGTH,
 } from 'renderer/constants/errorForm'
 
 import includes from 'lodash/includes'
@@ -223,10 +223,10 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
     validation = {
       ...validation,
       validate: {
+        ...props.registerOption?.validate,
         minLength: (v: any) => {
           const value = v.replace(/[^,\d]/g, '').toString()
-
-          return value >= 10 || HARGA_SATUAN_ERROR_LENGTH
+          return value >= 10 || ERROR_NOMINAL_MINLENGTH
         },
       },
       onBlur: (e) => {
@@ -235,7 +235,7 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
         if (value < 10) {
           setError(name, {
             type: 'manual',
-            message: HARGA_SATUAN_ERROR_LENGTH,
+            message: ERROR_NOMINAL_MINLENGTH,
           })
           return
         }
@@ -254,10 +254,7 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
         clearErrorRequired(value)
         clearErrorServer(value)
         props.registerOption?.onChange(e)
-        if (
-          value >= 10 &&
-          errors[name]?.message === HARGA_SATUAN_ERROR_LENGTH
-        ) {
+        if (value >= 10 && errors[name]?.message === ERROR_NOMINAL_MINLENGTH) {
           props.handleClearError(name)
           return
         }
