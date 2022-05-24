@@ -34,6 +34,8 @@ import { IPC_ANGGARAN } from 'global/ipc'
 import { formatDateToString } from 'renderer/utils/date-formatting'
 
 import { copyKertasKerja } from 'renderer/utils/copy-writing'
+import AlertNoConnection from 'renderer/views/AlertNoConnection'
+import { AppStates, useAppStore } from 'renderer/stores/app'
 
 const MengulasKertasKerjaView: FC = () => {
   const location = useLocation()
@@ -65,11 +67,24 @@ const MengulasKertasKerjaView: FC = () => {
     (state: AnggaranStates) => state.responseMengulas
   )
 
+  const setCounterRetryPengajuan = useAnggaranStore(
+    (state: AnggaranStates) => state.setCounterRetryPengajuan
+  )
+
+  const setAlertNoConnection = useAppStore(
+    (state: AppStates) => state.setAlertNoConnection
+  )
+
   const isFocused = useAnggaranStore((state: AnggaranStates) => state.isFocused)
 
   const setIsFocused = useAnggaranStore(
     (state: AnggaranStates) => state.setIsFocused
   )
+
+  const isHideBtnCancel =
+    responseMengulas !== RESPONSE_PENGESAHAN.success &&
+    responseMengulas !== RESPONSE_PENGESAHAN.error_sync_status &&
+    responseMengulas !== RESPONSE_PENGESAHAN.error_multiple_device
 
   const handleBackToBeranda = () => {
     navigate('/anggaran')
@@ -94,6 +109,17 @@ const MengulasKertasKerjaView: FC = () => {
       id_anggaran: idAnggaran,
     })
     setAnggaran(anggaran?.total ?? 0)
+  }
+
+  const handlePengesahan = () => {
+    setAlertNoConnection(false)
+    setTimeout(() => {
+      if (!navigator.onLine) {
+        setAlertNoConnection(true)
+      } else {
+        setOpenModalAjukan(true)
+      }
+    }, 300)
   }
 
   const getPanduan = () => {
@@ -138,9 +164,19 @@ const MengulasKertasKerjaView: FC = () => {
     if (responseMengulas === RESPONSE_PENGESAHAN.success) {
       navigate('/anggaran')
     }
+    if (responseMengulas === RESPONSE_PENGESAHAN.error_sync_status) {
+      setOpenModalAjukan(false)
+      navigate(`/sync/anggaran/mengulas/${encodeURIComponent(q_id_anggaran)}`, {
+        state: { backgroundLocation: location },
+      })
+    }
+    if (responseMengulas === RESPONSE_PENGESAHAN.error_multiple_device) {
+      navigate('/registration')
+    }
   }
 
   const handleTutupModal = () => {
+    setCounterRetryPengajuan(0)
     setAlertMengulas(false)
     setIsFocused(true)
   }
@@ -278,7 +314,7 @@ const MengulasKertasKerjaView: FC = () => {
                 color="blue"
                 size="md"
                 variant="solid"
-                onClick={() => setOpenModalAjukan(true)}
+                onClick={handlePengesahan}
               >
                 Ajukan Pengesahan
               </Button>
@@ -372,13 +408,17 @@ const MengulasKertasKerjaView: FC = () => {
           title={ALERT_MENGULAS[responseMengulas].title}
           desc={ALERT_MENGULAS[responseMengulas].desc}
           isOpen={alertMengulas}
-          hideBtnCancel={responseMengulas !== RESPONSE_PENGESAHAN.success}
+          hideBtnCancel={isHideBtnCancel}
           btnCancelText={ALERT_MENGULAS[responseMengulas].btnCancelText}
           btnActionText={ALERT_MENGULAS[responseMengulas].btnActionText}
           onCancel={handleTutupModal}
           onSubmit={handleSubmit}
         />
       )}
+      <AlertNoConnection
+        onSubmit={handlePengesahan}
+        onCancel={() => setAlertNoConnection(false)}
+      />
     </div>
   )
 }
