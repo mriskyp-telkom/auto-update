@@ -4,9 +4,13 @@ import {
   CheckUserPass,
   CheckLogin,
   GetPenggunaByToken,
-} from 'main/repositories/User'
+} from 'main/repositories/UserRepository'
 import CommonUtils from 'main/utils/CommonUtils'
-import { SetConfig, DeleteConfig, GetConfig } from 'main/repositories/Config'
+import {
+  SetConfig,
+  DeleteConfig,
+  GetConfig,
+} from 'main/repositories/ConfigRepository'
 import { Register } from 'main/services/RegistrationService'
 
 module.exports = {

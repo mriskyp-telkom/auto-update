@@ -1,7 +1,7 @@
 import { ipcMain } from 'electron'
 import { MstSekolah } from 'main/models/MstSekolah'
-import { AddSekolah, GetSekolah } from 'main/repositories/Sekolah'
-import { GetConfig } from 'main/repositories/Config'
+import { AddSekolah, GetSekolah } from 'main/repositories/SekolahRepository'
+import { GetConfig } from 'main/repositories/ConfigRepository'
 
 module.exports = {
   getSekolah: ipcMain.on('sekolah:getSekolah', async (e) => {

@@ -8,7 +8,7 @@ import {
   GetTotalAnggaranPerBulanRequest,
   GetTotalSaldoRequest,
 } from 'global/types/TataUsaha'
-import { GetConfig } from 'main/repositories/Config'
+import { GetConfig } from 'main/repositories/ConfigRepository'
 
 const conn = getConnection()
 const tataUsahaService = new TataUsahaService(conn)

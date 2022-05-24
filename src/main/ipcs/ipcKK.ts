@@ -6,14 +6,14 @@ import {
   GetRapbs,
   GetRapbsBulan,
   GetRapbsLastUpdate,
-} from 'main/repositories/Rapbs'
+} from 'main/repositories/RapbsRepository'
 import {
   AddRapbsPeriode,
   GetRapbsPeriode,
   GetDetailListRapbs,
   GetRapbsSummary,
   GetListValidasiReferensiPeriode,
-} from 'main/repositories/RapbsPeriode'
+} from 'main/repositories/RapbsPeriodeRepository'
 import CommonUtils from 'main/utils/CommonUtils'
 import { IPC_KK } from 'global/ipc'
 import {

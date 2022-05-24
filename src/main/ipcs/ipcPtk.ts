@@ -1,10 +1,14 @@
 import { ipcMain } from 'electron'
-import { AddBulkPtk, GetLastUpdate, GetPtk } from 'main/repositories/Ptk'
+import {
+  AddBulkPtk,
+  GetLastUpdate,
+  GetPtk,
+} from 'main/repositories/PtkRepository'
 
-import { GetRapbsPtkHonor } from 'main/repositories/RapbsPtk'
+import { GetRapbsPtkHonor } from 'main/repositories/RapbsPtkRepository'
 import CommonUtils from 'main/utils/CommonUtils'
 import { IPC_PTK } from 'global/ipc'
-import { GetConfig } from 'main/repositories/Config'
+import { GetConfig } from 'main/repositories/ConfigRepository'
 
 module.exports = {
   getPtkLastUpdate: ipcMain.on('ptk:getPtkLastUpdate', async (e) => {

@@ -3,7 +3,7 @@ import {
   addBulkRefSatuan,
   getRefSatuanLastUpdate,
   getRefSatuan,
-} from 'main/repositories/RefSatuan'
+} from 'main/repositories/RefSatuanRepository'
 import CommonUtils from 'main/utils/CommonUtils'
 import { createConnection, getConnection } from 'typeorm'
 import { cfg, Migrate } from '../migration'

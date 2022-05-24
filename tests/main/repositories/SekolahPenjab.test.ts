@@ -4,7 +4,7 @@ import {
   addSekolahPenjab,
   findSekolahPenjabId,
   updateSekolahPenjab,
-} from 'main/repositories/SekolahPenjab'
+} from 'main/repositories/SekolahPenjabRepository'
 import { createConnection, getConnection } from 'typeorm'
 import { cfg, Migrate } from '../migration'
 

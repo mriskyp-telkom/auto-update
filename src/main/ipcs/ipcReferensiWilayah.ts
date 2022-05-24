@@ -1,5 +1,5 @@
 import { ipcMain } from 'electron'
-import { AddWilayah } from 'main/repositories/Wilayah'
+import { AddWilayah } from 'main/repositories/WilayahRepository'
 import { MstWilayah } from 'main/models/MstWilayah'
 
 module.exports = {

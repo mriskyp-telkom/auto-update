@@ -1,7 +1,7 @@
 import { Rapbs } from 'main/models/Rapbs'
 import { RapbsPeriode } from 'main/models/RapbsPeriode'
 import { RapbsPtk } from 'main/models/RapbsPtk'
-import { GetConfig } from 'main/repositories/Config'
+import { GetConfig } from 'main/repositories/ConfigRepository'
 import {
   AddRapbs,
   GetLatestUrutan,
@@ -9,14 +9,14 @@ import {
   GetOneRapbsBulan,
   DelRapbsByRapbsId,
   GetRapbs,
-} from 'main/repositories/Rapbs'
+} from 'main/repositories/RapbsRepository'
 import {
   AddBulkRapbsPeriode,
   BulkUpsertByRapbsId,
   GetManyRapbsPeriode,
   DelRapbsPeriodeByRapbsId,
-} from 'main/repositories/RapbsPeriode'
-import { AddRapbsPtk, GetRapbsPtk } from 'main/repositories/RapbsPtk'
+} from 'main/repositories/RapbsPeriodeRepository'
+import { AddRapbsPtk, GetRapbsPtk } from 'main/repositories/RapbsPtkRepository'
 import {
   DetailKegiatan,
   ResultAddDetailKegiatan,

@@ -5,7 +5,7 @@ import {
   findSekolahPenjabId,
   updateSekolahPenjab,
   GetSekolahPenjabById,
-} from 'main/repositories/SekolahPenjab'
+} from 'main/repositories/SekolahPenjabRepository'
 import CommonUtils from 'main/utils/CommonUtils'
 
 module.exports = {

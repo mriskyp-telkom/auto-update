@@ -12,7 +12,7 @@ import { RefRekening } from 'main/models/RefRekening'
 import { RefKode } from 'main/models/RefKode'
 import { RefAcuanBarang } from 'main/models/RefAcuanBarang'
 import { RapbsPeriode } from 'main/models/RapbsPeriode'
-import { GetAnggaranById } from 'main/repositories/Anggaran'
+import { GetAnggaranById } from 'main/repositories/AnggaranRepository'
 
 beforeEach(async () => {
   const db = await createConnection({
