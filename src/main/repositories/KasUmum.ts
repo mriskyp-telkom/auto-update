@@ -2,7 +2,13 @@ import { KasUmum } from 'main/models/KasUmum'
 import { Saldo } from 'main/types/KasUmum'
 import CommonUtils from 'main/utils/CommonUtils'
 import { err, ok, Result } from 'neverthrow'
-import { Connection, getManager, Like, Repository } from 'typeorm'
+import {
+  Connection,
+  createQueryBuilder,
+  getManager,
+  Like,
+  Repository,
+} from 'typeorm'
 
 export class KasUmumRepository {
   private conn: Connection
@@ -78,4 +84,33 @@ export class KasUmumRepository {
 
     return ok(result)
   }
+}
+
+export const GetTotalSaldoDibelanjakan = async (
+  idAnggaran: string,
+  idPeriode: number[]
+): Promise<number> => {
+  const result = await createQueryBuilder('kas_umum', 'ku')
+    .select('ifnull(sum(ku.saldo),0) as sudahDibelanjakan')
+    .innerJoin(
+      'rapbs_periode',
+      'rp',
+      'rp.id_rapbs_periode = ku.id_rapbs_periode'
+    )
+    .where(
+      `ku.id_anggaran = :idAnggaran 
+      AND ku.id_ref_bku in (4,15)
+      AND rp.id_periode in (:...idPeriode)`,
+      {
+        idAnggaran,
+        idPeriode,
+      }
+    )
+    .getRawOne()
+
+  if (result !== undefined) {
+    return result.sudahDibelanjakan
+  }
+
+  return 0
 }

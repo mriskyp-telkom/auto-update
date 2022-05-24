@@ -3,6 +3,7 @@ import {
   GetListAnggaranRequest,
   Anggaran as AnggaranData,
   GetTotalSaldoRequest,
+  GetTotalSaldoDibelanjakanRequest,
   GetTotalAnggaranPerBulanRequest,
 } from 'global/types/TataUsaha'
 import { AktivasiBku } from 'main/models/AktivasiBku'
@@ -120,6 +121,18 @@ test('GetTotalSaldo', async () => {
   const saldo = res.unwrapOr(<Saldo>{})
   expect(saldo.sisaBank).toBe(50)
   expect(saldo.sisaTunai).toBe(25)
+})
+
+test('GetTotalSaldoDibelanjakan', async () => {
+  const conn = getConnection()
+  const tataUsahaService = new TataUsahaService(conn)
+  const request = <GetTotalSaldoDibelanjakanRequest>{
+    idAnggaran: '3GIqBvF91Em6K_VasjmhTw',
+    idPeriode: [92],
+  }
+
+  const res = await tataUsahaService.GetTotalSaldoDibelanjakan(request)
+  expect(res).toBe(100)
 })
 
 test('GetTotalAnggaranPerBulan', async () => {
