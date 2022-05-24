@@ -1,7 +1,8 @@
 import React, { FC } from 'react'
 import { useNavigate } from 'react-router-dom'
+
 import BadgeComponent, { BadgeType } from 'renderer/components/BadgeComponent'
-import CreateKertasKerjaView from './CreateKertasKerjaView'
+import CreateKertasKerjaView from 'renderer/views/Anggaran/CreateKertasKerjaView'
 import CekStatusKKView from 'renderer/views/Anggaran/CekStatus/CekStatusKKView'
 
 import { KKCardDashboardType } from 'renderer/types/AnggaranType'

@@ -12,7 +12,7 @@ import CreateAccountView from 'renderer/views/Auth/CreateAccountView'
 import RegistrationView from 'renderer/views/Auth/RegistrationView'
 
 // Anggaran
-import DashboardAnggaranView from 'renderer/views/Anggaran/DashboardAnggaranView'
+import DashboardAnggaranView from 'renderer/views/Anggaran/Dashboard/DashboardAnggaranView'
 import MenyusunKertasKerjaView from 'renderer/views/Anggaran/MenyusunKertasKerjaView'
 import MengulasKertasKerjaView from 'renderer/views/Anggaran/MengulasKertasKerjaView'
 import FormKertasKerjaView from 'renderer/views/Anggaran/Form/FormKertasKerjaView'
@@ -22,7 +22,7 @@ import SyncCekStatusKKView from './views/Anggaran/CekStatus/SyncCekStatusKKView'
 import SyncMengulasKertasKerjaView from 'renderer/views/Anggaran/MengulasKertasKerjaView/SyncMengulasKertasKerjaView'
 
 // Tata Usaha
-import DashboardTataUsahaView from 'renderer/views/TataUsaha/DashboardTataUsahaView'
+import DashboardTataUsahaView from 'renderer/views/TataUsaha/Dashboard/DashboardTataUsahaView'
 import FormPenerimaanDanaView from 'renderer/views/TataUsaha/Form/FormPenerimaanDanaView'
 import SyncAktivasiBKUView from 'renderer/views/TataUsaha/Aktivasi/SyncAktivasiBKUView'
 import DetailTataUsahaView from 'renderer/views/TataUsaha/Detail/DetailTataUsahaView'

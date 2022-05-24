@@ -1,10 +1,20 @@
-import React from 'react'
+import React, { FC } from 'react'
 
 import AmountCardComponent from 'renderer/components/Card/AmountCardComponent'
 
-const CardTotalDanaView = () => {
+import clsx from 'clsx'
+
+interface CardTotalDanaProps {
+  class: string
+}
+
+const CardTotalDanaView: FC<CardTotalDanaProps> = (
+  props: CardTotalDanaProps
+) => {
   return (
-    <div className="bg-blue-5 w-min px-6 pb-6 pt-5 rounded">
+    <div
+      className={clsx(props.class, 'bg-blue-5 w-min px-6 pb-6 pt-5 rounded')}
+    >
       <div className="flex justify-end text-large text-blue-700 font-semibold">
         <span className="mr-11 cursor-pointer">Tarik Tunai</span>
         <span className="cursor-pointer">Setor Tunai</span>
