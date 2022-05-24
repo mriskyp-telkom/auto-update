@@ -14,7 +14,7 @@ import { TataUsahaStates, useTataUsahaStore } from 'renderer/stores/tata-usaha'
 
 import {
   FormPenerimaanDanaData,
-  FormPenanggungJawabType,
+  FormPenerimaanDanaType,
 } from 'renderer/types/forms/TataUsahaType'
 import { SaveBkuRequest } from 'global/types/TataUsaha'
 
@@ -60,7 +60,7 @@ const FormPenerimaanDanaView: FC = () => {
     formState: { errors },
   } = formMethods
 
-  const handleClearError = (name: FormPenanggungJawabType) => {
+  const handleClearError = (name: FormPenerimaanDanaType) => {
     clearErrors(name)
   }
 
