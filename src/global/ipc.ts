@@ -34,6 +34,7 @@ export const IPC_REFERENSI = {
 
   addBulkRefSatuan: `${REFERENSI}:addBulkRefSatuan`,
   getRefSatuan: `${REFERENSI}:getRefSatuan`,
+  getRefSatuanLastUpdate: `${REFERENSI}:getRefSatuanLastUpdate`,
 }
 
 export const IPC_KK = {
