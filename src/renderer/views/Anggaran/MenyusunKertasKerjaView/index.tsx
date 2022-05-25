@@ -41,7 +41,7 @@ const MenyusunKertasKerjaView: FC = () => {
   const location = useLocation()
   const { q_mode, q_id_anggaran } = useParams()
 
-  const [indexTab, setIndexTab] = useState(2)
+  const [indexTab, setIndexTab] = useState(0)
   const [isSync, setIsSync] = useState(false)
   const [openModalInit, setOpenModalInit] = useState(false)
   const [jumlahPagu, setJumlahPagu] = useState(0)
