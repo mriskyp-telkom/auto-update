@@ -4,9 +4,8 @@ import { getConnection } from 'typeorm'
 import { TataUsahaService } from 'main/services/TataUsahaService'
 import {
   GetListAnggaranRequest,
-  GetTotalSaldoDibelanjakanRequest,
-  GetTotalAnggaranPerBulanRequest,
   GetTotalSaldoRequest,
+  GetTotalAnggaranRequest,
   CashWithdrawalRequest,
 } from 'global/types/TataUsaha'
 import { GetConfig } from 'main/repositories/ConfigRepository'
@@ -45,14 +44,22 @@ module.exports = {
   ),
   getTotalSaldoDibelanjakan: ipcMain.on(
     IPC_TATA_USAHA.getTotalSaldoDibelanjakan,
-    async (e, request: GetTotalSaldoDibelanjakanRequest) => {
+    async (e, request: GetTotalAnggaranRequest) => {
       e.returnValue = await tataUsahaService.GetTotalSaldoDibelanjakan(request)
     }
   ),
   getTotalAnggaranPerBulan: ipcMain.on(
     IPC_TATA_USAHA.getTotalAnggaranPerBulan,
-    async (e, request: GetTotalAnggaranPerBulanRequest) => {
+    async (e, request: GetTotalAnggaranRequest) => {
       e.returnValue = await tataUsahaService.GetTotalAnggaranPerBulan(request)
+    }
+  ),
+  getTotalPerluDianggarkanUlang: ipcMain.on(
+    IPC_TATA_USAHA.getTotalPerluDianggarkanUlang,
+    async (e, request: GetTotalAnggaranRequest) => {
+      e.returnValue = await tataUsahaService.GetTotalPerluDianggarkanUlang(
+        request
+      )
     }
   ),
   cashWithdrawal: ipcMain.on(

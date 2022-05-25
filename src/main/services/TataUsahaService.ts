@@ -5,16 +5,12 @@ import {
   Anggaran as AnggaranData,
   AktivasiBku as AktivasiData,
   GetTotalSaldoRequest,
-  GetTotalSaldoDibelanjakanRequest,
-  GetTotalAnggaranPerBulanRequest,
+  GetTotalAnggaranRequest,
   CashWithdrawalRequest,
 } from 'global/types/TataUsaha'
 import { GetAnggaran } from 'main/repositories/AnggaranRepository'
 import { AktivasiBkuRepository } from 'main/repositories/AktivasiBkuRepository'
-import {
-  KasUmumRepository,
-  GetTotalSaldoDibelanjakan,
-} from 'main/repositories/KasUmumRepository'
+import { KasUmumRepository } from 'main/repositories/KasUmumRepository'
 import { Anggaran, Bku } from 'main/types/TataUsaha'
 import { AktivasiBku } from 'main/models/AktivasiBku'
 import { CONFIG, STATUS_BKU_PERTAHUN } from 'global/constants'
@@ -166,18 +162,27 @@ export class TataUsahaService {
   }
 
   async GetTotalSaldoDibelanjakan(
-    request: GetTotalSaldoDibelanjakanRequest
+    request: GetTotalAnggaranRequest
   ): Promise<number> {
-    return await GetTotalSaldoDibelanjakan(
+    return await this.kasUmumRepo.GetTotalSaldoDibelanjakan(
       request.idAnggaran,
       request.idPeriode
     )
   }
 
   async GetTotalAnggaranPerBulan(
-    request: GetTotalAnggaranPerBulanRequest
+    request: GetTotalAnggaranRequest
   ): Promise<number> {
     return await GetTotalAnggaranPerBulan(request.idAnggaran, request.idPeriode)
+  }
+
+  async GetTotalPerluDianggarkanUlang(
+    request: GetTotalAnggaranRequest
+  ): Promise<number> {
+    return await this.kasUmumRepo.GetTotalPerluDianggarkanUlang(
+      request.idAnggaran,
+      request.idPeriode
+    )
   }
 
   async CashWithdrawal(
