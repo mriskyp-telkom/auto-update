@@ -1,3 +1,9 @@
+b:before,
+b:after {
+  content: ' ';
+  white-space: pre;
+}
+
 table.tableTataUsaha thead th {
   padding-top: 1.5rem;
   padding-bottom: 1rem;
@@ -11,6 +17,11 @@ table.tableTataUsaha > tbody tr {
   width: 100%;
   table-layout: fixed;
   box-shadow: inset 0px -1px 0px #c9cbcf;
+}
+
+table.tableTataUsaha > tbody tr.blue {
+  display: flex;
+  box-shadow: unset;
 }
 
 @media screen and (min-height: 1024px) {
