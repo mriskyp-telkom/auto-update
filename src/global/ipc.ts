@@ -71,5 +71,6 @@ export const IPC_TATA_USAHA = {
   getTotalSaldo: `${TATA_USAHA}:getTotalSaldo`,
   getTotalSaldoDibelanjakan: `${TATA_USAHA}:getTotalSaldoDibelanjakan`,
   getTotalAnggaranPerBulan: `${TATA_USAHA}:getTotalAnggaranPerBulan`,
+  getTotalPerluDianggarkanUlang: `${TATA_USAHA}:getTotalPerluDianggarkanUlang`,
   cashWithdrawal: `${TATA_USAHA}:cashWithdrawal`,
 }

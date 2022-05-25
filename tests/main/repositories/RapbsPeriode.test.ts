@@ -5,7 +5,7 @@ import {
   GetListValidasiReferensiPeriode,
 } from 'main/repositories/RapbsPeriodeRepository'
 import { ValidasiReferensiPeriode } from 'main/types/RapbsPeriode'
-import { createConnection, getConnection } from 'typeorm'
+import { createConnection, getConnection, getRepository } from 'typeorm'
 import { cfg, Migrate } from '../migration'
 
 beforeAll(async () => {
@@ -63,8 +63,13 @@ test('GetDetailListRapbs', async () => {
 })
 
 test('GetListValidasiReferensiPeriode', async () => {
+  await getRepository(Rapbs).update(
+    { idRapbs: 'vavMwmO850KsQlMUkuedzg' },
+    { idBarang: 'id-barang-1' }
+  )
   const data = await GetListValidasiReferensiPeriode('apQwiAb-9EWxv74iwMY6aQ')
   const list = data.unwrapOr(<ValidasiReferensiPeriode[]>[])
+
   expect(data.isOk()).toBe(true)
   expect(list[0].idPeriode).toBe(92)
   expect(list[0].isValidate).toBe(2)

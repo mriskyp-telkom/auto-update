@@ -3,8 +3,7 @@ import {
   GetListAnggaranRequest,
   Anggaran as AnggaranData,
   GetTotalSaldoRequest,
-  GetTotalSaldoDibelanjakanRequest,
-  GetTotalAnggaranPerBulanRequest,
+  GetTotalAnggaranRequest,
   CashWithdrawalRequest,
 } from 'global/types/TataUsaha'
 import { AktivasiBku } from 'main/models/AktivasiBku'
@@ -13,6 +12,7 @@ import { AppConfig } from 'main/models/AppConfig'
 import { KasUmum } from 'main/models/KasUmum'
 import { MstSekolah } from 'main/models/MstSekolah'
 import { Rapbs } from 'main/models/Rapbs'
+import { RapbsPeriode } from 'main/models/RapbsPeriode'
 import { GetConfig } from 'main/repositories/ConfigRepository'
 import { TataUsahaService } from 'main/services/TataUsahaService'
 import { Saldo } from 'main/types/KasUmum'
@@ -25,7 +25,15 @@ beforeEach(async () => {
     type: 'better-sqlite3',
     database: ':memory:',
     dropSchema: true,
-    entities: [AktivasiBku, AppConfig, KasUmum, Anggaran, MstSekolah, Rapbs],
+    entities: [
+      AktivasiBku,
+      AppConfig,
+      KasUmum,
+      Anggaran,
+      MstSekolah,
+      Rapbs,
+      RapbsPeriode,
+    ],
     synchronize: false,
     logging: true,
   })
@@ -127,7 +135,7 @@ test('GetTotalSaldo', async () => {
 test('GetTotalSaldoDibelanjakan', async () => {
   const conn = getConnection()
   const tataUsahaService = new TataUsahaService(conn)
-  const request = <GetTotalSaldoDibelanjakanRequest>{
+  const request = <GetTotalAnggaranRequest>{
     idAnggaran: '3GIqBvF91Em6K_VasjmhTw',
     idPeriode: [92],
   }
@@ -139,13 +147,111 @@ test('GetTotalSaldoDibelanjakan', async () => {
 test('GetTotalAnggaranPerBulan', async () => {
   const conn = getConnection()
   const tataUsahaService = new TataUsahaService(conn)
-  const request = <GetTotalAnggaranPerBulanRequest>{
+  const request = <GetTotalAnggaranRequest>{
     idAnggaran: 'apQwiAb-9EWxv74iwMY6aQ',
     idPeriode: [92],
   }
 
   const res = await tataUsahaService.GetTotalAnggaranPerBulan(request)
   expect(res).toBe(26176000)
+})
+
+test('GetTotalPerluDianggarkanUlang', async () => {
+  const promises = []
+  const now = new Date()
+  const idAnggaran = 'idAnggaran-1'
+  const conn = getConnection()
+  const tataUsahaService = new TataUsahaService(conn)
+
+  const seedKasUmum = new KasUmum({
+    idAnggaran: idAnggaran,
+    idKasUmum: 'idKasUmum-1',
+    idRapbsPeriode: 'idRapbsPeriode-1',
+    volume: 3000,
+    saldo: 1000,
+    idRefBku: 4,
+    tanggalTransaksi: now,
+    uraian: 'uraian',
+    createDate: now,
+    lastUpdate: now,
+  })
+
+  const seedKasUmum2 = new KasUmum({
+    idAnggaran: idAnggaran,
+    idKasUmum: 'idKasUmum-2',
+    idRapbsPeriode: 'idRapbsPeriode-2',
+    volume: 3000,
+    saldo: 9000,
+    idRefBku: 15,
+    tanggalTransaksi: now,
+    uraian: 'uraian',
+    createDate: now,
+    lastUpdate: now,
+  })
+
+  promises.push(conn.getRepository(KasUmum).insert([seedKasUmum, seedKasUmum2]))
+
+  const seedRapbs = new Rapbs({
+    idAnggaran: idAnggaran,
+    idRapbs: 'idRapbs-1',
+    sekolahId: 'sekolahId-1',
+    idRefKode: 'idRefKode-1',
+    idRefTahunAnggaran: 2022,
+    kodeRekening: '5.1.02.04.01.0003',
+    uraian: 'uraian',
+    volume: 10,
+    satuan: 'Unit',
+    hargaSatuan: 10,
+    jumlah: 100,
+    createDate: now,
+    lastUpdate: now,
+  })
+
+  promises.push(conn.getRepository(Rapbs).insert(seedRapbs))
+
+  const seedRapbsPeriode = new RapbsPeriode({
+    idRapbsPeriode: seedKasUmum.idRapbsPeriode,
+    idRapbs: seedRapbs.idRapbs,
+    idPeriode: 81,
+    volume: 3000,
+    satuan: 'Unit',
+    hargaSatuan: 10,
+    jumlah: 30000,
+    createDate: now,
+    lastUpdate: now,
+  })
+
+  const seedRapbsPeriode2 = new RapbsPeriode({
+    idRapbsPeriode: seedKasUmum2.idRapbsPeriode,
+    idRapbs: seedRapbs.idRapbs,
+    idPeriode: 82,
+    volume: 3000,
+    satuan: 'Unit',
+    hargaSatuan: 10,
+    jumlah: 30000,
+    createDate: now,
+    lastUpdate: now,
+  })
+
+  promises.push(
+    conn
+      .getRepository(RapbsPeriode)
+      .insert([seedRapbsPeriode, seedRapbsPeriode2])
+  )
+
+  await Promise.all(promises)
+
+  const request = <GetTotalAnggaranRequest>{
+    idAnggaran: idAnggaran,
+    idPeriode: [80, 81, 82],
+  }
+
+  const res = await tataUsahaService.GetTotalPerluDianggarkanUlang(request)
+  expect(res).toBe(
+    seedRapbsPeriode.jumlah +
+      seedRapbsPeriode2.jumlah -
+      (seedKasUmum.saldo + seedKasUmum2.saldo)
+  )
 })
 
 test('CashWithdrawal', async () => {

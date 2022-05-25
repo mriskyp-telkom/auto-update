@@ -4,6 +4,11 @@ import { BaseEntity, Column, Entity, Index } from 'typeorm'
 @Index('REL_PERIODE_FK', ['idPeriode'], {})
 @Entity('rapbs_periode')
 export class RapbsPeriode extends BaseEntity {
+  public constructor(init?: Partial<RapbsPeriode>) {
+    super()
+    Object.assign(this, init)
+  }
+
   @Column('varchar', {
     primary: true,
     name: 'id_rapbs_periode',

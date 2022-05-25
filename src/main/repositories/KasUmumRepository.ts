@@ -84,33 +84,102 @@ export class KasUmumRepository {
 
     return ok(result)
   }
-}
 
-export const GetTotalSaldoDibelanjakan = async (
-  idAnggaran: string,
-  idPeriode: number[]
-): Promise<number> => {
-  const result = await createQueryBuilder('kas_umum', 'ku')
-    .select('ifnull(sum(ku.saldo),0) as sudahDibelanjakan')
-    .innerJoin(
-      'rapbs_periode',
-      'rp',
-      'rp.id_rapbs_periode = ku.id_rapbs_periode'
-    )
-    .where(
-      `ku.id_anggaran = :idAnggaran 
-      AND ku.id_ref_bku in (4,15)
-      AND rp.id_periode in (:...idPeriode)`,
-      {
-        idAnggaran,
-        idPeriode,
-      }
-    )
-    .getRawOne()
+  async GetTotalSaldoDibelanjakan(
+    idAnggaran: string,
+    idPeriode: number[]
+  ): Promise<number> {
+    const result = await createQueryBuilder('kas_umum', 'ku')
+      .select('ifnull(sum(ku.saldo),0) as sudahDibelanjakan')
+      .innerJoin(
+        'rapbs_periode',
+        'rp',
+        'rp.id_rapbs_periode = ku.id_rapbs_periode'
+      )
+      .where(
+        `ku.id_anggaran = :idAnggaran 
+        AND ku.id_ref_bku in (4,15)
+        AND rp.id_periode in (:...idPeriode)`,
+        {
+          idAnggaran,
+          idPeriode,
+        }
+      )
+      .getRawOne()
 
-  if (result !== undefined) {
-    return result.sudahDibelanjakan
+    if (result !== undefined) {
+      return result.sudahDibelanjakan
+    }
+
+    return 0
   }
 
-  return 0
+  async GetTotalPerluDianggarkanUlang(
+    idAnggaran: string,
+    listIdPeriode: number[]
+  ): Promise<number> {
+    const query = `
+    select 
+      sum(perlu_dianggarkan_ulang) as totalPerluDianggarkanUlang 
+    from 
+      (
+        select 
+        case 
+            when sum(volume_rencana) - sum(volume_realisasi) = 0
+            then sum(total_rencana) - sum(total_realisasi)
+            else 0
+        end as perlu_dianggarkan_ulang
+        from 
+          (
+            select 
+              ku.id_rapbs_periode, 
+              0 as volume_rencana, 
+              0 as total_rencana, 
+              ku.volume as volume_realisasi, 
+              ku.saldo as total_realisasi 
+            from 
+              kas_umum ku 
+              join rapbs_periode rp on rp.id_rapbs_periode = ku.id_rapbs_periode 
+            where 
+              ku.soft_delete = 0 
+              and ku.id_anggaran = :idAnggaran 
+              and ku.id_ref_bku in (4, 15) 
+              and rp.id_periode in (:...listIdPeriode)
+            UNION ALL 
+            select 
+              rp.id_rapbs_periode, 
+              rp.volume as volume_rencana, 
+              rp.jumlah as total_rencana, 
+              0 as volume_realisasi, 
+              0 as total_realisasi 
+            from 
+              rapbs r 
+              join rapbs_periode rp on rp.id_rapbs = r.id_rapbs 
+            where 
+              r.id_anggaran = :idAnggaran 
+              and rp.id_periode in (:...listIdPeriode)
+          ) a 
+        group by 
+          id_rapbs_periode
+      ) b;
+    `
+
+    const result = await this.rawQuery<
+      Array<{ totalPerluDianggarkanUlang: number }>
+    >(query, { idAnggaran: idAnggaran, listIdPeriode: listIdPeriode })
+
+    if (result.length > 0) {
+      if (result[0].totalPerluDianggarkanUlang !== null) {
+        return result[0].totalPerluDianggarkanUlang
+      }
+    }
+
+    return 0
+  }
+
+  async rawQuery<T = any[]>(query: string, parameters: any): Promise<T> {
+    const [escapedQuery, escapedParams] =
+      this.conn.driver.escapeQueryWithParameters(query, parameters, {})
+    return this.conn.query(escapedQuery, escapedParams)
+  }
 }

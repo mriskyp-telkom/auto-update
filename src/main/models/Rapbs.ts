@@ -7,6 +7,11 @@ import { BaseEntity, Column, Entity, Index } from 'typeorm'
 @Index('REL_ANGGARAN_FK', ['idAnggaran'], {})
 @Entity('rapbs')
 export class Rapbs extends BaseEntity {
+  public constructor(init?: Partial<Rapbs>) {
+    super()
+    Object.assign(this, init)
+  }
+
   @Column('varchar', {
     primary: true,
     name: 'id_rapbs',
