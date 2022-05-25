@@ -99,7 +99,10 @@ const App: FC = () => {
             </Route>
             <Route path="tata-usaha">
               <Route index={true} element={<DashboardTataUsahaView />} />
-              <Route path="detail" element={<DetailTataUsahaView />} />
+              <Route
+                path="detail/:q_id_anggaran/:q_id_periode"
+                element={<DetailTataUsahaView />}
+              />
             </Route>
           </Route>
         </Routes>
@@ -136,7 +139,7 @@ const App: FC = () => {
                 element={<FormPenerimaanDanaView />}
               />
               <Route
-                path="form/penarikan-tunai"
+                path="form/penarikan-tunai/:q_id_anggaran/:q_id_periode"
                 element={<FormPenarikanTunaiView />}
               />
               <Route

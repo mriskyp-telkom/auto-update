@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import { numberUtils } from '@wartek-id/fe-toolbox'
 
@@ -14,9 +14,13 @@ import {
 } from 'renderer/types/forms/TataUsahaType'
 
 import { NOMINAL_TARIK_TUNAI_ERROR_MORE_THAN } from 'renderer/constants/errorForm'
+import { CashWithdrawalRequest } from 'global/types/TataUsaha'
+import syncToIpcMain from 'renderer/configs/ipc'
+import { IPC_TATA_USAHA } from 'global/ipc'
 
 const FormPenarikanTunaiView: FC = () => {
   const navigate = useNavigate()
+  const { q_id_anggaran } = useParams()
 
   const saldo = 1000000
   const displaySaldo = `Rp ${numberUtils.delimit(saldo, '.')}`
@@ -44,8 +48,23 @@ const FormPenarikanTunaiView: FC = () => {
   }
 
   const onSubmit = async (data: FormPenarikanTunaiData) => {
-    //TO DO
-    console.error(data)
+    const amount =
+      data.nominal !== ''
+        ? parseInt(data.nominal.replace(/[^,\d]/g, '').toString())
+        : 0
+    const cashWithdrawalRequest: CashWithdrawalRequest = {
+      idAnggaran: q_id_anggaran,
+      date: data.tanggal_tarik_tunai,
+      amount: amount,
+    }
+    const res = syncToIpcMain(
+      IPC_TATA_USAHA.cashWithdrawal,
+      cashWithdrawalRequest
+    )
+    closeModal()
+    if (res.error) {
+      //TODO display error when save data
+    }
   }
 
   return (

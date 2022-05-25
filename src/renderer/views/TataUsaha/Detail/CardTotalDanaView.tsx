@@ -7,8 +7,13 @@ import { FORM_PENARIKAN_TUNAI_PAGE_URL } from 'renderer/constants/routes'
 
 import clsx from 'clsx'
 
+interface CardTotalDanaDataProps {
+  idAnggaran: string
+  idPeriode: number
+}
 interface CardTotalDanaProps {
   class: string
+  data: CardTotalDanaDataProps
 }
 
 const CardTotalDanaView: FC<CardTotalDanaProps> = (
@@ -16,9 +21,14 @@ const CardTotalDanaView: FC<CardTotalDanaProps> = (
 ) => {
   const navigate = useNavigate()
   const location = useLocation()
+  const { data } = props
 
   const handleClickTarikTunai = () => {
-    navigate(FORM_PENARIKAN_TUNAI_PAGE_URL, {
+    const url = FORM_PENARIKAN_TUNAI_PAGE_URL(
+      encodeURIComponent(data.idAnggaran),
+      data.idPeriode
+    )
+    navigate(url, {
       state: { backgroundLocation: location },
     })
   }

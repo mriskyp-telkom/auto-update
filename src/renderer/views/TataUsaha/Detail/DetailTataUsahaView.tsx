@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import TabelTataUsahaView from './TabelTataUsahaView'
 import CardTotalDanaView from './CardTotalDanaView'
@@ -18,9 +18,12 @@ import clsx from 'clsx'
 
 const DetailTataUsahaView: FC = () => {
   const navigate = useNavigate()
-
+  const { q_id_anggaran, q_id_periode } = useParams()
   const lastUpdate = new Date()
-
+  const cardTotalDanaDataProps = {
+    idAnggaran: q_id_anggaran,
+    idPeriode: parseInt(q_id_periode),
+  }
   const handleBackToBeranda = () => {
     navigate(DASHBOARD_BKU_PAGE_URL)
   }
@@ -100,7 +103,7 @@ const DetailTataUsahaView: FC = () => {
           Tersimpan otomatis {formatDateTimeStatus(new Date(lastUpdate))}
         </div>
         <div className="flex pb-6">
-          <CardTotalDanaView class="mr-4" />
+          <CardTotalDanaView class="mr-4" data={cardTotalDanaDataProps} />
           <CardDanaPembelanjaanView />
         </div>
         <TabelTataUsahaView />
