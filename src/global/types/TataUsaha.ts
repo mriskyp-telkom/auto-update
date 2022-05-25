@@ -39,3 +39,9 @@ export interface GetTotalAnggaranPerBulanRequest {
   idAnggaran: string
   idPeriode: number[]
 }
+
+export interface CashWithdrawalRequest {
+  idAnggaran: string
+  date: Date
+  amount: number
+}

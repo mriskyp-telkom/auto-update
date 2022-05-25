@@ -1,5 +1,5 @@
 import { Connection } from 'typeorm'
-import { ok, Result } from 'neverthrow'
+import { ok, err, Result } from 'neverthrow'
 import {
   GetListAnggaranRequest,
   Anggaran as AnggaranData,
@@ -7,6 +7,7 @@ import {
   GetTotalSaldoRequest,
   GetTotalSaldoDibelanjakanRequest,
   GetTotalAnggaranPerBulanRequest,
+  CashWithdrawalRequest,
 } from 'global/types/TataUsaha'
 import { GetAnggaran } from 'main/repositories/AnggaranRepository'
 import { AktivasiBkuRepository } from 'main/repositories/AktivasiBkuRepository'
@@ -25,6 +26,8 @@ import CommonUtils from 'main/utils/CommonUtils'
 import { AnggaranDTO } from 'main/types/Anggaran'
 import { Saldo } from 'main/types/KasUmum'
 import { GetTotalAnggaranPerBulan } from 'main/repositories/RapbsRepository'
+import { KasUmum } from 'main/models/KasUmum'
+import { GetPenggunaID } from './UserService'
 
 export class TataUsahaService {
   private aktivasiBkuRepo: AktivasiBkuRepository
@@ -175,5 +178,36 @@ export class TataUsahaService {
     request: GetTotalAnggaranPerBulanRequest
   ): Promise<number> {
     return await GetTotalAnggaranPerBulan(request.idAnggaran, request.idPeriode)
+  }
+
+  async CashWithdrawal(
+    request: CashWithdrawalRequest
+  ): Promise<Result<boolean, Error>> {
+    const kasUmumList: KasUmum[] = []
+    const refBkuList: { id: number; bku: string }[] = [
+      { id: 3, bku: 'Tarik Tunai' },
+      { id: 12, bku: 'Pergeseran Uang di Bank' },
+    ]
+    const now = new Date()
+    const penggunaId = await GetPenggunaID()
+    for (const refBku of refBkuList) {
+      const kas = new KasUmum()
+      kas.idKasUmum = CommonUtils.encodeUUID(CommonUtils.uuid())
+      kas.idAnggaran = request.idAnggaran
+      kas.idRefBku = refBku.id
+      kas.uraian = refBku.bku
+      kas.saldo = request.amount
+      kas.tanggalTransaksi = request.date
+      kas.createDate = now
+      kas.lastUpdate = now
+      kas.updaterId = penggunaId
+      kasUmumList.push(kas)
+    }
+    try {
+      await this.kasUmumRepo.BulkInsert(kasUmumList)
+    } catch (error) {
+      return err(new Error(error))
+    }
+    return ok(true)
   }
 }

@@ -5,6 +5,7 @@ import {
   GetTotalSaldoRequest,
   GetTotalSaldoDibelanjakanRequest,
   GetTotalAnggaranPerBulanRequest,
+  CashWithdrawalRequest,
 } from 'global/types/TataUsaha'
 import { AktivasiBku } from 'main/models/AktivasiBku'
 import { Anggaran } from 'main/models/Anggaran'
@@ -16,7 +17,7 @@ import { GetConfig } from 'main/repositories/ConfigRepository'
 import { TataUsahaService } from 'main/services/TataUsahaService'
 import { Saldo } from 'main/types/KasUmum'
 import { GetMonthName } from 'main/utils/Months'
-import { createConnection, getConnection } from 'typeorm'
+import { createConnection, getConnection, getRepository } from 'typeorm'
 import { cfg, Migrate } from '../migration'
 
 beforeEach(async () => {
@@ -145,4 +146,42 @@ test('GetTotalAnggaranPerBulan', async () => {
 
   const res = await tataUsahaService.GetTotalAnggaranPerBulan(request)
   expect(res).toBe(26176000)
+})
+
+test('CashWithdrawal', async () => {
+  const conn = getConnection()
+  const tataUsahaService = new TataUsahaService(conn)
+  const request = <CashWithdrawalRequest>{
+    idAnggaran: 'apQwiAb-9EWxv74iwMY6aQ',
+    amount: 90000,
+    date: new Date('2022-05-10T00:00:00.000Z'),
+  }
+  const res = await tataUsahaService.CashWithdrawal(request)
+
+  expect(res.isOk()).toBe(true)
+
+  const kasUmumList = await getRepository(KasUmum).find({
+    idAnggaran: request.idAnggaran,
+  })
+
+  expect(kasUmumList.length).toBeGreaterThan(0)
+
+  for (const k of kasUmumList) {
+    switch (k.idRefBku) {
+      case 3:
+        expect(k.uraian).toBe('Tarik Tunai')
+        expect(k.saldo).toBe(90000)
+        expect(k.tanggalTransaksi.toISOString()).toBe(
+          '2022-05-10T00:00:00.000Z'
+        )
+        break
+      case 12:
+        expect(k.uraian).toBe('Pergeseran Uang di Bank')
+        expect(k.saldo).toBe(90000)
+        expect(k.tanggalTransaksi.toISOString()).toBe(
+          '2022-05-10T00:00:00.000Z'
+        )
+        break
+    }
+  }
 })
