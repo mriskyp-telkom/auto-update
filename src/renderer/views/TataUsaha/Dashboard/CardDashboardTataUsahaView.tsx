@@ -55,7 +55,9 @@ const CardBulan: FC<CardBulanProps> = (props: CardBulanProps) => {
   const classStatus = color + ' border-gray-500'
 
   const handleClick = () => {
-    navigate(DETAIL_BKU_PAGE_URL)
+    navigate(
+      DETAIL_BKU_PAGE_URL(encodeURIComponent(data.idAnggaran), data.idPeriode)
+    )
   }
 
   return (
@@ -204,6 +206,8 @@ const CardDashboardTataUsahaView: FC<CardDashboardTataUsahaProps> = (
               const bulanStatus = {
                 bulan: bulan.name,
                 status: filtered[0]?.status,
+                idAnggaran: data.idAnggaran,
+                idPeriode: bulan.id,
               }
               return (
                 <CardBulan

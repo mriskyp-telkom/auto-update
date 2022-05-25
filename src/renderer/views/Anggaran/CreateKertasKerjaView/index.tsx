@@ -26,6 +26,7 @@ import AlertFailedSyncData from 'renderer/views/AlertFailedSyncData'
 
 import { copyKertasKerja } from 'renderer/utils/copy-writing'
 import { SetConfigRequest } from 'global/types/Config'
+import { IPC_REFERENSI } from 'global/ipc'
 
 const ipcRenderer = window.require('electron').ipcRenderer
 
@@ -373,7 +374,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
     if (dataRefBarang !== undefined) {
       ipcRenderer.send('referensi:addBulkRefBarang', dataRefBarang?.data)
       const satuanLastUpdate = ipcRenderer.sendSync(
-        'referensi:getRefSatuanLastUpdate'
+        IPC_REFERENSI.getRefSatuanLastUpdate
       )
       setLastUpdateSatuan(satuanLastUpdate)
       setApi(stepApi[10])
@@ -382,7 +383,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
 
   useEffect(() => {
     if (dataRefSatuan !== undefined) {
-      ipcRenderer.send('referensi:addBulkRefSatuan', dataRefSatuan?.data)
+      ipcRenderer.send(IPC_REFERENSI.addBulkRefSatuan, dataRefSatuan?.data)
       setApi(stepApi[11])
     }
   }, [dataRefSatuan])
