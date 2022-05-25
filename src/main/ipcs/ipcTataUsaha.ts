@@ -7,6 +7,7 @@ import {
   GetTotalSaldoDibelanjakanRequest,
   GetTotalAnggaranPerBulanRequest,
   GetTotalSaldoRequest,
+  CashWithdrawalRequest,
 } from 'global/types/TataUsaha'
 import { GetConfig } from 'main/repositories/ConfigRepository'
 
@@ -52,6 +53,12 @@ module.exports = {
     IPC_TATA_USAHA.getTotalAnggaranPerBulan,
     async (e, request: GetTotalAnggaranPerBulanRequest) => {
       e.returnValue = await tataUsahaService.GetTotalAnggaranPerBulan(request)
+    }
+  ),
+  cashWithdrawal: ipcMain.on(
+    IPC_TATA_USAHA.cashWithdrawal,
+    async (e, request: CashWithdrawalRequest) => {
+      e.returnValue = await tataUsahaService.CashWithdrawal(request)
     }
   ),
 }
