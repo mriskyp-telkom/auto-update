@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { FormProvider, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 
 import { numberUtils } from '@wartek-id/fe-toolbox'
@@ -19,14 +19,17 @@ const FormPaguView: FC = () => {
 
   const paguTemp = useAnggaranStore((state: AnggaranStates) => state.paguTemp)
   const setPagu = useAnggaranStore((state: AnggaranStates) => state.setPagu)
+
+  const formMethods = useForm<FormPaguData>({
+    mode: 'onChange',
+  })
+
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<FormPaguData>({
-    mode: 'onChange',
-  })
+  } = formMethods
 
   const closeModal = () => {
     navigate(-1)
@@ -55,43 +58,45 @@ const FormPaguView: FC = () => {
   }, [setValue, paguTemp])
 
   return (
-    <FormDialogComponent
-      width={720}
-      title="Dana Pagu BOS Reguler"
-      subtitle="Nominal diambil dari BOS Salur dan dihitung sesuai ketentuan Permendikbud terbaru. Pastikan data jumlah murid di Dapodik sudah diperbarui."
-      isOpen={true}
-      onCancel={closeModal}
-      onSubmit={handleSubmit(onSubmit)}
-    >
-      <div>
-        <div className="pr-7">
-          <div className="text-base pb-1 font-normal text-gray-900">
-            Nominal Penerimaan
-          </div>
-          <InputComponent
-            type="text"
-            name="nominal"
-            placeholder="Masukkan nominal penerimaan"
-            errors={errors}
-            register={register}
-            required={true}
-            registerOption={{
-              onChange: (e) => {
-                const numb = e.target.value.replace(/[^,\d]/g, '').toString()
-                setAmount(numb)
-                if (numb !== null) {
-                  setValue('nominal', `Rp ${numberUtils.delimit(numb, '.')}`)
-                }
-              },
-            }}
-            isDisabled={!allowEdit}
-          />
-          <div className="pt-1 text-[12px] text-gray-600">
-            (jumlah murid) x (nominal BOS per daerah)
+    <FormProvider {...formMethods}>
+      <FormDialogComponent
+        width={720}
+        title="Dana Pagu BOS Reguler"
+        subtitle="Nominal diambil dari BOS Salur dan dihitung sesuai ketentuan Permendikbud terbaru. Pastikan data jumlah murid di Dapodik sudah diperbarui."
+        isOpen={true}
+        onCancel={closeModal}
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <div>
+          <div className="pr-7">
+            <div className="text-base pb-1 font-normal text-gray-900">
+              Nominal Penerimaan
+            </div>
+            <InputComponent
+              type="text"
+              name="nominal"
+              placeholder="Masukkan nominal penerimaan"
+              errors={errors}
+              register={register}
+              required={true}
+              registerOption={{
+                onChange: (e) => {
+                  const numb = e.target.value.replace(/[^,\d]/g, '').toString()
+                  setAmount(numb)
+                  if (numb !== null) {
+                    setValue('nominal', `Rp ${numberUtils.delimit(numb, '.')}`)
+                  }
+                },
+              }}
+              isDisabled={!allowEdit}
+            />
+            <div className="pt-1 text-[12px] text-gray-600">
+              (jumlah murid) x (nominal BOS per daerah)
+            </div>
           </div>
         </div>
-      </div>
-    </FormDialogComponent>
+      </FormDialogComponent>
+    </FormProvider>
   )
 }
 
