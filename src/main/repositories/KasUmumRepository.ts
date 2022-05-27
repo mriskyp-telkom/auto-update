@@ -125,7 +125,7 @@ export class KasUmumRepository {
       (
         select 
         case 
-            when sum(volume_rencana) - sum(volume_realisasi) = 0
+            when sum(volume_rencana) = sum(volume_realisasi)
             then sum(total_rencana) - sum(total_realisasi)
             else 0
         end as perlu_dianggarkan_ulang
@@ -143,7 +143,7 @@ export class KasUmumRepository {
             where 
               ku.soft_delete = 0 
               and ku.id_anggaran = :idAnggaran 
-              and ku.id_ref_bku in (4, 15) 
+              and ku.id_ref_bku in (4,24,15,35) 
               and rp.id_periode in (:...listIdPeriode)
             UNION ALL 
             select 
