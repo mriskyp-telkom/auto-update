@@ -32,7 +32,7 @@ test('AktivasiBku', async () => {
     idAnggaran: 'apQwiAb-9EWxv74iwMY6aQ',
     recieveDate: new Date('2022-03-10T00:00:00.000Z'),
     recieveAmount: 20000,
-    uraian: 'Bku Januari sampai Maret 2022',
+    uraian: 'tahapan 1 (Januari - Maret)',
   }
 
   const res = await bkuService.AktivasiBku(req)
@@ -53,7 +53,7 @@ test('AktivasiBku', async () => {
       expect(k.idRefBku).toBe(2)
       expect(k.idRapbsPeriode).toBe(null)
       expect(k.noBukti).toBe('BBU02')
-      expect(k.uraian).toBe(req.uraian)
+      expect(k.uraian).toBe('Penerimaan ' + req.uraian)
       expect(k.saldo).toBe(req.recieveAmount)
       expect(k.tanggalTransaksi.toString()).toBe(req.recieveDate.toString())
     } else {

@@ -99,7 +99,7 @@ export class BkuService {
             // Terima Dana BOS
             kas.tanggalTransaksi = req.recieveDate
             kas.saldo = req.recieveAmount
-            kas.uraian = req.uraian
+            kas.uraian = 'Penerimaan ' + req.uraian
             kas.noBukti = noBukti
           }
 
