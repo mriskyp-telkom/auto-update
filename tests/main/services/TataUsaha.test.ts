@@ -5,6 +5,8 @@ import {
   GetTotalSaldoRequest,
   GetTotalAnggaranRequest,
   CashWithdrawalRequest,
+  GetListKasUmumRequest,
+  TarikTunai,
 } from 'global/types/TataUsaha'
 import { AktivasiBku } from 'main/models/AktivasiBku'
 import { Anggaran } from 'main/models/Anggaran'
@@ -153,7 +155,8 @@ test('GetTotalAnggaranPerBulan', async () => {
   }
 
   const res = await tataUsahaService.GetTotalAnggaranPerBulan(request)
-  expect(res).toBe(26176000)
+  expect(res.isOk()).toBe(true)
+  expect(res.unwrapOr(0)).toBe(26176000)
 })
 
 test('GetTotalPerluDianggarkanUlang', async () => {
@@ -247,7 +250,8 @@ test('GetTotalPerluDianggarkanUlang', async () => {
   }
 
   const res = await tataUsahaService.GetTotalPerluDianggarkanUlang(request)
-  expect(res).toBe(
+  expect(res.isOk()).toBe(true)
+  expect(res.unwrapOr(0)).toBe(
     seedRapbsPeriode.jumlah +
       seedRapbsPeriode2.jumlah -
       (seedKasUmum.saldo + seedKasUmum2.saldo)
@@ -290,4 +294,120 @@ test('CashWithdrawal', async () => {
         break
     }
   }
+})
+
+test('GetListKasUmum ', async () => {
+  const idAnggaran = '-ywMrrqE30Ck6P0p08Uj2w'
+  const now = new Date()
+  const conn = getConnection()
+  const promises = []
+  const seedRapbs = new Rapbs({
+    idAnggaran: idAnggaran,
+    idRapbs: 'idRapbs-1',
+    sekolahId: 'sekolahId-1',
+    idRefKode: '22OId5G6YUOZTaSawYOvcw',
+    idRefTahunAnggaran: 2022,
+    kodeRekening: '5.1.02.04.01.0003',
+    uraian: 'uraian',
+    volume: 10,
+    satuan: 'Unit',
+    hargaSatuan: 10,
+    jumlah: 100,
+    createDate: now,
+    lastUpdate: now,
+  })
+
+  promises.push(conn.getRepository(Rapbs).insert(seedRapbs))
+
+  const seedRapbsPeriode = new RapbsPeriode({
+    idRapbsPeriode: '6WX3WYnrKUOQRXNkdsbYuw',
+    idRapbs: seedRapbs.idRapbs,
+    idPeriode: 81,
+    volume: 3000,
+    satuan: 'Unit',
+    hargaSatuan: 10,
+    jumlah: 30000,
+    createDate: now,
+    lastUpdate: now,
+  })
+
+  const seedRapbsPeriode2 = new RapbsPeriode({
+    idRapbsPeriode: 'idRapbsPeriode-1',
+    idRapbs: seedRapbs.idRapbs,
+    idPeriode: 82,
+    volume: 3000,
+    satuan: 'Unit',
+    hargaSatuan: 10,
+    jumlah: 30000,
+    createDate: now,
+    lastUpdate: now,
+  })
+
+  promises.push(
+    conn
+      .getRepository(RapbsPeriode)
+      .insert([seedRapbsPeriode, seedRapbsPeriode2])
+  )
+
+  promises.push([
+    conn
+      .createQueryBuilder()
+      .update(KasUmum)
+      .set({
+        volume: 1000,
+        idRapbsPeriode: seedRapbsPeriode2.idRapbsPeriode,
+        lastUpdate: new Date(),
+      })
+      .where(`id_kas_umum = :idKasUmum`, {
+        idKasUmum: 'KvVuixtqKUucPfTel5YTSg',
+      })
+      .execute(),
+    conn
+      .createQueryBuilder()
+      .update(KasUmum)
+      .set({
+        volume: 1001,
+        lastUpdate: new Date(),
+      })
+      .where(`id_kas_umum = :idKasUmum`, {
+        idKasUmum: 'LJZ9AK3F8UK5tyIVNfl0Kg',
+      })
+      .execute(),
+  ])
+
+  await Promise.all(promises)
+
+  const tataUsahaService = new TataUsahaService(conn)
+  const request = <GetListKasUmumRequest>{
+    idAnggaran: idAnggaran,
+    idPeriode: 84,
+  }
+
+  const res = await tataUsahaService.GetListKasUmum(request)
+  expect(res.isOk()).toBe(true)
+
+  const list = res.unwrapOr(Array<TarikTunai>())
+  expect(list[0].type).toBe('line')
+  expect(list[0].data.jumlah).toBe(1000)
+  expect(list[0].data.date).toBe('2021-04-01')
+  expect(list[0].data.message).toBe(
+    'Anda telah melakukan <b>Setor Tunai Rp. 1000 </b> pada 2021-04-01'
+  )
+
+  expect(list[1].type).toBe('line')
+  expect(list[1].data.jumlah).toBe(1001)
+  expect(list[1].data.date).toBe('2021-04-22')
+  expect(list[1].data.message).toBe(
+    'Anda telah melakukan <b>Tarik Tunai Rp. 1001 </b> pada 2021-04-22'
+  )
+
+  expect(list[2].type).toBe('row')
+  expect(list[2].data.id).toBe('BNU02')
+  expect(list[2].data.tanggal).toBe('2021-04-01')
+  expect(list[2].data.kegiatan).toBe(null)
+  expect(list[2].data.uraian).toBe('Belanja langganan telepon 1')
+  expect(list[2].data.jenisTransaksi).toBe('Non Tunai')
+  expect(list[2].data.anggaran).toBe(null)
+  expect(list[2].data.dibelanjakan).toBe(100)
+  expect(list[2].data.pajakWajibLapor).toBe(null)
 })

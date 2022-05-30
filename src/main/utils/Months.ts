@@ -31,6 +31,10 @@ export function GetMonthName(id: number): string {
   return mapMonth.get(id)?.name
 }
 
+export function GetMonth(id: number): Month {
+  return mapMonth.get(id)
+}
+
 export interface Month {
   id: number
   name: string

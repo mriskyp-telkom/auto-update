@@ -1,5 +1,5 @@
 import { KasUmum } from 'main/models/KasUmum'
-import { Saldo } from 'main/types/KasUmum'
+import { Saldo, TarikTunaiBKU } from 'main/types/KasUmum'
 import CommonUtils from 'main/utils/CommonUtils'
 import { err, ok, Result } from 'neverthrow'
 import {
@@ -25,6 +25,15 @@ export class KasUmumRepository {
 
   async BulkInsert(kasUmumList: KasUmum[]) {
     return await this.repo.insert(kasUmumList)
+  }
+
+  private async rawQuery<T = any[]>(
+    query: string,
+    parameters: any
+  ): Promise<T> {
+    const [escapedQuery, escapedParams] =
+      this.conn.driver.escapeQueryWithParameters(query, parameters, {})
+    return this.conn.query(escapedQuery, escapedParams)
   }
 
   async GetNextNoBukti(kodeBku: string): Promise<string> {
@@ -177,9 +186,49 @@ export class KasUmumRepository {
     return 0
   }
 
-  async rawQuery<T = any[]>(query: string, parameters: any): Promise<T> {
-    const [escapedQuery, escapedParams] =
-      this.conn.driver.escapeQueryWithParameters(query, parameters, {})
-    return this.conn.query(escapedQuery, escapedParams)
+  async GetListTarikTunaiBKU(
+    idAnggaran: string,
+    bulan: number
+  ): Promise<Array<TarikTunaiBKU>> {
+    const paddedMonth = bulan.toString().padStart(2, '0')
+    const query = `
+    select 
+      ku.no_bukti as id, 
+      ku.tanggal_transaksi as tanggalTransaksi, 
+      a.uraian_kode as kegiatan, 
+      ku.uraian as uraian, 
+      ku.id_ref_bku as idRefBku,
+      rb.bku,
+      case 
+          when ku.id_ref_bku in (4,24)
+          then 'Tunai' 
+          when ku.id_ref_bku in (15,35)
+          then 'Non Tunai' 
+      end as jenisTransaksi,
+      (case when ku.volume is not null then ku.volume else 0 end) as jumlahVolume,
+      a.jumlah as jumlahAnggaran,
+      ku.saldo as saldoDibelanjakan,
+      (select sum(saldo) from kas_umum where id_ref_bku in(10,30) and parent_id_kas_umum = ku.id_kas_umum) as pajakWajibLapor
+    from kas_umum ku
+    left join (
+        select rp.id_rapbs_periode, rk.id_ref_kode, rk.uraian_kode, rp.jumlah
+        from rapbs r
+        join rapbs_periode rp
+        on rp.id_rapbs = r.id_rapbs
+        join ref_kode rk
+        on rk.id_ref_kode = r.id_ref_kode
+    ) a
+    on a.id_rapbs_periode = ku.id_rapbs_periode
+    left join ref_bku rb
+    on ku.id_ref_bku = rb.id_ref_bku
+    where ku.id_anggaran = :idAnggaran 
+    and ku.id_ref_bku in (3,4,5,23,24,25,15,35) 
+    and strftime('%m',tanggal_transaksi) = :bulan;
+    `
+
+    return await this.rawQuery<Array<TarikTunaiBKU>>(query, {
+      idAnggaran: idAnggaran,
+      bulan: paddedMonth,
+    })
   }
 }

@@ -7,6 +7,9 @@ import {
   GetTotalSaldoRequest,
   GetTotalAnggaranRequest,
   CashWithdrawalRequest,
+  GetListKasUmumRequest,
+  TarikTunai,
+  TarikTunaiData,
 } from 'global/types/TataUsaha'
 import { GetAnggaran } from 'main/repositories/AnggaranRepository'
 import { AktivasiBkuRepository } from 'main/repositories/AktivasiBkuRepository'
@@ -14,16 +17,17 @@ import { KasUmumRepository } from 'main/repositories/KasUmumRepository'
 import { Anggaran, Bku } from 'main/types/TataUsaha'
 import { AktivasiBku } from 'main/models/AktivasiBku'
 import { CONFIG, STATUS_BKU_PERTAHUN } from 'global/constants'
-import { GetMonthName } from 'main/utils/Months'
+import { GetMonth, GetMonthName } from 'main/utils/Months'
 import { GetStatusAktivasiBku, GetStatusAnggaran } from 'global/status'
 import { Anggaran as AnggaranEntity } from 'main/models/Anggaran'
 import { GetConfig } from 'main/repositories/ConfigRepository'
 import CommonUtils from 'main/utils/CommonUtils'
 import { AnggaranDTO } from 'main/types/Anggaran'
-import { Saldo } from 'main/types/KasUmum'
+import { Saldo, TarikTunaiBKU } from 'main/types/KasUmum'
 import { GetTotalAnggaranPerBulan } from 'main/repositories/RapbsRepository'
 import { KasUmum } from 'main/models/KasUmum'
 import { GetPenggunaID } from './UserService'
+import { format } from 'global/format'
 
 export class TataUsahaService {
   private aktivasiBkuRepo: AktivasiBkuRepository
@@ -172,17 +176,34 @@ export class TataUsahaService {
 
   async GetTotalAnggaranPerBulan(
     request: GetTotalAnggaranRequest
-  ): Promise<number> {
-    return await GetTotalAnggaranPerBulan(request.idAnggaran, request.idPeriode)
+  ): Promise<Result<number, Error>> {
+    let result: number
+    try {
+      result = await GetTotalAnggaranPerBulan(
+        request.idAnggaran,
+        request.idPeriode
+      )
+    } catch (error) {
+      return err(new Error(error))
+    }
+
+    return ok(result)
   }
 
   async GetTotalPerluDianggarkanUlang(
     request: GetTotalAnggaranRequest
-  ): Promise<number> {
-    return await this.kasUmumRepo.GetTotalPerluDianggarkanUlang(
-      request.idAnggaran,
-      request.idPeriode
-    )
+  ): Promise<Result<number, Error>> {
+    let result: number
+    try {
+      result = await this.kasUmumRepo.GetTotalPerluDianggarkanUlang(
+        request.idAnggaran,
+        request.idPeriode
+      )
+    } catch (error) {
+      return err(new Error(error))
+    }
+
+    return ok(result)
   }
 
   async CashWithdrawal(
@@ -214,5 +235,75 @@ export class TataUsahaService {
       return err(new Error(error))
     }
     return ok(true)
+  }
+
+  async GetListKasUmum(
+    request: GetListKasUmumRequest
+  ): Promise<Result<Array<TarikTunai>, Error>> {
+    let tarikTunaiList: Array<TarikTunaiBKU> = []
+    const result: Array<TarikTunai> = []
+    const getComponentType = (idRefBku: number): string => {
+      switch (idRefBku) {
+        case 4:
+        case 15:
+        case 24:
+        case 35:
+          return 'row'
+        case 3:
+        case 5:
+        case 23:
+        case 25:
+          return 'line'
+        default:
+          return ''
+      }
+    }
+
+    const month = GetMonth(request.idPeriode)
+    try {
+      tarikTunaiList = await this.kasUmumRepo.GetListTarikTunaiBKU(
+        request.idAnggaran,
+        month.monthNumber + 1
+      )
+    } catch (error) {
+      return err(new Error(error))
+    }
+
+    for (const tarikTunai of tarikTunaiList) {
+      let data: TarikTunaiData
+      const tType = getComponentType(tarikTunai.idRefBku)
+      if (tType === 'line') {
+        const msgTemplate = `Anda telah melakukan <b>${tarikTunai.bku} Rp. %s </b> pada %s`
+        data = <TarikTunaiData>{
+          jumlah: tarikTunai.jumlahVolume,
+          date: tarikTunai.tanggalTransaksi,
+          messageTemplate: msgTemplate,
+          message: format(
+            msgTemplate,
+            tarikTunai.jumlahVolume,
+            tarikTunai.tanggalTransaksi
+          ),
+        }
+      } else if (tType === 'row') {
+        data = <TarikTunaiData>{
+          id: tarikTunai.id,
+          tanggal: tarikTunai.tanggalTransaksi,
+          kegiatan: tarikTunai.kegiatan,
+          uraian: tarikTunai.uraian,
+          jenisTransaksi: tarikTunai.jenisTransaksi,
+          anggaran: tarikTunai.jumlahAnggaran,
+          dibelanjakan: tarikTunai.saldoDibelanjakan,
+          pajakWajibLapor: tarikTunai.pajakWajibLapor,
+        }
+      }
+
+      const tunai = <TarikTunai>{
+        type: tType,
+        data: data,
+      }
+      result.push(tunai)
+    }
+
+    return ok(result)
   }
 }
