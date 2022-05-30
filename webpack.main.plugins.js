@@ -13,6 +13,10 @@ module.exports = [
         to: path.resolve(__dirname, '.webpack/main/convert'),
       },
       {
+        from: path.resolve(__dirname, 'print'),
+        to: path.resolve(__dirname, '.webpack/main/print'),
+      },
+      {
         from: path.resolve(__dirname, 'src/splash.html'),
         to: path.resolve(__dirname, '.webpack/main'),
       },
