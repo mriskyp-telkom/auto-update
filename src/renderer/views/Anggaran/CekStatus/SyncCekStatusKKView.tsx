@@ -23,6 +23,7 @@ import { IPC_ANGGARAN, IPC_SEKOLAH } from 'global/ipc'
 import { useAPIInfoConnection } from 'renderer/apis/utils'
 import { useAPIGetToken } from 'renderer/apis/token'
 import { useAPIGetAnggaran } from 'renderer/apis/anggaran'
+import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
 
 const ipcRenderer = window.require('electron').ipcRenderer
 const stepApi = ['infoConnection', 'getToken', 'getAnggaran']
@@ -48,6 +49,9 @@ const SyncCekStatusKKView: FC = () => {
   const setToken = useAppStore((state: AppStates) => state.setToken)
   const setAlertFailedSyncData = useAppStore(
     (state: AppStates) => state.setAlertFailedSyncData
+  )
+  const setIsFocused = useAnggaranStore(
+    (state: AnggaranStates) => state.setIsFocused
   )
   const uuidAnggaran = ipcRenderer.sendSync('utils:decodeUUID', idAnggaran)
 
@@ -116,12 +120,14 @@ const SyncCekStatusKKView: FC = () => {
       navigate(`/anggaran/mengulas/${encodeURIComponent(q_id_anggaran)}`)
     }
     if (statusKK === RESPONSE_CEK_STATUS.declined) {
+      setIsFocused(true)
       navigate(`/anggaran/menyusun/update/${encodeURIComponent(q_id_anggaran)}`)
     }
   }
 
   const handleBtnCancelAlert = () => {
     if (statusKK === RESPONSE_CEK_STATUS.approved) {
+      setIsFocused(true)
       navigate(`/anggaran/mengulas/${encodeURIComponent(q_id_anggaran)}`)
       return
     }
