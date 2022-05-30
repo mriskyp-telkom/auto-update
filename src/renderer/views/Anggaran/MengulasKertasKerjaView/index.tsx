@@ -164,11 +164,21 @@ const MengulasKertasKerjaView: FC = () => {
     if (responseMengulas === RESPONSE_PENGESAHAN.success) {
       navigate('/anggaran')
     }
-    if (responseMengulas === RESPONSE_PENGESAHAN.error_sync_status) {
+    if (
+      responseMengulas === RESPONSE_PENGESAHAN.error_sync_status ||
+      responseMengulas === RESPONSE_PENGESAHAN.error_lost_connection
+    ) {
       setOpenModalAjukan(false)
-      navigate(`/sync/anggaran/mengulas/${encodeURIComponent(q_id_anggaran)}`, {
-        state: { backgroundLocation: location },
-      })
+      if (!navigator.onLine) {
+        setAlertNoConnection(true)
+      } else {
+        navigate(
+          `/sync/anggaran/mengulas/${encodeURIComponent(q_id_anggaran)}`,
+          {
+            state: { backgroundLocation: location },
+          }
+        )
+      }
     }
     if (responseMengulas === RESPONSE_PENGESAHAN.error_multiple_device) {
       navigate('/registration')
