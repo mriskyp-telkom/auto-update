@@ -275,12 +275,12 @@ export class TataUsahaService {
       if (tType === 'line') {
         const msgTemplate = `Anda telah melakukan <b>${tarikTunai.bku} Rp. %s </b> pada %s`
         data = <TarikTunaiData>{
-          jumlah: tarikTunai.jumlahVolume,
+          jumlah: tarikTunai.saldoDibelanjakan,
           date: tarikTunai.tanggalTransaksi,
           messageTemplate: msgTemplate,
           message: format(
             msgTemplate,
-            tarikTunai.jumlahVolume,
+            tarikTunai.saldoDibelanjakan,
             tarikTunai.tanggalTransaksi
           ),
         }

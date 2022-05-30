@@ -13,6 +13,6 @@ export interface TarikTunaiBKU {
   jenisTransaksi: string
   jumlahVolume: number
   jumlahAnggaran: null
-  saldoDibelanjakan: 100
+  saldoDibelanjakan: number
   pajakWajibLapor: number | null
 }

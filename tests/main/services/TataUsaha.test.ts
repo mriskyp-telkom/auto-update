@@ -355,6 +355,7 @@ test('GetListKasUmum ', async () => {
       .update(KasUmum)
       .set({
         volume: 1000,
+        saldo: 1500,
         idRapbsPeriode: seedRapbsPeriode2.idRapbsPeriode,
         lastUpdate: new Date(),
       })
@@ -367,6 +368,7 @@ test('GetListKasUmum ', async () => {
       .update(KasUmum)
       .set({
         volume: 1001,
+        saldo: 1501,
         lastUpdate: new Date(),
       })
       .where(`id_kas_umum = :idKasUmum`, {
@@ -388,17 +390,17 @@ test('GetListKasUmum ', async () => {
 
   const list = res.unwrapOr(Array<TarikTunai>())
   expect(list[0].type).toBe('line')
-  expect(list[0].data.jumlah).toBe(1000)
+  expect(list[0].data.jumlah).toBe(1500)
   expect(list[0].data.date).toBe('2021-04-01')
   expect(list[0].data.message).toBe(
-    'Anda telah melakukan <b>Setor Tunai Rp. 1000 </b> pada 2021-04-01'
+    'Anda telah melakukan <b>Setor Tunai Rp. 1500 </b> pada 2021-04-01'
   )
 
   expect(list[1].type).toBe('line')
-  expect(list[1].data.jumlah).toBe(1001)
+  expect(list[1].data.jumlah).toBe(1501)
   expect(list[1].data.date).toBe('2021-04-22')
   expect(list[1].data.message).toBe(
-    'Anda telah melakukan <b>Tarik Tunai Rp. 1001 </b> pada 2021-04-22'
+    'Anda telah melakukan <b>Tarik Tunai Rp. 1501 </b> pada 2021-04-22'
   )
 
   expect(list[2].type).toBe('row')
