@@ -1,0 +1,1 @@
+Select *,:sekolah_id as id_sekolah,:id_anggaran,1 from mst_sekolah where soft_delete = 0 and sekolah_id=:sekolah_id
