@@ -107,8 +107,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
   const setNpsn = useAuthStore((state: AuthStates) => state.setNpsn)
   const setTahunAktif = useAuthStore((state: AuthStates) => state.setTahunAktif)
   const setKoreg = useAuthStore((state: AuthStates) => state.setKoreg)
-  const responseErrorSyncStatus =
-    RESPONSE_PENGESAHAN.error_sync_status as ResponseMengulas
+
   const setAlertMengulas = useAnggaranStore(
     (state: AnggaranStates) => state.setAlertMengulas
   )
@@ -359,6 +358,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
       RESPONSE_PENGESAHAN.error_sync_status,
       RESPONSE_PENGESAHAN.error_sync_status_final,
       RESPONSE_PENGESAHAN.error_multiple_device,
+      RESPONSE_PENGESAHAN.error_lost_connection,
     ]
     if (includes(stayInMengulas, response)) {
       closeModal()
@@ -404,16 +404,19 @@ const SyncMengulasKertasKerjaView: FC = () => {
     removeCacheData()
     removeCacheSyncData()
     setCurrentSyncId('')
+    let response = RESPONSE_PENGESAHAN.error_sync_status as ResponseMengulas
     if (counterRetryPengajuan < MAX_RETRY_PENGAJUAN_KK) {
       setCounterRetryPengajuan(counterRetryPengajuan + 1)
-      failedPengajuanKK(responseErrorSyncStatus)
+      if (!navigator.onLine) {
+        response = RESPONSE_PENGESAHAN.error_lost_connection as ResponseMengulas
+      }
     } else {
       setCounterRetryPengajuan(0)
       setSyncId('')
-      const response =
-        RESPONSE_PENGESAHAN.error_sync_status_final as ResponseMengulas
+      response = RESPONSE_PENGESAHAN.error_sync_status_final as ResponseMengulas
       failedPengajuanKK(response)
     }
+    failedPengajuanKK(response)
   }
 
   const checkSisaDana = () => {
@@ -460,7 +463,8 @@ const SyncMengulasKertasKerjaView: FC = () => {
     } else {
       if (
         counterRetryPengajuan > 0 &&
-        counterRetryPengajuan < MAX_RETRY_PENGAJUAN_KK
+        counterRetryPengajuan < MAX_RETRY_PENGAJUAN_KK &&
+        syncId !== ''
       ) {
         setEnablePreviousSyncStatus(true)
       } else {
@@ -782,30 +786,12 @@ const SyncMengulasKertasKerjaView: FC = () => {
     if (
       isInfoConnError ||
       isTokenError ||
+      isInfoSyncConnError ||
+      isSyncTokenError ||
       isCheckHddVolError ||
       isGetRefBarangError ||
       isGetRefKodeError ||
-      isGetRefRekeningError
-    ) {
-      const response = RESPONSE_PENGESAHAN.failed_sync_data as ResponseMengulas
-      directPage(response)
-      setResponseMengulas(response)
-      removeCacheData()
-      setAlertMengulas(true)
-    }
-  }, [
-    isInfoConnError,
-    isTokenError,
-    isCheckHddVolError,
-    isGetRefBarangError,
-    isGetRefKodeError,
-    isGetRefRekeningError,
-  ])
-
-  useEffect(() => {
-    if (
-      isInfoSyncConnError ||
-      isSyncTokenError ||
+      isGetRefRekeningError ||
       isSyncError ||
       isSyncAnggaranError ||
       isSyncRkasPenjabError ||
@@ -819,6 +805,12 @@ const SyncMengulasKertasKerjaView: FC = () => {
       displayErrorDialog()
     }
   }, [
+    isInfoConnError,
+    isTokenError,
+    isCheckHddVolError,
+    isGetRefBarangError,
+    isGetRefKodeError,
+    isGetRefRekeningError,
     isInfoSyncConnError,
     isSyncTokenError,
     isSyncError,

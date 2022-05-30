@@ -43,6 +43,7 @@ export const RESPONSE_PENGESAHAN = {
   error_sync_status: 'error_sync_status',
   error_sync_status_final: 'error_sync_status_final',
   error_multiple_device: 'error_multiple_device',
+  error_lost_connection: 'error_lost_connection',
 }
 
 export const ALERT_MENGULAS = {
@@ -101,6 +102,14 @@ export const ALERT_MENGULAS = {
     desc: `Silakan input ulang NPSN dan kode aktivasi untuk dapat melanjutkan menggunakan ARKAS pada komputer ini. Data yang sudah Anda masukkan tidak akan hilang.`,
     btnCancelText: 'Batal',
     btnActionText: `Registrasi Ulang`,
+  },
+  [RESPONSE_PENGESAHAN.error_lost_connection]: {
+    type: 'info',
+    icon: 'wifi_off',
+    title: `Koneksi Internet Terputus`,
+    desc: `Periksa kembali koneksi internet Anda lalu sinkronisasi ulang.`,
+    btnCancelText: 'Kembali',
+    btnActionText: `Sinkronisasi Ulang`,
   },
 }
 
