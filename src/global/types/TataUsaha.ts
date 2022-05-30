@@ -40,3 +40,28 @@ export interface CashWithdrawalRequest {
   date: Date
   amount: number
 }
+
+export interface GetListKasUmumRequest {
+  idAnggaran: string
+  idPeriode: number
+}
+
+export interface TarikTunaiData {
+  jumlah: number
+  date: string
+  messageTemplate: string
+  message: string
+  id: string
+  tanggal?: string | null
+  kegiatan: string
+  uraian: string
+  jenisTransaksi: string
+  anggaran?: number
+  dibelanjakan?: number | null
+  pajakWajibLapor?: number | null
+}
+
+export interface TarikTunai {
+  type: string
+  data: TarikTunaiData
+}
