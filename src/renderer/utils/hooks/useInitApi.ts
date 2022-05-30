@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 
-import { useAPIInfoConnection, useAPICheckHDDVol } from 'renderer/apis/utils'
 import { useAPIGetToken } from 'renderer/apis/token'
+import { useAPIGetConfigAll } from 'renderer/apis/config'
+import { useAPIInfoConnection, useAPICheckHDDVol } from 'renderer/apis/utils'
 
 import { AppStates, useAppStore } from 'renderer/stores/app'
 
@@ -11,7 +12,16 @@ import { IPC_CONFIG, IPC_SEKOLAH } from 'global/ipc'
 
 import syncToIPCMain from 'renderer/configs/ipc'
 
+const stepApi = {
+  infoConnection: 'infoConnection',
+  getToken: 'getToken',
+  checkHddVol: 'checkHddVol',
+  getConfigAll: 'getConfigAll',
+}
+
 const useInitApi = () => {
+  const [api, setApi] = useState('')
+
   const [npsn, setNpsn] = useState('')
   const [tahunAktif, setTahunAktif] = useState('')
   const [koreg, setKoreg] = useState('')
@@ -26,7 +36,10 @@ const useInitApi = () => {
     isSuccess: isInfoConnSuccess,
     isError: isInfoConnError,
     remove: removeInfoConnection,
-  } = useAPIInfoConnection({ retry: 0 })
+  } = useAPIInfoConnection({
+    retry: 0,
+    enabled: api === stepApi.infoConnection,
+  })
 
   const {
     data: dataToken,
@@ -40,7 +53,11 @@ const useInitApi = () => {
     },
     {
       retry: 0,
-      enabled: npsn !== '' && tahunAktif !== '' && koreg !== '',
+      enabled:
+        api === stepApi.getToken &&
+        npsn !== '' &&
+        tahunAktif !== '' &&
+        koreg !== '',
     }
   )
 
@@ -56,18 +73,54 @@ const useInitApi = () => {
     },
     {
       retry: 0,
-      enabled: hddVol !== '' && hddVolOld !== '' && tokenTemp !== '',
+      enabled:
+        api === stepApi.checkHddVol &&
+        hddVol !== '' &&
+        hddVolOld !== '' &&
+        tokenTemp !== '',
     }
   )
 
-  useEffect(() => {
-    if (dataToken !== undefined) {
-      setTokenTemp(dataToken?.data.access_token)
-      setToken(dataToken?.data.access_token)
-    }
-  }, [dataToken])
+  const {
+    data: dataConfigAll,
+    isSuccess: isGetConfigSuccess,
+    isError: isGetConfigError,
+    remove: removeConfigAll,
+  } = useAPIGetConfigAll({
+    retry: 0,
+    enabled: api === stepApi.getConfigAll,
+  })
+
+  const removeCacheData = () => {
+    removeInfoConnection()
+    removeToken()
+    removeCheckHddVol()
+    removeConfigAll()
+  }
 
   useEffect(() => {
+    if (isCheckHddVolSuccess) {
+      setApi(stepApi.getConfigAll)
+    }
+  }, [isCheckHddVolSuccess])
+
+  useEffect(() => {
+    if (isTokenSuccess) {
+      setTokenTemp(dataToken?.data.access_token)
+      setToken(dataToken?.data.access_token)
+      setApi(stepApi.checkHddVol)
+    }
+  }, [isTokenSuccess])
+
+  useEffect(() => {
+    if (isInfoConnSuccess) {
+      setApi(stepApi.getToken)
+    }
+  }, [isInfoConnSuccess])
+
+  useEffect(() => {
+    removeCacheData()
+
     const tahunAktif = syncToIPCMain(
       IPC_CONFIG.getConfig,
       APP_CONFIG.tahunAktif
@@ -80,25 +133,36 @@ const useInitApi = () => {
     setTahunAktif(tahunAktif)
     setHddVol(hddVol)
     setHddVolOld(hddVolOld)
+
+    setApi(stepApi.infoConnection)
   }, [])
 
-  return {
-    isSuccess: isInfoConnSuccess && isTokenSuccess && isCheckHddVolSuccess,
+  const returnValue = {
+    isSuccess:
+      isInfoConnSuccess &&
+      isTokenSuccess &&
+      isCheckHddVolSuccess &&
+      isGetConfigSuccess,
+    isError:
+      isInfoConnError || isTokenError || isCheckHddVolError || isGetConfigError,
+    stepApi: api,
     data: {
       infoConnection,
       isInfoConnError,
       isInfoConnSuccess,
-      removeInfoConnection,
       dataToken,
       isTokenError,
       isTokenSuccess,
-      removeToken,
       dataHDDVol,
       isCheckHddVolError,
       isCheckHddVolSuccess,
-      removeCheckHddVol,
+      dataConfigAll,
+      isGetConfigError,
+      isGetConfigSuccess,
     },
   }
+
+  return returnValue
 }
 
 export default useInitApi
