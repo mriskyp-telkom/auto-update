@@ -10,6 +10,7 @@ import {
   GetTotalAnggaran,
   UpdateIsPengesahan,
   UpdateTanggalPengajuan,
+  ResetAnggaranAfterPengajuan,
 } from 'main/repositories/AnggaranRepository'
 import { GetConfig } from 'main/repositories/ConfigRepository'
 import CommonUtils from 'main/utils/CommonUtils'
@@ -162,6 +163,13 @@ module.exports = {
       const id_tahap = data.id_tahap
       const id_anggaran = data.id_anggaran
       e.returnValue = await GetTotalAnggaran(id_tahap, id_anggaran)
+    }
+  ),
+
+  resetAnggaranAfterPengajuan: ipcMain.on(
+    IPC_ANGGARAN.resetAnggaranAfterPengajuan,
+    async (e, idAnggaran: string) => {
+      e.returnValue = await ResetAnggaranAfterPengajuan(idAnggaran)
     }
   ),
 }

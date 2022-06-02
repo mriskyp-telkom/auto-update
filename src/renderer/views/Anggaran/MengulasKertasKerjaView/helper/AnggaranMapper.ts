@@ -29,18 +29,12 @@ export const SetterAnggaranParam = (data: Anggaran): ParamAnggaranType => {
   dataParamAnggaran.tanggal_pengajuan = tanggalPengajuanFormatted
 
   // as for now, menunggu konfirmasi mas fuad terkait tanggal pengesahan null
-  dataParamAnggaran.tanggal_pengesahan =
-    data.tanggalPengesahan != null
-      ? CommonUtils.formatDateToString(
-          data?.tanggalPengesahan,
-          'YYYY-MM-DD HH:mm:ss'
-        )
-      : null
+  dataParamAnggaran.tanggal_pengesahan = null
 
   // dataParamAnggaran.tanggal_pengesahan = tanggalPengesahan
   dataParamAnggaran.is_approve = data?.isApprove
   dataParamAnggaran.is_revisi = data?.isRevisi
-  dataParamAnggaran.alasan_penolakan = data?.alasanPenolakan
+  dataParamAnggaran.alasan_penolakan = null
   dataParamAnggaran.is_aktif = data?.isAktif
   dataParamAnggaran.soft_delete = data?.softDelete
 

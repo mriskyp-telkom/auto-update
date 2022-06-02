@@ -16,6 +16,7 @@ export const IPC_ANGGARAN = {
   upsertAnggaran: `${ANGGARAN}:upsertAnggaran`,
   updateIsPengesahan: `${ANGGARAN}:updateIsPengesahan`,
   UpdateTanggalPengajuan: `${ANGGARAN}:UpdateTanggalPengajuan`,
+  resetAnggaranAfterPengajuan: `${ANGGARAN}:ResetAnggaranAfterPengajuan`,
 }
 
 export const IPC_PENJAB = {

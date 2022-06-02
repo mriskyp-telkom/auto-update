@@ -126,8 +126,8 @@ const SyncCekStatusKKView: FC = () => {
   }
 
   const handleBtnCancelAlert = () => {
+    setIsFocused(true)
     if (statusKK === RESPONSE_CEK_STATUS.approved) {
-      setIsFocused(true)
       navigate(`/anggaran/mengulas/${encodeURIComponent(q_id_anggaran)}`)
       return
     }
