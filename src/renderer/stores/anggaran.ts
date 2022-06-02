@@ -54,6 +54,9 @@ export interface AnggaranStates extends State {
 
   syncId: string
   setSyncId: (syncId: string) => void
+
+  tanggalPengajuan: Date
+  setTanggalPengajuan: (tanggalPengajuan: Date) => void
 }
 
 export const useAnggaranStore = create<AnggaranStates>((set) => ({
@@ -104,4 +107,7 @@ export const useAnggaranStore = create<AnggaranStates>((set) => ({
 
   syncId: '',
   setSyncId: (syncId) => set(() => ({ syncId })),
+
+  tanggalPengajuan: null,
+  setTanggalPengajuan: (tanggalPengajuan) => set(() => ({ tanggalPengajuan })),
 }))

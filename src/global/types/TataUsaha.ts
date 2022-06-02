@@ -32,7 +32,7 @@ export interface GetTotalSaldoRequest {
 
 export interface GetTotalAnggaranRequest {
   idAnggaran: string
-  idPeriode: number[]
+  idPeriode: number
 }
 
 export interface CashWithdrawalRequest {

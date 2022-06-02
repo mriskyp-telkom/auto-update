@@ -43,16 +43,16 @@ module.exports = {
       e.returnValue = await tataUsahaService.GetTotalSaldo(request)
     }
   ),
-  getTotalSaldoDibelanjakan: ipcMain.on(
-    IPC_TATA_USAHA.getTotalSaldoDibelanjakan,
+  getTotalSudahDibelanjakan: ipcMain.on(
+    IPC_TATA_USAHA.getTotalSudahDibelanjakan,
     async (e, request: GetTotalAnggaranRequest) => {
-      e.returnValue = await tataUsahaService.GetTotalSaldoDibelanjakan(request)
+      e.returnValue = await tataUsahaService.GetTotalSudahDibelanjakan(request)
     }
   ),
-  getTotalAnggaranPerBulan: ipcMain.on(
-    IPC_TATA_USAHA.getTotalAnggaranPerBulan,
+  getTotalBisaDibelanjakan: ipcMain.on(
+    IPC_TATA_USAHA.getTotalBisaDibelanjakan,
     async (e, request: GetTotalAnggaranRequest) => {
-      e.returnValue = await tataUsahaService.GetTotalAnggaranPerBulan(request)
+      e.returnValue = await tataUsahaService.GetTotalBisaDibelanjakan(request)
     }
   ),
   getTotalPerluDianggarkanUlang: ipcMain.on(

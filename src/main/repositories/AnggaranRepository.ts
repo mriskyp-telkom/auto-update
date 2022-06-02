@@ -375,3 +375,18 @@ export const GetTotalAnggaran = async (
   }
   return {} as AnggaranTotal
 }
+
+export const ResetAnggaranAfterPengajuan = async (
+  idAnggaran: string
+): Promise<UpdateResult> => {
+  return await createQueryBuilder()
+    .update(Anggaran)
+    .set({
+      isPengesahan: 0,
+      tanggalPengesahan: null,
+      alasanPenolakan: null,
+      lastUpdate: new Date(),
+    })
+    .where('id_anggaran = :idAnggaran', { idAnggaran })
+    .execute()
+}

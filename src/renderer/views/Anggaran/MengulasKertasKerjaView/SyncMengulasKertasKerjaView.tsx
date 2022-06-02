@@ -128,6 +128,14 @@ const SyncMengulasKertasKerjaView: FC = () => {
 
   const setSyncId = useAnggaranStore((state: AnggaranStates) => state.setSyncId)
 
+  const tanggalPengajuan = useAnggaranStore(
+    (state: AnggaranStates) => state.tanggalPengajuan
+  )
+
+  const setTanggalPengajuan = useAnggaranStore(
+    (state: AnggaranStates) => state.setTanggalPengajuan
+  )
+
   const setToken = useAppStore((state: AppStates) => state.setToken)
 
   const [sekolahId, setSekolahId] = useState(null)
@@ -154,7 +162,6 @@ const SyncMengulasKertasKerjaView: FC = () => {
   const [listRkasDetail, setListRkasDetail] =
     useState<ParamRkasDetailType[]>(null)
   const [listRkasPtk, setListRkasPtk] = useState<ParamRkasPtkType[]>(null)
-  const [tanggalPengajuan, setTanggalPengajuan] = useState(null)
 
   const closeModal = () => {
     navigate(-1)
@@ -774,7 +781,13 @@ const SyncMengulasKertasKerjaView: FC = () => {
           tanggalPengajuan
         )
 
+        ipcRenderer.sendSync(
+          IPC_ANGGARAN.resetAnggaranAfterPengajuan,
+          idAnggaran
+        )
+
         const response = RESPONSE_PENGESAHAN.success as ResponseMengulas
+        setTanggalPengajuan(null)
         setResponseMengulas(response)
         directPage(response)
         setAlertMengulas(true)

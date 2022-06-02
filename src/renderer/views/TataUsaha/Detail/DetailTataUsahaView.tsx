@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import TabelTataUsahaView from './TabelTataUsahaView'
@@ -15,10 +15,14 @@ import { DASHBOARD_BKU_PAGE_URL } from 'renderer/constants/routes'
 import { formatDateTimeStatus } from 'renderer/utils/date-formatting'
 
 import clsx from 'clsx'
+import { DATA_BULAN } from 'renderer/constants/general'
+import syncToIpcMain from 'renderer/configs/ipc'
+import { IPC_ANGGARAN } from 'global/ipc'
 
 const DetailTataUsahaView: FC = () => {
   const navigate = useNavigate()
   const { q_id_anggaran, q_id_periode } = useParams()
+  const [tahun, setTahun] = useState('')
   const lastUpdate = new Date()
   const cardTotalDanaDataProps = {
     idAnggaran: q_id_anggaran,
@@ -27,6 +31,12 @@ const DetailTataUsahaView: FC = () => {
   const handleBackToBeranda = () => {
     navigate(DASHBOARD_BKU_PAGE_URL)
   }
+  const bulan = DATA_BULAN.find((b: any) => b.id === parseInt(q_id_periode))
+
+  useEffect(() => {
+    const anggaran = syncToIpcMain(IPC_ANGGARAN.getAnggaranById, q_id_anggaran)
+    setTahun(anggaran.tahunAnggaran)
+  }, [])
 
   return (
     <div>
@@ -48,7 +58,8 @@ const DetailTataUsahaView: FC = () => {
             </span>
           </div>
           <div className="flex items-center text-[22px] font-semibold">
-            BKU Maret 2021
+            BKU <span className="capitalize mr-1 ml-1"> {bulan?.name} </span>{' '}
+            {tahun}
             <Icon
               as="button"
               color="default"
@@ -63,7 +74,7 @@ const DetailTataUsahaView: FC = () => {
             className="text-base font-semibold text-gray-600 mb-[57px]"
             style={{ display: 'inline-block' }}
           >
-            Bos reguler 2021
+            Bos reguler {tahun}
           </div>
         </span>
         <span>
@@ -104,9 +115,12 @@ const DetailTataUsahaView: FC = () => {
         </div>
         <div className="flex pb-6">
           <CardTotalDanaView class="mr-4" data={cardTotalDanaDataProps} />
-          <CardDanaPembelanjaanView />
+          <CardDanaPembelanjaanView data={cardTotalDanaDataProps} />
         </div>
-        <TabelTataUsahaView />
+        <TabelTataUsahaView
+          idAnggaran={q_id_anggaran}
+          idPeriode={parseInt(q_id_periode)}
+        />
       </div>
     </div>
   )
