@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "ARKAS"
-#define MyAppVersion "4.00"
+#define MyAppVersion "4.0.0"
 #define MyAppNameShort "ARKAS 4"
 #define MyAppPublisher "Kemdikbudristek"
 #define MyAppURL "http://rkas.kemdikbud.go.id/"
@@ -45,8 +45,8 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "..\out\Arkas-win32-x64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
-Source: "..\print\query"; DestDir: "{commonappdata}\Arkas\query"; Flags: ignoreversion recursesubdirs
-Source: "..\print\report"; DestDir: "{commonappdata}\Arkas\report"; Flags: ignoreversion recursesubdirs
+Source: "..\print\query\*"; DestDir: "{commonappdata}\Arkas\query"; Flags: ignoreversion recursesubdirs
+Source: "..\print\report\*"; DestDir: "{commonappdata}\Arkas\report"; Flags: ignoreversion recursesubdirs
 
 [Icons]
 Name: "{commonprograms}\{#MyAppNameShort}"; Filename: "{app}\{#MyAppExeName}"
