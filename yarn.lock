@@ -1369,6 +1369,11 @@
   resolved "https://registry.npmjs.org/@headlessui/react/-/react-1.4.3.tgz"
   integrity "sha1-93xrtctKYUpdcw+4gMq1AtSKvzc= sha512-n2IQkaaw0aAAlQS5MEXsM4uRK+w18CrM72EqnGRl/UBOQeQajad8oiKXR9Nk15jOzTFQjpxzrZMf1NxHidFBiw=="
 
+"@headlessui/react@1.6.1":
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/@headlessui/react/-/react-1.6.1.tgz#d822792e589aac005462491dd62f86095e0c3bef"
+  integrity sha512-gMd6uIs1U4Oz718Z5gFoV0o/vD43/4zvbyiJN9Dt7PK9Ubxn+TmJwTmYwyNJc5KxxU1t0CmgTNgwZX9+4NjCnQ==
+
 "@headlessui/react@^1.5.0":
   version "1.5.0"
   resolved "https://registry.npmjs.org/@headlessui/react/-/react-1.5.0.tgz"
@@ -2564,12 +2569,12 @@
   resolved "https://gitlab.com/api/v4/projects/25182406/packages/npm/@wartek-id/tailwind-config/-/@wartek-id/tailwind-config-0.7.0.tgz"
   integrity "sha1-lv/FNzqbZ5u6NOJGyusXEwOKeNc= sha512-qZSjaUfXJWveuNtTryMB4H5wlmf+NWSXA37faismUMiRsEGkdsEpD55UN9H+M5h+L9B7QOjdH/sW2H5Gvlt+/g=="
 
-"@wartek-id/tooltip@^1.1.2":
-  version "1.3.0"
-  resolved "https://gitlab.com/api/v4/projects/25182406/packages/npm/@wartek-id/tooltip/-/@wartek-id/tooltip-1.3.0.tgz"
-  integrity "sha1-ThzAvnrLrdqla/9dsLENdFAtE44= sha512-uxCoKtbkElfJgykgSn4+2EWl5c0qTjPNzlUGYOpYz/CUrxNN7Zwj9tmHf0JnmX7hQkdLnTw44TngpvxAe5uIyA=="
+"@wartek-id/tooltip@^1.4.0":
+  version "1.4.0"
+  resolved "https://gitlab.com/api/v4/projects/25182406/packages/npm/@wartek-id/tooltip/-/@wartek-id/tooltip-1.4.0.tgz#795abc3aec080b1c06917aa0bb99da756660f6d6"
+  integrity sha1-eVq8OuwICxwGkXqgu5nadWZg9tY=
   dependencies:
-    "@headlessui/react" "1.4.3"
+    "@headlessui/react" "1.6.1"
     clsx "^1.1.1"
     react-popper "^2.2.5"
 
