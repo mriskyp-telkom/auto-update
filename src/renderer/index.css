@@ -58,10 +58,16 @@ body {
   border: 1px solid #808489;
   box-shadow: unset !important;
   border-radius: 4px;
+  padding: 8px !important;
 }
 
 .find-case {
   display: none !important;
+}
+
+input.find-input {
+  background: unset !important;
+  border: unset !important;
 }
 
 /*
