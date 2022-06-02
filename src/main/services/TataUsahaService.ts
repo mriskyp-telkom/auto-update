@@ -16,7 +16,7 @@ import { AktivasiBkuRepository } from 'main/repositories/AktivasiBkuRepository'
 import { KasUmumRepository } from 'main/repositories/KasUmumRepository'
 import { Anggaran, Bku } from 'main/types/TataUsaha'
 import { AktivasiBku } from 'main/models/AktivasiBku'
-import { CONFIG, STATUS_BKU_PERTAHUN } from 'global/constants'
+import { CONFIG, KAS_UMUM_TYPE, STATUS_BKU_PERTAHUN } from 'global/constants'
 import { GetMonth, GetMonthName } from 'main/utils/Months'
 import { GetStatusAktivasiBku, GetStatusAnggaran } from 'global/status'
 import { Anggaran as AnggaranEntity } from 'main/models/Anggaran'
@@ -256,12 +256,12 @@ export class TataUsahaService {
         case 15:
         case 24:
         case 35:
-          return 'row'
+          return KAS_UMUM_TYPE.row
         case 3:
         case 5:
         case 23:
         case 25:
-          return 'line'
+          return KAS_UMUM_TYPE.line
         default:
           return ''
       }
@@ -280,7 +280,7 @@ export class TataUsahaService {
     for (const tarikTunai of tarikTunaiList) {
       let data: TarikTunaiData
       const tType = getComponentType(tarikTunai.idRefBku)
-      if (tType === 'line') {
+      if (tType === KAS_UMUM_TYPE.line) {
         const msgTemplate = `Anda telah melakukan <b>${tarikTunai.bku} Rp. %s </b> pada %s`
         data = <TarikTunaiData>{
           jumlah: tarikTunai.saldoDibelanjakan,
@@ -292,7 +292,7 @@ export class TataUsahaService {
             tarikTunai.tanggalTransaksi
           ),
         }
-      } else if (tType === 'row') {
+      } else if (tType === KAS_UMUM_TYPE.row) {
         data = <TarikTunaiData>{
           id: tarikTunai.id,
           tanggal: tarikTunai.tanggalTransaksi,
