@@ -286,7 +286,7 @@ const MengulasKertasKerjaView: FC = () => {
         <span>
           {getPanduan()}
           <div className="flex justify-end pt-5 pb-3">
-            {false && <ButtonCariComponent />}
+            <ButtonCariComponent />
             {showButtonEdit() && (
               <Button
                 color="white"

@@ -1,24 +1,25 @@
-// const remote = window.require('@electron/remote')
-// const FindInPage = window.require('electron-find').FindInPage
-// const ipcRenderer = window.require('electron').ipcRenderer
+import * as remote from '@electron/remote'
+import { FindInPage } from 'electron-find'
 
-// export const openFindText = () =>
-//   remote.getCurrentWebContents().send('open-find')
+const ipcRenderer = window.require('electron').ipcRenderer
 
-// export const closeFindText = () =>
-//   remote.getCurrentWebContents().send('close-find')
+export const openFindText = () =>
+  remote.getCurrentWebContents().send('open-find')
 
-// export const initializeFindText = (element?: string) => {
-//   const findInPage = new FindInPage(remote.getCurrentWebContents(), {
-//     parentElement: document.getElementById(element),
-//     inputFocusColor: '#808489',
-//   })
+export const closeFindText = () =>
+  remote.getCurrentWebContents().send('close-find')
 
-//   ipcRenderer.on('open-find', () => {
-//     findInPage.openFindWindow()
-//   })
+export const initializeFindText = (element?: string) => {
+  const findInPage = new FindInPage(remote.getCurrentWebContents(), {
+    parentElement: document.getElementById(element),
+    inputFocusColor: '#808489',
+  })
 
-//   ipcRenderer.on('close-find', () => {
-//     findInPage.closeFindWindow()
-//   })
-// }
+  ipcRenderer.on('open-find', () => {
+    findInPage.openFindWindow()
+  })
+
+  ipcRenderer.on('close-find', () => {
+    findInPage.closeFindWindow()
+  })
+}
