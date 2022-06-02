@@ -8,18 +8,36 @@ import { KKCardDashboardType } from 'renderer/types/AnggaranType'
 
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from '@wartek-id/tabs'
 import { ID_SUMBER_DANA } from 'renderer/constants/anggaran'
+import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
 
 const ipcRenderer = window.require('electron').ipcRenderer
 
 const DashboardAnggaranView: FC = () => {
   const [bosReguler, setBosReguler] = useState([])
-  useEffect(() => {
+  const isFocused = useAnggaranStore((state: AnggaranStates) => state.isFocused)
+
+  const setIsFocused = useAnggaranStore(
+    (state: AnggaranStates) => state.setIsFocused
+  )
+
+  const fetchData = () => {
     const anggaranBOSReguler = ipcRenderer.sendSync(
       'anggaran:getAnggaran',
       ID_SUMBER_DANA.BOS_REGULER
     )
     setBosReguler(anggaranBOSReguler)
+    setIsFocused(false)
+  }
+
+  useEffect(() => {
+    fetchData()
   }, [])
+
+  useEffect(() => {
+    if (isFocused) {
+      fetchData()
+    }
+  }, [isFocused])
 
   return (
     <PageLayout>
