@@ -40,6 +40,7 @@ import {
   NPSN_ERROR_NOT_REGISTERED,
   KODE_AKTIVASI_ERROR_WRONG,
 } from 'renderer/constants/errorForm'
+import { SetConfigRequest } from 'global/types/Config'
 
 const ipcRenderer = window.require('electron').ipcRenderer
 const stepApi = ['infoConnection', 'checkActivation']
@@ -175,7 +176,11 @@ const RegistrationView: FC = () => {
       removeInfoConnection()
       removeCheckActivation()
       if (result === 1) {
-        ipcRenderer.sendSync('config:setConfig', APP_CONFIG.hddVolOld, hddVol)
+        const data: SetConfigRequest = {
+          varname: APP_CONFIG.hddVolOld,
+          varvalue: hddVol,
+        }
+        ipcRenderer.sendSync('config:setConfig', data)
         response_status = 'sukses'
         if (koregInvalid === '0' || koregInvalid === '') {
           next_route = '/create-account/new'

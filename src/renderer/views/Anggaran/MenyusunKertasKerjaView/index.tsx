@@ -30,13 +30,18 @@ import {
 import { APP_CONFIG } from 'renderer/constants/appConfig'
 
 import { AlertType } from 'renderer/types/ComponentType'
+
 import { formatDateTimeStatus } from 'renderer/utils/date-formatting'
+import { copyKertasKerja } from 'renderer/utils/copy-writing'
+
+import findIndex from 'lodash/findIndex'
 
 const MenyusunKertasKerjaView: FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const { q_mode, q_id_anggaran } = useParams()
 
+  const [indexTab, setIndexTab] = useState(0)
   const [isSync, setIsSync] = useState(false)
   const [openModalInit, setOpenModalInit] = useState(false)
   const [jumlahPagu, setJumlahPagu] = useState(0)
@@ -49,6 +54,7 @@ const MenyusunKertasKerjaView: FC = () => {
   const [idAnggaran, setIdAnggaran] = useState(null)
   const [lastUpdate, setLastUpdate] = useState(null)
   const [anggaranDetail, setAnggaranDetail] = useState(null)
+  const [validasiFlagPeriode, setvalidasiFlagPeriode] = useState(new Map())
 
   const alertMengulas = useAnggaranStore(
     (state: AnggaranStates) => state.alertMengulas
@@ -228,6 +234,42 @@ const MenyusunKertasKerjaView: FC = () => {
     }
   }, [tahunAktif, idAnggaranBefore, penggunaId])
 
+  useEffect(() => {
+    if (q_id_anggaran !== '') {
+      const res = syncToIPCMain(
+        IPC_KK.getListValidasiReferensiPeriode,
+        decodeURIComponent(q_id_anggaran)
+      )
+
+      const m = new Map()
+      if (res?.error) {
+        // TODO: should display error modal
+      } else {
+        if (res?.value) {
+          let isSet = false
+          for (const v of res.value) {
+            m.set(v.idPeriode, v.isValidate)
+            if (v.isValidate && !isSet) {
+              const index = findIndex(DATA_BULAN, ['id', v.idPeriode])
+              isSet = true
+              setIndexTab(index)
+            }
+          }
+          setvalidasiFlagPeriode(m)
+        }
+      }
+    }
+  }, [])
+
+  const checkFlag = (id: number): boolean => {
+    const v = validasiFlagPeriode.get(id)
+    if (v !== undefined && v > 0) {
+      return true
+    }
+
+    return false
+  }
+
   return (
     <div>
       <div className="flex justify-between pt-10 pb-5 px-10 bg-gray-0">
@@ -248,7 +290,7 @@ const MenyusunKertasKerjaView: FC = () => {
             </span>
           </div>
           <div className="flex items-center text-[22px] font-semibold">
-            Menyusun RKAS
+            Menyusun {copyKertasKerja()}
             <Link
               to={`/form/penanggung-jawab/update/${encodeURIComponent(
                 idAnggaran
@@ -294,12 +336,7 @@ const MenyusunKertasKerjaView: FC = () => {
               </Button>
             </Link>
             <Link to={`/anggaran/mengulas/${encodeURIComponent(idAnggaran)}`}>
-              <Button
-                color="black"
-                size="md"
-                variant="solid"
-                disabled={responseMengulas !== null}
-              >
+              <Button color="black" size="md" variant="solid">
                 Selesai
               </Button>
             </Link>
@@ -352,11 +389,18 @@ const MenyusunKertasKerjaView: FC = () => {
             </div>
           </span>
         </div>
-        <Tabs className="w-full">
+        <Tabs className="w-full" defaultIndex={indexTab}>
           <div className="shadow pt-[14px]">
             <TabList style={{ marginLeft: 0 }}>
               {DATA_BULAN.map((bulan) => (
-                <Tab key={bulan.id} className="capitalize-first">
+                <Tab
+                  key={bulan.id}
+                  className={
+                    checkFlag(bulan.id)
+                      ? 'capitalize-first text-red-600'
+                      : 'capitalize-first'
+                  }
+                >
                   {bulan.name}
                 </Tab>
               ))}
@@ -377,11 +421,13 @@ const MenyusunKertasKerjaView: FC = () => {
       <AlertDialogComponent
         type="warning"
         icon="file_copy"
-        title="Salin dari RKAS sebelumnya?"
-        desc="Anda dapat menyalin isi RKAS pada tahun anggaran sebelumnya ke lembar ini atau membuat RKAS baru."
+        title={`Salin dari ${copyKertasKerja()} sebelumnya?`}
+        desc={`Anda dapat menyalin isi ${copyKertasKerja(
+          STATUS_KERTAS_KERJA.approved
+        )} pada tahun anggaran sebelumnya ke lembar ini atau membuat ${copyKertasKerja()} baru.`}
         isOpen={openModalInit}
         btnCancelText="Buat Baru"
-        btnActionText="Salin RKAS"
+        btnActionText={`Salin ${copyKertasKerja()}`}
         onCancel={() => handleCreateKertasKerja(MODE_CREATE_KERTAS_KERJA.new)}
         onSubmit={() => handleCreateKertasKerja(MODE_CREATE_KERTAS_KERJA.salin)}
       />
@@ -400,7 +446,7 @@ const MenyusunKertasKerjaView: FC = () => {
         />
       )}
       <SyncDialogComponent
-        title="Menyalin RKAS..."
+        title={`Menyalin ${copyKertasKerja()}...`}
         subtitle="Mohon tunggu sebentar."
         percentage={50}
         isOpen={isSync}

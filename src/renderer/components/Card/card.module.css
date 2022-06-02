@@ -1,0 +1,8 @@
+.point ul {
+  list-style: disc inside;
+}
+
+.point ul li span {
+  position: relative;
+  left: -6px;
+}

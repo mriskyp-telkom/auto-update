@@ -1,12 +1,12 @@
 import React, { FC } from 'react'
 
-import CardPanduanAnggaranView from 'renderer/views/Anggaran/CardPanduanAnggaranView'
+import PanduanCardComponent from 'renderer/components/Card/PanduanCardComponent'
 
 import { Icon } from '@wartek-id/icon'
 
 const PanduanMengulasKKView: FC = () => {
   return (
-    <CardPanduanAnggaranView type="info">
+    <PanduanCardComponent type="info">
       <>
         <div className="mb-2">
           <Icon
@@ -41,7 +41,7 @@ const PanduanMengulasKKView: FC = () => {
           </li>
         </ul>
       </>
-    </CardPanduanAnggaranView>
+    </PanduanCardComponent>
   )
 }
 

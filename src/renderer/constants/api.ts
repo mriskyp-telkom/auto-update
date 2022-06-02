@@ -1,11 +1,13 @@
 import { ParamSalur } from 'renderer/types/apis/UtilType'
 
+//auth
 export const API_GET_TOKEN = '/token'
 
 //util
 export const API_CHECK_HDD_VOL = (hdd_vol: string, hdd_vol_old: string) =>
   `/api/utils/check_hdd_vol/${hdd_vol}/${hdd_vol_old}`
-
+export const API_GET_CONFIG_ALL = `/api/config/all`
+export const API_GET_CONFIG = (varname: string) => `/api/config/all/${varname}`
 export const API_INFO_CONNECTION = '/api/utils/info_connection'
 
 export const API_CHECK_ACTIVATION = (
@@ -22,10 +24,6 @@ export const API_GET_REFERENSI = (referensi: string, lastUpdate: string) =>
 
 export const API_GET_REFERENSI_WILAYAH = (kodeWilayah: string) =>
   `/api/referensi/wilayah/${kodeWilayah}`
-
-export const API_GET_CONFIG_ALL = `/api/config/all`
-
-export const API_GET_CONFIG = (varname: string) => `/api/config/all/${varname}`
 
 export const API_REGISTRATION = '/api/user/registration'
 
@@ -46,11 +44,11 @@ export const API_POST_ANGGARAN = `/api/anggaran`
 
 // rkas
 export const API_POST_RKAS = `/api/rkas`
-
 export const API_POST_RKAS_PENJAB = `/api/rkas/penjab`
-
 export const API_POST_RKAS_DETAIL = `/api/rkas/detail`
-
 export const API_POST_RKAS_PTK = `/api/rkas/ptk`
-
 export const API_POST_RKAS_FINAL = `/api/rkas/final`
+
+//check-sync
+export const API_GET_SYNC_STATUS = (syncGuid: string) =>
+  `/api/sync/status/${syncGuid}`

@@ -31,6 +31,11 @@ import syncToIPCMain from 'renderer/configs/ipc'
 
 import { AlertType } from 'renderer/types/ComponentType'
 import { IPC_ANGGARAN } from 'global/ipc'
+import { formatDateToString } from 'renderer/utils/date-formatting'
+
+import { copyKertasKerja } from 'renderer/utils/copy-writing'
+import AlertNoConnection from 'renderer/views/AlertNoConnection'
+import { AppStates, useAppStore } from 'renderer/stores/app'
 
 const MengulasKertasKerjaView: FC = () => {
   const location = useLocation()
@@ -38,10 +43,12 @@ const MengulasKertasKerjaView: FC = () => {
 
   const { q_id_anggaran } = useParams()
   const idAnggaran = decodeURIComponent(q_id_anggaran)
+
   const [openModalAjukan, setOpenModalAjukan] = useState(false)
   const [modeMengulas, setModeMengulas] = useState(MODE_MENGULAS.tahap)
   const [tahap, setTahap] = useState(1)
   const [anggaran, setAnggaran] = useState(0)
+  const [detailAnggaran, setDetailAnggaran] = useState(null)
   const [totalAnggaran, setTotalAnggaran] = useState(0)
   const [sisaDana, setSisaDana] = useState(0)
   const [tahun, setTahun] = useState(null)
@@ -60,23 +67,139 @@ const MengulasKertasKerjaView: FC = () => {
     (state: AnggaranStates) => state.responseMengulas
   )
 
+  const setCounterRetryPengajuan = useAnggaranStore(
+    (state: AnggaranStates) => state.setCounterRetryPengajuan
+  )
+
+  const setAlertNoConnection = useAppStore(
+    (state: AppStates) => state.setAlertNoConnection
+  )
+
+  const isFocused = useAnggaranStore((state: AnggaranStates) => state.isFocused)
+
+  const setIsFocused = useAnggaranStore(
+    (state: AnggaranStates) => state.setIsFocused
+  )
+
+  const isHideBtnCancel =
+    responseMengulas !== RESPONSE_PENGESAHAN.success &&
+    responseMengulas !== RESPONSE_PENGESAHAN.error_sync_status &&
+    responseMengulas !== RESPONSE_PENGESAHAN.error_multiple_device
+
   const handleBackToBeranda = () => {
     navigate('/anggaran')
   }
 
+  const handleBtnEdit = () => {
+    navigate(`/anggaran/menyusun/update/${encodeURIComponent(q_id_anggaran)}`)
+  }
+
   const handleAjukanPengesahan = () => {
     setOpenModalAjukan(false)
-    navigate(`/sync/anggaran/mengulas/${q_id_anggaran}`, {
+    navigate(`/sync/anggaran/mengulas/${encodeURIComponent(q_id_anggaran)}`, {
       state: { backgroundLocation: location },
     })
   }
 
-  useEffect(() => {
+  const handleChangeTabs = (index: number) => {
+    const selectedTahap = index + 1
+    setTahap(selectedTahap)
+    const anggaran = syncToIPCMain(IPC_ANGGARAN.getTotalAnggaran, {
+      id_tahap: selectedTahap,
+      id_anggaran: idAnggaran,
+    })
+    setAnggaran(anggaran?.total ?? 0)
+  }
+
+  const handlePengesahan = () => {
+    setAlertNoConnection(false)
+    setTimeout(() => {
+      if (!navigator.onLine) {
+        setAlertNoConnection(true)
+      } else {
+        setOpenModalAjukan(true)
+      }
+    }, 300)
+  }
+
+  const getPanduan = () => {
+    if (
+      detailAnggaran?.status === STATUS_KERTAS_KERJA.draft ||
+      detailAnggaran?.status === STATUS_KERTAS_KERJA.not_approved
+    ) {
+      return <PanduanMengulasKKView />
+    }
+    if (detailAnggaran?.status === STATUS_KERTAS_KERJA.waiting_approval) {
+      return (
+        <PanduanCekStatusKKView
+          tanggalPengajuan={formatDateToString(
+            detailAnggaran?.tanggalPengajuan,
+            'DD/MM/YYYY'
+          )}
+          idAnggaran={idAnggaran}
+        />
+      )
+    }
+    if (detailAnggaran?.status === STATUS_KERTAS_KERJA.approved) {
+      return <PanduanSuccessPengesahanKKView />
+    }
+  }
+
+  const showButtonEdit = () => {
+    if (detailAnggaran?.status === STATUS_KERTAS_KERJA.draft) {
+      return true
+    }
+    if (detailAnggaran?.status === STATUS_KERTAS_KERJA.not_approved) {
+      return true
+    }
+    return false
+  }
+
+  const handleChangeMode = (value: string) => {
+    setModeMengulas(value)
+  }
+
+  const handleSubmit = () => {
+    setAlertMengulas(false)
+    if (responseMengulas === RESPONSE_PENGESAHAN.success) {
+      navigate('/anggaran')
+    }
+    if (
+      responseMengulas === RESPONSE_PENGESAHAN.error_sync_status ||
+      responseMengulas === RESPONSE_PENGESAHAN.error_lost_connection
+    ) {
+      setOpenModalAjukan(false)
+      if (!navigator.onLine) {
+        setAlertNoConnection(true)
+      } else {
+        navigate(
+          `/sync/anggaran/mengulas/${encodeURIComponent(q_id_anggaran)}`,
+          {
+            state: { backgroundLocation: location },
+          }
+        )
+      }
+    }
+    if (responseMengulas === RESPONSE_PENGESAHAN.error_multiple_device) {
+      navigate('/registration')
+    }
+  }
+
+  const handleTutupModal = () => {
+    setCounterRetryPengajuan(0)
+    setAlertMengulas(false)
+    setIsFocused(true)
+  }
+
+  const fetchData = () => {
     const pagu = syncToIPCMain(IPC_ANGGARAN.getPagu, idAnggaran)
+    const dataAnggaran = syncToIPCMain(IPC_ANGGARAN.getAnggaranById, idAnggaran)
     setSisaDana(pagu?.sisa)
     setTotalAnggaran(pagu?.total)
     setTahun(pagu.tahun_anggaran)
-  }, [])
+    setDetailAnggaran(dataAnggaran)
+    setIsFocused(false)
+  }
 
   useEffect(() => {
     if (modeMengulas != '') {
@@ -91,32 +214,15 @@ const MengulasKertasKerjaView: FC = () => {
     }
   }, [modeMengulas])
 
-  const handleChangeTabs = (index: number) => {
-    const selectedTahap = index + 1
-    setTahap(selectedTahap)
-    const anggaran = syncToIPCMain(IPC_ANGGARAN.getTotalAnggaran, {
-      id_tahap: selectedTahap,
-      id_anggaran: idAnggaran,
-    })
-    setAnggaran(anggaran?.total ?? 0)
-  }
+  useEffect(() => {
+    if (isFocused) {
+      fetchData()
+    }
+  }, [isFocused])
 
-  const getPanduan = () => {
-    const dataAnggaran = syncToIPCMain(IPC_ANGGARAN.getAnggaranById, idAnggaran)
-    if (dataAnggaran.status === STATUS_KERTAS_KERJA.draft) {
-      return <PanduanMengulasKKView />
-    }
-    if (dataAnggaran.status === STATUS_KERTAS_KERJA.waiting_approval) {
-      return <PanduanCekStatusKKView />
-    }
-    if (dataAnggaran.status === STATUS_KERTAS_KERJA.approved) {
-      return <PanduanSuccessPengesahanKKView />
-    }
-  }
-
-  const handleChangeMode = (value: string) => {
-    setModeMengulas(value)
-  }
+  useEffect(() => {
+    fetchData()
+  }, [])
 
   return (
     <div>
@@ -138,7 +244,7 @@ const MengulasKertasKerjaView: FC = () => {
             </span>
           </div>
           <div className="flex items-center text-[22px] font-semibold">
-            Mengulas RKAS
+            Mengulas {copyKertasKerja('draft')}
           </div>
           <div
             className="text-base font-semibold text-gray-600 mb-[57px]"
@@ -180,9 +286,15 @@ const MengulasKertasKerjaView: FC = () => {
         <span>
           {getPanduan()}
           <div className="flex justify-end pt-5 pb-3">
-            <ButtonCariComponent />
-            {responseMengulas === null && (
-              <Button color="white" size="md" variant="solid" className="mr-3">
+            {false && <ButtonCariComponent />}
+            {showButtonEdit() && (
+              <Button
+                color="white"
+                size="md"
+                variant="solid"
+                className="mr-3"
+                onClick={handleBtnEdit}
+              >
                 <Icon
                   as="i"
                   color="default"
@@ -207,18 +319,18 @@ const MengulasKertasKerjaView: FC = () => {
               </Icon>
               Cetak
             </Button>
-            {responseMengulas === null && (
+            {showButtonEdit() && (
               <Button
                 color="blue"
                 size="md"
                 variant="solid"
-                onClick={() => setOpenModalAjukan(true)}
+                onClick={handlePengesahan}
               >
                 Ajukan Pengesahan
               </Button>
             )}
           </div>
-          {responseMengulas === null && (
+          {showButtonEdit() && (
             <div className="w-full flex text-center justify-end font-normal text-tiny text-blue-700 pb-4">
               <b>“Ajukan Pengesahan”</b> membutuhkan koneksi internet
             </div>
@@ -291,8 +403,8 @@ const MengulasKertasKerjaView: FC = () => {
       <AlertDialogComponent
         type="warning"
         icon="send"
-        title="Ajukan pengesahan RKAS?"
-        desc="RKAS Anda akan dikirim ke dinas setempat dan diperiksa kesesuaiannya dengan peraturan yang berlaku. Setelah pengajuan dikirim, RKAS tidak bisa diedit."
+        title={`Ajukan pengesahan ${copyKertasKerja()}?`}
+        desc={`${copyKertasKerja()} Anda akan dikirim ke dinas setempat dan diperiksa kesesuaiannya dengan peraturan yang berlaku. Setelah pengajuan dikirim, ${copyKertasKerja()} tidak bisa diedit.`}
         isOpen={openModalAjukan}
         btnCancelText="Batal"
         btnActionText="Kirim Pengajuan"
@@ -306,13 +418,17 @@ const MengulasKertasKerjaView: FC = () => {
           title={ALERT_MENGULAS[responseMengulas].title}
           desc={ALERT_MENGULAS[responseMengulas].desc}
           isOpen={alertMengulas}
-          hideBtnCancel={responseMengulas !== RESPONSE_PENGESAHAN.success}
+          hideBtnCancel={isHideBtnCancel}
           btnCancelText={ALERT_MENGULAS[responseMengulas].btnCancelText}
           btnActionText={ALERT_MENGULAS[responseMengulas].btnActionText}
-          onCancel={() => setAlertMengulas(false)}
-          onSubmit={() => setAlertMengulas(false)}
+          onCancel={handleTutupModal}
+          onSubmit={handleSubmit}
         />
       )}
+      <AlertNoConnection
+        onSubmit={handlePengesahan}
+        onCancel={() => setAlertNoConnection(false)}
+      />
     </div>
   )
 }

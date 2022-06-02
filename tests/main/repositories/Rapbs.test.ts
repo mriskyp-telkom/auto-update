@@ -3,7 +3,8 @@ import {
   GetLatestUrutan,
   GetNextUrutan,
   GetRapbsBulan,
-} from 'main/repositories/Rapbs'
+  GetRapbsByAnggaranId,
+} from 'main/repositories/RapbsRepository'
 import { createConnection, getConnection } from 'typeorm'
 import { cfg, Migrate } from '../migration'
 import { AnggaranKegiatan } from 'main/types/Anggaran'
@@ -44,8 +45,8 @@ test('GetLatestAndNextUrutan', async () => {
 
 test('GetRapbsBulan', async () => {
   const res = await GetRapbsBulan('apQwiAb-9EWxv74iwMY6aQ', 92)
+  expect(res.isErr()).toBe(false)
 
-  expect(res.isOk()).toBe(true)
   const rapbsBulanan = res.unwrapOr(<AnggaranKegiatan[]>[])
   expect(rapbsBulanan.length).toBeGreaterThanOrEqual(3)
   expect(rapbsBulanan[0].idAnggaran).toBe('apQwiAb-9EWxv74iwMY6aQ')
@@ -63,4 +64,13 @@ test('GetRapbsBulan', async () => {
   expect(rapbsBulanan[0].satuan).toBe('Orang')
   expect(rapbsBulanan[0].hargaSatuan).toBe(20000)
   expect(rapbsBulanan[0].total).toBe(2000000)
+
+  // expected result for rapbs.satuan reference to ref_satuan.unit
+  expect(rapbsBulanan[2].satuan).toBe('Jam Pelajaran')
+})
+
+test('GetRapbsByAnggaranId', async () => {
+  const idAnggaran = 'ODMMS_baREyJzOtKTDHEdw'
+  const result = await GetRapbsByAnggaranId(idAnggaran)
+  expect(result).toBeDefined()
 })

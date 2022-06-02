@@ -16,13 +16,13 @@ export class MstSekolah extends BaseEntity {
   anggaran: Anggaran[]
 
   @Column('varchar', { name: 'kode_wilayah', length: 8 })
-  kodeWilayah: NonNullable<unknown>
+  kodeWilayah: NonNullable<string>
 
   @Column('varchar', { name: 'nama', nullable: true, length: 80 })
   nama: string | null
 
   @Column('varchar', { name: 'npsn', length: 8 })
-  npsn: NonNullable<unknown>
+  npsn: NonNullable<string>
 
   @Column('varchar', { name: 'alamat', length: 50 })
   alamat: string

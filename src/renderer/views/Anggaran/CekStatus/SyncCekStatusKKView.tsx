@@ -15,7 +15,7 @@ import {
 } from 'renderer/constants/anggaran'
 import { APP_CONFIG } from 'renderer/constants/appConfig'
 
-import { Anggaran } from 'renderer/types/AnggaranType'
+import { Anggaran } from 'global/types/Anggaran'
 import { AlertType } from 'renderer/types/ComponentType'
 
 import { IPC_ANGGARAN, IPC_SEKOLAH } from 'global/ipc'
@@ -23,6 +23,7 @@ import { IPC_ANGGARAN, IPC_SEKOLAH } from 'global/ipc'
 import { useAPIInfoConnection } from 'renderer/apis/utils'
 import { useAPIGetToken } from 'renderer/apis/token'
 import { useAPIGetAnggaran } from 'renderer/apis/anggaran'
+import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
 
 const ipcRenderer = window.require('electron').ipcRenderer
 const stepApi = ['infoConnection', 'getToken', 'getAnggaran']
@@ -48,6 +49,9 @@ const SyncCekStatusKKView: FC = () => {
   const setToken = useAppStore((state: AppStates) => state.setToken)
   const setAlertFailedSyncData = useAppStore(
     (state: AppStates) => state.setAlertFailedSyncData
+  )
+  const setIsFocused = useAnggaranStore(
+    (state: AnggaranStates) => state.setIsFocused
   )
   const uuidAnggaran = ipcRenderer.sendSync('utils:decodeUUID', idAnggaran)
 
@@ -113,16 +117,19 @@ const SyncCekStatusKKView: FC = () => {
 
   const handleBtnSubmitAlert = () => {
     if (statusKK === RESPONSE_CEK_STATUS.in_progress) {
-      navigate(`mengulas/${q_id_anggaran}`)
+      navigate(`/anggaran/mengulas/${encodeURIComponent(q_id_anggaran)}`)
     }
     if (statusKK === RESPONSE_CEK_STATUS.declined) {
-      navigate(`menyusun/update/${q_id_anggaran}`)
+      setIsFocused(true)
+      navigate(`/anggaran/menyusun/update/${encodeURIComponent(q_id_anggaran)}`)
     }
   }
 
   const handleBtnCancelAlert = () => {
     if (statusKK === RESPONSE_CEK_STATUS.approved) {
-      navigate(`mengulas/${q_id_anggaran}`)
+      setIsFocused(true)
+      navigate(`/anggaran/mengulas/${encodeURIComponent(q_id_anggaran)}`)
+      return
     }
     closeModal()
   }
@@ -142,6 +149,7 @@ const SyncCekStatusKKView: FC = () => {
 
   useEffect(() => {
     if (dataAnggaran !== undefined) {
+      let status = ''
       if (dataAnggaran.data.length > 0) {
         const anggaran = dataAnggaran.data[0] as Anggaran
 
@@ -163,25 +171,41 @@ const SyncCekStatusKKView: FC = () => {
 
           ipcRenderer.sendSync(IPC_ANGGARAN.upsertAnggaran, updateData)
 
-          let status = ''
-
-          if (anggaran.is_approve === 0 || anggaran.tanggal_pengajuan !== '') {
+          if (
+            anggaran.is_approve === 0 ||
+            (anggaran.tanggal_pengajuan !== '' &&
+              anggaran.tanggal_pengajuan !== null)
+          ) {
             status = RESPONSE_CEK_STATUS.in_progress
           }
 
-          if (anggaran.is_approve === 1 || anggaran.tanggal_pengesahan !== '') {
+          if (
+            anggaran.is_approve === 1 ||
+            (anggaran.tanggal_pengesahan !== '' &&
+              anggaran.tanggal_pengesahan !== null)
+          ) {
             status = RESPONSE_CEK_STATUS.approved
           }
 
-          if (anggaran.alasan_penolakan !== '') {
-            status = RESPONSE_CEK_STATUS.approved
+          if (
+            anggaran.alasan_penolakan !== '' &&
+            anggaran.alasan_penolakan !== null
+          ) {
+            status = RESPONSE_CEK_STATUS.declined
           }
-
-          removeCacheData()
-          setStatusKK(status)
-          setIsSync(false)
-          setIsAlert(true)
         }
+      } else {
+        /*
+         sementara set status menunggu pengesahan
+         harusnya munculin error data anggaran gagal di insert
+         */
+        status = RESPONSE_CEK_STATUS.in_progress
+      }
+      if (status !== '') {
+        removeCacheData()
+        setStatusKK(status)
+        setIsSync(false)
+        setIsAlert(true)
       }
     }
   }, [dataAnggaran])

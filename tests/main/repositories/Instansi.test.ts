@@ -3,7 +3,7 @@ import { InstansiPengguna } from 'main/models/InstansiPengguna'
 import { MstWilayah } from 'main/models/MstWilayah'
 import { Pengguna } from 'main/models/Pengguna'
 import { UserRole } from 'main/models/UserRole'
-import { AddInstansi } from 'main/repositories/Instansi'
+import { AddInstansi } from 'main/repositories/InstansiRepository'
 import { createConnection, getConnection } from 'typeorm'
 import { cfg, Migrate } from '../migration'
 
@@ -41,7 +41,7 @@ test('AddInstansi', async () => {
     'Dinas Pendidikan dan Pemuda Olahraga Kabupaten Gunung Kidul'
   datainstansi.alamat = 'Jl. Pemuda'
   datainstansi.kodePos = 0
-  datainstansi.kodeWilayah = 0
+  datainstansi.kodeWilayah = '040304'
   datainstansi.lintang = 0
   datainstansi.bujur = 0
   datainstansi.email = ''

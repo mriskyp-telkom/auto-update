@@ -34,7 +34,7 @@ export class Instansi extends BaseEntity {
   jenisInstansiId: number
 
   @Column('varchar', { name: 'kode_instansi', nullable: true, length: 8 })
-  kodeInstansi: NonNullable<unknown> | null
+  kodeInstansi: string | null
 
   @Column('varchar', { name: 'nama', length: 80 })
   nama: string
@@ -46,7 +46,7 @@ export class Instansi extends BaseEntity {
   kodePos: number | null
 
   @Column('varchar', { name: 'kode_wilayah', length: 8 })
-  kodeWilayah: NonNullable<unknown>
+  kodeWilayah: NonNullable<string>
 
   @Column('decimal', {
     name: 'lintang',

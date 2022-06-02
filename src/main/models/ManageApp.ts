@@ -19,5 +19,5 @@ export class ManageApp extends BaseEntity {
   appId: string
 
   @Column('int', { name: 'is_superadmin', nullable: true })
-  isSuperadmin: NonNullable<unknown> | null
+  isSuperadmin: number | null
 }

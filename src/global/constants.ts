@@ -16,6 +16,7 @@ export const CONFIG = {
   sekolahId: 'sekolah_id',
   penggunaId: 'pengguna_id',
   sessionId: 'sessionId',
+  tahunAktif: 'tahun_aktif',
 }
 
 export const ERROR = {
@@ -110,4 +111,26 @@ export const CONST_ACCOUNT = {
 
   wLoginByEmailSekolah: 'Masukkan email yang terdaftar di sekolah',
   wDeviceAlreadyUsed: 'Akun anda teridentifikasi pada perangkat lain',
+}
+
+export const STATUS_INVALID_PENGESAHAN = {
+  invalidSisaDana: 2,
+  invalidDataCentral: 3,
+}
+
+export const STATUS_BKU_PERBULAN = {
+  not_created: 'not_created',
+  done: 'done',
+  request_to_edit: 'request_to_edit',
+  request_to_delete: 'request_to_delete',
+  not_reported_tax: 'not_reported_tax',
+  draft: 'draft',
+}
+
+export const STATUS_BKU_PERTAHUN = {
+  not_active: 'not_active',
+  active: 'active',
+  done: 'done',
+  temporary_inactive: 'temporary_inactive',
+  date_over: 'date_over',
 }

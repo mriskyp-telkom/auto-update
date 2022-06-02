@@ -19,6 +19,7 @@ interface InputSearchProps {
   required: boolean
   isDisabled?: boolean
   name: string
+  customNotFound?: (query: string) => React.ReactNode
   defaultValue: string
   placeholder: string
   errors: FieldErrors
@@ -97,11 +98,13 @@ const InputSearchComponent: FC<InputSearchProps> = (
 
   const handleClick = (event: any) => {
     const id = event.target.dataset.id
-    const fieldShow = filter(props.headers, ['show', true])[0].key
-    const value = filter(props.dataOptions, ['id', parseInt(id) || id])[0][
-      fieldShow
-    ]
+    const value = event.target.dataset.value
     handleSendData(id, name, value, defaultValue)
+  }
+
+  const getValueDisplay = (data: any) => {
+    const fieldShow = filter(props.headers, ['show', true])[0].key
+    return data[fieldShow]
   }
 
   const handleSendData = (
@@ -110,7 +113,11 @@ const InputSearchComponent: FC<InputSearchProps> = (
     value: string,
     defaultValue: string
   ) => {
-    setQuery(value)
+    if (id === '') {
+      setQuery('')
+    } else {
+      setQuery(value)
+    }
     const sendData = {
       id: id,
       name: name,
@@ -119,6 +126,59 @@ const InputSearchComponent: FC<InputSearchProps> = (
     }
     setOpen(false)
     props.onClick(sendData)
+  }
+
+  const getDropdownView = () => {
+    if (data.length === 0 && props.customNotFound !== undefined) {
+      return <div className="absolute z-10">{props.customNotFound(query)}</div>
+    }
+
+    return (
+      <table
+        className={clsx(
+          styles.searchTable,
+          'grid text-left absolute z-10 bg-white'
+        )}
+        style={{ width: `${props.width - 8}px` }}
+      >
+        <thead className="text-[14px] font-semibold bg-gray-5">
+          {props.headerShow && (
+            <tr className={styles.headerTable} style={{ display: 'flex' }}>
+              {props.headers?.map((header: any) => (
+                <th key={header.key} style={{ width: header.width }}>
+                  {header.label}
+                </th>
+              ))}
+            </tr>
+          )}
+        </thead>
+        <tbody
+          className="text-[14px] font-normal"
+          style={{ height: `${props.height}px` }}
+        >
+          {data?.map((data: any, indexData) => (
+            <tr
+              key={indexData}
+              className="hover:bg-gray-5 cursor-pointer"
+              onClick={handleClick}
+              style={{ display: 'flex' }}
+            >
+              {props.headers?.map((header: any) => (
+                <td
+                  key={header.key}
+                  dangerouslySetInnerHTML={{
+                    __html: makeBold(data[header.key]),
+                  }}
+                  data-id={data.id}
+                  data-value={getValueDisplay(data)}
+                  style={{ width: header.width }}
+                ></td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    )
   }
 
   useEffect(() => {
@@ -162,51 +222,7 @@ const InputSearchComponent: FC<InputSearchProps> = (
           {...register(name, validation)}
         />
       </InputGroup>
-      {open && (
-        <table
-          className={clsx(
-            styles.searchTable,
-            'grid text-left absolute z-10 bg-white'
-          )}
-          style={{ width: `${props.width - 8}px` }}
-        >
-          <thead className="text-[14px] font-semibold bg-gray-5">
-            {props.headerShow && (
-              <tr className={styles.headerTable} style={{ display: 'flex' }}>
-                {props.headers?.map((header: any) => (
-                  <th key={header.key} style={{ width: header.width }}>
-                    {header.label}
-                  </th>
-                ))}
-              </tr>
-            )}
-          </thead>
-          <tbody
-            className="text-[14px] font-normal"
-            style={{ height: `${props.height}px` }}
-          >
-            {data?.map((data: any, indexData) => (
-              <tr
-                key={indexData}
-                className="hover:bg-gray-5 cursor-pointer"
-                onClick={handleClick}
-                style={{ display: 'flex' }}
-              >
-                {props.headers?.map((header: any) => (
-                  <td
-                    key={header.key}
-                    dangerouslySetInnerHTML={{
-                      __html: makeBold(data[header.key]),
-                    }}
-                    data-id={data.id}
-                    style={{ width: header.width }}
-                  ></td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+      {open && getDropdownView()}
     </div>
   )
 }

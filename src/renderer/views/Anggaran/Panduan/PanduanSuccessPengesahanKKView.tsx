@@ -1,12 +1,14 @@
 import React, { FC } from 'react'
 
-import CardPanduanAnggaranView from 'renderer/views/Anggaran/CardPanduanAnggaranView'
+import PanduanCardComponent from 'renderer/components/Card/PanduanCardComponent'
 
 import { Icon } from '@wartek-id/icon'
 
+import { copyKertasKerja } from 'renderer/utils/copy-writing'
+
 const PanduanSuccessPengesahanKKView: FC = () => {
   return (
-    <CardPanduanAnggaranView type="success">
+    <PanduanCardComponent type="success">
       <>
         <div className="mb-2 font-semibold">
           <Icon
@@ -18,7 +20,7 @@ const PanduanSuccessPengesahanKKView: FC = () => {
           >
             check_circle
           </Icon>
-          RKAS Berhasil Disahkan!
+          {copyKertasKerja()} Berhasil Disahkan!
         </div>
         <ul className="list font-normal text-base text-gray-900 ml-7">
           <li>
@@ -41,7 +43,7 @@ const PanduanSuccessPengesahanKKView: FC = () => {
           </li>
         </ul>
       </>
-    </CardPanduanAnggaranView>
+    </PanduanCardComponent>
   )
 }
 

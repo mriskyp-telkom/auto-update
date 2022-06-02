@@ -1,12 +1,14 @@
 import React, { FC } from 'react'
 
-import CardPanduanAnggaranView from 'renderer/views/Anggaran/CardPanduanAnggaranView'
+import PanduanCardComponent from 'renderer/components/Card/PanduanCardComponent'
 
 import { Icon } from '@wartek-id/icon'
 
+import { copyKertasKerja } from 'renderer/utils/copy-writing'
+
 const PanduanErrorSisaDanaKKView: FC = () => {
   return (
-    <CardPanduanAnggaranView type="failed">
+    <PanduanCardComponent type="failed">
       <>
         <div className="mb-2 font-semibold">
           <Icon
@@ -18,13 +20,13 @@ const PanduanErrorSisaDanaKKView: FC = () => {
           >
             cancel
           </Icon>
-          RKAS Belum Memenuhi Syarat
+          {copyKertasKerja()} Belum Memenuhi Syarat
         </div>
         <ul className="list font-normal text-base text-gray-900 ml-7">
           <li>
             <span>
-              Anda belum dapat mengajukan pengesahan karena RKAS Anda masih
-              memiliki sisa dana.
+              Anda belum dapat mengajukan pengesahan karena masih memiliki
+              kekurangan atau kelebihan sisa dana.
             </span>
           </li>
           <li>
@@ -33,9 +35,15 @@ const PanduanErrorSisaDanaKKView: FC = () => {
               dana habis.
             </span>
           </li>
+          <li>
+            <span>
+              Setelah {copyKertasKerja()} disesuaikan, pastikan Anda ajukan
+              pengesahan kembali.
+            </span>
+          </li>
         </ul>
       </>
-    </CardPanduanAnggaranView>
+    </PanduanCardComponent>
   )
 }
 

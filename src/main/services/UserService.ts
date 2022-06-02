@@ -1,5 +1,5 @@
-import { GetConfig, SetConfig } from 'main/repositories/Config'
-import { GetPenggunaByToken } from 'main/repositories/User'
+import { GetConfig, SetConfig } from 'main/repositories/ConfigRepository'
+import { GetPenggunaByToken } from 'main/repositories/UserRepository'
 import CommonUtils from 'main/utils/CommonUtils'
 import { CONFIG } from 'global/constants'
 

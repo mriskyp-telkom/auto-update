@@ -1,6 +1,7 @@
 export const ERROR_REQUIRED = 'Wajib Diisi'
 export const ERROR_NUMBER_ONLY = 'Isi dengan format angka'
 export const ERROR_ALPHABET_ONLY = 'Isi dengan format huruf'
+export const ERROR_NOMINAL_MINLENGTH = 'Harga satuan minimal 2 digit angka'
 
 /* Nama */
 export const NAMA_ERROR_VALIDATION =
@@ -31,6 +32,19 @@ export const KODE_AKTIVASI_ERROR_WRONG = 'Kode aktivasi salah'
 export const NIP_ERROR_LENGTH = 'NIP harus terdiri dari 18 angka'
 
 /* Harga Satuan */
-export const HARGA_SATUAN_ERROR_LENGTH = 'Harga satuan minimal 2 digit angka'
 export const HARGA_SATUAN_ERROR_LESS_THAN = 'Harga kurang dari batas bawah SSH'
 export const HARGA_SATUAN_ERROR_MORE_THAN = 'Harga melebihi batas atas SSH'
+
+/* Data Sentral */
+export const KEGIATAN_ERROR_DATA_SENTRAL =
+  'Daftar kegiatan berubah. Silakan pilih ulang.'
+export const REKENING_BELANJA_ERROR_DATA_SENTRAL =
+  'Daftar rekening belanja berubah. Silakan pilih ulang.'
+export const URAIAN_ERROR_DATA_SENTRAL =
+  'Referensi daftar barang/jasa berubah. Silakan pilih ulang.'
+export const HARGA_SATUAN_ERROR_DATA_SENTRAL =
+  'Batas harga berubah. Silakan masukkan ulang.'
+
+/* Tarik Tunai Nominal */
+export const NOMINAL_TARIK_TUNAI_ERROR_MORE_THAN =
+  'Penarikan tunai tidak bisa melebihi total saldo'

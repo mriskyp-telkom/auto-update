@@ -11,13 +11,13 @@ export class MstWilayah extends BaseEntity {
     length: 8,
     unique: true,
   })
-  kodeWilayah: NonNullable<unknown>
+  kodeWilayah: NonNullable<string>
 
   @Column('varchar', { name: 'mst_kode_wilayah', nullable: true, length: 8 })
-  mstKodeWilayah: NonNullable<unknown> | null
+  mstKodeWilayah: string | null
 
   @Column('varchar', { name: 'negara_id', length: 2 })
-  negaraId: NonNullable<unknown>
+  negaraId: NonNullable<string>
 
   @Column('smallint', { name: 'id_level_wilayah' })
   idLevelWilayah: number
@@ -26,13 +26,13 @@ export class MstWilayah extends BaseEntity {
   nama: string
 
   @Column('varchar', { name: 'asal_wilayah', nullable: true, length: 8 })
-  asalWilayah: NonNullable<unknown> | null
+  asalWilayah: string | null
 
   @Column('varchar', { name: 'kode_bps', nullable: true, length: 7 })
-  kodeBps: NonNullable<unknown> | null
+  kodeBps: string | null
 
   @Column('varchar', { name: 'kode_dagri', nullable: true, length: 7 })
-  kodeDagri: NonNullable<unknown> | null
+  kodeDagri: string | null
 
   @Column('varchar', { name: 'kode_keu', nullable: true, length: 10 })
   kodeKeu: string | null

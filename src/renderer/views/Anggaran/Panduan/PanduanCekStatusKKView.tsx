@@ -1,13 +1,21 @@
 import React, { FC } from 'react'
 
-import CardPanduanAnggaranView from 'renderer/views/Anggaran/CardPanduanAnggaranView'
+import PanduanCardComponent from 'renderer/components/Card/PanduanCardComponent'
 
-import { Button } from '@wartek-id/button'
+import CekStatusKKView from 'renderer/views/Anggaran/CekStatus/CekStatusKKView'
+
 import { Icon } from '@wartek-id/icon'
 
-const PanduanCekStatusKKView: FC = () => {
+export interface PanduanCekStatusProps {
+  idAnggaran: string
+  tanggalPengajuan: string
+}
+
+const PanduanCekStatusKKView: FC<PanduanCekStatusProps> = (
+  props: PanduanCekStatusProps
+) => {
   return (
-    <CardPanduanAnggaranView type="warning">
+    <PanduanCardComponent type="warning">
       <>
         <div className="mb-2">
           <Icon
@@ -21,7 +29,7 @@ const PanduanCekStatusKKView: FC = () => {
           </Icon>
           Menunggu Pengesahan
           <span className="text-tiny font-normal text-red-600 ml-3">
-            Tanggal pengajuan: 09/11/2021
+            Tanggal pengajuan: {props.tanggalPengajuan}
           </span>
         </div>
         <ul className="list font-normal text-base text-gray-900 ml-7">
@@ -39,21 +47,13 @@ const PanduanCekStatusKKView: FC = () => {
           </li>
         </ul>
         <div className="flex mt-2 items-center">
-          <Button
-            color="white"
-            size="sm"
-            variant="solid"
-            className="mr-3"
-            style={{ backgroundColor: 'unset' }}
-          >
-            Cek Status
-          </Button>
+          <CekStatusKKView idAnggaran={props.idAnggaran} page="banner" />
           <span className="text-blue-700 text-[12px] text-right">
             <b>“Cek Status”</b> membutuhkan koneksi internet
           </span>
         </div>
       </>
-    </CardPanduanAnggaranView>
+    </PanduanCardComponent>
   )
 }
 

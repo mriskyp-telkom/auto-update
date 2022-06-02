@@ -3,13 +3,15 @@ import { useParams } from 'react-router-dom'
 
 import InfoDialogComponent from 'renderer/components/Dialog/InfoDialogComponent'
 
-import CardPanduanAnggaranView from 'renderer/views/Anggaran/CardPanduanAnggaranView'
+import PanduanCardComponent from 'renderer/components/Card/PanduanCardComponent'
 
 import { Icon } from '@wartek-id/icon'
 
 import syncToIPCMain from 'renderer/configs/ipc'
 
 import { IPC_ANGGARAN } from 'global/ipc'
+
+import { copyKertasKerja } from 'renderer/utils/copy-writing'
 
 const PanduanErrorPengesahanKKView: FC = () => {
   const { q_id_anggaran } = useParams()
@@ -26,7 +28,7 @@ const PanduanErrorPengesahanKKView: FC = () => {
 
   return (
     <>
-      <CardPanduanAnggaranView type="failed">
+      <PanduanCardComponent type="failed">
         <>
           <div className="mb-2 font-semibold">
             <Icon
@@ -38,13 +40,13 @@ const PanduanErrorPengesahanKKView: FC = () => {
             >
               cancel
             </Icon>
-            RKAS Belum Disetujui
+            {copyKertasKerja()} Belum Disetujui
           </div>
           <ul className="list font-normal text-base text-gray-900 ml-7">
             <li>
               <span>
-                RKAS Anda belum bisa disetujui karena ada beberapa revisi yang
-                perlu dilakukan.
+                {copyKertasKerja()} Anda belum bisa disetujui karena ada
+                beberapa revisi yang perlu dilakukan.
               </span>
             </li>
             <li>
@@ -58,9 +60,15 @@ const PanduanErrorPengesahanKKView: FC = () => {
                 </a>
               </span>
             </li>
+            <li>
+              <span>
+                Setelah {copyKertasKerja()} disesuaikan, pastikan Anda ajukan
+                pengesahan kembali.
+              </span>
+            </li>
           </ul>
         </>
-      </CardPanduanAnggaranView>
+      </PanduanCardComponent>
       <InfoDialogComponent
         title="Catatan Revisi Dinas"
         text={alasanPenolakan}

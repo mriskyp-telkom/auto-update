@@ -1,0 +1,1 @@
+select :id_anggaran as id_anggaran, :id_periode as id_periode

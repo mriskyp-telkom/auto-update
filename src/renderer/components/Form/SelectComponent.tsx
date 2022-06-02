@@ -1,4 +1,4 @@
-import React, { FC, useState, useRef } from 'react'
+import React, { FC, useState, useRef, useEffect } from 'react'
 import { RegisterOptions } from 'react-hook-form'
 
 import { Listbox } from '@headlessui/react'
@@ -10,24 +10,32 @@ import clsx from 'clsx'
 
 interface SelectProps {
   name: string
+  width?: number
   selected?: string
+  border?: boolean
   options: any
   register: (arg0: string, arg1: RegisterOptions) => void
   handleSelect: (value: string) => void
-  disabled?: boolean
+  isDisabled?: boolean
 }
 
 const SelectComponent: FC<SelectProps> = (props: SelectProps) => {
   const ref = useRef(null)
 
-  const [selectedValue, setSelectedValue] = useState(props.selected)
+  const [selectedValue, setSelectedValue] = useState(null)
 
   const { name, register } = props
+
+  const width = props.width ? `w-[${props.width}px]` : 'w-full'
 
   const handleChange = (value: string) => {
     setSelectedValue(value)
     props.handleSelect(value)
   }
+
+  useEffect(() => {
+    setSelectedValue(props.selected)
+  }, [])
 
   return (
     <div ref={ref}>
@@ -41,14 +49,20 @@ const SelectComponent: FC<SelectProps> = (props: SelectProps) => {
       <Listbox
         value={selectedValue}
         onChange={handleChange}
-        disabled={props.disabled}
+        disabled={props.isDisabled}
       >
         <Listbox.Button
-          className={clsx(props.disabled && 'cursor-not-allowed', 'w-[88px]')}
+          className={clsx(
+            props.border && 'rounded border border-solid py-3 px-4 text-form',
+            props.border && props.isDisabled
+              ? 'bg-gray-10 border-gray-200 text-gray-500 cursor-not-allowed'
+              : 'border-gray-500',
+            width
+          )}
         >
           <span className="w-full flex justify-between items-center">
             <span className="capitalize-first">{selectedValue}</span>
-            {!props.disabled && (
+            {!props.isDisabled && (
               <Icon as="i" color="default" fontSize="default">
                 arrow_drop_down
               </Icon>
@@ -57,13 +71,16 @@ const SelectComponent: FC<SelectProps> = (props: SelectProps) => {
         </Listbox.Button>
         <Listbox.Options
           className={clsx(
-            'w-[88px] absolute bg-white z-10',
+            'absolute bg-white z-10',
             'rounded border-gray-500 border-solid',
             'py-1 mt-2',
             'text-base text-gray-900',
             'overflow-y-scroll max-h-[194px]'
           )}
-          style={{ boxShadow: '0px 8px 20px rgba(37, 40, 43, 0.2)' }}
+          style={{
+            width: `${ref.current?.clientWidth}px`,
+            boxShadow: '0px 8px 20px rgba(37, 40, 43, 0.2)',
+          }}
         >
           {props.options.map((option: any, index: number) => (
             <Listbox.Option
@@ -83,6 +100,10 @@ const SelectComponent: FC<SelectProps> = (props: SelectProps) => {
       </Listbox>
     </div>
   )
+}
+
+SelectComponent.defaultProps = {
+  border: true,
 }
 
 export default SelectComponent

@@ -21,13 +21,13 @@ export class Anggaran extends BaseEntity {
   volume: number | null
 
   @Column('numeric', { name: 'harga_satuan', nullable: true })
-  hargaSatuan: NonNullable<unknown> | null
+  hargaSatuan: number | null
 
   @Column('numeric', { name: 'jumlah', nullable: true })
-  jumlah: NonNullable<unknown> | null
+  jumlah: number | null
 
   @Column('numeric', { name: 'sisa_anggaran', nullable: true })
-  sisaAnggaran: NonNullable<unknown> | null
+  sisaAnggaran: number | null
 
   @Column('numeric', {
     name: 'is_pengesahan',

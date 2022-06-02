@@ -1,12 +1,14 @@
 import React, { FC } from 'react'
 
-import CardPanduanAnggaranView from 'renderer/views/Anggaran/CardPanduanAnggaranView'
+import PanduanCardComponent from 'renderer/components/Card/PanduanCardComponent'
 
 import { Icon } from '@wartek-id/icon'
 
+import { copyKertasKerja } from 'renderer/utils/copy-writing'
+
 const PanduanErrorDataSentralKKView: FC = () => {
   return (
-    <CardPanduanAnggaranView type="failed">
+    <PanduanCardComponent type="failed">
       <>
         <div className="mb-2 font-semibold">
           <Icon
@@ -18,7 +20,7 @@ const PanduanErrorDataSentralKKView: FC = () => {
           >
             cancel
           </Icon>
-          RKAS Butuh Disesuaikan
+          {copyKertasKerja()} Butuh Disesuaikan
         </div>
         <ul className="list font-normal text-base text-gray-900 ml-7">
           <li>
@@ -33,9 +35,15 @@ const PanduanErrorDataSentralKKView: FC = () => {
               terbaru.
             </span>
           </li>
+          <li>
+            <span>
+              Setelah {copyKertasKerja()} disesuaikan, pastikan Anda ajukan
+              pengesahan kembali.
+            </span>
+          </li>
         </ul>
       </>
-    </CardPanduanAnggaranView>
+    </PanduanCardComponent>
   )
 }
 

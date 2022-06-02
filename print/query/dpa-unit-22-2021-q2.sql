@@ -1,0 +1,1 @@
+select m.*,:id_anggaran as id_anggaran from mst_sekolah m join anggaran a on m.sekolah_id = a.sekolah_id where a.soft_delete = 0 and a.id_anggaran=:id_anggaran

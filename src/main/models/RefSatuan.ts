@@ -19,16 +19,7 @@ export class RefSatuan extends BaseEntity {
   @Column('varchar', { name: 'unit', length: 30 })
   unit: string
 
-  @Column('numeric', {
-    name: 'soft_delete',
-    nullable: true,
-    precision: 1,
-    scale: 0,
-    default: () => '0',
-  })
-  softDelete: number | null
-
-  @Column('datetime', { name: 'created_date' })
+  @Column('datetime', { name: 'create_date' })
   createDate: Date
 
   @Column('datetime', { name: 'last_update' })

@@ -1,5 +1,9 @@
 import { Ptk } from 'main/models/Ptk'
-import { AddBulkPtk, GetLastUpdate, GetPtk } from 'main/repositories/Ptk'
+import {
+  AddBulkPtk,
+  GetLastUpdate,
+  GetPtk,
+} from 'main/repositories/PtkRepository'
 import { createConnection, getConnection } from 'typeorm'
 import { cfg, Migrate } from '../migration'
 

@@ -29,7 +29,7 @@ export interface ParamRkasType {
 }
 
 export interface ParamRkasPenjabType {
-  id_rapbs: string
+  id_penjab: string
   sekolah_id: string
   tanggal_mulai: string
   tanggal_selesai: string

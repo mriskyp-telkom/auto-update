@@ -1,9 +1,4 @@
-export const STATUS_BKU_PERTAHUN = {
-  not_active: 'not_active',
-  active: 'active',
-  done: 'done',
-  temporary_inactive: 'temporary_inactive',
-}
+import { STATUS_BKU_PERBULAN, STATUS_BKU_PERTAHUN } from 'global/constants'
 
 export const LABEL_STATUS_BKU_PERTAHUN = [
   {
@@ -24,18 +19,14 @@ export const LABEL_STATUS_BKU_PERTAHUN = [
   {
     status: STATUS_BKU_PERTAHUN.temporary_inactive,
     type: 'disabled-with-border',
-    label: 'Non Aktif Sementara',
+    label: 'Nonaktif Sementara',
+  },
+  {
+    status: STATUS_BKU_PERTAHUN.date_over,
+    type: 'disabled',
+    label: 'Nonaktif - Lewat Batas',
   },
 ]
-
-export const STATUS_BKU_PERBULAN = {
-  not_created: 'not_created',
-  done: 'done',
-  request_to_edit: 'request_to_edit',
-  request_to_delete: 'request_to_delete',
-  not_reported_tax: 'not_reported_tax',
-  draft: 'draft',
-}
 
 export const LABEL_STATUS_BKU_PERBULAN = [
   {

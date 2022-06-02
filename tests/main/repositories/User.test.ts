@@ -17,7 +17,7 @@ import {
   GetPenggunaByEmail,
   GetPenggunaByToken,
   AddPengguna,
-} from 'main/repositories/User'
+} from 'main/repositories/UserRepository'
 import { createConnection, getConnection } from 'typeorm'
 import { cfg, Migrate } from '../migration'
 
@@ -96,7 +96,7 @@ test('GetPenggunaByEmail', async () => {
 })
 
 test('GetPenggunaByToken', async () => {
-  const tokenId = CommonUtils.encodeUUID(CommonUtils.uuid())
+  const tokenId = CommonUtils.encodeUUIDFromV4()
   const data = await GetPenggunaByToken(tokenId)
 
   expect(data).toBe(undefined)

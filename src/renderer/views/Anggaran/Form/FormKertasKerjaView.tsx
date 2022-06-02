@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from 'react'
-import { useForm, useFieldArray } from 'react-hook-form'
+import { FormProvider, useForm, useFieldArray } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import AlertDialogComponent from 'renderer/components/Dialog/AlertDialogComponent'
@@ -21,20 +21,25 @@ import {
 import { AnggaranBulanData } from 'renderer/types/datas/AnggaranType'
 
 import { DATA_BULAN } from 'renderer/constants/general'
+
 import {
   headerKegiatan,
   headerRekeningBelanja,
   headerUraian,
   headerPtk,
   headerSatuan,
-  optionsSatuan,
   headerHarga,
 } from 'renderer/constants/table'
+
 import {
   ERROR_REQUIRED,
-  HARGA_SATUAN_ERROR_LENGTH,
+  HARGA_SATUAN_ERROR_DATA_SENTRAL,
+  ERROR_NOMINAL_MINLENGTH,
   HARGA_SATUAN_ERROR_LESS_THAN,
   HARGA_SATUAN_ERROR_MORE_THAN,
+  KEGIATAN_ERROR_DATA_SENTRAL,
+  REKENING_BELANJA_ERROR_DATA_SENTRAL,
+  URAIAN_ERROR_DATA_SENTRAL,
 } from 'renderer/constants/errorForm'
 
 import { numberUtils } from '@wartek-id/fe-toolbox'
@@ -52,6 +57,7 @@ import isEmpty from 'lodash/isEmpty'
 import styles from './index.module.css'
 
 import clsx from 'clsx'
+import { TIME_DELAY_SUCCESS_SCREEN } from 'renderer/constants/app'
 
 const initialFormDisable = {
   kegiatan: false,
@@ -95,7 +101,7 @@ const FormKertasKerjaView: FC = () => {
 
   const [openModalDelete, setOpenModalDelete] = useState(false)
   const [openModalSuccess, setOpenModalSuccess] = useState(false)
-  const [openModalConfirmCancel, setOpenModalConfirmCancel] = useState(false)
+  const [openModalFailedDelete, setOpenModalFailedDelete] = useState(false)
 
   const [formDisable, setFormDisable] = useState(initialFormDisable)
   const [formDefaultValue, setFormDefaultValue] = useState({
@@ -108,10 +114,12 @@ const FormKertasKerjaView: FC = () => {
   const [optionsRekening, setOptionsRekening] = useState([])
   const [optionsUraian, setOptionsUraian] = useState([])
   const [optionsHarga, setOptionsHarga] = useState([])
+  const [optionsSatuan, setOptionsSatuan] = useState([])
 
   const [selectedKegiatan, setSelectedKegiatan] = useState(null)
   const [selectedRekening, setSelectedRekening] = useState(null)
   const [selectedUraian, setSelectedUraian] = useState(null)
+  const [selectedSatuan, setSelectedSatuan] = useState(null)
 
   const setTempDetailKertasKerja = useAnggaranStore(
     (state: AnggaranStates) => state.setTempDetailKertasKerja
@@ -120,19 +128,7 @@ const FormKertasKerjaView: FC = () => {
     (state: AnggaranStates) => state.setIsFocused
   )
 
-  const {
-    register,
-    unregister,
-    handleSubmit,
-    setValue,
-    setError,
-    setFocus,
-    getValues,
-    control,
-    reset,
-    clearErrors,
-    formState: { errors, isDirty },
-  } = useForm<FormIsiKertasKerjaData>({
+  const formMethods = useForm<FormIsiKertasKerjaData>({
     mode: 'onSubmit',
     reValidateMode: 'onBlur',
     defaultValues: {
@@ -147,6 +143,20 @@ const FormKertasKerjaView: FC = () => {
       ],
     },
   })
+
+  const {
+    register,
+    unregister,
+    handleSubmit,
+    setValue,
+    setError,
+    setFocus,
+    getValues,
+    control,
+    reset,
+    clearErrors,
+    formState: { errors },
+  } = formMethods
 
   const { fields, append, update, remove } = useFieldArray({
     control,
@@ -167,11 +177,13 @@ const FormKertasKerjaView: FC = () => {
     const volume = anggaranBulan.reduce((accumulator, bulan) => {
       return accumulator + parseInt(bulan.jumlah.toString())
     }, 0)
+
     data.idAnggaran = idAnggaran
     data.idRefTahunAnggaran = anggaran.tahunAnggaran
     data.idRefKode = selectedKegiatan.id
     data.kodeRekening = selectedRekening.kode
-    data.idBarang = selectedUraian?.kode
+    data.idBarang =
+      selectedKegiatan.flag_honor === 1 ? null : selectedUraian?.kode
     data.uraian =
       selectedUraian != null && selectedUraian.uraian != ''
         ? selectedUraian.uraian
@@ -181,6 +193,7 @@ const FormKertasKerjaView: FC = () => {
         .replace(/[^,\d]/g, '')
         .toString()
     )
+
     data.volume = volume
     data.jumlah = volume * data.hargaSatuan
     if (selectedKegiatan?.flag_honor === 1) {
@@ -189,7 +202,8 @@ const FormKertasKerjaView: FC = () => {
       ptk.nama = selectedUraian.uraian
       data.ptk = ptk
     }
-    data.satuan = anggaranBulan[0].satuan
+
+    data.satuan = selectedSatuan?.satuan
     data.periode = []
     anggaranBulan.forEach((bulan) => {
       const periode = {} as Periode
@@ -198,7 +212,7 @@ const FormKertasKerjaView: FC = () => {
       periode.idPeriode = bulan.id_bulan
       periode.volume = jumlah
       periode.jumlah = jumlah * data.hargaSatuan
-      periode.satuan = bulan.satuan
+      periode.satuan = selectedSatuan?.satuan
       data.periode.push(periode)
     })
     return data
@@ -206,6 +220,8 @@ const FormKertasKerjaView: FC = () => {
 
   const closeModal = () => {
     setTempDetailKertasKerja(null)
+    reset()
+    setFormDisable(initialFormDisable)
     navigate(-1)
   }
 
@@ -224,13 +240,6 @@ const FormKertasKerjaView: FC = () => {
       setIsFocused(true)
       closeModal()
     }
-  }
-
-  const onConfirmCancel = () => {
-    setOpenModalConfirmCancel(false)
-    closeModal()
-    reset()
-    setFormDisable(initialFormDisable)
   }
 
   const handleDefaultValue = (name: string, value: string) => {
@@ -278,6 +287,7 @@ const FormKertasKerjaView: FC = () => {
       setValue('uraian', '')
       setValue('harga_satuan', '')
       setFocus('rekening_belanja')
+      setSelectedUraian(null)
       setFormDisable({
         ...formDisable,
         rekening_belanja: false,
@@ -315,24 +325,20 @@ const FormKertasKerjaView: FC = () => {
       })
     }
     if (data.name === 'anggaran_bulan.0.satuan') {
+      const satuanData = optionsSatuan.find((k: any) => k.id === data.id)
+      setSelectedSatuan(satuanData)
       fields.map((field, index) => {
         if (index !== 0) {
           setValue(`anggaran_bulan.${index}.satuan`, data.value)
+          clearErrors(`anggaran_bulan.${index}.satuan`)
         }
       })
     }
   }
 
-  const handleCancel = () => {
-    if (isDirty) {
-      setOpenModalConfirmCancel(true)
-    } else {
-      closeModal()
-    }
-  }
-
   const handleDelete = () => {
     setOpenModalDelete(false)
+    setOpenModalFailedDelete(false)
 
     // before
     const res = ipcRenderer.sendSync(IPC_KK.deleteRapbs, idRapbs)
@@ -344,9 +350,9 @@ const FormKertasKerjaView: FC = () => {
         setOpenModalSuccess(false)
         setIsFocused(true)
         closeModal()
-      }, 3000)
+      }, TIME_DELAY_SUCCESS_SCREEN)
     } else if (res.isError) {
-      // TO DO:
+      setOpenModalFailedDelete(true)
     }
   }
 
@@ -411,8 +417,10 @@ const FormKertasKerjaView: FC = () => {
   useEffect(() => {
     const kegiatan = ipcRenderer.sendSync(IPC_REFERENSI.getRefKode)
     const rekening = ipcRenderer.sendSync(IPC_REFERENSI.getRefRekening)
+    const satuan = ipcRenderer.sendSync(IPC_REFERENSI.getRefSatuan)
     setOptionsKegiatan(kegiatan)
     setOptionsRekening(rekening)
+    setOptionsSatuan(satuan)
 
     if (q_mode === 'update') {
       const idRapbs = decodeURIComponent(q_id_rapbs)
@@ -445,13 +453,24 @@ const FormKertasKerjaView: FC = () => {
       uraian.uraian = anggaran.uraian
       setSelectedUraian(uraian)
 
+      let satuanData = satuan.find((k: any) => k.satuan === anggaran.satuan)
+      //case when satuan is not from ref_satuan table
+      if (satuanData == null) {
+        satuanData = {
+          satuan: anggaran.satuan,
+          unit: anggaran.satuan,
+        }
+      }
+
+      setSelectedSatuan(satuanData)
+
       const anggaran_bulan: AnggaranBulanData[] = []
       periode.map((per: any) => {
         const idx = DATA_BULAN.findIndex((b) => b.id == per.periode)
         anggaran_bulan.push({
           id_bulan: per.periode,
           jumlah: per.jumlah,
-          satuan: per.satuan,
+          satuan: satuanData?.unit,
           bulan: DATA_BULAN[idx].name,
         })
       })
@@ -461,13 +480,15 @@ const FormKertasKerjaView: FC = () => {
         kegiatan: anggaran.kegiatan,
         rekening_belanja: anggaran.rekeningBelanja,
         uraian: anggaran.uraian,
-        harga_satuan: anggaran.hargaSatuan.toString(),
+        harga_satuan: `Rp ${numberUtils.delimit(
+          anggaran.hargaSatuan.toString(),
+          '.'
+        )}`,
         anggaran_bulan: anggaran_bulan,
       }
 
       reset(defaultValue)
       setFormDefaultValue(defaultValue)
-
       setFormDisable({
         kegiatan: false,
         rekening_belanja: false,
@@ -475,6 +496,29 @@ const FormKertasKerjaView: FC = () => {
         harga_satuan: false,
         harga_per_month: false,
       })
+
+      if (anggaran.errorKegiatan === 1) {
+        setError('kegiatan', {
+          type: 'manual',
+          message: KEGIATAN_ERROR_DATA_SENTRAL,
+        })
+      }
+      if (anggaran.errorRekening === 1) {
+        setError('rekening_belanja', {
+          type: 'manual',
+          message: REKENING_BELANJA_ERROR_DATA_SENTRAL,
+        })
+      }
+      if (anggaran.errorUraian === 1) {
+        setError('uraian', {
+          type: 'manual',
+          message: URAIAN_ERROR_DATA_SENTRAL,
+        })
+        setError('harga_satuan', {
+          type: 'manual',
+          message: HARGA_SATUAN_ERROR_DATA_SENTRAL,
+        })
+      }
     }
   }, [])
 
@@ -552,9 +596,11 @@ const FormKertasKerjaView: FC = () => {
                 name={`anggaran_bulan.${props.index}.bulan`}
                 options={getMonthOptions().map((b: any) => b.name)}
                 selected={field.bulan}
+                width={88}
+                border={false}
                 register={register}
                 handleSelect={handleSelect}
-                disabled={getMonthOptions().length === 0}
+                isDisabled={getMonthOptions().length === 0}
               />
             </span>
             <span>Rp {numberUtils.delimit(totalPerMonth, '.')}</span>
@@ -616,280 +662,283 @@ const FormKertasKerjaView: FC = () => {
 
   return (
     <div>
-      <FormDialogComponent
-        width={960}
-        maxHeight={550}
-        icon={q_mode !== 'update' && 'add'}
-        title="Isi Detail Anggaran Kegiatan"
-        isOpen={true}
-        isDelete={q_mode === 'update'}
-        btnSubmitText={
-          q_mode === 'update' ? 'Perbarui' : 'Masukkan ke Anggaran'
-        }
-        btnCancelText={q_mode === 'update' && 'Tutup'}
-        onDelete={() => setOpenModalDelete(true)}
-        onCancel={handleCancel}
-        onSubmit={handleSubmit(onSubmit)}
-        isSubmitDisabled={btnFormDisabled(errors)}
-      >
-        <div>
-          <div className="mb-5">
-            <div className="text-base pb-1 font-normal text-gray-900">
-              Kegiatan
+      <FormProvider {...formMethods}>
+        <FormDialogComponent
+          width={960}
+          maxHeight={550}
+          icon={q_mode !== 'update' && 'add'}
+          title="Isi Detail Anggaran Kegiatan"
+          isOpen={true}
+          isDelete={q_mode === 'update'}
+          btnAlertSubmitText="Kembali Isi Kegiatan"
+          btnSubmitText={
+            q_mode === 'update' ? 'Perbarui' : 'Masukkan ke Anggaran'
+          }
+          btnCancelText={q_mode === 'update' && 'Tutup'}
+          onDelete={() => setOpenModalDelete(true)}
+          onCancel={closeModal}
+          onSubmit={handleSubmit(onSubmit)}
+          isSubmitDisabled={btnFormDisabled(errors)}
+        >
+          <div>
+            <div className="mb-5">
+              <div className="text-base pb-1 font-normal text-gray-900">
+                Kegiatan
+              </div>
+              <InputSearchComponent
+                width={888}
+                height={250}
+                name="kegiatan"
+                placeholder="Apa kegiatan yang ingin Anda anggarkan?"
+                defaultValue={formDefaultValue.kegiatan}
+                errors={errors}
+                register={register}
+                onClick={handleClick}
+                required={true}
+                headers={headerKegiatan}
+                dataOptions={optionsKegiatan}
+              />
             </div>
-            <InputSearchComponent
-              width={888}
-              height={250}
-              name="kegiatan"
-              placeholder="Apa kegiatan yang ingin Anda anggarkan?"
-              defaultValue={formDefaultValue.kegiatan}
-              errors={errors}
-              register={register}
-              onClick={handleClick}
-              required={true}
-              headers={headerKegiatan}
-              dataOptions={optionsKegiatan}
-            />
-          </div>
-          <div className="mb-5">
-            <div className="text-base pb-1 font-normal text-gray-900">
-              Rekening Belanja
+            <div className="mb-5">
+              <div className="text-base pb-1 font-normal text-gray-900">
+                Rekening Belanja
+              </div>
+              <InputSearchComponent
+                width={888}
+                height={250}
+                name="rekening_belanja"
+                placeholder="Apa jenis rekening belanja yang ingin Anda anggarkan untuk kegiatan tersebut?"
+                defaultValue={formDefaultValue.rekening_belanja}
+                errors={errors}
+                register={register}
+                onClick={handleClick}
+                required={true}
+                isDisabled={formDisable.rekening_belanja}
+                headers={headerRekeningBelanja}
+                dataOptions={optionsRekening}
+              />
             </div>
-            <InputSearchComponent
-              width={888}
-              height={250}
-              name="rekening_belanja"
-              placeholder="Apa jenis rekening belanja yang ingin Anda anggarkan untuk kegiatan tersebut?"
-              defaultValue={formDefaultValue.rekening_belanja}
-              errors={errors}
-              register={register}
-              onClick={handleClick}
-              required={true}
-              isDisabled={formDisable.rekening_belanja}
-              headers={headerRekeningBelanja}
-              dataOptions={optionsRekening}
-            />
-          </div>
-          <div className="p-4 rounded border border-solid	border-gray-300 text-base">
-            <div className="flex mb-5">
-              <span className="flex-grow pr-6">
-                <div className="text-base pb-1 font-normal text-gray-900">
-                  Uraian
-                </div>
-                <InputUraian
-                  width={543}
-                  height={150}
-                  name="uraian"
-                  placeholder="Apa detail barang atau jasanya? (mis. papan tulis, honor narasumber)"
-                  defaultValue={formDefaultValue.uraian}
-                  errors={errors}
-                  register={register}
-                  handleClearError={handleClearError}
-                  onClick={handleClick}
-                  required={true}
-                  isDisabled={formDisable.uraian}
-                  headers={headerPopupUraian}
-                  dataOptions={optionsUraian}
-                  registerOption={{
-                    onChange: (e: any) => {
-                      const value = e.target.value
-                      if (value !== '') {
+            <div className="p-4 rounded border border-solid	border-gray-300 text-base">
+              <div className="flex mb-5">
+                <span className="flex-grow pr-6">
+                  <div className="text-base pb-1 font-normal text-gray-900">
+                    Uraian
+                  </div>
+                  <InputUraian
+                    width={543}
+                    height={150}
+                    name="uraian"
+                    placeholder="Apa detail barang atau jasanya? (mis. papan tulis, honor narasumber)"
+                    customNotFound={(query: string) => {
+                      return (
+                        <div className="p-4 bg-gray-5 shadow-inputSearch">
+                          “{query}” tidak ditemukan. Hubungi dinas setempat
+                          untuk menambah barang/jasa ini ke daftar kode barang.
+                        </div>
+                      )
+                    }}
+                    defaultValue={formDefaultValue.uraian}
+                    errors={errors}
+                    register={register}
+                    handleClearError={handleClearError}
+                    onClick={handleClick}
+                    required={true}
+                    isDisabled={formDisable.uraian}
+                    headers={headerPopupUraian}
+                    dataOptions={optionsUraian}
+                    registerOption={{
+                      onChange: (e: any) => {
+                        const value = e.target.value
+                        if (value !== '') {
+                          setFormDisable({
+                            ...formDisable,
+                            harga_satuan: false,
+                          })
+                        }
+                      },
+                    }}
+                  />
+                </span>
+                <span className="flex-none w-[289px]">
+                  <div className="text-base pb-1 font-normal text-gray-900">
+                    Harga Satuan yang Dianggarkan
+                  </div>
+                  <InputHargaSatuan
+                    width={289}
+                    name="harga_satuan"
+                    placeholder="Berapa perkiraan harganya?"
+                    errors={errors}
+                    register={register}
+                    handleClearError={handleClearError}
+                    required={true}
+                    isDisabled={formDisable.harga_satuan}
+                    headers={headerHarga}
+                    dataOptions={optionsHarga}
+                    registerOption={{
+                      validate: {
+                        minLength: (v: any) => {
+                          const value = v.replace(/[^,\d]/g, '').toString()
+
+                          return value >= 10 || ERROR_NOMINAL_MINLENGTH
+                        },
+                        lessThan: (v: any) => {
+                          if (optionsHarga.length > 0) {
+                            const batas_bawah = optionsHarga[0]?.batas_bawah
+
+                            const value = v.replace(/[^,\d]/g, '').toString()
+
+                            return (
+                              parseInt(value) >= batas_bawah ||
+                              HARGA_SATUAN_ERROR_LESS_THAN
+                            )
+                          }
+                        },
+                        moreThan: (v: any) => {
+                          if (optionsHarga.length > 0) {
+                            const batas_atas = optionsHarga[0]?.batas_atas
+
+                            const value = v.replace(/[^,\d]/g, '').toString()
+
+                            return (
+                              parseInt(value) <= batas_atas ||
+                              HARGA_SATUAN_ERROR_MORE_THAN
+                            )
+                          }
+                        },
+                      },
+                      onBlur: (e: any) => {
+                        const batas_bawah = optionsHarga[0]?.batas_bawah
+                        const batas_atas = optionsHarga[0]?.batas_atas
+
+                        const value = e.target.value
+                          .replace(/[^,\d]/g, '')
+                          .toString()
+
+                        if (value < 10) {
+                          setError('harga_satuan', {
+                            type: 'manual',
+                            message: ERROR_NOMINAL_MINLENGTH,
+                          })
+                          return
+                        }
+
+                        if (optionsHarga.length > 0) {
+                          if (parseInt(value) < batas_bawah) {
+                            setError('harga_satuan', {
+                              type: 'manual',
+                              message: HARGA_SATUAN_ERROR_LESS_THAN,
+                            })
+                            return
+                          }
+
+                          if (parseInt(value) > batas_atas) {
+                            setError('harga_satuan', {
+                              type: 'manual',
+                              message: HARGA_SATUAN_ERROR_MORE_THAN,
+                            })
+                            return
+                          }
+                        }
+
+                        clearErrors('harga_satuan')
+                      },
+                      onChange: (e: any) => {
+                        const batas_bawah = optionsHarga[0]?.batas_bawah
+                        const batas_atas = optionsHarga[0]?.batas_atas
+
+                        const value = e.target.value
+                          .replace(/[^,\d]/g, '')
+                          .toString()
+
+                        if (value !== null) {
+                          setValue(
+                            'harga_satuan',
+                            `Rp ${numberUtils.delimit(value, '.')}`
+                          )
+                        }
+
+                        if (
+                          value !== '' &&
+                          errors.harga_satuan?.message === ERROR_REQUIRED
+                        ) {
+                          clearErrors('harga_satuan')
+                          return
+                        }
+
+                        if (
+                          value >= 10 &&
+                          errors.harga_satuan?.message ===
+                            ERROR_NOMINAL_MINLENGTH
+                        ) {
+                          clearErrors('harga_satuan')
+                          return
+                        }
+
+                        if (
+                          parseInt(value) >= batas_bawah &&
+                          errors.harga_satuan?.message ===
+                            HARGA_SATUAN_ERROR_LESS_THAN
+                        ) {
+                          clearErrors('harga_satuan')
+                          return
+                        }
+
+                        if (
+                          parseInt(value) <= batas_atas &&
+                          errors.harga_satuan?.message ===
+                            HARGA_SATUAN_ERROR_MORE_THAN
+                        ) {
+                          clearErrors('harga_satuan')
+                          return
+                        }
+
                         setFormDisable({
                           ...formDisable,
-                          harga_satuan: false,
+                          harga_per_month: false,
                         })
-                      }
-                    },
-                  }}
-                />
-              </span>
-              <span className="flex-none w-[289px]">
-                <div className="text-base pb-1 font-normal text-gray-900">
-                  Harga Satuan yang Dianggarkan
-                </div>
-                <InputHargaSatuan
-                  width={289}
-                  name="harga_satuan"
-                  placeholder="Berapa perkiraan harganya?"
-                  errors={errors}
-                  register={register}
-                  handleClearError={handleClearError}
-                  required={true}
-                  isDisabled={formDisable.harga_satuan}
-                  headers={headerHarga}
-                  dataOptions={optionsHarga}
-                  registerOption={{
-                    validate: {
-                      minLength: (v: any) => {
-                        const value = v.replace(/[^,\d]/g, '').toString()
-
-                        return value >= 10 || HARGA_SATUAN_ERROR_LENGTH
                       },
-                      lessThan: (v: any) => {
-                        if (optionsHarga.length > 0) {
-                          const batas_bawah = optionsHarga[0]?.batas_bawah
-
-                          const value = v.replace(/[^,\d]/g, '').toString()
-
-                          return (
-                            parseInt(value) >= batas_bawah ||
-                            HARGA_SATUAN_ERROR_LESS_THAN
-                          )
-                        }
-                      },
-                      moreThan: (v: any) => {
-                        if (optionsHarga.length > 0) {
-                          const batas_atas = optionsHarga[0]?.batas_atas
-
-                          const value = v.replace(/[^,\d]/g, '').toString()
-
-                          return (
-                            parseInt(value) <= batas_atas ||
-                            HARGA_SATUAN_ERROR_MORE_THAN
-                          )
-                        }
-                      },
-                    },
-                    onBlur: (e: any) => {
-                      const batas_bawah = optionsHarga[0]?.batas_bawah
-                      const batas_atas = optionsHarga[0]?.batas_atas
-
-                      const value = e.target.value
-                        .replace(/[^,\d]/g, '')
-                        .toString()
-
-                      if (value < 10) {
-                        setError('harga_satuan', {
-                          type: 'manual',
-                          message: HARGA_SATUAN_ERROR_LENGTH,
-                        })
-                        return
-                      }
-
-                      if (optionsHarga.length > 0) {
-                        if (parseInt(value) < batas_bawah) {
-                          setError('harga_satuan', {
-                            type: 'manual',
-                            message: HARGA_SATUAN_ERROR_LESS_THAN,
-                          })
-                          return
-                        }
-
-                        if (parseInt(value) > batas_atas) {
-                          setError('harga_satuan', {
-                            type: 'manual',
-                            message: HARGA_SATUAN_ERROR_MORE_THAN,
-                          })
-                          return
-                        }
-                      }
-
-                      clearErrors('harga_satuan')
-                    },
-                    onChange: (e: any) => {
-                      const batas_bawah = optionsHarga[0]?.batas_bawah
-                      const batas_atas = optionsHarga[0]?.batas_atas
-
-                      const value = e.target.value
-                        .replace(/[^,\d]/g, '')
-                        .toString()
-
-                      if (value !== null) {
-                        setValue(
-                          'harga_satuan',
-                          `Rp ${numberUtils.delimit(value, '.')}`
-                        )
-                      }
-
-                      if (
-                        value !== '' &&
-                        errors.harga_satuan?.message === ERROR_REQUIRED
-                      ) {
-                        clearErrors('harga_satuan')
-                        return
-                      }
-
-                      if (
-                        value >= 10 &&
-                        errors.harga_satuan?.message ===
-                          HARGA_SATUAN_ERROR_LENGTH
-                      ) {
-                        clearErrors('harga_satuan')
-                        return
-                      }
-
-                      if (
-                        parseInt(value) >= batas_bawah &&
-                        errors.harga_satuan?.message ===
-                          HARGA_SATUAN_ERROR_LESS_THAN
-                      ) {
-                        clearErrors('harga_satuan')
-                        return
-                      }
-
-                      if (
-                        parseInt(value) <= batas_atas &&
-                        errors.harga_satuan?.message ===
-                          HARGA_SATUAN_ERROR_MORE_THAN
-                      ) {
-                        clearErrors('harga_satuan')
-                        return
-                      }
-
-                      setFormDisable({
-                        ...formDisable,
-                        harga_per_month: false,
-                      })
-                    },
-                  }}
-                />
-              </span>
-            </div>
-            <div className="mb-5">Dianggarkan untuk Bulan</div>
-            <div className="grid grid-cols-2 gap-x-[40px] gap-y-[20px]">
-              {fields.map((field, index) => {
-                return (
-                  <FormHargaPerMonth key={index} index={index} field={field} />
-                )
-              })}
-              {fields.length <= DATA_BULAN.length - 1 && (
-                <div
-                  className={clsx(
-                    styles.borderDashed,
-                    'grid place-content-center cursor-pointer p-11'
-                  )}
-                  onClick={handleTambahBulan}
-                >
-                  <div className="flex items-center">
-                    <Icon
-                      as="i"
-                      color="default"
-                      fontSize="default"
-                      className="mr-2"
-                      style={{ fontSize: '15px' }}
-                    >
-                      add
-                    </Icon>
-                    Tambah Bulan
+                    }}
+                  />
+                </span>
+              </div>
+              <div className="mb-5">Dianggarkan untuk Bulan</div>
+              <div className="grid grid-cols-2 gap-x-[40px] gap-y-[20px]">
+                {fields.map((field, index) => {
+                  return (
+                    <FormHargaPerMonth
+                      key={index}
+                      index={index}
+                      field={field}
+                    />
+                  )
+                })}
+                {fields.length <= DATA_BULAN.length - 1 && (
+                  <div
+                    className={clsx(
+                      styles.borderDashed,
+                      'grid place-content-center cursor-pointer p-11'
+                    )}
+                    onClick={handleTambahBulan}
+                  >
+                    <div className="flex items-center">
+                      <Icon
+                        as="i"
+                        color="default"
+                        fontSize="default"
+                        className="mr-2"
+                        style={{ fontSize: '15px' }}
+                      >
+                        add
+                      </Icon>
+                      Tambah Bulan
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      </FormDialogComponent>
-      <AlertDialogComponent
-        type="failed"
-        icon="exit_to_app"
-        title="Keluar dari halaman ini?"
-        desc="Jika Anda keluar, data yang baru saja Anda isi akan hilang."
-        isOpen={openModalConfirmCancel}
-        btnCancelText="Keluar"
-        btnActionText="Kembali Isi Kegiatan"
-        onCancel={onConfirmCancel}
-        onSubmit={() => setOpenModalConfirmCancel(false)}
-        layer={2}
-      />
+        </FormDialogComponent>
+      </FormProvider>
       <AlertDialogComponent
         type="failed"
         icon="delete"
@@ -916,10 +965,10 @@ const FormKertasKerjaView: FC = () => {
         icon="delete"
         title="Gagal menghapus kegiatan"
         desc="Maaf, terjadi gangguan di sistem kami. Silakan coba lagi dałam beberapa saat."
-        isOpen={openModalDelete}
+        isOpen={openModalFailedDelete}
         btnCancelText="Tutup"
         btnActionText="Hapus Ulang"
-        onCancel={() => setOpenModalDelete(false)}
+        onCancel={() => setOpenModalFailedDelete(false)}
         onSubmit={handleDelete}
         layer={2}
       />

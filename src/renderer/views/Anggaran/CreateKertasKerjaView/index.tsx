@@ -2,7 +2,6 @@ import React, { FC, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { Button } from '@wartek-id/button'
-import { Icon } from '@wartek-id/icon'
 
 import AlertDialogComponent from 'renderer/components/Dialog/AlertDialogComponent'
 import SyncDialogComponent from 'renderer/components/Dialog/SyncDialogComponent'
@@ -19,10 +18,15 @@ import {
   useAPIGetReferensi,
   useAPIGetReferensiWilayah,
 } from 'renderer/apis/referensi'
+
 import { APP_CONFIG } from 'renderer/constants/appConfig'
 import { ID_SUMBER_DANA } from 'renderer/constants/anggaran'
 import AlertNoConnection from 'renderer/views/AlertNoConnection'
 import AlertFailedSyncData from 'renderer/views/AlertFailedSyncData'
+
+import { copyKertasKerja } from 'renderer/utils/copy-writing'
+import { SetConfigRequest } from 'global/types/Config'
+import { IPC_REFERENSI } from 'global/ipc'
 
 const ipcRenderer = window.require('electron').ipcRenderer
 
@@ -37,6 +41,7 @@ const stepApi = [
   'refKode',
   'refRekening',
   'refBarang',
+  'refSatuan',
   'configPagu',
 ]
 
@@ -60,6 +65,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
   const [lastUpdateKode, setLastUpdateKode] = useState('')
   const [lastUpdateRekening, setLastUpdateRekening] = useState('')
   const [lastUpdateBarang, setLastUpdateBarang] = useState('')
+  const [lastUpdateSatuan, setLastUpdateSatuan] = useState('')
   const [alertDesc, setAlertDesc] = useState('')
 
   const npsn = useAuthStore((state: AuthStates) => state.npsn)
@@ -198,12 +204,21 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
   )
 
   const {
+    data: dataRefSatuan,
+    isError: isGetRefSatuanError,
+    remove: removeRefSatuan,
+  } = useAPIGetReferensi(
+    { referensi: 'satuan', lastUpdate: lastUpdateSatuan },
+    { enabled: api === stepApi[10] && lastUpdateSatuan !== '' }
+  )
+
+  const {
     data: dataPagu,
     isError: isGetPaguError,
     remove: removePagu,
   } = useAPIGetConfigPagu(
     { idSumberData: props.idSumberDana, isRevisi: 0 },
-    { enabled: api === stepApi[10] }
+    { enabled: api === stepApi[11] }
   )
 
   const removeCacheData = () => {
@@ -218,6 +233,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
     removeRefRekening()
     removeRefBarang()
     removePagu()
+    removeRefSatuan()
   }
 
   const failedSyncData = () => {
@@ -244,11 +260,11 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
     )
     if (ipcHddVolOld === '') {
       ipcHddVolOld = ipcHddVol
-      ipcRenderer.sendSync(
-        'config:setConfig',
-        APP_CONFIG.hddVolOld,
-        ipcHddVolOld
-      )
+      const data: SetConfigRequest = {
+        varname: APP_CONFIG.hddVolOld,
+        varvalue: ipcHddVolOld,
+      }
+      ipcRenderer.sendSync('config:setConfig', data)
     }
     setHddVol(ipcHddVol)
     setHddVolOld(ipcHddVolOld)
@@ -286,7 +302,11 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
         setApi('')
         removeCacheData()
         setIsSync(false)
-        ipcRenderer.send('config:setConfig', APP_CONFIG.koregInvalid, '1')
+        const data: SetConfigRequest = {
+          varname: APP_CONFIG.koregInvalid,
+          varvalue: '1',
+        }
+        ipcRenderer.send('config:setConfig', data)
         setMultipleDevice(true)
       }
     }
@@ -353,9 +373,20 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
   useEffect(() => {
     if (dataRefBarang !== undefined) {
       ipcRenderer.send('referensi:addBulkRefBarang', dataRefBarang?.data)
+      const satuanLastUpdate = ipcRenderer.sendSync(
+        IPC_REFERENSI.getRefSatuanLastUpdate
+      )
+      setLastUpdateSatuan(satuanLastUpdate)
       setApi(stepApi[10])
     }
   }, [dataRefBarang])
+
+  useEffect(() => {
+    if (dataRefSatuan !== undefined) {
+      ipcRenderer.send(IPC_REFERENSI.addBulkRefSatuan, dataRefSatuan?.data)
+      setApi(stepApi[11])
+    }
+  }, [dataRefSatuan])
 
   useEffect(() => {
     if (dataPagu !== undefined) {
@@ -365,7 +396,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
       if (dataPagu?.data?.sumber_dana_id === ID_SUMBER_DANA.BOS_REGULER) {
         if (dataPagu?.data?.volume <= 0) {
           setAlertDesc(
-            'Anda tidak bisa membuat RKAS dari sumber dana BOS Reguler karena belum ada pencatatan penerimaan dana dari BOSSalur. Silakan hubungi dinas setempat jika ada kesalahan.'
+            `Anda tidak bisa membuat ${copyKertasKerja()} dari sumber dana BOS Reguler karena belum ada pencatatan penerimaan dana dari BOSSalur. Silakan hubungi dinas setempat jika ada kesalahan.`
           )
           setOpenModalFailed(true)
         } else {
@@ -390,7 +421,8 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
       isGetRefKodeError ||
       isGetRefRekeningError ||
       isGetRefBarangError ||
-      isGetPaguError
+      isGetPaguError ||
+      isGetRefSatuanError
     ) {
       failedSyncData()
     }
@@ -406,6 +438,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
     isGetRefRekeningError,
     isGetRefBarangError,
     isGetPaguError,
+    isGetRefSatuanError,
   ])
 
   const onClickCreate = () => {
@@ -434,15 +467,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
         variant="solid"
         onClick={onClickCreate}
       >
-        <Icon
-          as="i"
-          color="default"
-          fontSize="default"
-          style={{ color: '#ffffff' }}
-        >
-          add
-        </Icon>
-        Buat RKAS
+        Aktivasi {copyKertasKerja()}
       </Button>
       <AlertDialogComponent
         type="failed"
@@ -458,7 +483,7 @@ const CreateKertasKerjaView: FC<CreateKertasKerjaProps> = (
         type="failed"
         icon="priority_high"
         title="Akun anda teridentifikasi pada perangkat lain"
-        desc="Silahkan input ulang NPSN dan kode aktivasi untuk dapat melanjutkan menggunakan ARKAS pada komputer ini. Data yang sudah Anda masukkan tidak akan hilang."
+        desc="Silakan input ulang NPSN dan kode aktivasi untuk dapat melanjutkan menggunakan ARKAS pada komputer ini. Data yang sudah Anda masukkan tidak akan hilang."
         isOpen={isMultipleDevice}
         btnCancelText="Batal"
         btnActionText="Registrasi Ulang"

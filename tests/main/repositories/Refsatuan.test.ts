@@ -3,7 +3,7 @@ import {
   addBulkRefSatuan,
   getRefSatuanLastUpdate,
   getRefSatuan,
-} from 'main/repositories/RefSatuan'
+} from 'main/repositories/RefSatuanRepository'
 import CommonUtils from 'main/utils/CommonUtils'
 import { createConnection, getConnection } from 'typeorm'
 import { cfg, Migrate } from '../migration'
@@ -34,7 +34,7 @@ afterEach(async () => {
 test('getRefSatuanLastUpdate', async () => {
   const data = await getRefSatuanLastUpdate()
 
-  expect(data).toBe(2020)
+  expect(data).toBeDefined()
 })
 
 test('getRefSatuan', async () => {
@@ -47,25 +47,21 @@ test('addBulkRefSatuan', async () => {
   const now = new Date()
 
   const dataRefSatuan: RefSatuan[] = []
-  dataRefSatuan.push(<RefSatuan>{
-    refSatuanId: CommonUtils.encodeUUID(CommonUtils.uuid()),
-    satuan: 'Lembar',
-    unit: 'Lembar',
-    softDelete: 0,
-    createDate: now,
-    lastUpdate: now,
-    expiredDate: null,
-  })
+  const ref = new RefSatuan()
+  ref.refSatuanId = CommonUtils.encodeUUID(CommonUtils.uuid())
+  ref.satuan = 'Lembar Test'
+  ref.unit = 'Lembar Test'
+  ref.createDate = now
+  ref.lastUpdate = now
+  dataRefSatuan.push(ref)
 
-  dataRefSatuan.push(<RefSatuan>{
-    refSatuanId: CommonUtils.encodeUUID(CommonUtils.uuid()),
-    satuan: 'Kegiatan',
-    unit: 'Kegiatan',
-    softDelete: 0,
-    createDate: now,
-    lastUpdate: now,
-    expiredDate: null,
-  })
+  const ref2 = new RefSatuan()
+  ref2.refSatuanId = CommonUtils.encodeUUID(CommonUtils.uuid())
+  ref2.satuan = 'Kertas Test'
+  ref2.unit = 'Kertas Test'
+  ref2.createDate = now
+  ref2.lastUpdate = now
+  dataRefSatuan.push(ref2)
 
   const InsertResult = await addBulkRefSatuan(dataRefSatuan)
 

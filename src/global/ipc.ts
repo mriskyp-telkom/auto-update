@@ -5,6 +5,8 @@ export const REFERENSI = 'referensi'
 export const KK = 'kk'
 export const CONFIG = 'config'
 export const SEKOLAH = 'sekolah'
+export const RAPBS = 'rapbs'
+export const TATA_USAHA = 'tata_usaha'
 
 export const IPC_ANGGARAN = {
   getAnggaranById: `${ANGGARAN}:getAnggaranById`,
@@ -13,6 +15,7 @@ export const IPC_ANGGARAN = {
   addAnggaran: `${ANGGARAN}:addAnggaran`,
   upsertAnggaran: `${ANGGARAN}:upsertAnggaran`,
   updateIsPengesahan: `${ANGGARAN}:updateIsPengesahan`,
+  UpdateTanggalPengajuan: `${ANGGARAN}:UpdateTanggalPengajuan`,
 }
 
 export const IPC_PENJAB = {
@@ -21,6 +24,7 @@ export const IPC_PENJAB = {
 
 export const IPC_PTK = {
   getPtk: `${PTK}:getPtk`,
+  GetRapbsPtkHonor: `${PTK}:GetRapbsPtkHonor`,
 }
 
 export const IPC_REFERENSI = {
@@ -30,6 +34,7 @@ export const IPC_REFERENSI = {
 
   addBulkRefSatuan: `${REFERENSI}:addBulkRefSatuan`,
   getRefSatuan: `${REFERENSI}:getRefSatuan`,
+  getRefSatuanLastUpdate: `${REFERENSI}:getRefSatuanLastUpdate`,
 }
 
 export const IPC_KK = {
@@ -42,6 +47,9 @@ export const IPC_KK = {
   getRapbsLastUpdate: `${KK}:getRapbsLastUpdate`,
   getRapbsSummary: `${KK}:getRapbsSummary`,
   deleteRapbs: `${KK}:deleteRapbs`,
+  getListValidasiReferensiPeriode: `${KK}:getListValidasiReferensiPeriode`,
+
+  aktivasiBku: `${KK}:aktivasiBku`,
 }
 
 export const IPC_CONFIG = {
@@ -51,4 +59,19 @@ export const IPC_CONFIG = {
 
 export const IPC_SEKOLAH = {
   getSekolah: `${SEKOLAH}:getSekolah`,
+}
+
+export const IPC_RAPBS = {
+  GetListRapbsPeriodeByListRapbsId: `${RAPBS}:GetListRapbsPeriodeByListRapbsId`,
+  GetRapbsByAnggaranId: `${RAPBS}:GetRapbsByAnggaranId`,
+}
+
+export const IPC_TATA_USAHA = {
+  getListAnggaran: `${TATA_USAHA}:getListAnggaran`,
+  getTotalSaldo: `${TATA_USAHA}:getTotalSaldo`,
+  getTotalSaldoDibelanjakan: `${TATA_USAHA}:getTotalSaldoDibelanjakan`,
+  getTotalAnggaranPerBulan: `${TATA_USAHA}:getTotalAnggaranPerBulan`,
+  getTotalPerluDianggarkanUlang: `${TATA_USAHA}:getTotalPerluDianggarkanUlang`,
+  cashWithdrawal: `${TATA_USAHA}:cashWithdrawal`,
+  getListKasUmum: `${TATA_USAHA}:getListKasUmum`,
 }

@@ -5,7 +5,7 @@ import { MstSekolah } from 'main/models/MstSekolah'
 import { AppConfig } from 'main/models/AppConfig'
 import { RefSumberDana } from 'main/models/RefSumberDana'
 import CommonUtils from 'main/utils/CommonUtils'
-import { GetConfig } from 'main/repositories/Config'
+import { GetConfig } from 'main/repositories/ConfigRepository'
 import {
   AddAnggaran,
   GetAnggaran,
@@ -16,8 +16,13 @@ import {
   CopyAnggaran,
   GetTotalAnggaran,
   UpdateIsPengesahan,
-} from 'main/repositories/Anggaran'
+  UpdateTanggalPengajuan,
+} from 'main/repositories/AnggaranRepository'
 import { cfg, Migrate } from '../migration'
+import { RefRekening } from 'main/models/RefRekening'
+import { RefKode } from 'main/models/RefKode'
+import { RefAcuanBarang } from 'main/models/RefAcuanBarang'
+import { RapbsPeriode } from 'main/models/RapbsPeriode'
 
 beforeAll(async () => {
   process.env.NODE_ENV = 'testing'
@@ -28,7 +33,17 @@ beforeEach(async () => {
     type: 'better-sqlite3',
     database: ':memory:',
     dropSchema: false,
-    entities: [Anggaran, MstSekolah, AppConfig, RefSumberDana, Rapbs],
+    entities: [
+      Anggaran,
+      MstSekolah,
+      AppConfig,
+      RefSumberDana,
+      Rapbs,
+      RefRekening,
+      RefKode,
+      RefAcuanBarang,
+      RapbsPeriode,
+    ],
     synchronize: false,
     logging: true,
   })
@@ -55,7 +70,7 @@ test('AddAnggaran', async () => {
     id_penjab: '343',
   }
 
-  const idAnggaran = CommonUtils.encodeUUID(CommonUtils.uuid())
+  const idAnggaran = CommonUtils.encodeUUIDFromV4()
   const dataAnggaran = new Anggaran()
   dataAnggaran.idAnggaran = idAnggaran
   dataAnggaran.idRefSumberDana = data.id_ref_sumber_dana
@@ -183,7 +198,7 @@ test('DelAnggaran', async () => {
 })
 
 test('CopyAnggaran', async () => {
-  const idAnggaranBefore = 'ODMMS_baREyJzOtKTDHEdw',
+  const idAnggaranBefore = 'apQwiAb-9EWxv74iwMY6aQ',
     idRefSumberDana = 1,
     sekolahId = 'XN60oPUuEeC-vv2_lhMTXQ',
     tahun = 2022,
@@ -203,11 +218,15 @@ test('CopyAnggaran', async () => {
     idPenjab
   )
 
-  expect(newIdAnggaran).not.toBeNull()
+  expect(newIdAnggaran.length).toBeGreaterThan(0)
 
   const anggaran = await GetAnggaranById(newIdAnggaran)
-
   expect(anggaran.idAnggaran).toBe(newIdAnggaran)
+
+  const rapbsList = await getRepository(Rapbs).find({
+    idAnggaran: newIdAnggaran,
+  })
+  expect(rapbsList.length).toBeGreaterThan(0)
 })
 
 test('GetTotalAnggaran', async () => {
@@ -226,4 +245,15 @@ test('UpdateIsPengesahan', async () => {
 
   const anggaran = await GetAnggaranById(idAnggaran)
   expect(anggaran.isPengesahan).toBe(3)
+})
+
+test('UpdateTanggalPengajuan', async () => {
+  const idAnggaran = 'ODMMS_baREyJzOtKTDHEdw'
+
+  // date param from renderer, this repositories set by param renderer
+  const anggaran = await UpdateTanggalPengajuan(
+    idAnggaran,
+    '2022-03-16 16:55:09.000'
+  )
+  expect(anggaran.affected).toBe(1)
 })

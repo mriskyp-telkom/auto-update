@@ -14,6 +14,10 @@ module.exports = {
   },
   plugins: plugins,
   resolve: {
+    fallback: {
+      crypto: require.resolve('crypto-browserify'),
+      stream: require.resolve('stream-browserify'),
+    },
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.json'],
     alias: {
       main: path.resolve(__dirname, './src/main'),

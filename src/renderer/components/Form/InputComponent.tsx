@@ -2,6 +2,9 @@ import React, { FC } from 'react'
 import { FieldErrors, FieldError, RegisterOptions } from 'react-hook-form'
 
 import { Input } from '@wartek-id/input'
+import { numberUtils } from '@wartek-id/fe-toolbox'
+
+import { InputType } from 'renderer/types/ComponentType'
 
 import {
   isFormatEmailValid,
@@ -11,23 +14,26 @@ import {
 } from 'renderer/utils/form-validation'
 
 import {
-  ERROR_REQUIRED,
   NAMA_ERROR_VALIDATION,
   EMAIL_ERROR_FORMAT,
-  EMAIL_ERROR_VALIDATION,
-  EMAIL_ERROR_REGISTERED,
   EMAIL_ERROR_NOT_REGISTERED,
+  EMAIL_ERROR_REGISTERED,
+  EMAIL_ERROR_VALIDATION,
   ERROR_ALPHABET_ONLY,
+  ERROR_REQUIRED,
+  KODE_AKTIVASI_ERROR_WRONG,
   NPSN_ERROR_LENGTH,
   NPSN_ERROR_NOT_REGISTERED,
-  KODE_AKTIVASI_ERROR_WRONG,
+  ERROR_NOMINAL_MINLENGTH,
 } from 'renderer/constants/errorForm'
 
 import includes from 'lodash/includes'
 
+import clsx from 'clsx'
+
 interface InputProps {
-  type: 'text' | 'email' | 'alphabet' | 'name'
-  required: boolean
+  type: InputType
+  required?: boolean
   isDisabled?: boolean
   name: string
   placeholder: string
@@ -35,6 +41,7 @@ interface InputProps {
   register: (arg0: string, arg1: RegisterOptions) => void
   setError?: (name: string, error: FieldError) => void
   handleClearError?: (name: string) => void
+  setValue?: (name: string, value: string) => void
   registerOption?: RegisterOptions
   className?: string
 }
@@ -56,6 +63,7 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
     errors,
     setError,
     register,
+    setValue,
   } = props
 
   const clearErrorRequired = (value: string) => {
@@ -103,19 +111,22 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
       },
       onBlur: (e) => {
         const value = e.target.value
-        if (value !== '' && !isEmailValid(value)) {
-          setError(name, {
-            type: 'manual',
-            message: EMAIL_ERROR_VALIDATION,
-          })
-          return
-        }
-        if (value !== '' && !isFormatEmailValid(value)) {
-          setError(name, {
-            type: 'manual',
-            message: EMAIL_ERROR_FORMAT,
-          })
-          return
+        if (value !== '') {
+          if (!isEmailValid(value)) {
+            setError(name, {
+              type: 'manual',
+              message: EMAIL_ERROR_VALIDATION,
+            })
+            return
+          }
+
+          if (!isFormatEmailValid(value)) {
+            setError(name, {
+              type: 'manual',
+              message: EMAIL_ERROR_FORMAT,
+            })
+            return
+          }
         }
         props.handleClearError(name)
       },
@@ -124,21 +135,21 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
         clearErrorRequired(value)
         clearErrorServer(value)
         props.registerOption?.onChange(e)
-        if (
-          value !== '' &&
-          isEmailValid(value) &&
-          errors[name]?.message === EMAIL_ERROR_VALIDATION
-        ) {
-          props.handleClearError(name)
-          return
-        }
-        if (
-          value !== '' &&
-          isFormatEmailValid(value) &&
-          errors[name]?.message === EMAIL_ERROR_FORMAT
-        ) {
-          props.handleClearError(name)
-          return
+        if (value !== '') {
+          if (
+            isEmailValid(value) &&
+            errors[name]?.message === EMAIL_ERROR_VALIDATION
+          ) {
+            props.handleClearError(name)
+            return
+          }
+          if (
+            isFormatEmailValid(value) &&
+            errors[name]?.message === EMAIL_ERROR_FORMAT
+          ) {
+            props.handleClearError(name)
+            return
+          }
         }
       },
     }
@@ -208,6 +219,49 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
     }
   }
 
+  if (type === 'nominal') {
+    validation = {
+      ...validation,
+      validate: {
+        ...props.registerOption?.validate,
+        minLength: (v: any) => {
+          const value = v.replace(/[^,\d]/g, '').toString()
+          return value >= 10 || ERROR_NOMINAL_MINLENGTH
+        },
+      },
+      onBlur: (e) => {
+        const value = e.target.value.replace(/[^,\d]/g, '').toString()
+
+        if (value < 10) {
+          setError(name, {
+            type: 'manual',
+            message: ERROR_NOMINAL_MINLENGTH,
+          })
+          return
+        }
+        props.handleClearError(name)
+        props.registerOption?.onBlur(e)
+      },
+      onChange: (e) => {
+        const value = e.target.value.replace(/[^,\d]/g, '').toString()
+        const maxDigit = value.replace(/\D/g, '').replace(/(\d{12})(\d)/, '$1')
+        const format = `Rp ${numberUtils.delimit(maxDigit, '.')}`
+
+        if (value !== null) {
+          setValue(name, format)
+        }
+
+        clearErrorRequired(value)
+        clearErrorServer(value)
+        props.registerOption?.onChange(e)
+        if (value >= 10 && errors[name]?.message === ERROR_NOMINAL_MINLENGTH) {
+          props.handleClearError(name)
+          return
+        }
+      },
+    }
+  }
+
   if (name === 'npsn') {
     validation = {
       ...validation,
@@ -241,7 +295,10 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
   return (
     <Input
       type="text"
-      className={props.className}
+      className={clsx(
+        props.isDisabled && 'cursor-not-allowed',
+        props.className
+      )}
       placeholder={placeholder}
       isDisabled={isDisabled}
       id={name}
@@ -251,6 +308,10 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
       {...register(name, validation)}
     />
   )
+}
+
+InputComponent.defaultProps = {
+  required: false,
 }
 
 export default InputComponent

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TfrxReport Version="5.4.6" DotMatrixReport="False" IniFile="\Software\Fast Reports" PreviewOptions.AllowEdit="False" PreviewOptions.Buttons="4095" PreviewOptions.Modal="False" PreviewOptions.Zoom="1" PrintOptions.Printer="Default" PrintOptions.PrintOnSheet="0" ReportOptions.CreateDate="42804,5718366435" ReportOptions.Description.Text="" ReportOptions.LastChange="43995,030896794" ScriptLanguage="PascalScript" ScriptText.Text="&#13;&#10;begin&#13;&#10;&#13;&#10;end." StoreInDFM="False">
+  <Datasets>
+    <item DataSet="frxDsReport1" DataSetName="frxDsReport1"/>
+    <item DataSet="frxDsReport2" DataSetName="frxDsReport2"/>
+    <item DataSet="frxDsReport3" DataSetName="frxDsReport3"/>
+  </Datasets>
+  <Variables>
+    <item Name="id_anggaran" Value="4fbd88eb-47db-4c9c-b931-8f45d1e0d787"/>
+    <item Name="id_periode" Value="84"/>
+    <item Name="tahun" Value="2020"/>
+    <item Name="tahun_up" Value="2018"/>
+  </Variables>
+  <TfrxDataPage Name="Data" Height="1000" Left="0" Top="0" Width="1000"/>
+  <TfrxReportPage Name="Page1" Orientation="poLandscape" PaperWidth="297" PaperHeight="215,9" PaperSize="256" LeftMargin="10" RightMargin="10" TopMargin="10" BottomMargin="10" ColumnWidth="0" ColumnPositions.Text="" HGuides.Text="" VGuides.Text="">
+    <TfrxMasterData Name="MasterData1" FillType="ftBrush" FillGap.Top="0" FillGap.Left="0" FillGap.Bottom="0" FillGap.Right="0" Height="18,8976378" Left="0" Top="374,17347" Width="1046,92981" ColumnWidth="0" ColumnGap="0" DataSet="frxDsReport2" DataSetName="frxDsReport2" RowCount="0" Stretched="True">
+      <TfrxMemoView Name="Memo34" Left="0" Top="0" Width="83,14966" Height="18,89765" StretchMode="smMaxHeight" DisplayFormat.FormatStr="dd-mm-yyyy" DisplayFormat.Kind="fkDateTime" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial Narrow" Font.Style="0" Frame.Typ="15" HAlign="haCenter" ParentFont="False" VAlign="vaCenter" Text="[frxDsReport2.&#34;tanggal_transaksi&#34;]"/>
+      <TfrxMemoView Name="Memo35" Left="283,46475" Top="0" Width="506,45702" Height="18,89765" StretchMode="smMaxHeight" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial Narrow" Font.Style="0" Frame.Typ="15" ParentFont="False" VAlign="vaCenter" Text="[frxDsReport2.&#34;uraian&#34;]"/>
+      <TfrxMemoView Name="Memo38" Left="789,92131598" Top="0" Width="83,14966" Height="18,89765" StretchMode="smMaxHeight" DisplayFormat.FormatStr="%2.0n" DisplayFormat.Kind="fkNumeric" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial Narrow" Font.Style="0" Frame.Typ="15" HAlign="haRight" ParentFont="False" VAlign="vaCenter" Text="[frxDsReport2.&#34;debit&#34;]"/>
+      <TfrxMemoView Name="Memo39" Left="873,07092228" Top="0" Width="86,92919" Height="18,89765" StretchMode="smMaxHeight" DisplayFormat.FormatStr="%2.0n" DisplayFormat.Kind="fkNumeric" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial Narrow" Font.Style="0" Frame.Typ="15" HAlign="haRight" ParentFont="False" VAlign="vaCenter" Text="[frxDsReport2.&#34;credit&#34;]"/>
+      <TfrxMemoView Name="Memo40" Left="960,00005614" Top="0" Width="86,92919" Height="18,89765" StretchMode="smMaxHeight" DisplayFormat.FormatStr="%2.0n" DisplayFormat.Kind="fkNumeric" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial Narrow" Font.Style="0" Frame.Typ="15" HAlign="haRight" ParentFont="False" VAlign="vaCenter" Text="[frxDsReport2.&#34;balance&#34;]"/>
+      <TfrxMemoView Name="Memo26" Left="83,14966" Top="0" Width="60,47248" Height="18,89765" StretchMode="smMaxHeight" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial Narrow" Font.Style="0" Frame.Typ="15" HAlign="haCenter" ParentFont="False" VAlign="vaCenter" Text="[&#60;frxDsReport2.&#34;kd_pro&#34;&#62;+&#60;frxDsReport2.&#34;kd_sub&#34;&#62;+&#60;frxDsReport2.&#34;kd_keg&#34;&#62;]">
+        <Formats>
+          <item/>
+          <item/>
+          <item/>
+        </Formats>
+      </TfrxMemoView>
+      <TfrxMemoView Name="Memo33" Left="143,62214" Top="0" Width="79,37013" Height="18,89765" StretchMode="smMaxHeight" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial Narrow" Font.Style="0" Frame.Typ="15" HAlign="haCenter" ParentFont="False" VAlign="vaCenter" Text="[frxDsReport2.&#34;kode_rekening&#34;]"/>
+      <TfrxMemoView Name="Memo41" Left="223,12616" Top="0" Width="60,47248" Height="18,89765" StretchMode="smMaxHeight" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial Narrow" Font.Style="0" Frame.Typ="15" HAlign="haCenter" ParentFont="False" VAlign="vaCenter" Text="[frxDsReport2.&#34;no_bukti&#34;]"/>
+    </TfrxMasterData>
+    <TfrxHeader Name="Header1" FillType="ftBrush" FillGap.Top="0" FillGap.Left="0" FillGap.Bottom="0" FillGap.Right="0" Height="18,89765" Left="0" Top="332,59864" Width="1046,92981" ReprintOnNewPage="True">
+      <TfrxMemoView Name="Memo19" Left="0" Top="0" Width="83,14966" Height="18,8976377952756" Font.Charset="1" Font.Color="0" Font.Height="-12" Font.Name="Arial Narrow" Font.Style="2" Frame.Typ="15" Fill.BackColor="14211288" HAlign="haCenter" ParentFont="False" Text="1"/>
+      <TfrxMemoView Name="Memo20" Left="83,14966" Top="0" Width="60,47248" Height="18,8976378" Font.Charset="1" Font.Color="0" Font.Height="-12" Font.Name="Arial Narrow" Font.Style="2" Frame.Typ="15" Fill.BackColor="14211288" HAlign="haCenter" ParentFont="False" Text="2"/>
+      <TfrxMemoView Name="Memo21" Left="143,62214" Top="0" Width="79,37013" Height="18,8976378" Font.Charset="1" Font.Color="0" Font.Height="-12" Font.Name="Arial Narrow" Font.Style="2" Frame.Typ="15" Fill.BackColor="14211288" HAlign="haCenter" ParentFont="False" Text="3"/>
+      <TfrxMemoView Name="Memo22" Left="873,07092228" Top="0" Width="86,92919" Height="18,8976378" Font.Charset="1" Font.Color="0" Font.Height="-12" Font.Name="Arial Narrow" Font.Style="2" Frame.Typ="15" Fill.BackColor="14211288" HAlign="haCenter" ParentFont="False" Text="7"/>
+      <TfrxMemoView Name="Memo23" Left="960,00005614" Top="0" Width="86,92919" Height="18,8976378" Font.Charset="1" Font.Color="0" Font.Height="-12" Font.Name="Arial Narrow" Font.Style="2" Frame.Typ="15" Fill.BackColor="14211288" HAlign="haCenter" ParentFont="False" Text="8"/>
+      <TfrxMemoView Name="Memo31" Left="222,99227" Top="0" Width="60,47248" Height="18,8976378" Font.Charset="1" Font.Color="0" Font.Height="-12" Font.Name="Arial Narrow" Font.Style="2" Frame.Typ="15" Fill.BackColor="14211288" HAlign="haCenter" ParentFont="False" Text="4"/>
+      <TfrxMemoView Name="Memo36" Left="283,46475" Top="0" Width="506,45702" Height="18,8976378" Font.Charset="1" Font.Color="0" Font.Height="-12" Font.Name="Arial Narrow" Font.Style="2" Frame.Typ="15" Fill.BackColor="14211288" HAlign="haCenter" ParentFont="False" Text="5"/>
+      <TfrxMemoView Name="Memo44" Left="789,92131598" Top="0" Width="83,14966" Height="18,8976378" Font.Charset="1" Font.Color="0" Font.Height="-12" Font.Name="Arial Narrow" Font.Style="2" Frame.Typ="15" Fill.BackColor="14211288" HAlign="haCenter" ParentFont="False" Text="6"/>
+    </TfrxHeader>
+    <TfrxFooter Name="Footer1" FillType="ftBrush" FillGap.Top="0" FillGap.Left="0" FillGap.Bottom="0" FillGap.Right="0" Height="30,23624" Left="0" Top="415,7483" Width="1046,92981">
+      <TfrxMemoView Name="Memo53" Left="0" Top="0" Width="789,92177" Height="18,89765" Font.Charset="1" Font.Color="0" Font.Height="-12" Font.Name="Arial" Font.Style="1" Frame.Typ="15" HAlign="haCenter" ParentFont="False" Text="Jumlah"/>
+      <TfrxMemoView Name="Memo54" Left="789,92177" Top="0" Width="83,14966" Height="18,89765" DisplayFormat.FormatStr="%2.0n" DisplayFormat.Kind="fkNumeric" Font.Charset="1" Font.Color="0" Font.Height="-12" Font.Name="Arial" Font.Style="1" Frame.Typ="15" HAlign="haRight" ParentFont="False" Text="[SUM(&#60;frxDsReport2.&#34;debit&#34;&#62;,MasterData1)]"/>
+      <TfrxMemoView Name="Memo55" Left="873,07143" Top="0" Width="86,92919" Height="18,89765" DisplayFormat.FormatStr="%2.0n" DisplayFormat.Kind="fkNumeric" Font.Charset="1" Font.Color="0" Font.Height="-12" Font.Name="Arial" Font.Style="1" Frame.Typ="15" HAlign="haRight" ParentFont="False" Text="[SUM(&#60;frxDsReport2.&#34;credit&#34;&#62;,MasterData1)]"/>
+      <TfrxMemoView Name="Memo56" Left="960,00062" Top="0" Width="86,92919" Height="18,89765" DisplayFormat.FormatStr="%2.0n" DisplayFormat.Kind="fkNumeric" Font.Charset="1" Font.Color="0" Font.Height="-12" Font.Name="Arial" Font.Style="1" Frame.Typ="15" HAlign="haRight" ParentFont="False" Text="[SUM(&#60;frxDsReport2.&#34;debit&#34;&#62;,MasterData1)-SUM(&#60;frxDsReport2.&#34;credit&#34;&#62;,MasterData1)]"/>
+    </TfrxFooter>
+    <TfrxReportSummary Name="ReportSummary1" FillType="ftBrush" FillGap.Top="0" FillGap.Left="0" FillGap.Bottom="0" FillGap.Right="0" Height="211,65368" Left="0" Top="506,45702" Width="1046,92981">
+      <TfrxMemoView Name="Memo42" Left="30,23624" Top="71,81107" Width="215,43321" Height="37,7953" Font.Charset="1" Font.Color="0" Font.Height="-12" Font.Name="Verdana" Font.Style="0" HAlign="haCenter" ParentFont="False" Text="Menyetujui,&#13;&#10;Kepala Sekolah"/>
+      <TfrxMemoView Name="Memo43" Left="771,02412" Top="71,81107" Width="211,65368" Height="37,7953" AutoWidth="True" Font.Charset="1" Font.Color="0" Font.Height="-12" Font.Name="Verdana" Font.Style="0" HAlign="haCenter" ParentFont="False" Text="[Copy(&#60;frxDsReport1.&#34;kec&#34;&#62;,6,100)], [frxDsReport3.&#34;tanggal_finish&#34;]&#13;&#10;Bendahara,">
+        <Formats>
+          <item/>
+          <item FormatStr="dd mmmm yyyy" Kind="fkDateTime"/>
+        </Formats>
+      </TfrxMemoView>
+      <TfrxMemoView Name="Memo45" Left="30,23624" Top="162,51979" Width="215,43321" Height="26,45671" Font.Charset="1" Font.Color="0" Font.Height="-12" Font.Name="Verdana" Font.Style="0" HAlign="haCenter" ParentFont="False" Text="[frxDsReport1.&#34;ks&#34;]"/>
+      <TfrxMemoView Name="Memo46" Left="30,23624" Top="181,41744" Width="215,43321" Height="18,89765" Font.Charset="1" Font.Color="0" Font.Height="-12" Font.Name="Verdana" Font.Style="0" ParentFont="False" Text="NIP. [frxDsReport1.&#34;nip_ks&#34;]"/>
+      <TfrxMemoView Name="Memo47" Left="771,02412" Top="162,51979" Width="211,65368" Height="26,45671" Font.Charset="1" Font.Color="0" Font.Height="-12" Font.Name="Verdana" Font.Style="0" HAlign="haCenter" ParentFont="False" Text="[frxDsReport1.&#34;bendahara&#34;]"/>
+      <TfrxMemoView Name="Memo48" Left="771,02412" Top="185,19697" Width="211,65368" Height="18,89765" Font.Charset="1" Font.Color="0" Font.Height="-12" Font.Name="Verdana" Font.Style="0" ParentFont="False" Text="NIP. [frxDsReport1.&#34;nip_bendahara&#34;]"/>
+      <TfrxLineView Name="Line1" Left="30,23624" Top="181,41744" Width="215,43321" Height="0" Color="0" Diagonal="True"/>
+      <TfrxLineView Name="Line2" Left="771,02412" Top="181,41744" Width="215,43321" Height="0" Color="0" Diagonal="True"/>
+      <TfrxMemoView Name="Memo1" Left="7,55906" Top="15,11812" Width="869,2919" Height="18,89765" DisplayFormat.FormatStr="dddd dd mmmm yyyy" DisplayFormat.Kind="fkDateTime" Font.Charset="1" Font.Color="-16777208" Font.Height="-12" Font.Name="Arial" Font.Style="0" ParentFont="False" Text="Pada hari ini [frxDsReport3.&#34;tanggal_finish&#34;]  Buku Kas Umum Ditutup dengan keadaan/posisi buku sebagai berikut :"/>
+      <TfrxMemoView Name="Memo2" Left="7,55906" Top="41,57483" Width="196,53556" Height="18,89765" Font.Charset="1" Font.Color="-16777208" Font.Height="-12" Font.Name="Arial" Font.Style="1" ParentFont="False" Text="Saldo Buku Kas Pembantu Tunai "/>
+      <TfrxMemoView Name="Memo7" Left="204,09462" Top="41,57483" Width="597,16574" Height="18,89765" DisplayFormat.FormatStr="%2.0m" DisplayFormat.Kind="fkNumeric" Font.Charset="1" Font.Color="-16777208" Font.Height="-12" Font.Name="Arial" Font.Style="1" ParentFont="False" Text=": [SUM(&#60;frxDsReport2.&#34;debit&#34;&#62;,MasterData1)-SUM(&#60;frxDsReport2.&#34;credit&#34;&#62;,MasterData1)]&#13;&#10; "/>
+    </TfrxReportSummary>
+    <TfrxPageFooter Name="PageFooter1" FillType="ftBrush" FillGap.Top="0" FillGap.Left="0" FillGap.Bottom="0" FillGap.Right="0" Height="18,89765" Left="0" Top="740,78788" Width="1046,92981">
+      <TfrxMemoView Name="Memo11" Left="782,36271" Top="0" Width="264,5671" Height="18,89765" Font.Charset="1" Font.Color="-16777208" Font.Height="-13" Font.Name="Arial Narrow" Font.Style="0" HAlign="haRight" ParentFont="False" Text="Halaman [Page#] dari [TotalPages#]"/>
+      <TfrxMemoView Name="Memo12" Left="0" Top="0" Width="835,27613" Height="18,89765" Font.Charset="1" Font.Color="-16777208" Font.Height="-13" Font.Name="Arial Narrow" Font.Style="2" ParentFont="False" Text="BKU Pembantu Tunai [frxDsReport3.&#34;periode&#34;] [frxDsReport3.&#34;tahun_anggaran&#34;] - NPSN : [frxDsReport1.&#34;npsn&#34;], Nama Sekolah : [frxDsReport1.&#34;nama&#34;]">
+        <Formats>
+          <item/>
+          <item/>
+          <item/>
+          <item/>
+        </Formats>
+      </TfrxMemoView>
+    </TfrxPageFooter>
+    <TfrxReportTitle Name="ReportTitle1" FillType="ftBrush" FillGap.Top="0" FillGap.Left="0" FillGap.Bottom="0" FillGap.Right="0" Height="253,22851" Left="0" Top="18,89765" Width="1046,92981">
+      <TfrxMemoView Name="Memo13" Align="baCenter" Left="139,84261" Top="0" Width="767,24459" Height="26,45671" AutoWidth="True" Font.Charset="1" Font.Color="0" Font.Height="-19" Font.Name="Arial" Font.Style="5" HAlign="haCenter" ParentFont="False" Text="B U K U   K A S   P E M B A N T U   T U N A I"/>
+      <TfrxMemoView Name="Memo14" Left="0" Top="86,92919" Width="94,48825" Height="18,89765" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="0" ParentFont="False" Text="Nama Sekolah"/>
+      <TfrxMemoView Name="Memo15" Left="0" Top="109,60637" Width="120,94496" Height="18,89765" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="0" ParentFont="False" Text="Desa/Kecamatan"/>
+      <TfrxMemoView Name="Memo16" Left="0" Top="132,28355" Width="120,94496" Height="18,89765" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="0" ParentFont="False" Text="Kabupaten / Kota"/>
+      <TfrxMemoView Name="Memo17" Left="0" Top="154,96073" Width="120,94496" Height="18,89765" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="0" ParentFont="False" Text="Provinsi"/>
+      <TfrxMemoView Name="Memo18" Left="124,72449" Top="86,92919" Width="850,39425" Height="18,89765" AutoWidth="True" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="0" ParentFont="False" Text=": [frxDsReport1.&#34;nama&#34;]"/>
+      <TfrxMemoView Name="Memo24" Left="124,72449" Top="109,60637" Width="850,39425" Height="18,89765" AutoWidth="True" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="0" ParentFont="False" Text=": [frxDsReport1.&#34;alamat&#34;], [frxDsReport1.&#34;kec&#34;]">
+        <Formats>
+          <item/>
+          <item/>
+        </Formats>
+      </TfrxMemoView>
+      <TfrxMemoView Name="Memo25" Left="124,72449" Top="132,28355" Width="532,91373" Height="18,89765" AutoWidth="True" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="0" ParentFont="False" Text=": [frxDsReport1.&#34;kab&#34;]"/>
+      <TfrxMemoView Name="Memo28" Left="124,72449" Top="154,96073" Width="532,91373" Height="18,89765" AutoWidth="True" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="0" ParentFont="False" Text=": [frxDsReport1.&#34;prop&#34;]"/>
+      <TfrxMemoView Name="Memo29" Left="914,64626" Top="49,13389" Width="132,28355" Height="37,7953" Font.Charset="1" Font.Color="0" Font.Height="-19" Font.Name="Arial" Font.Style="1" Frame.Typ="15" Frame.Width="2" HAlign="haCenter" ParentFont="False" VAlign="vaCenter" Text="BKU - TUNAI"/>
+      <TfrxMemoView Name="Memo37" Left="0" Top="215,43321" Width="83,14966" Height="37,7953" Font.Charset="1" Font.Color="0" Font.Height="-12" Font.Name="Arial Narrow" Font.Style="1" Frame.Typ="15" HAlign="haCenter" ParentFont="False" VAlign="vaCenter" Text="TANGGAL"/>
+      <TfrxMemoView Name="Memo49" Left="83,14966" Top="215,43321" Width="60,47248" Height="37,7953" Font.Charset="1" Font.Color="0" Font.Height="-12" Font.Name="Arial Narrow" Font.Style="1" Frame.Typ="15" HAlign="haCenter" ParentFont="False" VAlign="vaCenter" Text="KODE KEGIATAN"/>
+      <TfrxMemoView Name="Memo64" Left="283,46454984" Top="215,43321" Width="506,45702" Height="37,7953" Font.Charset="1" Font.Color="0" Font.Height="-12" Font.Name="Arial Narrow" Font.Style="1" Frame.Typ="15" HAlign="haCenter" ParentFont="False" VAlign="vaCenter" Text="URAIAN"/>
+      <TfrxMemoView Name="Memo65" Left="789,92131598" Top="215,43321" Width="83,14966" Height="37,7953" Font.Charset="1" Font.Color="0" Font.Height="-12" Font.Name="Arial Narrow" Font.Style="1" Frame.Typ="15" HAlign="haCenter" ParentFont="False" VAlign="vaCenter" Text="PENERIMAAN"/>
+      <TfrxMemoView Name="Memo66" Left="873,07092228" Top="215,43321" Width="86,92919" Height="37,7953" Font.Charset="1" Font.Color="0" Font.Height="-12" Font.Name="Arial Narrow" Font.Style="1" Frame.Typ="15" HAlign="haCenter" ParentFont="False" VAlign="vaCenter" Text="PENGELUARAN"/>
+      <TfrxMemoView Name="Memo67" Left="960,00005614" Top="215,43321" Width="86,92919" Height="37,7953" Font.Charset="1" Font.Color="0" Font.Height="-12" Font.Name="Arial Narrow" Font.Style="1" Frame.Typ="15" HAlign="haCenter" ParentFont="False" VAlign="vaCenter" Text="SALDO"/>
+      <TfrxMemoView Name="Memo68" Align="baCenter" Left="236,220625" Top="30,23624" Width="574,48856" Height="18,89765" AutoWidth="True" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="0" HAlign="haCenter" ParentFont="False" Text="BULAN : [Uppercase(&#60;frxDsReport3.&#34;periode&#34;&#62;)] TAHUN : [frxDsReport3.&#34;tahun_anggaran&#34;]">
+        <Formats>
+          <item/>
+          <item/>
+        </Formats>
+      </TfrxMemoView>
+      <TfrxMemoView Name="Memo70" Left="143,62214" Top="215,43321" Width="79,37013" Height="37,7953" Font.Charset="1" Font.Color="0" Font.Height="-12" Font.Name="Arial Narrow" Font.Style="1" Frame.Typ="15" HAlign="haCenter" ParentFont="False" VAlign="vaCenter" Text="KODE REKENING"/>
+      <TfrxMemoView Name="Memo71" Left="222,99211866" Top="215,43321" Width="60,47248" Height="37,7953" Font.Charset="1" Font.Color="0" Font.Height="-12" Font.Name="Arial Narrow" Font.Style="1" Frame.Typ="15" HAlign="haCenter" ParentFont="False" VAlign="vaCenter" Text="NO. BUKTI"/>
+      <TfrxMemoView Name="Memo27" Left="0" Top="64,25201" Width="94,48825" Height="18,89765" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="0" ParentFont="False" Text="NPSN"/>
+      <TfrxMemoView Name="Memo30" Left="124,72449" Top="64,25201" Width="120,94496" Height="18,89765" AutoWidth="True" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="0" ParentFont="False" Text=": [frxDsReport1.&#34;npsn&#34;]"/>
+      <TfrxMemoView Name="Memo32" Left="0" Top="177,63791" Width="120,94496" Height="18,89765" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="0" ParentFont="False" Text="Sumber Dana"/>
+      <TfrxMemoView Name="Memo50" Left="124,72449" Top="177,63791" Width="907,0872" Height="18,89765" AutoWidth="True" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="0" ParentFont="False" Text=": [frxDsReport1.&#34;sumber_dana&#34;]"/>
+    </TfrxReportTitle>
+  </TfrxReportPage>
+</TfrxReport>

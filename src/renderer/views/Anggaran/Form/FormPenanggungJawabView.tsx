@@ -1,9 +1,8 @@
 import React, { FC, useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { FormProvider, useForm } from 'react-hook-form'
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
 
 import InputComponent from 'renderer/components/Form/InputComponent'
-import AlertDialogComponent from 'renderer/components/Dialog/AlertDialogComponent'
 import FormDialogComponent from 'renderer/components/Dialog/FormDialogComponent'
 
 import {
@@ -26,7 +25,6 @@ const FormPenanggungJawabView: FC = () => {
   const location = useLocation()
   const { q_mode, q_id_anggaran } = useParams()
 
-  const [openModalConfirmCancel, setOpenModalConfirmCancel] = useState(false)
   const [dataPenjab, setDataPenjab] = useState(null)
 
   const penanggungJawab = useAnggaranStore(
@@ -41,18 +39,20 @@ const FormPenanggungJawabView: FC = () => {
     (state: AnggaranStates) => state.setPenanggungJawab
   )
 
+  const formMethods = useForm<FormPenanggungJawabData>({
+    mode: 'onSubmit',
+    reValidateMode: 'onBlur',
+  })
+
   const {
     register,
     handleSubmit,
     setValue,
+    reset,
     setError,
     clearErrors,
-    reset,
-    formState: { errors, isDirty },
-  } = useForm<FormPenanggungJawabData>({
-    mode: 'onSubmit',
-    reValidateMode: 'onBlur',
-  })
+    formState: { errors },
+  } = formMethods
 
   const handleClearError = (name: FormPenanggungJawabType) => {
     clearErrors(name)
@@ -107,20 +107,13 @@ const FormPenanggungJawabView: FC = () => {
     navigate(-1)
   }
 
-  const handleCancel = () => {
-    if (isDirty) {
-      setOpenModalConfirmCancel(true)
-    } else {
-      closeModal()
-    }
-  }
-
   const formatNIP = (value: string) => {
     return value != null
       ? value
           .replace(/\D/g, '')
-          .replace(/(\d{9})(\d)/, '$1.$2')
-          .replace(/(\d{6})(\d)/, '$1.$2')
+          .replace(/(\d{15})(\d)/, '$1.$2')
+          .replace(/(\d{14})(\d)/, '$1.$2')
+          .replace(/(\d{8})(\d)/, '$1.$2')
       : ''
   }
 
@@ -204,135 +197,125 @@ const FormPenanggungJawabView: FC = () => {
 
   return (
     <div>
-      <FormDialogComponent
-        width={960}
-        title="Isi Data Penanggung Jawab"
-        subtitle="Data kepala sekolah dan bendahara terisi otomatis dari Dapodik."
-        btnSubmitText={q_mode === 'create' ? 'Lanjutkan' : 'Perbarui'}
-        isOpen={true}
-        onCancel={handleCancel}
-        onSubmit={handleSubmit(onSubmit)}
-        isSubmitDisabled={btnFormDisabled(errors)}
-      >
-        <div>
-          <div className="flex pb-5">
-            <div className="flex-1 pr-7">
-              <div className="text-base pb-1 font-normal text-gray-900">
-                Nama Kepala Sekolah
+      <FormProvider {...formMethods}>
+        <FormDialogComponent
+          width={960}
+          title="Isi Data Penanggung Jawab"
+          subtitle="Data kepala sekolah dan bendahara terisi otomatis dari Dapodik."
+          btnSubmitText={q_mode === 'create' ? 'Lanjutkan' : 'Perbarui'}
+          isOpen={true}
+          onCancel={closeModal}
+          onSubmit={handleSubmit(onSubmit)}
+          isSubmitDisabled={btnFormDisabled(errors)}
+        >
+          <div>
+            <div className="flex pb-5">
+              <div className="flex-1 pr-7">
+                <div className="text-base pb-1 font-normal text-gray-900">
+                  Nama Kepala Sekolah
+                </div>
+                <InputComponent
+                  type="name"
+                  name="nama_kepala_sekolah"
+                  placeholder="Masukkan nama kepala sekolah"
+                  errors={errors}
+                  register={register}
+                  setError={setError}
+                  handleClearError={handleClearError}
+                  required={true}
+                />
               </div>
-              <InputComponent
-                type="name"
-                name="nama_kepala_sekolah"
-                placeholder="Masukkan nama kepala sekolah"
-                errors={errors}
-                register={register}
-                setError={setError}
-                handleClearError={handleClearError}
-                required={true}
-              />
+              <div className="flex-1 pr-7">
+                <div className="text-base pb-1 font-normal text-gray-900">
+                  Nama Bendahara
+                </div>
+                <InputComponent
+                  type="name"
+                  name="nama_bendahara"
+                  placeholder="Masukkan nama bendahara"
+                  errors={errors}
+                  register={register}
+                  setError={setError}
+                  handleClearError={handleClearError}
+                  required={true}
+                />
+              </div>
+              <div className="flex-1">
+                <div className="text-base pb-1 font-normal text-gray-900">
+                  Nama Komite
+                </div>
+                <InputComponent
+                  type="alphabet"
+                  name="nama_komite"
+                  placeholder="Masukkan nama komite"
+                  errors={errors}
+                  register={register}
+                  setError={setError}
+                  handleClearError={handleClearError}
+                  required={true}
+                />
+              </div>
             </div>
-            <div className="flex-1 pr-7">
-              <div className="text-base pb-1 font-normal text-gray-900">
-                Nama Bendahara
+            <div className="flex">
+              <div className="flex-1 pr-7">
+                <div className="text-base pb-1 font-normal text-gray-900">
+                  NIP Kepala Sekolah (Opsional)
+                </div>
+                <InputComponent
+                  type="text"
+                  name="nip_kepala_sekolah"
+                  placeholder="Masukkan NIP kepala sekolah"
+                  errors={errors}
+                  register={register}
+                  required={false}
+                  registerOption={{
+                    validate: {
+                      minMaxLength: (v) => handleMinLengthNip(v),
+                    },
+                    onBlur: (e) => handleBlurNip(e, 'nip_kepala_sekolah'),
+                    onChange: (e) => handleChangeNip(e, 'nip_kepala_sekolah'),
+                  }}
+                />
               </div>
-              <InputComponent
-                type="name"
-                name="nama_bendahara"
-                placeholder="Masukkan nama bendahara"
-                errors={errors}
-                register={register}
-                setError={setError}
-                handleClearError={handleClearError}
-                required={true}
-              />
-            </div>
-            <div className="flex-1">
-              <div className="text-base pb-1 font-normal text-gray-900">
-                Nama Komite
+              <div className="flex-1 pr-7">
+                <div className="text-base pb-1 font-normal text-gray-900">
+                  NIP Bendahara (Opsional)
+                </div>
+                <InputComponent
+                  type="text"
+                  name="nip_bendahara"
+                  placeholder="Masukkan NIP bendahara"
+                  errors={errors}
+                  register={register}
+                  required={false}
+                  registerOption={{
+                    validate: {
+                      minMaxLength: (v) => handleMinLengthNip(v),
+                    },
+                    onBlur: (e) => handleBlurNip(e, 'nip_bendahara'),
+                    onChange: (e) => handleChangeNip(e, 'nip_bendahara'),
+                  }}
+                />
               </div>
-              <InputComponent
-                type="alphabet"
-                name="nama_komite"
-                placeholder="Masukkan nama komite"
-                errors={errors}
-                register={register}
-                setError={setError}
-                handleClearError={handleClearError}
-                required={true}
-              />
+              <div className="flex-1">
+                <div className="text-base pb-1 font-normal text-gray-900">
+                  Email Komite
+                </div>
+                <InputComponent
+                  type="email"
+                  name="email_komite"
+                  placeholder="Masukkan email komite"
+                  errors={errors}
+                  register={register}
+                  setError={setError}
+                  handleClearError={handleClearError}
+                  required={true}
+                />
+              </div>
             </div>
           </div>
-          <div className="flex">
-            <div className="flex-1 pr-7">
-              <div className="text-base pb-1 font-normal text-gray-900">
-                NIP Kepala Sekolah (Opsional)
-              </div>
-              <InputComponent
-                type="text"
-                name="nip_kepala_sekolah"
-                placeholder="Masukkan NIP kepala sekolah"
-                errors={errors}
-                register={register}
-                required={false}
-                registerOption={{
-                  validate: {
-                    minMaxLength: (v) => handleMinLengthNip(v),
-                  },
-                  onBlur: (e) => handleBlurNip(e, 'nip_kepala_sekolah'),
-                  onChange: (e) => handleChangeNip(e, 'nip_kepala_sekolah'),
-                }}
-              />
-            </div>
-            <div className="flex-1 pr-7">
-              <div className="text-base pb-1 font-normal text-gray-900">
-                NIP Bendahara (Opsional)
-              </div>
-              <InputComponent
-                type="text"
-                name="nip_bendahara"
-                placeholder="Masukkan NIP bendahara"
-                errors={errors}
-                register={register}
-                required={false}
-                registerOption={{
-                  validate: {
-                    minMaxLength: (v) => handleMinLengthNip(v),
-                  },
-                  onBlur: (e) => handleBlurNip(e, 'nip_bendahara'),
-                  onChange: (e) => handleChangeNip(e, 'nip_bendahara'),
-                }}
-              />
-            </div>
-            <div className="flex-1">
-              <div className="text-base pb-1 font-normal text-gray-900">
-                Email Komite
-              </div>
-              <InputComponent
-                type="email"
-                name="email_komite"
-                placeholder="Masukkan email komite"
-                errors={errors}
-                register={register}
-                setError={setError}
-                handleClearError={handleClearError}
-                required={true}
-              />
-            </div>
-          </div>
-        </div>
-      </FormDialogComponent>
-      <AlertDialogComponent
-        type="failed"
-        icon="exit_to_app"
-        title="Keluar dari halaman ini?"
-        desc="Jika Anda keluar, data yang baru saja Anda isi akan hilang."
-        isOpen={openModalConfirmCancel}
-        btnCancelText="Keluar"
-        btnActionText="Kembali Isi Data"
-        onCancel={closeModal}
-        onSubmit={() => setOpenModalConfirmCancel(false)}
-        layer={2}
-      />
+        </FormDialogComponent>
+      </FormProvider>
     </div>
   )
 }

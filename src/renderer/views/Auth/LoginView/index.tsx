@@ -178,7 +178,7 @@ const LoginView: FC = () => {
         type="failed"
         icon="priority_high"
         title="Akun anda teridentifikasi pada perangkat lain"
-        desc="Silahkan input ulang NPSN dan kode aktivasi untuk dapat melanjutkan menggunakan ARKAS pada komputer ini. Data yang sudah Anda masukkan tidak akan hilang."
+        desc="Silakan input ulang NPSN dan kode aktivasi untuk dapat melanjutkan menggunakan ARKAS pada komputer ini. Data yang sudah Anda masukkan tidak akan hilang."
         isOpen={isMultipleDevice}
         btnCancelText="Batal"
         btnActionText="Registrasi Ulang"

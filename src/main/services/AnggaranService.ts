@@ -1,9 +1,17 @@
-import { GetAnggaran, GetAnggaranById } from 'main/repositories/Anggaran'
-import { GetConfig } from 'main/repositories/Config'
+import {
+  GetAnggaran,
+  GetAnggaranById,
+  UpsertAnggaran,
+} from 'main/repositories/AnggaranRepository'
+import { GetConfig } from 'main/repositories/ConfigRepository'
 
 import CommonUtils from 'main/utils/CommonUtils'
 
 import { STATUS_KERTAS_KERJA, VERSI_ANGGARAN } from 'global/constants'
+import { Anggaran as AnggaranData } from 'global/types/Anggaran'
+import { Anggaran } from 'main/models/Anggaran'
+import { err, ok, Result } from 'neverthrow'
+import { InsertResult } from 'typeorm'
 
 export const GetAnggaranList = async (idSumberDana: number) => {
   const configTahunAktif = await GetConfig('tahun_aktif')
@@ -56,6 +64,10 @@ export const GetAnggaranList = async (idSumberDana: number) => {
 
 export const GetDetailAnggaran = async (idAnggaran: string) => {
   const dataAnggaran = await GetAnggaranById(idAnggaran)
+  if (dataAnggaran === undefined) {
+    return
+  }
+
   const restructured = {
     ...dataAnggaran,
     tanggal_pengajuan: dataAnggaran.tanggalPengajuan,
@@ -109,4 +121,52 @@ export const GetStatusAnggaran = async (
     }
     return STATUS_KERTAS_KERJA.not_created
   }
+}
+
+export const IPCUpsertAnggaran = async (
+  data: AnggaranData
+): Promise<Result<InsertResult, Error>> => {
+  const now = new Date()
+
+  const anggaran = new Anggaran()
+  anggaran.idAnggaran = data.id_anggaran
+  anggaran.idRefSumberDana = data.id_ref_sumber_dana
+  anggaran.sekolahId = data.sekolah_id
+  anggaran.tahunAnggaran = data.tahun_anggaran
+  anggaran.volume = data.volume
+  anggaran.hargaSatuan = data.harga_satuan
+  anggaran.jumlah = data.jumlah
+  anggaran.sisaAnggaran = data.sisa_anggaran
+  anggaran.isPengesahan = data.is_pengesahan
+  anggaran.isApprove = data.is_approve
+  anggaran.isRevisi = data.is_revisi
+  anggaran.alasanPenolakan = data.alasan_penolakan
+  anggaran.isAktif = data.is_aktif
+  anggaran.softDelete = 0
+  anggaran.lastUpdate = now
+  anggaran.updaterId = await GetConfig('pengguna_id')
+  anggaran.idPenjab = data.id_penjab
+
+  if (data.tanggal_pengajuan !== '' && data.tanggal_pengajuan !== null) {
+    anggaran.tanggalPengajuan = new Date(data.tanggal_pengajuan)
+  }
+
+  if (data.tanggal_pengesahan !== '' && data.tanggal_pengesahan !== null) {
+    anggaran.tanggalPengesahan = new Date(data.tanggal_pengesahan)
+  }
+
+  if (data.create_date !== '' && data.create_date !== null) {
+    anggaran.createDate = new Date(data.create_date)
+  } else {
+    anggaran.createDate = now
+  }
+
+  let result: InsertResult
+  try {
+    result = await UpsertAnggaran(anggaran)
+  } catch (error) {
+    return err(new Error(error))
+  }
+
+  return ok(result)
 }

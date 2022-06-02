@@ -1,7 +1,7 @@
 import { Rapbs } from 'main/models/Rapbs'
 import { RapbsPeriode } from 'main/models/RapbsPeriode'
 import { RapbsPtk } from 'main/models/RapbsPtk'
-import { GetConfig } from 'main/repositories/Config'
+import { GetConfig } from 'main/repositories/ConfigRepository'
 import {
   AddRapbs,
   GetLatestUrutan,
@@ -9,14 +9,14 @@ import {
   GetOneRapbsBulan,
   DelRapbsByRapbsId,
   GetRapbs,
-} from 'main/repositories/Rapbs'
+} from 'main/repositories/RapbsRepository'
 import {
   AddBulkRapbsPeriode,
   BulkUpsertByRapbsId,
   GetManyRapbsPeriode,
   DelRapbsPeriodeByRapbsId,
-} from 'main/repositories/RapbsPeriode'
-import { AddRapbsPtk, GetRapbsPtk } from 'main/repositories/RapbsPtk'
+} from 'main/repositories/RapbsPeriodeRepository'
+import { AddRapbsPtk, GetRapbsPtk } from 'main/repositories/RapbsPtkRepository'
 import {
   DetailKegiatan,
   ResultAddDetailKegiatan,
@@ -24,10 +24,9 @@ import {
 } from 'main/types/Rapbs'
 import CommonUtils from 'main/utils/CommonUtils'
 import { getConnection } from 'typeorm'
-import { GetPenggunaID } from './UserService'
 import { CONFIG } from 'global/constants'
 import { ok, err, Result } from 'neverthrow'
-import { GetMonth } from 'main/utils/Months'
+import { GetMonthName } from 'main/utils/Months'
 import {
   AnggaranKegiatan,
   DetailAnggaranKegiatan,
@@ -39,9 +38,8 @@ export async function AddDetailKegiatan(
   data: DetailKegiatan
 ): Promise<Result<ResultAddDetailKegiatan, Error>> {
   const now = new Date()
-  const idRapbs = CommonUtils.encodeUUID(CommonUtils.uuid())
+  const idRapbs = CommonUtils.encodeUUIDFromV4()
   const idBarang = data.idBarang == '' ? null : data.idBarang
-  const penggunaId = await GetPenggunaID()
   const sekolahId = await GetConfig(CONFIG.sekolahId)
   const res = <ResultAddDetailKegiatan>{
     idRapbs: idRapbs,
@@ -83,7 +81,7 @@ export async function AddDetailKegiatan(
     softDelete: 0,
     createDate: now,
     lastUpdate: now,
-    updaterId: penggunaId,
+    updaterId: sekolahId,
   }
 
   const rapbsPeriodes: RapbsPeriode[] = []
@@ -104,7 +102,7 @@ export async function AddDetailKegiatan(
       softDelete: 0,
       createDate: now,
       lastUpdate: now,
-      updaterId: penggunaId,
+      updaterId: sekolahId,
     })
   })
 
@@ -182,9 +180,7 @@ export async function GetDetailKegiatan(
 ): Promise<Result<DetailAnggaranKegiatan, Error>> {
   const rapbs = await GetOneRapbsBulan(idRapbs)
   if (rapbs.isErr()) {
-    rapbs.mapErr((e) => {
-      return err(e)
-    })
+    return err(rapbs.error)
   }
 
   const rapbsPeriode = await GetManyRapbsPeriode(idRapbs)
@@ -207,7 +203,7 @@ export async function GetDetailKegiatan(
 
   for (const v of rapbsPeriode) {
     res.periode.push(<AnggaranPeriode>{
-      bulan: GetMonth(v.idPeriode),
+      bulan: GetMonthName(v.idPeriode),
       periode: v.idPeriode,
       satuan: v.satuan,
       jumlah: v.volume,
@@ -224,7 +220,6 @@ export async function UpdateDetailKegiatan(
 ): Promise<Result<boolean, Error>> {
   const now = new Date()
   const idBarang = data.idBarang == '' ? null : data.idBarang
-  const penggunaId = await GetPenggunaID()
   const sekolahId = await GetConfig(CONFIG.sekolahId)
   const idRapbs = data.idRapbs
 
@@ -273,7 +268,7 @@ export async function UpdateDetailKegiatan(
     softDelete: 0,
     createDate: currentRapbs.createDate,
     lastUpdate: now,
-    updaterId: penggunaId,
+    updaterId: sekolahId,
   }
 
   const rapbsPeriodes: RapbsPeriode[] = []
@@ -288,7 +283,7 @@ export async function UpdateDetailKegiatan(
       v1: periode.volume,
       s1: periode.satuan,
       softDelete: 0,
-      updaterId: penggunaId,
+      updaterId: sekolahId,
     })
   })
 

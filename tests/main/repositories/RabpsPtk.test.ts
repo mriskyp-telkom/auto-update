@@ -3,7 +3,8 @@ import {
   AddRapbsPtk,
   DeleteRapbsPtk,
   GetRapbsPtk,
-} from 'main/repositories/RapbsPtk'
+  GetRapbsPtkHonor,
+} from 'main/repositories/RapbsPtkRepository'
 import { createConnection, getConnection } from 'typeorm'
 import { cfg, Migrate } from '../migration'
 
@@ -58,4 +59,13 @@ test('DeleteGetRapbsPtk', async () => {
 
   const findRapbsPtk2 = await GetRapbsPtk(rapbsPtk.idRapbs)
   expect(findRapbsPtk2).toBe(undefined)
+})
+
+test('GetRapbsPtkHonor', async () => {
+  const param: string[] = []
+  const idRapbs = '8n-NMdSjb0yz6iuQ_eGN_A'
+  param.push(idRapbs)
+
+  const findRapbsPtkHonor = await GetRapbsPtkHonor(param)
+  expect(findRapbsPtkHonor).toBeDefined()
 })

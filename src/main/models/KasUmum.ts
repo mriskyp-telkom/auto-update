@@ -2,6 +2,11 @@ import { BaseEntity, Column, Entity } from 'typeorm'
 
 @Entity('kas_umum')
 export class KasUmum extends BaseEntity {
+  public constructor(init?: Partial<KasUmum>) {
+    super()
+    Object.assign(this, init)
+  }
+
   @Column('varchar', {
     primary: true,
     name: 'id_kas_umum',
@@ -41,10 +46,10 @@ export class KasUmum extends BaseEntity {
   uraianPajak: string | null
 
   @Column('numeric', { name: 'saldo' })
-  saldo: NonNullable<unknown>
+  saldo: NonNullable<number>
 
   @Column('varchar', { name: 'status_bku', nullable: true, length: 1 })
-  statusBku: NonNullable<unknown> | null
+  statusBku: string | null
 
   @Column('numeric', { name: 'volume', nullable: true, precision: 6, scale: 0 })
   volume: number | null

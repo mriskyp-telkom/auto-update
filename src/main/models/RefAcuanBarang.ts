@@ -26,13 +26,13 @@ export class RefAcuanBarang extends BaseEntity {
   kodeBelanja: string | null
 
   @Column('numeric', { name: 'harga_barang', nullable: true })
-  hargaBarang: NonNullable<unknown> | null
+  hargaBarang: number | null
 
   @Column('numeric', { name: 'batas_bawah', nullable: true })
-  batasBawah: NonNullable<unknown> | null
+  batasBawah: number | null
 
   @Column('numeric', { name: 'batas_atas', nullable: true })
-  batasAtas: NonNullable<unknown> | null
+  batasAtas: number | null
 
   @Column('varchar', { name: 'kategori_id', nullable: true, length: 20 })
   kategoriId: string | null
