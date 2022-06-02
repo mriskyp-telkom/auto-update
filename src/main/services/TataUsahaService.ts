@@ -28,6 +28,7 @@ import { GetTotalAnggaranPerBulan } from 'main/repositories/RapbsRepository'
 import { KasUmum } from 'main/models/KasUmum'
 import { GetPenggunaID } from './UserService'
 import { format } from 'global/format'
+import { range } from 'global/numbers'
 
 export class TataUsahaService {
   private aktivasiBkuRepo: AktivasiBkuRepository
@@ -165,23 +166,30 @@ export class TataUsahaService {
     )
   }
 
-  async GetTotalSaldoDibelanjakan(
+  async GetTotalSudahDibelanjakan(
     request: GetTotalAnggaranRequest
-  ): Promise<number> {
-    return await this.kasUmumRepo.GetTotalSaldoDibelanjakan(
-      request.idAnggaran,
-      request.idPeriode
-    )
+  ): Promise<Result<number, Error>> {
+    let result: number
+    try {
+      result = await this.kasUmumRepo.GetTotalSaldoDibelanjakan(
+        request.idAnggaran,
+        range(request.idPeriode - 80, 81)
+      )
+    } catch (error) {
+      return err(new Error(error))
+    }
+
+    return ok(result)
   }
 
-  async GetTotalAnggaranPerBulan(
+  async GetTotalBisaDibelanjakan(
     request: GetTotalAnggaranRequest
   ): Promise<Result<number, Error>> {
     let result: number
     try {
       result = await GetTotalAnggaranPerBulan(
         request.idAnggaran,
-        request.idPeriode
+        range(request.idPeriode - 80, 81)
       )
     } catch (error) {
       return err(new Error(error))
@@ -197,7 +205,7 @@ export class TataUsahaService {
     try {
       result = await this.kasUmumRepo.GetTotalPerluDianggarkanUlang(
         request.idAnggaran,
-        request.idPeriode
+        range(request.idPeriode - 80, 81)
       )
     } catch (error) {
       return err(new Error(error))

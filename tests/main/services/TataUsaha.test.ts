@@ -139,10 +139,10 @@ test('GetTotalSaldoDibelanjakan', async () => {
   const tataUsahaService = new TataUsahaService(conn)
   const request = <GetTotalAnggaranRequest>{
     idAnggaran: '3GIqBvF91Em6K_VasjmhTw',
-    idPeriode: [92],
+    idPeriode: 92,
   }
 
-  const res = await tataUsahaService.GetTotalSaldoDibelanjakan(request)
+  const res = await tataUsahaService.GetTotalSudahDibelanjakan(request)
   expect(res).toBe(100)
 })
 
@@ -151,12 +151,12 @@ test('GetTotalAnggaranPerBulan', async () => {
   const tataUsahaService = new TataUsahaService(conn)
   const request = <GetTotalAnggaranRequest>{
     idAnggaran: 'apQwiAb-9EWxv74iwMY6aQ',
-    idPeriode: [92],
+    idPeriode: 92,
   }
 
-  const res = await tataUsahaService.GetTotalAnggaranPerBulan(request)
+  const res = await tataUsahaService.GetTotalBisaDibelanjakan(request)
   expect(res.isOk()).toBe(true)
-  expect(res.unwrapOr(0)).toBe(26176000)
+  expect(res.unwrapOr(0)).toBe(147285000)
 })
 
 test('GetTotalPerluDianggarkanUlang', async () => {
@@ -246,7 +246,7 @@ test('GetTotalPerluDianggarkanUlang', async () => {
 
   const request = <GetTotalAnggaranRequest>{
     idAnggaran: idAnggaran,
-    idPeriode: [80, 81, 82],
+    idPeriode: 82,
   }
 
   const res = await tataUsahaService.GetTotalPerluDianggarkanUlang(request)

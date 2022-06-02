@@ -69,8 +69,8 @@ export const IPC_RAPBS = {
 export const IPC_TATA_USAHA = {
   getListAnggaran: `${TATA_USAHA}:getListAnggaran`,
   getTotalSaldo: `${TATA_USAHA}:getTotalSaldo`,
-  getTotalSaldoDibelanjakan: `${TATA_USAHA}:getTotalSaldoDibelanjakan`,
-  getTotalAnggaranPerBulan: `${TATA_USAHA}:getTotalAnggaranPerBulan`,
+  getTotalSudahDibelanjakan: `${TATA_USAHA}:getTotalSudahDibelanjakan`,
+  getTotalBisaDibelanjakan: `${TATA_USAHA}:getTotalBisaDibelanjakan`,
   getTotalPerluDianggarkanUlang: `${TATA_USAHA}:getTotalPerluDianggarkanUlang`,
   cashWithdrawal: `${TATA_USAHA}:cashWithdrawal`,
   getListKasUmum: `${TATA_USAHA}:getListKasUmum`,
