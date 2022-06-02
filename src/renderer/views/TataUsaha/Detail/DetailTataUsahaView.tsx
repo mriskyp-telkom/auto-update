@@ -104,7 +104,7 @@ const DetailTataUsahaView: FC = () => {
         </div>
         <div className="flex pb-6">
           <CardTotalDanaView class="mr-4" data={cardTotalDanaDataProps} />
-          <CardDanaPembelanjaanView />
+          <CardDanaPembelanjaanView data={cardTotalDanaDataProps} />
         </div>
         <TabelTataUsahaView />
       </div>
