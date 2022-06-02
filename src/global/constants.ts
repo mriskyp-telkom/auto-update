@@ -134,3 +134,8 @@ export const STATUS_BKU_PERTAHUN = {
   temporary_inactive: 'temporary_inactive',
   date_over: 'date_over',
 }
+
+export const KAS_UMUM_TYPE = {
+  line: 'line',
+  row: 'row',
+}
