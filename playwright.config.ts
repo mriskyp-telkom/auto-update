@@ -1,7 +1,5 @@
 // @ts-check
-import { PlaywrightTestConfig } from '@playwright/test'
-import { devices } from '@playwright/test'
-
+import { PlaywrightTestConfig, devices } from '@playwright/test'
 
 const config: PlaywrightTestConfig = {
   testDir: './tests/playwright/',
@@ -35,7 +33,7 @@ const config: PlaywrightTestConfig = {
       use: {
         ...devices['Pixel 5'],
       },
-    }
+    },
     // {
     //   name: 'Mobile Safari',
     //   use: {
