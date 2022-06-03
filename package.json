@@ -134,7 +134,7 @@
     "@wartek-id/input": "^1.1.2",
     "@wartek-id/tabs": "^1.0.2",
     "@wartek-id/tailwind-config": "^0.7.0",
-    "@wartek-id/tooltip": "^1.1.2",
+    "@wartek-id/tooltip": "^1.4.0",
     "axios": "^0.26.0",
     "better-sqlite3": "^7.5.1",
     "better-sqlite3-multiple-ciphers": "^7.5.0",

@@ -83,6 +83,7 @@ const TabelMenyusunKertasKerjaView: FC<TabelMenyusunKertasKerjaProps> = (
           placement="top"
           strategy="fixed"
           trigger="hover"
+          scrollHide={true}
         >
           <span className="cursor-pointer">{props.text}</span>
         </Tooltip>
