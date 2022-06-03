@@ -1,20 +1,20 @@
 /* eslint-disable */
 const { test, expect } = require('@playwright/test')
-
-// add helper
 import { findLatestBuild, parseElectronApp } from 'electron-playwright-helpers'
-
 import jimp from 'jimp'
 import { ElectronApplication, Page, _electron as electron } from 'playwright'
+import { LoginPage } from '../page_object/Login.page'
 
 let electronApp: ElectronApplication
-// end of helper
 
 test.beforeAll(async () => {
   // find the latest build in the out directory
   const latestBuild = findLatestBuild()
+  console.log(latestBuild)
+
   // parse the directory and find paths and other info
   const appInfo = parseElectronApp(latestBuild)
+
   // set the CI environment variable to true
   process.env.CI = 'e2e'
   electronApp = await electron.launch({
@@ -30,17 +30,11 @@ test('input arkas credentials', async () => {
     console.log(`Window opened: ${filename}`)
 
     // fill NPSN and Activation code
-    const elementNPSN = await page.$('#npsn')
-    await elementNPSN.type(process.env.NSPN_NUMBER)
-    await elementNPSN.press('Enter')
-    // or :
-    // await page.click("#npsn")
-    // await page.fill('#npsn', '88888888');
-
-    await page.click('#activation_code')
-    await page.fill('#activation_code', 'loremIpsum')
-
-    await page.click('text=Daftar')
+    const playwrightLogin = new LoginPage(page)
+    await playwrightLogin.splashScreenWait()
+    await playwrightLogin.fillNSPN()
+    await playwrightLogin.fillActivationCode()
+    await playwrightLogin.clickDaftar()
 
     await expect(page.locator('.Input-module_helper__1kt7W')).toHaveText(
       'NPSN tidak terdaftar di Dapodik. Silakan periksa kembali.'

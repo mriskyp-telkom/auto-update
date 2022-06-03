@@ -2,7 +2,7 @@
 import { PlaywrightTestConfig, devices } from '@playwright/test'
 
 const config: PlaywrightTestConfig = {
-  testDir: './tests/playwright/',
+  testDir: './tests/playwright/test',
   maxFailures: 2,
   /* Configure projects for major browsers */
   projects: [

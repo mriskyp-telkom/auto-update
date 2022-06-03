@@ -1,10 +1,12 @@
 How to:
 
 - build the apps image (Mac Os)
-  yarn make
+  > yarn make
   * see package.json for other platform
-  yarn postinstall
-  yarn package
+  
+  > yarn postinstall
+  > yarn package
+  * creating app pacakge
 - create the test on this path: tests/playwright/
 
 - run the test
