@@ -144,7 +144,7 @@
     "electron-ga-uuid": "^1.0.2",
     "electron-squirrel-startup": "^1.0.0",
     "electron-updater": "^5.0.1",
-    "loadash": "^1.0.0",
+    "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "neverthrow": "^4.3.1",
     "node-machine-id": "^1.1.12",
