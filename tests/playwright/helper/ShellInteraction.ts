@@ -1,4 +1,3 @@
-/* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 import 'dotenv/config'
 
 import { exec } from 'child_process'
