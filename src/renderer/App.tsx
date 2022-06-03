@@ -15,10 +15,11 @@ import RegistrationView from 'renderer/views/Auth/RegistrationView'
 import DashboardAnggaranView from 'renderer/views/Anggaran/Dashboard/DashboardAnggaranView'
 import MenyusunKertasKerjaView from 'renderer/views/Anggaran/MenyusunKertasKerjaView'
 import MengulasKertasKerjaView from 'renderer/views/Anggaran/MengulasKertasKerjaView'
+import CetakKertasKerjaView from 'renderer/views/Anggaran/Cetak/CetakKertasKerjaView'
 import FormKertasKerjaView from 'renderer/views/Anggaran/Form/FormKertasKerjaView'
 import FormPenanggungJawabView from 'renderer/views/Anggaran/Form/FormPenanggungJawabView'
 import FormPaguView from 'renderer/views/Anggaran/Form/FormPaguView'
-import SyncCekStatusKKView from './views/Anggaran/CekStatus/SyncCekStatusKKView'
+import SyncCekStatusKKView from 'renderer/views/Anggaran/CekStatus/SyncCekStatusKKView'
 import SyncMengulasKertasKerjaView from 'renderer/views/Anggaran/MengulasKertasKerjaView/SyncMengulasKertasKerjaView'
 
 // Tata Usaha
@@ -84,6 +85,7 @@ const App: FC = () => {
             />
             <Route path="anggaran">
               <Route index={true} element={<DashboardAnggaranView />} />
+              <Route path="cetak" element={<CetakKertasKerjaView />} />
               <Route path="menyusun">
                 <Route path=":q_mode" element={<MenyusunKertasKerjaView />}>
                   <Route
