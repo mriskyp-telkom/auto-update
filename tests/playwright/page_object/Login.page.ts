@@ -1,4 +1,3 @@
-// playwright-dev-page.ts
 import { Locator, Page } from '@playwright/test'
 import 'dotenv/config'
 

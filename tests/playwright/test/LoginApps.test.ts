@@ -4,10 +4,15 @@ import { findLatestBuild, parseElectronApp } from 'electron-playwright-helpers'
 import jimp from 'jimp'
 import { ElectronApplication, Page, _electron as electron } from 'playwright'
 import { LoginPage } from '../page_object/Login.page'
+import { ShellIntercation } from '../helper/ShellInteraction'
 
 let electronApp: ElectronApplication
 
 test.beforeAll(async () => {
+  // trial shell command
+  const shell = new ShellIntercation()
+  shell.shellExec('ls -al')
+
   // find the latest build in the out directory
   const latestBuild = findLatestBuild()
   console.log(latestBuild)
