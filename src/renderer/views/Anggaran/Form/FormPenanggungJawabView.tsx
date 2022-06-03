@@ -17,6 +17,7 @@ import syncToIPCMain from 'renderer/configs/ipc'
 import { NIP_ERROR_LENGTH } from 'renderer/constants/errorForm'
 
 import { btnFormDisabled } from 'renderer/utils/form-validation'
+import { formattingToNumber } from 'renderer/utils/number-formatting'
 
 import { IPC_ANGGARAN, IPC_PENJAB } from 'global/ipc'
 
@@ -80,8 +81,8 @@ const FormPenanggungJawabView: FC = () => {
       kepsek: data.nama_kepala_sekolah,
       bendahara: data.nama_bendahara,
       komite: data.nama_komite,
-      nip_kepsek: data.nip_kepala_sekolah,
-      nip_bendahara: data.nip_bendahara,
+      nip_kepsek: formattingToNumber(data.nip_kepala_sekolah),
+      nip_bendahara: formattingToNumber(data.nip_bendahara),
       nip_komite: data.email_komite,
       email_kepsek: dataPenjab.email_kepsek,
       email_bendahara: dataPenjab.email_bendahara,
