@@ -1,10 +1,7 @@
-import { IPC_ANGGARAN, IPC_CONFIG, IPC_SEKOLAH } from 'global/ipc'
+import { IPC_ANGGARAN, IPC_CONFIG, } from 'global/ipc'
 import React, { FC, useEffect, useState } from 'react'
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
-import { useAPIGetToken } from 'renderer/apis/token'
 import {
-  useAPICheckHDDVol,
-  useAPIInfoConnection,
   useAPISalur,
 } from 'renderer/apis/utils'
 
@@ -18,30 +15,17 @@ import { Penerimaan } from 'renderer/types/apis/UtilType'
 import syncToIPCMain from 'renderer/configs/ipc'
 import { SetConfigRequest } from 'global/types/Config'
 import { AuthStates, useAuthStore } from 'renderer/stores/auth'
-
-const stepApi = {
-  infoConnection: 'infoConnection',
-  checkHddVol: 'checkHddVol',
-  getToken: 'getToken',
-  salur: 'salur',
-}
+import useInitApi from 'renderer/utils/hooks/useInitApi'
 
 const SyncAktivasiBKUView: FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
-
+  const initApi  = useInitApi()
   const { q_sumber_dana, q_id_anggaran } = useParams()
 
-  const [api, setApi] = useState('')
-  const [tahunAktif, setTahunAktif] = useState(null)
-  const [hddVol, setHddVol] = useState(null)
-  const [hddVolOld, setHddVolOld] = useState(null)
+  const [initDone, setInitDone] = useState(false)
   const [tahunAnggaran, setTahunAnggaran] = useState(null)
-  const [npsn, setNpsn] = useState('')
-  const [koreg, setKoreg] = useState('')
   const [percentage, setPercentage] = useState(0)
-
-  const setToken = useAppStore((state: AppStates) => state.setToken)
 
   const setIsActivationBKUFailed = useTataUsahaStore(
     (state: TataUsahaStates) => state.setIsActivationBKUFailed
@@ -72,49 +56,6 @@ const SyncAktivasiBKUView: FC = () => {
   }
 
   const {
-    data: infoConnection,
-    isError: isInfoConnError,
-    remove: removeInfoConnection,
-  } = useAPIInfoConnection({
-    retry: 0,
-    enabled: api === stepApi.infoConnection,
-  })
-
-  const {
-    data: dataToken,
-    isError: isTokenError,
-    remove: removeToken,
-  } = useAPIGetToken(
-    {
-      username: `${npsn}${tahunAktif}`,
-      password: koreg,
-    },
-    {
-      retry: 0,
-      enabled:
-        api === stepApi.getToken &&
-        npsn !== '' &&
-        tahunAktif !== '' &&
-        koreg !== '',
-    }
-  )
-
-  const {
-    data: dataHDDVol,
-    isError: isCheckHddVolError,
-    remove: removeCheckHddVol,
-  } = useAPICheckHDDVol(
-    {
-      hdd_vol: hddVol,
-      hdd_vol_old: hddVolOld,
-    },
-    {
-      retry: 0,
-      enabled: api === stepApi.checkHddVol && hddVol !== '' && hddVolOld !== '',
-    }
-  )
-
-  const {
     data: dataSalur,
     isError: isSalurError,
     remove: removeSalur,
@@ -125,17 +66,10 @@ const SyncAktivasiBKUView: FC = () => {
     },
     {
       enabled:
-        tahunAnggaran != null && q_sumber_dana != null && api == stepApi.salur,
+        tahunAnggaran != null && q_sumber_dana != null ,
       retry: 0,
     }
   )
-
-  const removeCacheData = () => {
-    removeInfoConnection()
-    removeToken()
-    removeCheckHddVol()
-    removeSalur()
-  }
 
   const setDefaultAktivasiBKUAlert = () => {
     setAlertNoConnection(false)
@@ -143,10 +77,9 @@ const SyncAktivasiBKUView: FC = () => {
     setAlertFailedSyncData(false)
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars 
   const lostConnectionSyncData = () => {
-    setApi('')
-    removeCacheData()
+    setTahunAnggaran(null)
+    removeSalur()
     closeModal()
 
     setDefaultAktivasiBKUAlert()
@@ -154,8 +87,8 @@ const SyncAktivasiBKUView: FC = () => {
   }
 
   const noConnectionSyncData = () => {
-    setApi('')
-    removeCacheData()
+    setTahunAnggaran(null)
+    removeSalur()
     closeModal()
 
     setDefaultAktivasiBKUAlert()
@@ -164,69 +97,46 @@ const SyncAktivasiBKUView: FC = () => {
 
 
   const failedSyncData = () => {
-    setApi('')
-    removeCacheData()
+    setTahunAnggaran(null)
+    removeSalur()
 
     setDefaultAktivasiBKUAlert()
     setAlertFailedSyncData(true)
     closeModal()
   }
 
-  useEffect(() => {
-    const tahunAktif = syncToIPCMain(
-      IPC_CONFIG.getConfig,
-      APP_CONFIG.tahunAktif
-    )
-    const hddVol = syncToIPCMain(IPC_CONFIG.getConfig, APP_CONFIG.hddVol)
-    const hddVolOld = syncToIPCMain(IPC_CONFIG.getConfig, APP_CONFIG.hddVolOld)
-    const anggaran = syncToIPCMain(IPC_ANGGARAN.getAnggaranById, q_id_anggaran)
-    const sekolah = syncToIPCMain(IPC_SEKOLAH.getSekolah)
-    setTahunAnggaran(anggaran.tahunAnggaran)
-    setNpsn(sekolah.npsn)
-    setKoreg(sekolah.kodeRegistrasi)
-    setTahunAktif(tahunAktif)
-    setHddVol(hddVol)
-    setHddVolOld(hddVolOld)
-    setApi(stepApi.infoConnection)
-  }, [])
-
-  useEffect(() => {
-    if (infoConnection !== undefined) {
-      if (Number(infoConnection.data) === 1) {
-        setApi(stepApi.getToken)
-        setPercentage(30)
-      } else {
-        failedSyncData()
-      }
-    }
-  }, [infoConnection])
-
-  useEffect(() => {
-    if (dataToken !== undefined) {
-      setToken(dataToken?.data.access_token)
-      setApi(stepApi.checkHddVol)
-      setPercentage(60)
-    }
-  }, [dataToken])
-
-  useEffect(() => {
-    if (dataHDDVol !== undefined) {
-      if (Number(dataHDDVol.data) === 1) {
-        setApi(stepApi.salur)
-        setPercentage(80)
-      } else {
-        setApi('')
-        removeCacheData()
-        const dataKoregInvalid: SetConfigRequest = {
-          varname: APP_CONFIG.koregInvalid,
-          varvalue: '1',
+  useEffect(()=>{
+    if(initApi != null){
+      const {data, isSuccess, isError} = initApi
+      if(isSuccess && !initDone){
+        setInitDone(true)
+        setPercentage(50)
+        if(Number(data.infoConnection.data) !== 1){
+          failedSyncData() 
+        } else if(Number(data.dataHDDVol.data) !== 1){
+          const dataKoregInvalid: SetConfigRequest = {
+            varname: APP_CONFIG.koregInvalid,
+            varvalue: '1',
+          }
+          syncToIPCMain(IPC_CONFIG.setConfig, dataKoregInvalid)
+          setMultipleDevice(true)
+          closeModal()  
+        } else {
+          const anggaran = syncToIPCMain(IPC_ANGGARAN.getAnggaranById, q_id_anggaran)
+          setTahunAnggaran(anggaran.tahunAnggaran)
         }
-        syncToIPCMain(IPC_CONFIG.setConfig, dataKoregInvalid)
-        setMultipleDevice(true)
-        closeModal()
+      }
+      if(isError){
+        if (!navigator.onLine) {
+          noConnectionSyncData()
+        } else {
+          failedSyncData()
+        }
       }
     }
-  }, [dataHDDVol])
+  },[initApi])
+
+  
 
   useEffect(() => {
     if (dataSalur !== undefined) {
@@ -245,24 +155,23 @@ const SyncAktivasiBKUView: FC = () => {
   }, [dataSalur])
 
   useEffect(() => {
-    if (isInfoConnError || isTokenError || isSalurError || isCheckHddVolError) {
+    if (isSalurError) {
       if (!navigator.onLine) {
         noConnectionSyncData()
       } else {
         failedSyncData()
       }
     }
-  }, [isInfoConnError, isTokenError, isSalurError, isCheckHddVolError])
+  }, [ isSalurError ])
 
   useEffect(() => {
     if (percentage === 100) {
-      //set delay redirect to form penerimaan dana
+      // set delay redirect to form penerimaan dana
       setTimeout(() => {
         navigate(`/form/penerimaan-dana/${encodeURIComponent(q_id_anggaran)}`, {
           state: location.state,
         })
       }, TIME_DELAY_SCREEN)
-      // }, 5000)
     }
   }, [percentage])
 

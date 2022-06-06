@@ -19,6 +19,7 @@ export class AktivasiBkuRepository {
       .getRepository(AktivasiBku)
       .createQueryBuilder()
       .where('id_anggaran IN (:...ids)', { ids })
+      .andWhere('soft_delete = 0 ')
       .getMany()
   }
 }
