@@ -119,8 +119,8 @@ const useInitApi = () => {
   }, [isInfoConnSuccess])
 
   useEffect(() => {
+    setApi('')
     removeCacheData()
-
     const tahunAktif = syncToIPCMain(
       IPC_CONFIG.getConfig,
       APP_CONFIG.tahunAktif
@@ -136,6 +136,12 @@ const useInitApi = () => {
 
     setApi(stepApi.infoConnection)
   }, [])
+
+  useEffect(() => {
+    if (isInfoConnError || isTokenError || isCheckHddVolError || isGetConfigError) {
+      removeCacheData()
+    }
+  }, [isInfoConnError, isTokenError, isCheckHddVolError, isGetConfigError])
 
   const returnValue = {
     isSuccess:
