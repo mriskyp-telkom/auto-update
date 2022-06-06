@@ -1,5 +1,6 @@
+import { Saldo } from 'global/types/TataUsaha'
 import { KasUmum } from 'main/models/KasUmum'
-import { Saldo, TarikTunaiBKU } from 'main/types/KasUmum'
+import { TarikTunaiBKU } from 'main/types/KasUmum'
 import CommonUtils from 'main/utils/CommonUtils'
 import { err, ok, Result } from 'neverthrow'
 import {

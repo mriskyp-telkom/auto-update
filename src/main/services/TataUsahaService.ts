@@ -10,20 +10,25 @@ import {
   GetListKasUmumRequest,
   TarikTunai,
   TarikTunaiData,
+  GetTotalSaldoByPeriodeRequest,
+  Saldo,
 } from 'global/types/TataUsaha'
-import { GetAnggaran } from 'main/repositories/AnggaranRepository'
+import {
+  GetAnggaran,
+  GetAnggaranById,
+} from 'main/repositories/AnggaranRepository'
 import { AktivasiBkuRepository } from 'main/repositories/AktivasiBkuRepository'
 import { KasUmumRepository } from 'main/repositories/KasUmumRepository'
 import { Anggaran, Bku } from 'main/types/TataUsaha'
 import { AktivasiBku } from 'main/models/AktivasiBku'
 import { CONFIG, KAS_UMUM_TYPE, STATUS_BKU_PERTAHUN } from 'global/constants'
-import { GetMonth, GetMonthName } from 'main/utils/Months'
+import { GetMonth, GetMonthDateRange, GetMonthName } from 'main/utils/Months'
 import { GetStatusAktivasiBku, GetStatusAnggaran } from 'global/status'
 import { Anggaran as AnggaranEntity } from 'main/models/Anggaran'
 import { GetConfig } from 'main/repositories/ConfigRepository'
 import CommonUtils from 'main/utils/CommonUtils'
 import { AnggaranDTO } from 'main/types/Anggaran'
-import { Saldo, TarikTunaiBKU } from 'main/types/KasUmum'
+import { TarikTunaiBKU } from 'main/types/KasUmum'
 import { GetTotalAnggaranPerBulan } from 'main/repositories/RapbsRepository'
 import { KasUmum } from 'main/models/KasUmum'
 import { GetPenggunaID } from './UserService'
@@ -162,6 +167,24 @@ export class TataUsahaService {
     return await this.kasUmumRepo.GetTotalSaldo(
       request.idAnggaran,
       startDate,
+      endDate
+    )
+  }
+
+  async GetTotalSaldoByPeriode(
+    request: GetTotalSaldoByPeriodeRequest
+  ): Promise<Result<Saldo, Error>> {
+    const anggaran = await GetAnggaranById(request.idAnggaran)
+    const month = GetMonth(request.idPeriode)
+    const monthDate = GetMonthDateRange(
+      anggaran.tahunAnggaran,
+      month.monthNumber
+    )
+    const endDateMs = monthDate.endDate.setDate(monthDate.endDate.getDate() + 1)
+    const endDate = new Date(endDateMs)
+    return await this.kasUmumRepo.GetTotalSaldo(
+      request.idAnggaran,
+      monthDate.startDate,
       endDate
     )
   }

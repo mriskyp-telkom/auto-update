@@ -75,4 +75,5 @@ export const IPC_TATA_USAHA = {
   getTotalPerluDianggarkanUlang: `${TATA_USAHA}:getTotalPerluDianggarkanUlang`,
   cashWithdrawal: `${TATA_USAHA}:cashWithdrawal`,
   getListKasUmum: `${TATA_USAHA}:getListKasUmum`,
+  getTotalSaldoByPeriod: `${TATA_USAHA}:getTotalSaldoByPeriod`,
 }
