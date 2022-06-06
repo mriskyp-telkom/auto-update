@@ -137,24 +137,39 @@ const SyncAktivasiBKUView: FC = () => {
     removeSalur()
   }
 
-  const failedSyncData = () => {
-    setApi('')
-    removeCacheData()
+  const setDefaultAktivasiBKUAlert = () => {
     setAlertNoConnection(false)
     setAlertLostConnection(false)
-    setAlertFailedSyncData(true)
-    closeModal()
+    setAlertFailedSyncData(false)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars 
   const lostConnectionSyncData = () => {
     setApi('')
     removeCacheData()
     closeModal()
 
-    // lost connection
-    setAlertFailedSyncData(false)
-    setAlertNoConnection(false)
+    setDefaultAktivasiBKUAlert()
     setAlertLostConnection(true)
+  }
+
+  const noConnectionSyncData = () => {
+    setApi('')
+    removeCacheData()
+    closeModal()
+
+    setDefaultAktivasiBKUAlert()
+    setAlertNoConnection(true)
+  }
+
+
+  const failedSyncData = () => {
+    setApi('')
+    removeCacheData()
+
+    setDefaultAktivasiBKUAlert()
+    setAlertFailedSyncData(true)
+    closeModal()
   }
 
   useEffect(() => {
@@ -232,7 +247,7 @@ const SyncAktivasiBKUView: FC = () => {
   useEffect(() => {
     if (isInfoConnError || isTokenError || isSalurError || isCheckHddVolError) {
       if (!navigator.onLine) {
-        lostConnectionSyncData()
+        noConnectionSyncData()
       } else {
         failedSyncData()
       }

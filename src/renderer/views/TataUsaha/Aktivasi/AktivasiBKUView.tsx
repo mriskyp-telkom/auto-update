@@ -68,6 +68,12 @@ const AktivasiBKUView: FC<AktivasiBKUViewProps> = (
    dana BOS Reguler tahap ini sehingga belum bisa mengaktifkan BKU. \
    Silakan periksa website BOS Salur secara berkala untuk melihat status penerimaan dana.'
 
+  const setDefaultAktivasiBKUAlert = () => {
+    setAlertNoConnection(false)
+    setAlertLostConnection(false)
+    setAlertFailedSyncData(false)
+  }
+
   const handleClickAktivasi = () => {
     if (
       idAnggaran === undefined ||
@@ -79,9 +85,7 @@ const AktivasiBKUView: FC<AktivasiBKUViewProps> = (
     }
 
     setOpenModalWarning(false)
-    setAlertNoConnection(false)
-    setAlertLostConnection(false)
-    setAlertFailedSyncData(false)
+    setDefaultAktivasiBKUAlert()
     if (navigator.onLine) {
       navigate(
         `/sync/tata-usaha/aktivasi/${sumberDana}/${encodeURIComponent(
