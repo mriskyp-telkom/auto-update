@@ -1,5 +1,5 @@
 {
-  "*.{js,jsx,ts,tsx},!public/*": [
+  "*.{js,jsx,ts,tsx}": [
     "yarn lint:script",
     "yarn format"
   ]
