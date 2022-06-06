@@ -1,8 +1,3 @@
-export interface Saldo {
-  sisaBank: number
-  sisaTunai: number
-}
-
 export interface TarikTunaiBKU {
   id: string
   bku: string

@@ -17,11 +17,14 @@ import { NOMINAL_TARIK_TUNAI_ERROR_MORE_THAN } from 'renderer/constants/errorFor
 import { CashWithdrawalRequest } from 'global/types/TataUsaha'
 import syncToIpcMain from 'renderer/configs/ipc'
 import { IPC_TATA_USAHA } from 'global/ipc'
+import { TataUsahaStates, useTataUsahaStore } from 'renderer/stores/tata-usaha'
 
 const FormPenarikanTunaiView: FC = () => {
   const navigate = useNavigate()
   const { q_id_anggaran } = useParams()
-
+  const setIsFocused = useTataUsahaStore(
+    (state: TataUsahaStates) => state.setIsFocused
+  )
   const saldo = 1000000
   const displaySaldo = `Rp ${numberUtils.delimit(saldo, '.')}`
 
@@ -62,6 +65,7 @@ const FormPenarikanTunaiView: FC = () => {
       cashWithdrawalRequest
     )
     closeModal()
+    setIsFocused(true)
     if (res.error) {
       //TODO display error when save data
     }

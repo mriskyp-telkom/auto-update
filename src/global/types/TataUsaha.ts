@@ -30,6 +30,11 @@ export interface GetTotalSaldoRequest {
   endDate: string
 }
 
+export interface GetTotalSaldoByPeriodeRequest {
+  idAnggaran: string
+  idPeriode: number
+}
+
 export interface GetTotalAnggaranRequest {
   idAnggaran: string
   idPeriode: number
@@ -64,4 +69,9 @@ export interface TarikTunaiData {
 export interface TarikTunai {
   type: string
   data: TarikTunaiData
+}
+
+export interface Saldo {
+  sisaBank: number
+  sisaTunai: number
 }

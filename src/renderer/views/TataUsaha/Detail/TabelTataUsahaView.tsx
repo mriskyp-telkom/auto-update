@@ -12,6 +12,7 @@ import { IPC_TATA_USAHA } from 'global/ipc'
 import { GetListKasUmumRequest, TarikTunaiData } from 'global/types/TataUsaha'
 import { KAS_UMUM_TYPE } from 'global/constants'
 import { format } from 'global/format'
+import { TataUsahaStates, useTataUsahaStore } from 'renderer/stores/tata-usaha'
 interface TabelTataUsahaProps {
   idAnggaran: string
   idPeriode: number
@@ -51,8 +52,15 @@ const RowType = (props: any) => {
 
 const TabelTataUsahaView = (props: TabelTataUsahaProps) => {
   const [kasUmumList, setKasUmumList] = useState([])
+  const isFocused = useTataUsahaStore(
+    (state: TataUsahaStates) => state.isFocused
+  )
 
-  useEffect(() => {
+  const setIsFocused = useTataUsahaStore(
+    (state: TataUsahaStates) => state.setIsFocused
+  )
+
+  const fetchData = () => {
     const getListKasUmumRequest: GetListKasUmumRequest = {
       idAnggaran: props.idAnggaran,
       idPeriode: props.idPeriode,
@@ -66,7 +74,14 @@ const TabelTataUsahaView = (props: TabelTataUsahaProps) => {
     } else {
       setKasUmumList(res.value)
     }
-  }, [])
+  }
+
+  useEffect(() => {
+    if (isFocused) {
+      fetchData()
+      setIsFocused(false)
+    }
+  }, [isFocused])
 
   return (
     <table className={clsx(styles.tableTataUsaha, 'w-full text-left')}>

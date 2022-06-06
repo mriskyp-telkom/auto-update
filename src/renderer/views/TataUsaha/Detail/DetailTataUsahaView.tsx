@@ -18,6 +18,7 @@ import clsx from 'clsx'
 import { DATA_BULAN } from 'renderer/constants/general'
 import syncToIpcMain from 'renderer/configs/ipc'
 import { IPC_ANGGARAN } from 'global/ipc'
+import { TataUsahaStates, useTataUsahaStore } from 'renderer/stores/tata-usaha'
 
 const DetailTataUsahaView: FC = () => {
   const navigate = useNavigate()
@@ -32,10 +33,13 @@ const DetailTataUsahaView: FC = () => {
     navigate(DASHBOARD_BKU_PAGE_URL)
   }
   const bulan = DATA_BULAN.find((b: any) => b.id === parseInt(q_id_periode))
-
+  const setIsFocused = useTataUsahaStore(
+    (state: TataUsahaStates) => state.setIsFocused
+  )
   useEffect(() => {
     const anggaran = syncToIpcMain(IPC_ANGGARAN.getAnggaranById, q_id_anggaran)
     setTahun(anggaran.tahunAnggaran)
+    setIsFocused(true)
   }, [])
 
   return (

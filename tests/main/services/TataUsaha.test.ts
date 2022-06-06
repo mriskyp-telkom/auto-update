@@ -7,6 +7,8 @@ import {
   CashWithdrawalRequest,
   GetListKasUmumRequest,
   TarikTunai,
+  GetTotalSaldoByPeriodeRequest,
+  Saldo,
 } from 'global/types/TataUsaha'
 import { AktivasiBku } from 'main/models/AktivasiBku'
 import { Anggaran } from 'main/models/Anggaran'
@@ -17,7 +19,6 @@ import { Rapbs } from 'main/models/Rapbs'
 import { RapbsPeriode } from 'main/models/RapbsPeriode'
 import { GetConfig } from 'main/repositories/ConfigRepository'
 import { TataUsahaService } from 'main/services/TataUsahaService'
-import { Saldo } from 'main/types/KasUmum'
 import { GetMonthName } from 'main/utils/Months'
 import { createConnection, getConnection, getRepository } from 'typeorm'
 import { cfg, Migrate } from '../migration'
@@ -134,6 +135,20 @@ test('GetTotalSaldo', async () => {
   expect(saldo.sisaTunai).toBe(25)
 })
 
+test('GetTotalSaldoByPeriode', async () => {
+  const conn = getConnection()
+  const tataUsahaService = new TataUsahaService(conn)
+  const request = <GetTotalSaldoByPeriodeRequest>{
+    idAnggaran: '-ywMrrqE30Ck6P0p08Uj2w',
+    idPeriode: 84,
+  }
+
+  const res = await tataUsahaService.GetTotalSaldoByPeriode(request)
+  const saldo = res.unwrapOr(<Saldo>{})
+  expect(saldo.sisaBank).toBe(50)
+  expect(saldo.sisaTunai).toBe(25)
+})
+
 test('GetTotalSaldoDibelanjakan', async () => {
   const conn = getConnection()
   const tataUsahaService = new TataUsahaService(conn)
@@ -143,7 +158,8 @@ test('GetTotalSaldoDibelanjakan', async () => {
   }
 
   const res = await tataUsahaService.GetTotalSudahDibelanjakan(request)
-  expect(res).toBe(100)
+  expect(res.isOk()).toBe(true)
+  expect(res.unwrapOr(0)).toBe(100)
 })
 
 test('GetTotalAnggaranPerBulan', async () => {

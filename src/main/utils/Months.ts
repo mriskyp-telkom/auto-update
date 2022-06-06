@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 const mapMonth = new Map()
   .set(81, <Month>{ id: 81, name: 'januari', monthNumber: 0 })
   .set(82, <Month>{ id: 82, name: 'februari', monthNumber: 1 })
@@ -76,4 +78,14 @@ export function GetMonthsRange(month: number): Month[] {
   }
 
   return months
+}
+
+export interface MonthDateRange {
+  startDate: Date
+  endDate: Date
+}
+export function GetMonthDateRange(year: number, month: number): MonthDateRange {
+  const startDate = moment([year, month])
+  const endDate = moment(startDate).endOf('month')
+  return { startDate: startDate.toDate(), endDate: endDate.toDate() }
 }
