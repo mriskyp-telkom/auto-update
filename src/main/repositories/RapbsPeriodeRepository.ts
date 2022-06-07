@@ -596,6 +596,7 @@ export const GetListRapbsPeriodeByListRapbsId = async (
         'create_date AS createDate',
         'last_update AS lastUpdate',
         'updater_id AS updaterId',
+        'soft_delete AS softDelete',
       ])
       .where('soft_delete = 0')
       .andWhere('id_rapbs IN (:...listIdRapbs)', { listIdRapbs })

@@ -167,6 +167,7 @@ export const MapperRkasDetailParam = (
       create_date: createDateFormatted,
       last_update: lastUpdateFormatted,
       updater_id: CommonUtils.decodeUUID(data?.updaterId),
+      soft_delete: data?.softDelete,
     })
   }
   return dataParamRkasPeriode
