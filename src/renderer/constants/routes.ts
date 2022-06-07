@@ -10,3 +10,4 @@ export const FORM_PENARIKAN_TUNAI_PAGE_URL = (
   idAnggaran: string,
   idPeriode: number
 ) => `/form/penarikan-tunai/${idAnggaran}/${idPeriode}`
+export const FORM_TAMBAH_PEMBELANJAAN = '/form/tambah-pembelanjaan'

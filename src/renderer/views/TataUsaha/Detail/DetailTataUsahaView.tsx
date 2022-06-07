@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import TabelTataUsahaView from './TabelTataUsahaView'
 import CardTotalDanaView from './CardTotalDanaView'
@@ -10,7 +10,10 @@ import PanduanTutupBKUView from 'renderer/views/TataUsaha/Panduan/PanduanTutupBK
 import { Icon } from '@wartek-id/icon'
 import { Button } from '@wartek-id/button'
 
-import { DASHBOARD_BKU_PAGE_URL } from 'renderer/constants/routes'
+import {
+  DASHBOARD_BKU_PAGE_URL,
+  FORM_TAMBAH_PEMBELANJAAN,
+} from 'renderer/constants/routes'
 
 import { formatDateTimeStatus } from 'renderer/utils/date-formatting'
 
@@ -22,6 +25,8 @@ import { TataUsahaStates, useTataUsahaStore } from 'renderer/stores/tata-usaha'
 
 const DetailTataUsahaView: FC = () => {
   const navigate = useNavigate()
+  const location = useLocation()
+
   const { q_id_anggaran, q_id_periode } = useParams()
   const [tahun, setTahun] = useState('')
   const lastUpdate = new Date()
@@ -41,6 +46,12 @@ const DetailTataUsahaView: FC = () => {
     setTahun(anggaran.tahunAnggaran)
     setIsFocused(true)
   }, [])
+
+  const handleAddPembelanjaan = () => {
+    navigate(FORM_TAMBAH_PEMBELANJAAN, {
+      state: { backgroundLocation: location },
+    })
+  }
 
   return (
     <div>
@@ -83,7 +94,10 @@ const DetailTataUsahaView: FC = () => {
         </span>
         <span>
           <PanduanTutupBKUView />
-          <div className="flex justify-end pt-5">
+          <div
+            className="flex justify-end pt-5"
+            onClick={handleAddPembelanjaan}
+          >
             <Button color="white" size="md" variant="solid" className="mr-3">
               <Icon as="i" color="default" fontSize="default">
                 add
