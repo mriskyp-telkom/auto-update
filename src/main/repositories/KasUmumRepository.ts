@@ -209,7 +209,7 @@ export class KasUmumRepository {
       (case when ku.volume is not null then ku.volume else 0 end) as jumlahVolume,
       a.jumlah as jumlahAnggaran,
       ku.saldo as saldoDibelanjakan,
-      (select sum(saldo) from kas_umum where id_ref_bku in(10,30) and parent_id_kas_umum = ku.id_kas_umum) as pajakWajibLapor
+      (select sum(saldo) from kas_umum where id_ref_bku in(10,30) and parent_id_kas_umum = ku.id_kas_umum and soft_delete = 0 ) as pajakWajibLapor
     from kas_umum ku
     left join (
         select rp.id_rapbs_periode, rk.id_ref_kode, rk.uraian_kode, rp.jumlah
@@ -218,13 +218,15 @@ export class KasUmumRepository {
         on rp.id_rapbs = r.id_rapbs
         join ref_kode rk
         on rk.id_ref_kode = r.id_ref_kode
+        where r.soft_delete = 0 and rp.soft_delete = 0
     ) a
     on a.id_rapbs_periode = ku.id_rapbs_periode
     left join ref_bku rb
     on ku.id_ref_bku = rb.id_ref_bku
     where ku.id_anggaran = :idAnggaran 
     and ku.id_ref_bku in (3,4,5,23,24,25,15,35) 
-    and strftime('%m',tanggal_transaksi) = :bulan;
+    and strftime('%m',tanggal_transaksi) = :bulan
+    and ku.soft_delete = 0
     `
 
     return await this.rawQuery<Array<TarikTunaiBKU>>(query, {
