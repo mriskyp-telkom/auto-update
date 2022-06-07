@@ -304,7 +304,7 @@ export class TataUsahaService {
       let data: TarikTunaiData
       const tType = getComponentType(tarikTunai.idRefBku)
       if (tType === KAS_UMUM_TYPE.line) {
-        const msgTemplate = `Anda telah melakukan <b>${tarikTunai.bku} Rp. %s </b> pada %s`
+        const msgTemplate = `Anda telah melakukan <span style="font-weight: 500;padding: unset">${tarikTunai.bku.toLowerCase()} Rp. %s </span> pada %s`
         data = <TarikTunaiData>{
           jumlah: tarikTunai.saldoDibelanjakan,
           date: tarikTunai.tanggalTransaksi,
