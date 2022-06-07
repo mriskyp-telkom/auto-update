@@ -138,7 +138,12 @@ const useInitApi = () => {
   }, [])
 
   useEffect(() => {
-    if (isInfoConnError || isTokenError || isCheckHddVolError || isGetConfigError) {
+    if (
+      isInfoConnError ||
+      isTokenError ||
+      isCheckHddVolError ||
+      isGetConfigError
+    ) {
       removeCacheData()
     }
   }, [isInfoConnError, isTokenError, isCheckHddVolError, isGetConfigError])

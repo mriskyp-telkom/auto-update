@@ -1,6 +1,9 @@
 import React, { FC } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { Icon } from '@wartek-id/icon'
+import { Tooltip } from '@wartek-id/tooltip'
+
 import BadgeComponent, { BadgeType } from 'renderer/components/BadgeComponent'
 import CreateKertasKerjaView from 'renderer/views/Anggaran/CreateKertasKerjaView'
 import CekStatusKKView from 'renderer/views/Anggaran/CekStatus/CekStatusKKView'
@@ -8,15 +11,13 @@ import CekStatusKKView from 'renderer/views/Anggaran/CekStatus/CekStatusKKView'
 import { KKCardDashboardType } from 'renderer/types/AnggaranType'
 
 import { LABEL_STATUS_KERTAS_KERJA } from 'renderer/constants/anggaran'
-import { Icon } from '@wartek-id/icon'
-import { Tooltip } from '@wartek-id/tooltip'
+import { CETAK_RKAS_PAGE_URL } from 'renderer/constants/routes'
+import { STATUS_KERTAS_KERJA, VERSI_ANGGARAN } from 'global/constants'
 
 import {
   formatDateToString,
   formatDateTimeStatus,
 } from 'renderer/utils/date-formatting'
-import { STATUS_KERTAS_KERJA, VERSI_ANGGARAN } from 'global/constants'
-
 import { copyKertasKerja } from 'renderer/utils/copy-writing'
 
 interface CardDashboardAnggaranProps {
@@ -46,6 +47,10 @@ const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (
 
   const handleDelete = () => {
     //action delete
+  }
+
+  const handleCetak = () => {
+    navigate(CETAK_RKAS_PAGE_URL(encodeURIComponent(data.id_anggaran)))
   }
 
   const handleOpen = () => {
@@ -180,6 +185,7 @@ const CardDashboardAnggaranView: FC<CardDashboardAnggaranProps> = (
                         color="default"
                         fontSize="small"
                         style={{ fontSize: '22px', color: '#45474a' }}
+                        onClick={handleCetak}
                       >
                         print
                       </Icon>

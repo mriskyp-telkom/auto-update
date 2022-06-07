@@ -1,8 +1,6 @@
 import React, { FC, useEffect, useState } from 'react'
 import { useNavigate, useLocation, useParams } from 'react-router-dom'
 
-import { Tooltip } from '@wartek-id/tooltip'
-
 import AmountCardComponent from 'renderer/components/Card/AmountCardComponent'
 import DropdownComponent from 'renderer/components/DropdownComponent'
 import AlertDialogComponent from 'renderer/components/Dialog/AlertDialogComponent'
@@ -251,14 +249,6 @@ const MengulasKertasKerjaView: FC = () => {
             style={{ display: 'inline-block' }}
           >
             Bos reguler {tahun}
-            <Tooltip
-              content={`BOS reguler ${tahun}`}
-              placement="top"
-              strategy="fixed"
-              trigger="hover"
-            >
-              <span className="hidden">BOS reguler {tahun}</span>
-            </Tooltip>
           </div>
           <div className="flex">
             <span className="mr-3">

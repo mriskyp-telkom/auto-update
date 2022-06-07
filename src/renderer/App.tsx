@@ -85,7 +85,10 @@ const App: FC = () => {
             />
             <Route path="anggaran">
               <Route index={true} element={<DashboardAnggaranView />} />
-              <Route path="cetak" element={<CetakKertasKerjaView />} />
+              <Route
+                path="cetak/:q_id_anggaran"
+                element={<CetakKertasKerjaView />}
+              />
               <Route path="menyusun">
                 <Route path=":q_mode" element={<MenyusunKertasKerjaView />}>
                   <Route

@@ -14,6 +14,7 @@ import {
   ALERT_CEK_STATUS,
 } from 'renderer/constants/anggaran'
 import { APP_CONFIG } from 'renderer/constants/appConfig'
+import { CETAK_RKAS_PAGE_URL } from 'renderer/constants/routes'
 
 import { Anggaran } from 'global/types/Anggaran'
 import { AlertType } from 'renderer/types/ComponentType'
@@ -122,6 +123,10 @@ const SyncCekStatusKKView: FC = () => {
     if (statusKK === RESPONSE_CEK_STATUS.declined) {
       setIsFocused(true)
       navigate(`/anggaran/menyusun/update/${encodeURIComponent(q_id_anggaran)}`)
+    }
+    if (statusKK === RESPONSE_CEK_STATUS.approved) {
+      navigate(CETAK_RKAS_PAGE_URL(encodeURIComponent(q_id_anggaran)))
+      return
     }
   }
 
