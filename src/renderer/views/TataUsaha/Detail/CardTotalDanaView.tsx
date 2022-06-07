@@ -32,9 +32,6 @@ const CardTotalDanaView: FC<CardTotalDanaProps> = (
     (state: TataUsahaStates) => state.isFocused
   )
 
-  const setIsFocused = useTataUsahaStore(
-    (state: TataUsahaStates) => state.setIsFocused
-  )
   const handleClickTarikTunai = () => {
     const url = FORM_PENARIKAN_TUNAI_PAGE_URL(
       encodeURIComponent(data.idAnggaran),
@@ -58,7 +55,6 @@ const CardTotalDanaView: FC<CardTotalDanaProps> = (
   useEffect(() => {
     if (isFocused) {
       fetchData()
-      setIsFocused(false)
     }
   }, [isFocused])
 

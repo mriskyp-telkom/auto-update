@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
 
@@ -14,19 +14,22 @@ import {
 } from 'renderer/types/forms/TataUsahaType'
 
 import { NOMINAL_TARIK_TUNAI_ERROR_MORE_THAN } from 'renderer/constants/errorForm'
-import { CashWithdrawalRequest } from 'global/types/TataUsaha'
+import {
+  CashWithdrawalRequest,
+  GetTotalSaldoByPeriodeRequest,
+} from 'global/types/TataUsaha'
 import syncToIpcMain from 'renderer/configs/ipc'
 import { IPC_TATA_USAHA } from 'global/ipc'
 import { TataUsahaStates, useTataUsahaStore } from 'renderer/stores/tata-usaha'
 
 const FormPenarikanTunaiView: FC = () => {
   const navigate = useNavigate()
-  const { q_id_anggaran } = useParams()
+  const { q_id_anggaran, q_id_periode } = useParams()
   const setIsFocused = useTataUsahaStore(
     (state: TataUsahaStates) => state.setIsFocused
   )
-  const saldo = 1000000
-  const displaySaldo = `Rp ${numberUtils.delimit(saldo, '.')}`
+
+  const [saldo, setSaldo] = useState(0)
 
   const formMethods = useForm<FormPenarikanTunaiData>({
     mode: 'onSubmit',
@@ -64,12 +67,24 @@ const FormPenarikanTunaiView: FC = () => {
       IPC_TATA_USAHA.cashWithdrawal,
       cashWithdrawalRequest
     )
-    closeModal()
-    setIsFocused(true)
+
     if (res.error) {
       //TODO display error when save data
     }
+    setIsFocused(true)
+    closeModal()
   }
+
+  useEffect(() => {
+    const payload: GetTotalSaldoByPeriodeRequest = {
+      idAnggaran: q_id_anggaran,
+      idPeriode: parseInt(q_id_periode),
+    }
+    const res = syncToIpcMain(IPC_TATA_USAHA.getTotalSaldoByPeriod, payload)
+    if (res?.value) {
+      setSaldo(res.value?.sisaBank)
+    }
+  }, [])
 
   return (
     <>
@@ -98,7 +113,7 @@ const FormPenarikanTunaiView: FC = () => {
               <div className="flex items-center justify-between text-base pb-1 font-normal">
                 <span className="text-gray-900">Nominal Penarikan</span>
                 <span className="font-semibold text-blue-700">
-                  Saldo : {displaySaldo}
+                  Saldo : Rp {numberUtils.delimit(saldo, '.')}
                 </span>
               </div>
               <InputComponent
