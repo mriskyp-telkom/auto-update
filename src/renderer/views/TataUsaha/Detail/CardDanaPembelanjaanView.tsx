@@ -7,6 +7,7 @@ import AmountCardComponent from 'renderer/components/Card/AmountCardComponent'
 import syncToIpcMain from 'renderer/configs/ipc'
 import { IPC_TATA_USAHA } from 'global/ipc'
 import { GetTotalAnggaranRequest } from 'global/types/TataUsaha'
+import clsx from 'clsx'
 
 interface CardDanaPembelanjaanViewData {
   idAnggaran: string
@@ -104,7 +105,7 @@ const CardDanaPembelanjaanView: FC<CardDanaPembelanjaanViewProps> = (
     <div className="border w-min px-6 pb-6 pt-5 rounded grid place-content-end">
       <div className="flex content-end">
         {list.map((data, index) => (
-          <span key={index} className="mr-6">
+          <span key={index} className={clsx(index < list.length - 1 && 'mr-6')}>
             <div className="flex items-center font-normal text-tiny text-gray-900 pb-1">
               {data.title}
               <Tooltip

@@ -55,6 +55,9 @@ const CardBulan: FC<CardBulanProps> = (props: CardBulanProps) => {
   const classStatus = color + ' border-gray-500'
 
   const handleClick = () => {
+    if (isDisabled) {
+      return
+    }
     navigate(
       DETAIL_BKU_PAGE_URL(encodeURIComponent(data.idAnggaran), data.idPeriode)
     )
@@ -64,7 +67,8 @@ const CardBulan: FC<CardBulanProps> = (props: CardBulanProps) => {
     <div
       className={clsx(
         color,
-        'rounded shadow-card py-3 px-5 w-[177px] capitalize-first cursor-pointer'
+        !isDisabled && 'cursor-pointer',
+        'rounded shadow-card py-3 px-5 w-[177px] capitalize-first'
       )}
       onClick={handleClick}
     >
