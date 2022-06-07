@@ -28,6 +28,7 @@ import FormPenerimaanDanaView from 'renderer/views/TataUsaha/Form/FormPenerimaan
 import SyncAktivasiBKUView from 'renderer/views/TataUsaha/Aktivasi/SyncAktivasiBKUView'
 import DetailTataUsahaView from 'renderer/views/TataUsaha/Detail/DetailTataUsahaView'
 import FormPenarikanTunaiView from 'renderer/views/TataUsaha/Form/FormPenarikanTunaiView'
+import FormTambahPembelanjaanView from './views/TataUsaha/Form/FormTambahPembelanjaan'
 
 const ipcRenderer = window.require('electron').ipcRenderer
 
@@ -152,6 +153,10 @@ const App: FC = () => {
                 element={<SyncAktivasiBKUView />}
               ></Route>
               <Route path="logout" element={<LogoutView />} />
+              <Route
+                path="form/tambah-pembelanjaan"
+                element={<FormTambahPembelanjaanView />}
+              />
             </Route>
           </Routes>
         )}
