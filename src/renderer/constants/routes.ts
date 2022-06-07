@@ -1,4 +1,6 @@
 /* Anggaran */
+export const CETAK_RKAS_PAGE_URL = (idAnggaran: string) =>
+  `/anggaran/cetak/${idAnggaran}`
 
 /* BKU */
 export const DASHBOARD_BKU_PAGE_URL = '/tata-usaha'

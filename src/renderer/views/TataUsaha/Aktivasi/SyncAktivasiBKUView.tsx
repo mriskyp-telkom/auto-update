@@ -1,9 +1,7 @@
-import { IPC_ANGGARAN, IPC_CONFIG, } from 'global/ipc'
+import { IPC_ANGGARAN, IPC_CONFIG } from 'global/ipc'
 import React, { FC, useEffect, useState } from 'react'
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
-import {
-  useAPISalur,
-} from 'renderer/apis/utils'
+import { useAPISalur } from 'renderer/apis/utils'
 
 import SyncDialogComponent from 'renderer/components/Dialog/SyncDialogComponent'
 import { TIME_DELAY_SCREEN } from 'renderer/constants/app'
@@ -20,7 +18,7 @@ import useInitApi from 'renderer/utils/hooks/useInitApi'
 const SyncAktivasiBKUView: FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
-  const initApi  = useInitApi()
+  const initApi = useInitApi()
   const { q_sumber_dana, q_id_anggaran } = useParams()
 
   const [initDone, setInitDone] = useState(false)
@@ -65,8 +63,7 @@ const SyncAktivasiBKUView: FC = () => {
       sumberDana: parseInt(q_sumber_dana),
     },
     {
-      enabled:
-        tahunAnggaran != null && q_sumber_dana != null ,
+      enabled: tahunAnggaran != null && q_sumber_dana != null,
       retry: 0,
     }
   )
@@ -77,14 +74,14 @@ const SyncAktivasiBKUView: FC = () => {
     setAlertFailedSyncData(false)
   }
 
-  const lostConnectionSyncData = () => {
-    setTahunAnggaran(null)
-    removeSalur()
-    closeModal()
+  // const lostConnectionSyncData = () => {
+  //   setTahunAnggaran(null)
+  //   removeSalur()
+  //   closeModal()
 
-    setDefaultAktivasiBKUAlert()
-    setAlertLostConnection(true)
-  }
+  //   setDefaultAktivasiBKUAlert()
+  //   setAlertLostConnection(true)
+  // }
 
   const noConnectionSyncData = () => {
     setTahunAnggaran(null)
@@ -95,7 +92,6 @@ const SyncAktivasiBKUView: FC = () => {
     setAlertNoConnection(true)
   }
 
-
   const failedSyncData = () => {
     setTahunAnggaran(null)
     removeSalur()
@@ -105,28 +101,31 @@ const SyncAktivasiBKUView: FC = () => {
     closeModal()
   }
 
-  useEffect(()=>{
-    if(initApi != null){
-      const {data, isSuccess, isError} = initApi
-      if(isSuccess && !initDone){
+  useEffect(() => {
+    if (initApi != null) {
+      const { data, isSuccess, isError } = initApi
+      if (isSuccess && !initDone) {
         setInitDone(true)
         setPercentage(50)
-        if(Number(data.infoConnection.data) !== 1){
-          failedSyncData() 
-        } else if(Number(data.dataHDDVol.data) !== 1){
+        if (Number(data.infoConnection.data) !== 1) {
+          failedSyncData()
+        } else if (Number(data.dataHDDVol.data) !== 1) {
           const dataKoregInvalid: SetConfigRequest = {
             varname: APP_CONFIG.koregInvalid,
             varvalue: '1',
           }
           syncToIPCMain(IPC_CONFIG.setConfig, dataKoregInvalid)
           setMultipleDevice(true)
-          closeModal()  
+          closeModal()
         } else {
-          const anggaran = syncToIPCMain(IPC_ANGGARAN.getAnggaranById, q_id_anggaran)
+          const anggaran = syncToIPCMain(
+            IPC_ANGGARAN.getAnggaranById,
+            q_id_anggaran
+          )
           setTahunAnggaran(anggaran.tahunAnggaran)
         }
       }
-      if(isError){
+      if (isError) {
         if (!navigator.onLine) {
           noConnectionSyncData()
         } else {
@@ -134,9 +133,7 @@ const SyncAktivasiBKUView: FC = () => {
         }
       }
     }
-  },[initApi])
-
-  
+  }, [initApi])
 
   useEffect(() => {
     if (dataSalur !== undefined) {
@@ -162,7 +159,7 @@ const SyncAktivasiBKUView: FC = () => {
         failedSyncData()
       }
     }
-  }, [ isSalurError ])
+  }, [isSalurError])
 
   useEffect(() => {
     if (percentage === 100) {

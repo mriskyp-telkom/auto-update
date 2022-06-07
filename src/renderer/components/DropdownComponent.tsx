@@ -12,6 +12,7 @@ interface DropdownOptions {
 }
 
 interface DropdownProps {
+  width?: number
   options: Array<DropdownOptions>
   handleChange: (value: string) => void
 }
@@ -28,7 +29,7 @@ const DropdownComponent: FC<DropdownProps> = (props: DropdownProps) => {
     <Listbox value={selectedValue} onChange={handleChange}>
       <Listbox.Button
         className={clsx(
-          'w-[224px]',
+          `w-[${props.width}px]`,
           'border rounded border-gray-500 border-solid',
           'px-4 py-3',
           'text-large text-gray-900'
@@ -43,7 +44,8 @@ const DropdownComponent: FC<DropdownProps> = (props: DropdownProps) => {
       </Listbox.Button>
       <Listbox.Options
         className={clsx(
-          'w-[224px] absolute bg-white z-10',
+          `w-[${props.width}px]`,
+          'absolute bg-white z-10',
           'rounded border-gray-500 border-solid',
           'py-1 mt-2',
           'text-large text-gray-900'
@@ -67,6 +69,10 @@ const DropdownComponent: FC<DropdownProps> = (props: DropdownProps) => {
       </Listbox.Options>
     </Listbox>
   )
+}
+
+DropdownComponent.defaultProps = {
+  width: 224,
 }
 
 export default DropdownComponent
