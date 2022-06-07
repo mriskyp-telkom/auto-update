@@ -57,6 +57,6 @@ export const LABEL_STATUS_BKU_PERBULAN = [
   {
     status: STATUS_BKU_PERBULAN.draft,
     type: 'informational',
-    label: 'Draft',
+    label: 'Draf',
   },
 ]

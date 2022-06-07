@@ -37,13 +37,13 @@ const CardDanaPembelanjaanView: FC<CardDanaPembelanjaanViewProps> = (
 
   const bisaDibelanjakanCard = {
     title: 'Bisa Dibelanjakan',
-    tooltip: 'Total sisa anggaran yang bisa dibelanjakan sampai bulan ini.',
+    tooltip: 'Total harga barang/jasa yang dibelanjakan bulan ini.',
     amount: 0,
   }
 
   const sudahDibelanjakanCard = {
-    title: 'Dana Dibelanjakan',
-    tooltip: 'Total harga barang/jasa yang dibelanjakan bulan ini.',
+    title: 'Sudah Dibelanjakan',
+    tooltip: 'Total sisa anggaran yang bisa dibelanjakan sampai bulan ini.',
     amount: 0,
   }
 

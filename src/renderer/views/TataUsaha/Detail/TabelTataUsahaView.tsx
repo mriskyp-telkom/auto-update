@@ -1,31 +1,43 @@
 import React, { useEffect, useState } from 'react'
 
-import { headerTataUsaha } from 'renderer/constants/table'
-
 import { Icon } from '@wartek-id/icon'
 
-import styles from 'renderer/views/TataUsaha/tata-usaha.module.css'
 import { numberUtils } from '@wartek-id/fe-toolbox'
-import clsx from 'clsx'
-import syncToIpcMain from 'renderer/configs/ipc'
-import { IPC_TATA_USAHA } from 'global/ipc'
+
 import { GetListKasUmumRequest, TarikTunaiData } from 'global/types/TataUsaha'
-import { KAS_UMUM_TYPE } from 'global/constants'
-import { format } from 'global/format'
+
 import { TataUsahaStates, useTataUsahaStore } from 'renderer/stores/tata-usaha'
+
+import { headerTataUsaha } from 'renderer/constants/table'
+import { IPC_TATA_USAHA } from 'global/ipc'
+import { KAS_UMUM_TYPE } from 'global/constants'
+
+import { format } from 'global/format'
+
+import { formatDateToString } from 'renderer/utils/date-formatting'
+
+import syncToIpcMain from 'renderer/configs/ipc'
+
+import styles from 'renderer/views/TataUsaha/tata-usaha.module.css'
+
+import clsx from 'clsx'
+
 interface TabelTataUsahaProps {
   idAnggaran: string
   idPeriode: number
 }
+
 interface KasUmumDataProps {
   data: TarikTunaiData
 }
+
 const LineType = (props: KasUmumDataProps) => {
   const message = format(
     props.data.messageTemplate,
     numberUtils.delimit(props.data.jumlah, '.'),
-    props.data.date
+    formatDateToString(new Date(props.data.date))
   )
+
   return (
     <tr className={clsx(styles.blue, 'bg-blue-5 p-4')}>
       <td className="flex items-center float-root">
