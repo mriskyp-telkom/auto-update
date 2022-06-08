@@ -1,0 +1,13 @@
+.divider {
+  flex-grow: 1;
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.divider:after {
+  position: relative;
+  height: 1px;
+  background: #888;
+  content: '';
+  display: block;
+}
