@@ -3,6 +3,7 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 
 import FormDialogComponent from 'renderer/components/Dialog/FormDialogComponent'
+import StepperComponent from 'renderer/components/StepperComponent/index'
 
 const FormTambahPembelanjaanView: FC = () => {
   const navigate = useNavigate()
@@ -31,9 +32,11 @@ const FormTambahPembelanjaanView: FC = () => {
         >
           <div>
             <div className="pb-5">
-              <div className="text-base pb-1 font-normal text-gray-900">
-                Periode Penerimaan
-              </div>
+              <StepperComponent
+                step={3}
+                activeStep={1}
+                label={['Step 1', 'Step 2', 'Step 3']}
+              />
             </div>
           </div>
         </FormDialogComponent>
