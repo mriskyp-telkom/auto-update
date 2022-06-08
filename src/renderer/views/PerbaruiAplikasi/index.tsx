@@ -1,9 +1,19 @@
 import { Button } from '@wartek-id/button'
 import React, { FC } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { APP_VERSION } from 'renderer/constants/appConfig'
+import { DIALOG_UPDATE } from 'renderer/constants/routes'
 import PageLayout from 'renderer/views/Layout/PageLayout'
 
 const PerbaruiAplikasi: FC = () => {
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  const handlePeriksaUpdate = () => {
+    navigate(DIALOG_UPDATE, {
+      state: { backgroundLocation: location },
+    })
+  }
   return (
     <PageLayout>
       <div className="flex w-[980px] mt-[45px] mx-auto border-b pb-14">
@@ -20,7 +30,13 @@ const PerbaruiAplikasi: FC = () => {
             <div className="text-gray-50 text-sm">
               Hak Cipta &copy; 2021 Kemendikbudristek
             </div>
-            <Button className="my-3" color="white" variant="solid" size="sm">
+            <Button
+              className="my-3"
+              color="white"
+              variant="solid"
+              size="sm"
+              onClick={handlePeriksaUpdate}
+            >
               Periksa Versi Terbaru
             </Button>
             <div className="text-blue-800 text-sm">
