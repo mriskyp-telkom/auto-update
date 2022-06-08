@@ -106,6 +106,7 @@ app.on('ready', async () => {
         require('./main/ipcs/ipcReferensiWilayah')
         require('./main/ipcs/ipcSekolah')
         require('./main/ipcs/ipcTataUsaha')
+        require('./main/ipcs/ipcBuktiBelanja')
         require('./main/ipcs/ipcToken')
         require('./main/ipcs/ipcUser')
         require('./main/ipcs/ipcUtils')
