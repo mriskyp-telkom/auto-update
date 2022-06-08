@@ -9,6 +9,7 @@ import {
   CashWithdrawalRequest,
   GetListKasUmumRequest,
   GetTotalSaldoByPeriodeRequest,
+  GetLastTransactionDateRequest,
 } from 'global/types/TataUsaha'
 import { GetConfig } from 'main/repositories/ConfigRepository'
 
@@ -80,6 +81,12 @@ module.exports = {
     IPC_TATA_USAHA.getListKasUmum,
     async (e, request: GetListKasUmumRequest) => {
       e.returnValue = await tataUsahaService.GetListKasUmum(request)
+    }
+  ),
+  GetLastTransactionDate: ipcMain.on(
+    IPC_TATA_USAHA.getLastTransactionDate,
+    async (e, request: GetLastTransactionDateRequest) => {
+      e.returnValue = await tataUsahaService.GetLastTransactionDate(request)
     }
   ),
 }

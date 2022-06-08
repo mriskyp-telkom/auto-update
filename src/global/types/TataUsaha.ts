@@ -35,6 +35,11 @@ export interface GetTotalSaldoByPeriodeRequest {
   idPeriode: number
 }
 
+export interface GetLastTransactionDateRequest {
+  idAnggaran: string
+  idPeriode: number
+}
+
 export interface GetTotalAnggaranRequest {
   idAnggaran: string
   idPeriode: number

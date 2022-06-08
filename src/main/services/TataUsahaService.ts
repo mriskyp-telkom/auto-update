@@ -12,6 +12,7 @@ import {
   TarikTunaiData,
   GetTotalSaldoByPeriodeRequest,
   Saldo,
+  GetLastTransactionDateRequest,
 } from 'global/types/TataUsaha'
 import {
   GetAnggaran,
@@ -336,5 +337,23 @@ export class TataUsahaService {
     }
 
     return ok(result)
+  }
+
+  async GetLastTransactionDate(
+    request: GetLastTransactionDateRequest
+  ): Promise<Result<Date, Error>> {
+    const month = GetMonth(request.idPeriode)
+    try {
+      let latestDate = await this.kasUmumRepo.GetLastTransactionDate(
+        request.idAnggaran,
+        month.monthNumber + 1
+      )
+      if (latestDate == null) {
+        latestDate = new Date()
+      }
+      return ok(latestDate)
+    } catch (error) {
+      return err(new Error(error))
+    }
   }
 }

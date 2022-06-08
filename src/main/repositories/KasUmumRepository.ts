@@ -234,4 +234,22 @@ export class KasUmumRepository {
       bulan: paddedMonth,
     })
   }
+
+  async GetLastTransactionDate(
+    idAnggaran: string,
+    bulan: number
+  ): Promise<Date> {
+    const paddedMonth = bulan.toString().padStart(2, '0')
+
+    const res = await this.repo
+      .createQueryBuilder()
+      .select('MAX(tanggal_transaksi) as tanggalTransaksi')
+      .where(`strftime('%m',tanggal_transaksi) = :bulan`, {
+        bulan: paddedMonth,
+      })
+      .andWhere('id_anggaran = :idAnggaran', { idAnggaran })
+      .andWhere('soft_delete = 0 ')
+      .getRawOne()
+    return res.tanggalTransaksi
+  }
 }
