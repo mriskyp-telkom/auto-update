@@ -53,3 +53,15 @@ test('GetNextNoBukti', async () => {
   const nextNoBukti2 = await kasUmumRepo.GetNextNoBukti('BBU')
   expect(nextNoBukti2).toBe('BBU02')
 })
+
+test('GetLastTransactionDate', async () => {
+  const bulan = 4
+  const idAnggaran = '-ywMrrqE30Ck6P0p08Uj2w'
+  const date = await kasUmumRepo.GetLastTransactionDate(idAnggaran, bulan)
+  expect(date).toBe('2021-04-22')
+
+  const bulan2 = 12
+  const idAnggaran2 = '-ywMrrqE30Ck6P0p08Uj2w'
+  const date2 = await kasUmumRepo.GetLastTransactionDate(idAnggaran2, bulan2)
+  expect(date2).toBe(null)
+})

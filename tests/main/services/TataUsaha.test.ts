@@ -9,6 +9,7 @@ import {
   TarikTunai,
   GetTotalSaldoByPeriodeRequest,
   Saldo,
+  GetLastTransactionDateRequest,
 } from 'global/types/TataUsaha'
 import { AktivasiBku } from 'main/models/AktivasiBku'
 import { Anggaran } from 'main/models/Anggaran'
@@ -19,6 +20,7 @@ import { Rapbs } from 'main/models/Rapbs'
 import { RapbsPeriode } from 'main/models/RapbsPeriode'
 import { GetConfig } from 'main/repositories/ConfigRepository'
 import { TataUsahaService } from 'main/services/TataUsahaService'
+import CommonUtils from 'main/utils/CommonUtils'
 import { GetMonthName } from 'main/utils/Months'
 import { createConnection, getConnection, getRepository } from 'typeorm'
 import { cfg, Migrate } from '../migration'
@@ -428,4 +430,30 @@ test('GetListKasUmum ', async () => {
   expect(list[2].data.anggaran).toBe(null)
   expect(list[2].data.dibelanjakan).toBe(100)
   expect(list[2].data.pajakWajibLapor).toBe(null)
+})
+
+test('GetLastTransactionDate', async () => {
+  const conn = getConnection()
+  const tataUsahaService = new TataUsahaService(conn)
+  const request: GetLastTransactionDateRequest = {
+    idAnggaran: '-ywMrrqE30Ck6P0p08Uj2w',
+    idPeriode: 84,
+  }
+
+  const request2: GetLastTransactionDateRequest = {
+    idAnggaran: '-ywMrrqE30Ck6P0p08Uj2w',
+    idPeriode: 90,
+  }
+
+  const res = await tataUsahaService.GetLastTransactionDate(request)
+  expect(res.isOk()).toBe(true)
+  const date = res.unwrapOr(Date())
+  expect(date).toBe('2021-04-22')
+
+  const res2 = await tataUsahaService.GetLastTransactionDate(request2)
+  expect(res2.isOk()).toBe(true)
+  const date2 = res2.unwrapOr(Date()) as Date
+  expect(CommonUtils.formatDateToString(date2)).toBe(
+    CommonUtils.formatDateToString(new Date())
+  )
 })

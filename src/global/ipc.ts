@@ -77,6 +77,7 @@ export const IPC_TATA_USAHA = {
   cashWithdrawal: `${TATA_USAHA}:cashWithdrawal`,
   getListKasUmum: `${TATA_USAHA}:getListKasUmum`,
   getTotalSaldoByPeriod: `${TATA_USAHA}:getTotalSaldoByPeriod`,
+  getLastTransactionDate: `${TATA_USAHA}:getLastTransactionDate`,
 }
 
 export const IPC_BUKTI_BELANJA = {
