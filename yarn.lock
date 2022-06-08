@@ -2494,6 +2494,14 @@
     "@wartek-id/react-primitive" "*"
     clsx "^1.1.1"
 
+"@wartek-id/checkbox@^1.2.4":
+  version "1.2.4"
+  resolved "https://gitlab.com/api/v4/projects/25182406/packages/npm/@wartek-id/checkbox/-/@wartek-id/checkbox-1.2.4.tgz#18a09b3d8148fedef3d8f8f15851f809c3b9a265"
+  integrity sha1-GKCbPYFI/t7z2PjxWFH4CcO5omU=
+  dependencies:
+    "@wartek-id/react-utils" "1.0.0"
+    clsx "^1.1.1"
+
 "@wartek-id/design-tokens@^1.4.1":
   version "1.4.1"
   resolved "https://gitlab.com/api/v4/projects/24396089/packages/npm/@wartek-id/design-tokens/-/@wartek-id/design-tokens-1.4.1.tgz"
@@ -2556,6 +2564,11 @@
   resolved "https://gitlab.com/api/v4/projects/25182406/packages/npm/@wartek-id/react-utils/-/@wartek-id/react-utils-0.0.6.tgz"
   integrity "sha1-GOr14ftCBk4mt/ZkCO68cStf4z8= sha512-q05Yte+SIr8bTyaF+VUDVohVjxIG/XpeGYx4OZclXiTP2Y6zexqO1GKye6paJOnQVO8qdBjiGnYKFDFsDLsRMA=="
 
+"@wartek-id/react-utils@1.0.0":
+  version "1.0.0"
+  resolved "https://gitlab.com/api/v4/projects/25182406/packages/npm/@wartek-id/react-utils/-/@wartek-id/react-utils-1.0.0.tgz#43ac0e890c608ac7be35f1ce9a84fab16ff213b7"
+  integrity sha1-Q6wOiQxgise+NfHOmoT6sW/yE7c=
+
 "@wartek-id/tabs@^1.0.2":
   version "1.0.3"
   resolved "https://gitlab.com/api/v4/projects/25182406/packages/npm/@wartek-id/tabs/-/@wartek-id/tabs-1.0.3.tgz"
@@ -2566,8 +2579,8 @@
 
 "@wartek-id/tailwind-config@^0.7.0":
   version "0.7.0"
-  resolved "https://gitlab.com/api/v4/projects/25182406/packages/npm/@wartek-id/tailwind-config/-/@wartek-id/tailwind-config-0.7.0.tgz"
-  integrity "sha1-lv/FNzqbZ5u6NOJGyusXEwOKeNc= sha512-qZSjaUfXJWveuNtTryMB4H5wlmf+NWSXA37faismUMiRsEGkdsEpD55UN9H+M5h+L9B7QOjdH/sW2H5Gvlt+/g=="
+  resolved "https://gitlab.com/api/v4/projects/25182406/packages/npm/@wartek-id/tailwind-config/-/@wartek-id/tailwind-config-0.7.0.tgz#96ffc5373a9b679bba34e246caeb1713038a78d7"
+  integrity sha1-lv/FNzqbZ5u6NOJGyusXEwOKeNc=
 
 "@wartek-id/tooltip@^1.4.0":
   version "1.4.0"

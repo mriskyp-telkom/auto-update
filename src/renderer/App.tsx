@@ -28,7 +28,7 @@ import FormPenerimaanDanaView from 'renderer/views/TataUsaha/Form/FormPenerimaan
 import SyncAktivasiBKUView from 'renderer/views/TataUsaha/Aktivasi/SyncAktivasiBKUView'
 import DetailTataUsahaView from 'renderer/views/TataUsaha/Detail/DetailTataUsahaView'
 import FormPenarikanTunaiView from 'renderer/views/TataUsaha/Form/FormPenarikanTunaiView'
-import FormTambahPembelanjaanView from 'renderer/views/TataUsaha/Form/FormTambahPembelanjaan'
+import FormTambahPembelanjaanView from 'renderer/views/TataUsaha/Form/FormTambahPembelanjaanView'
 import PerbaruiAplikasi from 'renderer/views/PerbaruiAplikasi'
 import { PAGE_PERBARUI_APLIKASI } from 'renderer/constants/routes'
 import DialogUpdate from './views/PerbaruiAplikasi/DialogUpdate'
@@ -156,14 +156,14 @@ const App: FC = () => {
                 element={<FormPenarikanTunaiView />}
               />
               <Route
+                path="form/tambah-pembelanjaan"
+                element={<FormTambahPembelanjaanView />}
+              />
+              <Route
                 path="sync/tata-usaha/aktivasi/:q_sumber_dana/:q_id_anggaran"
                 element={<SyncAktivasiBKUView />}
               ></Route>
               <Route path="logout" element={<LogoutView />} />
-              <Route
-                path="form/tambah-pembelanjaan"
-                element={<FormTambahPembelanjaanView />}
-              />
               <Route
                 path="perbarui-aplikasi/dialog-update"
                 element={<DialogUpdate />}
