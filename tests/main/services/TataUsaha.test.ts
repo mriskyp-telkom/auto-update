@@ -1,4 +1,5 @@
 import { STATUS_BKU_PERBULAN, STATUS_BKU_PERTAHUN } from 'global/constants'
+import { InformasiToko } from 'global/types/BuktiBelanjaType'
 import {
   GetListAnggaranRequest,
   Anggaran as AnggaranData,
@@ -15,6 +16,7 @@ import { AktivasiBku } from 'main/models/AktivasiBku'
 import { Anggaran } from 'main/models/Anggaran'
 import { AppConfig } from 'main/models/AppConfig'
 import { KasUmum } from 'main/models/KasUmum'
+import { KasUmumNota } from 'main/models/KasUmumNota'
 import { MstSekolah } from 'main/models/MstSekolah'
 import { Rapbs } from 'main/models/Rapbs'
 import { RapbsPeriode } from 'main/models/RapbsPeriode'
@@ -38,6 +40,7 @@ beforeEach(async () => {
       MstSekolah,
       Rapbs,
       RapbsPeriode,
+      KasUmumNota,
     ],
     synchronize: false,
     logging: true,
@@ -456,4 +459,29 @@ test('GetLastTransactionDate', async () => {
   expect(CommonUtils.formatDateToString(date2)).toBe(
     CommonUtils.formatDateToString(new Date())
   )
+})
+
+test('GetInformasiToko', async () => {
+  const conn = getConnection()
+  const tataUsahaService = new TataUsahaService(conn)
+
+  const res = await tataUsahaService.GetInformasiToko('ADARA MAKMUR')
+  expect(res.isOk()).toBe(true)
+
+  const tokoAdaraMakmur = res.unwrapOr(<InformasiToko>{})
+  expect(tokoAdaraMakmur.nama).toBe('ADARA MAKMUR')
+  expect(tokoAdaraMakmur.npwp).toBe('90.655.179.1-542.000')
+  expect(tokoAdaraMakmur.alamat).toBe('Ngemplak, Kabupaten Sleman')
+  expect(tokoAdaraMakmur.telpon).toBe('085742549494')
+
+  const res2 = await tataUsahaService.GetInformasiToko('CV. ACITYA')
+  expect(res2.isOk()).toBe(true)
+
+  const tokoACITYA = res2.unwrapOr(<InformasiToko>{})
+  expect(tokoACITYA.nama).toBe('CV. ACITYA')
+  expect(tokoACITYA.npwp).toBe('41.294.835.8-545.000')
+  expect(tokoACITYA.alamat).toBe(
+    'Jl. Wonosari-Karangmojo, Selang 1, Selang,Wonosari'
+  )
+  expect(tokoACITYA.telpon).toBe('02115221')
 })
