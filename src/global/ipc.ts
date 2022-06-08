@@ -78,6 +78,7 @@ export const IPC_TATA_USAHA = {
   getListKasUmum: `${TATA_USAHA}:getListKasUmum`,
   getTotalSaldoByPeriod: `${TATA_USAHA}:getTotalSaldoByPeriod`,
   getLastTransactionDate: `${TATA_USAHA}:getLastTransactionDate`,
+  getInformasiToko: `${TATA_USAHA}:getInformasiToko`,
 }
 
 export const IPC_BUKTI_BELANJA = {

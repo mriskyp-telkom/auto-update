@@ -89,4 +89,10 @@ module.exports = {
       e.returnValue = await tataUsahaService.GetLastTransactionDate(request)
     }
   ),
+  getInformasiToko: ipcMain.on(
+    IPC_TATA_USAHA.getInformasiToko,
+    async (e, namaToko: string) => {
+      e.returnValue = await tataUsahaService.GetInformasiToko(namaToko)
+    }
+  ),
 }
