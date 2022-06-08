@@ -28,7 +28,9 @@ import FormPenerimaanDanaView from 'renderer/views/TataUsaha/Form/FormPenerimaan
 import SyncAktivasiBKUView from 'renderer/views/TataUsaha/Aktivasi/SyncAktivasiBKUView'
 import DetailTataUsahaView from 'renderer/views/TataUsaha/Detail/DetailTataUsahaView'
 import FormPenarikanTunaiView from 'renderer/views/TataUsaha/Form/FormPenarikanTunaiView'
-import FormTambahPembelanjaanView from './views/TataUsaha/Form/FormTambahPembelanjaan'
+import FormTambahPembelanjaanView from 'renderer/views/TataUsaha/Form/FormTambahPembelanjaan'
+import PerbaruiAplikasi from 'renderer/views/PerbaruiAplikasi'
+import { PAGE_PERBARUI_APLIKASI } from 'renderer/constants/routes'
 
 const ipcRenderer = window.require('electron').ipcRenderer
 
@@ -110,6 +112,10 @@ const App: FC = () => {
                 element={<DetailTataUsahaView />}
               />
             </Route>
+            <Route
+              path={PAGE_PERBARUI_APLIKASI}
+              element={<PerbaruiAplikasi />}
+            />
           </Route>
         </Routes>
         {state?.backgroundLocation && (

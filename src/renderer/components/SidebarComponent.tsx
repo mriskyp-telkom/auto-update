@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom'
 import { Icon } from '@wartek-id/icon'
 
 import clsx from 'clsx'
+import { PAGE_PERBARUI_APLIKASI } from 'renderer/constants/routes'
 
 const MenusTop = () => {
   return [
@@ -43,7 +44,7 @@ const MenusBottom = () => {
       label: 'Bantuan',
     },
     {
-      route: '/update-app',
+      route: PAGE_PERBARUI_APLIKASI,
       icon: 'update',
       iconType: 'default',
       label: 'Perbarui Aplikasi',
