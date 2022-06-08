@@ -7,6 +7,7 @@ export const CONFIG = 'config'
 export const SEKOLAH = 'sekolah'
 export const RAPBS = 'rapbs'
 export const TATA_USAHA = 'tata_usaha'
+export const BUKTI_BELANJA = 'bukti_belanja'
 
 export const IPC_ANGGARAN = {
   getAnggaranById: `${ANGGARAN}:getAnggaranById`,
@@ -76,4 +77,8 @@ export const IPC_TATA_USAHA = {
   cashWithdrawal: `${TATA_USAHA}:cashWithdrawal`,
   getListKasUmum: `${TATA_USAHA}:getListKasUmum`,
   getTotalSaldoByPeriod: `${TATA_USAHA}:getTotalSaldoByPeriod`,
+}
+
+export const IPC_BUKTI_BELANJA = {
+  getInformasiToko: `${BUKTI_BELANJA}:getInformasiToko`,
 }

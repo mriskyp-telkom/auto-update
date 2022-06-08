@@ -1,0 +1,18 @@
+CREATE TABLE [kas_umum_nota] (
+  [id_kas_nota] varchar(22), 
+  [no_bukti] varchar(30), 
+  [tanggal_nota] date, 
+  [no_nota] varchar(30), 
+  [nama_toko] varchar(50), 
+  [alamat_toko] varchar(80), 
+  [npwp] varchar(20), 
+  [total] numeric, 
+  [kode_rekening] varchar(20), 
+  [id_ref_kode] varchar(22), 
+  [has_ppn] numeric(1), 
+  [has_pph_22] numeric(1), 
+  [create_date] datetime, 
+  [last_update] datetime,
+  [soft_delete] numeric(1), 
+  [updater_id] varchar(22), 
+  CONSTRAINT [sqlite_autoindex_kas_umum_nota_1] PRIMARY KEY ([id_kas_nota]));

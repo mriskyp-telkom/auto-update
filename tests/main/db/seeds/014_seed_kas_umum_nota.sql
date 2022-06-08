@@ -1,0 +1,8 @@
+INSERT INTO kas_umum_nota 
+(id_kas_nota, no_bukti, tanggal_nota, no_nota, nama_toko, alamat_toko, npwp, total, kode_rekening, id_ref_kode, has_ppn, has_pph_22, create_date, last_update, soft_delete, updater_id) 
+VALUES 
+('hLCUNSfbZU64oUOiGNo7Hg', 'BNU03', '2021-06-16', '', 'ADARA MAKMUR', 'Ngemplak, Kabupaten Sleman|||085742549494', '90.655.179.1-542.000', 18700990, '5.2.04.02.06.0005', 'R18UIIoGj0aKCGa4pcjpcA', 1, NULL, '2021-06-23 13:09:34.000', '2021-06-23 13:09:34.000', 0, 's0rmxk7YQECBIb-V3K8CYg'),
+('iAvQ8390nkqCQhsJzl5mKQ', 'BNU69', '2022-04-19', '', 'Berkah Santosa', 'Wonosari, Gunungkidul|||082338381147', '90.605.825.0-542.000', 6699800, '5.1.02.01.01.0008', 'MFytu780mUGFB4LWeXONMA', 1, NULL, '2022-05-01 09:19:25.000', '2022-05-01 09:19:25.000', 0, 's0rmxk7YQECBIb-V3K8CYg'),
+('V-cajwQAVkSVlhEDr5E7sA', 'BNU206', '2021-07-30', '', 'CV DIGITALARTHA MANDIRI', 'Jalan Wonocatur No. 25 Gedongkuning Yogyakarta|||08121558871', '94.497.021.9-541.000', 6650000, '5.1.02.01.01.0026', '544MC40W2USQYP05ntSGGg', 1, NULL, '2021-08-04 13:47:51.000', '2021-08-04 13:47:51.000', 0, 's0rmxk7YQECBIb-V3K8CYg'),
+('LNs-PArDvk6OoJseG6u92w', 'BNU02', '2021-10-05', '', 'CV PMA Store', 'Jalan Tentara Pelajar No. 36 Karanganyar|0271|7685944|', '93.005.159.4-528.000', 6094000, '5.2.02.10.02.0005', 'BHD62ZoJbkWaJkRtRskiZA', 1, NULL, '2021-06-02 14:04:37.000', '2021-06-02 14:04:37.000', 0, 's0rmxk7YQECBIb-V3K8CYg'),
+('nGwhebNXG0eEmwU7rlxpaQ', 'BNU349', '2021-11-30', '', 'CV. ACITYA', 'Jl. Wonosari-Karangmojo, Selang 1, Selang,Wonosari|021|15221|', '41.294.835.8-545.000', 8924245, '5.1.02.01.01.0001', 'DJdSJQNnfUOOtqOa37Rxkg', 1, NULL, '2021-12-06 11:27:45.000', '2021-12-06 11:27:45.000', 0, 's0rmxk7YQECBIb-V3K8CYg');
