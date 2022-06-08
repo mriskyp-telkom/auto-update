@@ -13,7 +13,7 @@ const PageLayout: FC = (props: PageLayoutProps) => {
       <HeaderComponent />
       <div className="flex bg-gray-0">
         <SidebarComponent />
-        <div className="w-full">{props.children}</div>
+        <div className="flex-grow">{props.children}</div>
       </div>
     </div>
   )
