@@ -21,6 +21,7 @@ export const ALERT_UPDATE: Record<string, Partial<AlertDialogProps>> = {
     title: 'ARKAS Anda berhasil diperbarui!',
     desc: 'Silakan buka ulang aplikasi.',
     btnActionText: 'Buka Ulang Aplikasi',
+    hideBtnCancel: true,
   },
   [RESPONSE_UPDATE.already_updated]: {
     type: 'failed',
