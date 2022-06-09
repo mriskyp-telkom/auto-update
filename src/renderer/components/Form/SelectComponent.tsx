@@ -26,8 +26,6 @@ const SelectComponent: FC<SelectProps> = (props: SelectProps) => {
 
   const { name, register } = props
 
-  const width = props.width ? `w-[${props.width}px]` : 'w-full'
-
   const handleChange = (value: string) => {
     setSelectedValue(value)
     props.handleSelect(value)
@@ -56,9 +54,11 @@ const SelectComponent: FC<SelectProps> = (props: SelectProps) => {
             props.border && 'rounded border border-solid py-3 px-4 text-form',
             props.border && props.isDisabled
               ? 'bg-gray-10 border-gray-200 text-gray-500 cursor-not-allowed'
-              : 'border-gray-500',
-            width
+              : 'border-gray-500'
           )}
+          style={{
+            width: props.width > 0 ? `${props.width}px` : '100%',
+          }}
         >
           <span className="w-full flex justify-between items-center">
             <span className="capitalize-first">{selectedValue}</span>
