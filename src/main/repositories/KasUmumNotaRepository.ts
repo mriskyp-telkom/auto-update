@@ -1,4 +1,5 @@
 import { KasUmumNota } from 'main/models/KasUmumNota'
+import { NamaToko } from 'main/types/TataUsaha'
 import { Connection, Repository } from 'typeorm'
 
 export class KasUmumNotaRepository {
@@ -15,5 +16,15 @@ export class KasUmumNotaRepository {
       { namaToko: name, softDelete: 0 },
       { order: { createDate: 'DESC' } }
     )
+  }
+
+  async GetListToko(): Promise<NamaToko[]> {
+    return await this.repo
+      .createQueryBuilder()
+      .select('nama_toko AS namaToko')
+      .distinct(true)
+      .where('soft_delete = 0')
+      .orderBy('nama_toko')
+      .getRawMany()
   }
 }
