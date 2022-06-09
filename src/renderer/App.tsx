@@ -165,7 +165,7 @@ const App: FC = () => {
               ></Route>
               <Route path="logout" element={<LogoutView />} />
               <Route
-                path="perbarui-aplikasi/dialog-update"
+                path="perbarui-aplikasi/dialog/:q_response"
                 element={<DialogUpdate />}
               />
             </Route>

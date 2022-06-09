@@ -14,4 +14,5 @@ export const FORM_TAMBAH_PEMBELANJAAN = '/form/tambah-pembelanjaan'
 
 /* Perbarui Aplikasi */
 export const PAGE_PERBARUI_APLIKASI = '/perbarui-aplikasi'
-export const DIALOG_UPDATE = '/perbarui-aplikasi/dialog-update'
+export const DIALOG_PERBARUI_APLIKASI = (type: string) =>
+  `/perbarui-aplikasi/dialog/${type}`

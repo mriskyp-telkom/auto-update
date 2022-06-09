@@ -1,29 +1,39 @@
-import React, { FC } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { FC, useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import AlertDialogComponent from 'renderer/components/Dialog/AlertDialogComponent'
+import { ALERT_UPDATE } from 'renderer/constants/perbaruiAplikasi'
 
 const DialogUpdate: FC = () => {
   const navigate = useNavigate()
+  const { q_response } = useParams()
+
+  const [response, setResponse] = useState('')
 
   const handleCancel = () => {
     navigate(-1)
   }
 
   const handleSubmit = () => {
+    // TODO: handle each response
     navigate(-1)
   }
 
+  useEffect(() => {
+    setResponse(q_response)
+  }, [])
+
   return (
     <AlertDialogComponent
-      type="success"
-      icon="update"
-      title="Versi terbaru sudah tersedia!"
-      desc="Silahkan perbarui aplikasi untuk penggunaan yang lebih nyaman. Pembaruan aplikasi membutuhkan [X] dari memori perangkat."
+      type={ALERT_UPDATE[response]?.type}
+      icon={ALERT_UPDATE[response]?.icon}
+      title={ALERT_UPDATE[response]?.title}
+      desc={ALERT_UPDATE[response]?.desc}
       isOpen={true}
-      btnCancelText="Kembali"
-      btnActionText="Perbarui Aplikasi"
+      btnCancelText={ALERT_UPDATE[response]?.btnCancelText}
+      btnActionText={ALERT_UPDATE[response]?.btnActionText}
       onCancel={handleCancel}
       onSubmit={handleSubmit}
+      hideBtnCancel={ALERT_UPDATE[response]?.hideBtnCancel}
     />
   )
 }
