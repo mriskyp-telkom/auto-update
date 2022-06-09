@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 
@@ -20,6 +20,8 @@ const formSteps = ['Bukti Belanja', 'Detail Barang/Jasa', 'Perhitungan Pajak']
 
 const FormTambahPembelanjaanView: FC = () => {
   const navigate = useNavigate()
+
+  const [haveNpwp, setHaveNpwp] = useState(true)
 
   const formMethods = useForm<FormTambahPembelanjaanData>({
     mode: 'onSubmit',
@@ -90,7 +92,7 @@ const FormTambahPembelanjaanView: FC = () => {
             </Checkbox>
             <div className="pb-5">
               <div className="text-base pb-1 font-normal text-gray-900">
-                Nama Badan Usaha
+                Nama Toko/Badan Usaha
               </div>
               <InputSearchComponent
                 name="store_name"
@@ -108,7 +110,7 @@ const FormTambahPembelanjaanView: FC = () => {
             </div>
             <div className="pb-5">
               <div className="text-base pb-1 font-normal text-gray-900">
-                Alamat Badan Usaha
+                Alamat Toko/Badan Usaha
               </div>
               <InputComponent
                 type="name"
@@ -138,7 +140,7 @@ const FormTambahPembelanjaanView: FC = () => {
             </div>
             <div className="pb-5">
               <div className="text-base pb-1 font-normal text-gray-900">
-                NPWP Badan Usaha
+                NPWP Toko/Badan Usaha
               </div>
               <InputComponent
                 type="name"
@@ -149,17 +151,18 @@ const FormTambahPembelanjaanView: FC = () => {
                 setError={setError}
                 handleClearError={handleClearError}
                 required={true}
+                isDisabled={!haveNpwp}
               />
             </div>
-            <Checkbox value="1" labelPosition="center">
-              Badan usaha ini tidak memiliki NPWP
+            <Checkbox
+              labelPosition="center"
+              onChange={() => setHaveNpwp(!haveNpwp)}
+              checked={!haveNpwp}
+            >
+              Toko/badan usaha ini tidak memiliki NPWP
             </Checkbox>
           </div>
-          <div>
-            <Checkbox value="1" labelPosition="center">
-              Badan usaha ini tidak memiliki NPWP
-            </Checkbox>
-          </div>
+          <div></div>
           <div></div>
         </FormDialogComponent>
       </FormProvider>

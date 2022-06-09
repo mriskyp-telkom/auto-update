@@ -29,7 +29,7 @@ const StepperComponent: FC<StepperProps> = (props: StepperProps) => {
                 {index + 1}
               </div>
               <div className={clsx(isActive && 'font-bold', ' ml-2')}>
-                {props.label[index]}
+                {step}
               </div>
             </div>
             {index < totalSteps - 1 && <div className={styles.divider}></div>}
