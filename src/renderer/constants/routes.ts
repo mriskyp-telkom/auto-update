@@ -10,7 +10,10 @@ export const FORM_PENARIKAN_TUNAI_PAGE_URL = (
   idAnggaran: string,
   idPeriode: number
 ) => `/form/penarikan-tunai/${idAnggaran}/${idPeriode}`
-export const FORM_TAMBAH_PEMBELANJAAN = '/form/tambah-pembelanjaan'
+export const FORM_TAMBAH_PEMBELANJAAN = (
+  idAnggaran: string,
+  idPeriode: number
+) => `/form/tambah-pembelanjaan/${idAnggaran}/${idPeriode}`
 
 /* Perbarui Aplikasi */
 export const PAGE_PERBARUI_APLIKASI = '/perbarui-aplikasi'

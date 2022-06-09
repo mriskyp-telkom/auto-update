@@ -156,7 +156,7 @@ const App: FC = () => {
                 element={<FormPenarikanTunaiView />}
               />
               <Route
-                path="form/tambah-pembelanjaan"
+                path="form/tambah-pembelanjaan/:q_id_anggaran/:q_id_periode"
                 element={<FormTambahPembelanjaanView />}
               />
               <Route
