@@ -16,7 +16,7 @@ import { AlertType } from 'renderer/types/ComponentType'
 
 import clsx from 'clsx'
 
-interface AlertDialogProps {
+export interface AlertDialogProps {
   type: AlertType
   icon: string
   title: string
