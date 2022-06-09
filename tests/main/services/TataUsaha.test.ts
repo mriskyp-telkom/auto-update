@@ -1,6 +1,7 @@
 import { STATUS_BKU_PERBULAN, STATUS_BKU_PERTAHUN } from 'global/constants'
-import { InformasiToko } from 'global/types/BuktiBelanjaType'
 import {
+  InformasiToko,
+  Kegiatan,
   GetListAnggaranRequest,
   Anggaran as AnggaranData,
   GetTotalSaldoRequest,
@@ -12,6 +13,7 @@ import {
   Saldo,
   GetLastTransactionDateRequest,
 } from 'global/types/TataUsaha'
+
 import { AktivasiBku } from 'main/models/AktivasiBku'
 import { Anggaran } from 'main/models/Anggaran'
 import { AppConfig } from 'main/models/AppConfig'
@@ -496,4 +498,26 @@ test('GetListToko', async () => {
   expect(list.length).toBe(5)
   expect(list[0]).toBe('ADARA MAKMUR')
   expect(list[1]).toBe('Berkah Santosa')
+})
+
+test('GetKegiatanByPeriode', async () => {
+  const conn = getConnection()
+  const tataUsahaService = new TataUsahaService(conn)
+
+  const res = await tataUsahaService.GetKegiatanByPeriode(
+    'apQwiAb-9EWxv74iwMY6aQ',
+    92
+  )
+  expect(res.isOk()).toBe(true)
+
+  const list = res.unwrapOr(Array<Kegiatan>())
+  expect(list[0].idPeriode).toBe(92)
+  expect(list[0].kode).toBe('02.03.65.')
+  expect(list[0].program).toBe('Pengembangan Standar Isi')
+  expect(list[0].kegiatan).toBe('Penyusunan Kurikulum')
+
+  expect(list[1].idPeriode).toBe(92)
+  expect(list[1].kode).toBe('07.12.01.')
+  expect(list[1].program).toBe('Pengembangan standar pembiayaan')
+  expect(list[1].kegiatan).toBe('Pembayaran Honor Guru')
 })

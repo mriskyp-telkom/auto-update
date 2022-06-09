@@ -1,11 +1,14 @@
 import { ERROR } from 'global/constants'
+import { Kegiatan } from 'global/types/TataUsaha'
 import { Rapbs } from 'main/models/Rapbs'
 import { AnggaranKegiatan } from 'main/types/Anggaran'
 import { err, ok, Result } from 'neverthrow'
 import {
+  Connection,
   createQueryBuilder,
   getRepository,
   InsertResult,
+  Repository,
   UpdateResult,
 } from 'typeorm'
 
@@ -260,4 +263,52 @@ export const GetTotalAnggaranPerBulan = async (
   }
 
   return 0
+}
+
+export class RapbsRepository {
+  private conn: Connection
+  private repo: Repository<Rapbs>
+
+  constructor(conn: Connection) {
+    this.conn = conn
+    this.repo = conn.getRepository(Rapbs)
+  }
+
+  async GetKegiatan(idAnggaran: string, periode?: number) {
+    const subQuery = this.repo
+      .createQueryBuilder('r')
+      .select([
+        'r.id_anggaran as idAnggaran',
+        'rp.id_periode as idPeriode',
+        'rk.id_kode as kode',
+        'rk3.uraian_kode as program',
+        'rk.uraian_kode as kegiatan',
+      ])
+      .innerJoin('anggaran', 'a', 'r.id_anggaran = a.id_anggaran')
+      .innerJoin('rapbs_periode', 'rp', 'r.id_rapbs = rp.id_rapbs')
+      .innerJoin('ref_kode', 'rk', 'r.id_ref_kode = rk.id_ref_kode')
+      .innerJoin('ref_kode', 'rk2', 'rk.parent_kode = rk2.id_ref_kode')
+      .innerJoin('ref_kode', 'rk3', 'rk2.parent_kode = rk3.id_ref_kode')
+      .where(
+        ' r.soft_delete = 0' +
+          ' AND rp.soft_delete = 0' +
+          ' AND a.is_approve = 1' +
+          ' AND r.id_anggaran = :idAnggaran',
+        { idAnggaran: idAnggaran }
+      )
+
+    if (periode !== undefined) {
+      subQuery.andWhere('rp.id_periode = :periode', { periode: periode })
+    }
+
+    const query = this.conn
+      .createQueryBuilder()
+      .select('*')
+      .from('(' + subQuery.getQuery() + ')', 'tbl')
+      .setParameters(subQuery.getParameters())
+      .groupBy('tbl.kode')
+
+    const data = await query.getRawMany()
+    return <Kegiatan[]>data
+  }
 }

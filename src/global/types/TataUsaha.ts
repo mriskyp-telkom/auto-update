@@ -10,6 +10,11 @@ export interface GetListAnggaranRequest {
   tahunAnggaran: number[]
 }
 
+interface CommonRequest {
+  idAnggaran: string
+  idPeriode: number
+}
+
 export interface Anggaran {
   tahun: number
   idAnggaran: string | null
@@ -80,3 +85,20 @@ export interface Saldo {
   sisaBank: number
   sisaTunai: number
 }
+
+export interface InformasiToko {
+  nama: string
+  alamat: string
+  telpon: string
+  npwp: string
+}
+
+export interface Kegiatan {
+  idAnggaran: string
+  idPeriode: number
+  kode: string
+  program: string
+  kegiatan: string
+}
+
+export type GetKegiatanByPeriodeRequest = CommonRequest

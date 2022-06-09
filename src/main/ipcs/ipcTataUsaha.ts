@@ -10,6 +10,7 @@ import {
   GetListKasUmumRequest,
   GetTotalSaldoByPeriodeRequest,
   GetLastTransactionDateRequest,
+  GetKegiatanByPeriodeRequest,
 } from 'global/types/TataUsaha'
 import { GetConfig } from 'main/repositories/ConfigRepository'
 
@@ -98,4 +99,13 @@ module.exports = {
   getListToko: ipcMain.on(IPC_TATA_USAHA.getListToko, async (e) => {
     e.returnValue = await tataUsahaService.GetListToko()
   }),
+  getKegiatanByPeriode: ipcMain.on(
+    IPC_TATA_USAHA.getKegiatanByPeriode,
+    async (e, request: GetKegiatanByPeriodeRequest) => {
+      e.returnValue = await tataUsahaService.GetKegiatanByPeriode(
+        request.idAnggaran,
+        request.idPeriode
+      )
+    }
+  ),
 }
