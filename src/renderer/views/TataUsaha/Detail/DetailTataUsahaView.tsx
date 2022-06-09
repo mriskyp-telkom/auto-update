@@ -48,9 +48,15 @@ const DetailTataUsahaView: FC = () => {
   }, [])
 
   const handleAddPembelanjaan = () => {
-    navigate(FORM_TAMBAH_PEMBELANJAAN, {
-      state: { backgroundLocation: location },
-    })
+    navigate(
+      FORM_TAMBAH_PEMBELANJAAN(
+        encodeURIComponent(q_id_anggaran),
+        parseInt(q_id_periode)
+      ),
+      {
+        state: { backgroundLocation: location },
+      }
+    )
   }
 
   return (

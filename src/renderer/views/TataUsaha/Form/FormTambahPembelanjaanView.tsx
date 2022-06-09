@@ -1,6 +1,6 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import { Checkbox } from '@wartek-id/checkbox'
 
@@ -14,15 +14,18 @@ import {
   FormTambahPembelanjaanData,
   FormTambahPembelanjaanType,
 } from 'renderer/types/forms/TataUsahaType'
+import { GetLastTransactionDateRequest } from 'global/types/TataUsaha'
+import syncToIpcMain from 'renderer/configs/ipc'
+import { IPC_TATA_USAHA } from 'global/ipc'
 
 const transactionTypeList = ['Tunai', 'Non Tunai']
 const formSteps = ['Bukti Belanja', 'Detail Barang/Jasa', 'Perhitungan Pajak']
 
 const FormTambahPembelanjaanView: FC = () => {
   const navigate = useNavigate()
-
+  const { q_id_anggaran, q_id_periode } = useParams()
+  const [tanggalPelunasan, setTanggalPelunasan] = useState(new Date())
   const [haveNpwp, setHaveNpwp] = useState(true)
-
   const formMethods = useForm<FormTambahPembelanjaanData>({
     mode: 'onSubmit',
     reValidateMode: 'onBlur',
@@ -46,6 +49,15 @@ const FormTambahPembelanjaanView: FC = () => {
   const handleClearError = (name: FormTambahPembelanjaanType) => {
     clearErrors(name)
   }
+
+  useEffect(() => {
+    const request: GetLastTransactionDateRequest = {
+      idAnggaran: q_id_anggaran,
+      idPeriode: parseInt(q_id_periode),
+    }
+    const result = syncToIpcMain(IPC_TATA_USAHA.getLastTransactionDate, request)
+    setTanggalPelunasan(new Date(result.value))
+  }, [])
 
   return (
     <>
@@ -83,6 +95,7 @@ const FormTambahPembelanjaanView: FC = () => {
                   name="payment_date"
                   placeholder="Masukkan tanggal pembelanjaan ini dilunasi"
                   required={true}
+                  defaultValue={tanggalPelunasan}
                 />
               </div>
             </div>
