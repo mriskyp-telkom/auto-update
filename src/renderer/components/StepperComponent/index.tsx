@@ -4,18 +4,19 @@ import React, { FC, Fragment } from 'react'
 import styles from './index.module.css'
 
 interface StepperProps {
-  step: number
   activeStep: number
   label: string[]
 }
 
 const StepperComponent: FC<StepperProps> = (props: StepperProps) => {
+  const totalSteps = props.label.length
+
   return (
     <div className="flex justify-between items-center">
-      {[...Array(props.step).keys()].map((stp) => {
-        const isActive = props.activeStep - 1 === stp
+      {props.label.map((step, index) => {
+        const isActive = props.activeStep - 1 === index
         return (
-          <Fragment key={stp}>
+          <Fragment key={step}>
             <div className="flex items-center">
               <div
                 className={clsx(
@@ -25,13 +26,13 @@ const StepperComponent: FC<StepperProps> = (props: StepperProps) => {
                     : 'text-gray-80 border-2'
                 )}
               >
-                {stp + 1}
+                {index + 1}
               </div>
               <div className={clsx(isActive && 'font-bold', ' ml-2')}>
-                {props.label[stp]}
+                {props.label[index]}
               </div>
             </div>
-            {stp < props.step - 1 && <div className={styles.divider}></div>}
+            {index < totalSteps - 1 && <div className={styles.divider}></div>}
           </Fragment>
         )
       })}
