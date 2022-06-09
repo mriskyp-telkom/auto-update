@@ -1,5 +1,10 @@
 import React, { FC } from 'react'
-import { FieldErrors, FieldError, RegisterOptions } from 'react-hook-form'
+import {
+  FieldErrors,
+  FieldError,
+  RegisterOptions,
+  useFormContext,
+} from 'react-hook-form'
 
 import { Input } from '@wartek-id/input'
 import { numberUtils } from '@wartek-id/fe-toolbox'
@@ -31,14 +36,20 @@ import includes from 'lodash/includes'
 
 import clsx from 'clsx'
 
+/*
+  not using these props below any more
+  errors, register, setError, setValue, handleClearError
+  note: delete this after all components has been updated
+*/
+
 interface InputProps {
   type: InputType
   required?: boolean
   isDisabled?: boolean
   name: string
   placeholder: string
-  errors: FieldErrors
-  register: (arg0: string, arg1: RegisterOptions) => void
+  errors?: FieldErrors
+  register?: (arg0: string, arg1: RegisterOptions) => void
   setError?: (name: string, error: FieldError) => void
   handleClearError?: (name: string) => void
   setValue?: (name: string, value: string) => void
@@ -54,28 +65,30 @@ const error_server = [
 ]
 
 const InputComponent: FC<InputProps> = (props: InputProps) => {
+  const { type, required, isDisabled, placeholder, name } = props
+
   const {
-    type,
-    required,
-    isDisabled,
-    placeholder,
-    name,
-    errors,
-    setError,
-    register,
     setValue,
-  } = props
+    setError,
+    clearErrors,
+    register,
+    formState: { errors },
+  } = useFormContext()
+
+  const handleClearError = () => {
+    clearErrors(name)
+  }
 
   const clearErrorRequired = (value: string) => {
     if (required && value !== '' && errors[name]?.message === ERROR_REQUIRED) {
-      props.handleClearError(name)
+      handleClearError()
       return
     }
   }
 
   const clearErrorServer = (value: string) => {
     if (value !== '' && includes(error_server, errors[name]?.message)) {
-      props.handleClearError(name)
+      handleClearError()
       return
     }
   }
@@ -128,7 +141,7 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
             return
           }
         }
-        props.handleClearError(name)
+        handleClearError()
       },
       onChange: (e) => {
         const value = e.target.value
@@ -140,14 +153,14 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
             isEmailValid(value) &&
             errors[name]?.message === EMAIL_ERROR_VALIDATION
           ) {
-            props.handleClearError(name)
+            handleClearError()
             return
           }
           if (
             isFormatEmailValid(value) &&
             errors[name]?.message === EMAIL_ERROR_FORMAT
           ) {
-            props.handleClearError(name)
+            handleClearError()
             return
           }
         }
@@ -170,7 +183,7 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
           })
           return
         }
-        props.handleClearError(name)
+        handleClearError()
       },
       onChange: (e) => {
         const value = e.target.value
@@ -179,7 +192,7 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
         props.registerOption?.onChange(e)
         if (errors[name]?.message === ERROR_ALPHABET_ONLY) {
           if (value !== '' && isOnlyAlphabet(value)) {
-            props.handleClearError(name)
+            handleClearError()
             return
           }
         }
@@ -202,7 +215,7 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
           })
           return
         }
-        props.handleClearError(name)
+        handleClearError()
       },
       onChange: (e) => {
         const value = e.target.value
@@ -211,7 +224,7 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
         props.registerOption?.onChange(e)
         if (errors[name]?.message === NAMA_ERROR_VALIDATION) {
           if (value !== '' && isNameValid(value)) {
-            props.handleClearError(name)
+            handleClearError()
             return
           }
         }
@@ -239,7 +252,7 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
           })
           return
         }
-        props.handleClearError(name)
+        handleClearError()
         props.registerOption?.onBlur(e)
       },
       onChange: (e) => {
@@ -255,7 +268,7 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
         clearErrorServer(value)
         props.registerOption?.onChange(e)
         if (value >= 10 && errors[name]?.message === ERROR_NOMINAL_MINLENGTH) {
-          props.handleClearError(name)
+          handleClearError()
           return
         }
       },
@@ -277,7 +290,7 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
           })
           return
         }
-        props.handleClearError(name)
+        handleClearError()
       },
       onChange: (e) => {
         const value = e.target.value
@@ -285,7 +298,7 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
         clearErrorServer(value)
         props.registerOption?.onChange(e)
         if (value.length === 8 && errors.npsn?.message === NPSN_ERROR_LENGTH) {
-          props.handleClearError(name)
+          handleClearError()
           return
         }
       },
