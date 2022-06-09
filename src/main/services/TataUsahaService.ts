@@ -13,6 +13,8 @@ import {
   GetTotalSaldoByPeriodeRequest,
   Saldo,
   GetLastTransactionDateRequest,
+  Kegiatan,
+  InformasiToko,
 } from 'global/types/TataUsaha'
 import {
   GetAnggaran,
@@ -30,12 +32,15 @@ import { GetConfig } from 'main/repositories/ConfigRepository'
 import CommonUtils from 'main/utils/CommonUtils'
 import { AnggaranDTO } from 'main/types/Anggaran'
 import { TarikTunaiBKU } from 'main/types/KasUmum'
-import { GetTotalAnggaranPerBulan } from 'main/repositories/RapbsRepository'
+import {
+  GetTotalAnggaranPerBulan,
+  RapbsRepository,
+} from 'main/repositories/RapbsRepository'
 import { KasUmum } from 'main/models/KasUmum'
 import { GetPenggunaID } from './UserService'
 import { format } from 'global/format'
 import { range } from 'global/numbers'
-import { InformasiToko } from 'global/types/BuktiBelanjaType'
+
 import { KasUmumNota } from 'main/models/KasUmumNota'
 import { KasUmumNotaRepository } from 'main/repositories/KasUmumNotaRepository'
 
@@ -43,11 +48,13 @@ export class TataUsahaService {
   private aktivasiBkuRepo: AktivasiBkuRepository
   private kasUmumRepo: KasUmumRepository
   private kasUmumNotaRepo: KasUmumNotaRepository
+  private rapbsRepo: RapbsRepository
 
   constructor(conn: Connection) {
     this.aktivasiBkuRepo = new AktivasiBkuRepository(conn)
     this.kasUmumRepo = new KasUmumRepository(conn)
     this.kasUmumNotaRepo = new KasUmumNotaRepository(conn)
+    this.rapbsRepo = new RapbsRepository(conn)
   }
 
   async GetListAnggaran(
@@ -415,6 +422,18 @@ export class TataUsahaService {
       const result: NamaToko[] = await this.kasUmumNotaRepo.GetListToko()
       const data = result.map((d: NamaToko) => d.namaToko)
       return ok(data)
+    } catch (error) {
+      return err(new Error(error))
+    }
+  }
+
+  async GetKegiatanByPeriode(
+    idAnggaran: string,
+    idPeriode: number
+  ): Promise<Result<Kegiatan[], Error>> {
+    try {
+      const res = await this.rapbsRepo.GetKegiatan(idAnggaran, idPeriode)
+      return ok(res)
     } catch (error) {
       return err(new Error(error))
     }
