@@ -674,7 +674,7 @@ const FormKertasKerjaView: FC = () => {
           btnSubmitText={
             q_mode === 'update' ? 'Perbarui' : 'Masukkan ke Anggaran'
           }
-          btnCancelText={q_mode === 'update' && 'Tutup'}
+          btnCancelText={q_mode === 'update' ? 'Tutup' : 'Batal'}
           onDelete={() => setOpenModalDelete(true)}
           onCancel={closeModal}
           onSubmit={handleSubmit(onSubmit)}
