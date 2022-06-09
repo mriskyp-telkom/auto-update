@@ -451,8 +451,9 @@ const FormKertasKerjaView: FC = () => {
         uraian.id = rapbsPtk.idPtk
       }
       uraian.uraian = anggaran.uraian
-      setSelectedUraian(uraian)
-
+      if (uraian.id !== '' || uraian.kode !== '') {
+        setSelectedUraian(uraian)
+      }
       let satuanData = satuan.find((k: any) => k.satuan === anggaran.satuan)
       //case when satuan is not from ref_satuan table
       if (satuanData == null) {

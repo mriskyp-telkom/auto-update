@@ -470,7 +470,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
     } else {
       if (
         counterRetryPengajuan > 0 &&
-        counterRetryPengajuan < MAX_RETRY_PENGAJUAN_KK &&
+        counterRetryPengajuan <= MAX_RETRY_PENGAJUAN_KK &&
         syncId !== ''
       ) {
         setEnablePreviousSyncStatus(true)
@@ -763,6 +763,7 @@ const SyncMengulasKertasKerjaView: FC = () => {
   useEffect(() => {
     if (dataPreviousSyncStatus !== undefined && enablePreviousSyncStatus) {
       setEnablePreviousSyncStatus(false)
+      removePreviousSyncStatus()
       if (dataPreviousSyncStatus?.data?.status === 2) {
         setPercentage(100)
       } else {
@@ -787,7 +788,13 @@ const SyncMengulasKertasKerjaView: FC = () => {
         )
 
         const response = RESPONSE_PENGESAHAN.success as ResponseMengulas
+        setApi(null)
+        setApiSync(null)
+        removeCacheData()
+        removeCacheSyncData()
         setTanggalPengajuan(null)
+        setSyncId('')
+        setCounterRetryPengajuan(0)
         setResponseMengulas(response)
         directPage(response)
         setAlertMengulas(true)
