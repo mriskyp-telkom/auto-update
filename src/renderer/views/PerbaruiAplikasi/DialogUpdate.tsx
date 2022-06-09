@@ -1,7 +1,10 @@
 import React, { FC, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import AlertDialogComponent from 'renderer/components/Dialog/AlertDialogComponent'
-import { ALERT_UPDATE } from 'renderer/constants/perbaruiAplikasi'
+import {
+  ALERT_UPDATE,
+  RESPONSE_UPDATE,
+} from 'renderer/constants/perbaruiAplikasi'
 
 const DialogUpdate: FC = () => {
   const navigate = useNavigate()
@@ -14,7 +17,15 @@ const DialogUpdate: FC = () => {
   }
 
   const handleSubmit = () => {
-    // TODO: handle each response
+    switch (response) {
+      case RESPONSE_UPDATE.ready:
+        break
+      case RESPONSE_UPDATE.success:
+      case RESPONSE_UPDATE.already_updated:
+      default:
+        navigate(-1)
+        break
+    }
     navigate(-1)
   }
 
