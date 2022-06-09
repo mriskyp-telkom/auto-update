@@ -251,7 +251,8 @@ export const GetTotalAnggaranPerBulan = async (
       idAnggaran,
       idPeriode,
     })
-    .andWhere('soft_delete = 0')
+    .andWhere('r.soft_delete = 0')
+    .andWhere('rp.soft_delete = 0')
     .getRawOne()
 
   if (result !== undefined) {

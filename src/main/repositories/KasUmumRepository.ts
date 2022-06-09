@@ -115,6 +115,8 @@ export class KasUmumRepository {
           idPeriode,
         }
       )
+      .andWhere('ku.soft_delete = 0 ')
+      .andWhere('rp.soft_delete = 0 ')
       .getRawOne()
 
     if (result !== undefined) {
@@ -155,6 +157,7 @@ export class KasUmumRepository {
               and ku.id_anggaran = :idAnggaran 
               and ku.id_ref_bku in (4,24,15,35) 
               and rp.id_periode in (:...listIdPeriode)
+              and rp.soft_delete = 0
             UNION ALL 
             select 
               rp.id_rapbs_periode, 
@@ -168,6 +171,8 @@ export class KasUmumRepository {
             where 
               r.id_anggaran = :idAnggaran 
               and rp.id_periode in (:...listIdPeriode)
+              and rp.soft_delete = 0 
+              and r.soft_delete = 0 
           ) a 
         group by 
           id_rapbs_periode
