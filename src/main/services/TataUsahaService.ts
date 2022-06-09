@@ -20,7 +20,7 @@ import {
 } from 'main/repositories/AnggaranRepository'
 import { AktivasiBkuRepository } from 'main/repositories/AktivasiBkuRepository'
 import { KasUmumRepository } from 'main/repositories/KasUmumRepository'
-import { Anggaran, Bku } from 'main/types/TataUsaha'
+import { Anggaran, Bku, NamaToko } from 'main/types/TataUsaha'
 import { AktivasiBku } from 'main/models/AktivasiBku'
 import { CONFIG, KAS_UMUM_TYPE, STATUS_BKU_PERTAHUN } from 'global/constants'
 import { GetMonth, GetMonthDateRange, GetMonthName } from 'main/utils/Months'
@@ -408,5 +408,15 @@ export class TataUsahaService {
 
     result.telpon = phoneNumber
     return ok(result)
+  }
+
+  async GetListToko(): Promise<Result<string[], Error>> {
+    try {
+      const result: NamaToko[] = await this.kasUmumNotaRepo.GetListToko()
+      const data = result.map((d: NamaToko) => d.namaToko)
+      return ok(data)
+    } catch (error) {
+      return err(new Error(error))
+    }
   }
 }

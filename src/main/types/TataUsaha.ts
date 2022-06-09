@@ -14,3 +14,7 @@ export interface Bku {
   bku: AktivasiBku | null
   status: string
 }
+
+export interface NamaToko {
+  namaToko: string
+}

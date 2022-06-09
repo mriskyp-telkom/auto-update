@@ -95,4 +95,7 @@ module.exports = {
       e.returnValue = await tataUsahaService.GetInformasiToko(namaToko)
     }
   ),
+  getListToko: ipcMain.on(IPC_TATA_USAHA.getListToko, async (e) => {
+    e.returnValue = await tataUsahaService.GetListToko()
+  }),
 }

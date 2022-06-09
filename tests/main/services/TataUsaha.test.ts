@@ -485,3 +485,15 @@ test('GetInformasiToko', async () => {
   )
   expect(tokoACITYA.telpon).toBe('02115221')
 })
+
+test('GetListToko', async () => {
+  const conn = getConnection()
+  const tataUsahaService = new TataUsahaService(conn)
+
+  const res = await tataUsahaService.GetListToko()
+  expect(res.isOk()).toBe(true)
+  const list = res.unwrapOr(Array<string>())
+  expect(list.length).toBe(5)
+  expect(list[0]).toBe('ADARA MAKMUR')
+  expect(list[1]).toBe('Berkah Santosa')
+})
