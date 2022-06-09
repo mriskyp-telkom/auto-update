@@ -11,7 +11,7 @@ const PerbaruiAplikasi: FC = () => {
 
   const handlePeriksaUpdate = () => {
     // TODO: Get response from API
-    navigate(DIALOG_PERBARUI_APLIKASI('already_updated'), {
+    navigate(DIALOG_PERBARUI_APLIKASI('success'), {
       state: { backgroundLocation: location },
     })
   }
