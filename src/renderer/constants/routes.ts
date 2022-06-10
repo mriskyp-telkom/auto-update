@@ -19,3 +19,4 @@ export const FORM_TAMBAH_PEMBELANJAAN = (
 export const PAGE_PERBARUI_APLIKASI = '/perbarui-aplikasi'
 export const DIALOG_PERBARUI_APLIKASI = (type: string) =>
   `/perbarui-aplikasi/dialog/${type}`
+export const SYNC_PERBARUI_APLIKASI = '/sync/perbarui-aplikasi'

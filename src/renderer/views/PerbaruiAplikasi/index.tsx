@@ -2,7 +2,7 @@ import { Button } from '@wartek-id/button'
 import React, { FC } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { APP_VERSION } from 'renderer/constants/appConfig'
-import { DIALOG_PERBARUI_APLIKASI } from 'renderer/constants/routes'
+import { SYNC_PERBARUI_APLIKASI } from 'renderer/constants/routes'
 import PageLayout from 'renderer/views/Layout/PageLayout'
 
 const PerbaruiAplikasi: FC = () => {
@@ -11,7 +11,7 @@ const PerbaruiAplikasi: FC = () => {
 
   const handlePeriksaUpdate = () => {
     // TODO: Get response from API
-    navigate(DIALOG_PERBARUI_APLIKASI('already_updated'), {
+    navigate(SYNC_PERBARUI_APLIKASI, {
       state: { backgroundLocation: location },
     })
   }

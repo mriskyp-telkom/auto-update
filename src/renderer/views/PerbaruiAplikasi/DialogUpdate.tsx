@@ -11,6 +11,7 @@ const DialogUpdate: FC = () => {
   const { q_response } = useParams()
 
   const [response, setResponse] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const handleCancel = () => {
     navigate(-1)
@@ -19,6 +20,7 @@ const DialogUpdate: FC = () => {
   const handleSubmit = () => {
     switch (response) {
       case RESPONSE_UPDATE.ready:
+        setLoading(true)
         break
       case RESPONSE_UPDATE.success:
       case RESPONSE_UPDATE.already_updated:
@@ -26,7 +28,6 @@ const DialogUpdate: FC = () => {
         navigate(-1)
         break
     }
-    navigate(-1)
   }
 
   useEffect(() => {
@@ -39,7 +40,7 @@ const DialogUpdate: FC = () => {
       icon={ALERT_UPDATE[response]?.icon}
       title={ALERT_UPDATE[response]?.title}
       desc={ALERT_UPDATE[response]?.desc}
-      isOpen={true}
+      isOpen={!loading}
       btnCancelText={ALERT_UPDATE[response]?.btnCancelText}
       btnActionText={ALERT_UPDATE[response]?.btnActionText}
       onCancel={handleCancel}
