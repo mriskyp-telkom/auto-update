@@ -12,6 +12,8 @@ import {
   GetTotalSaldoByPeriodeRequest,
   Saldo,
   GetLastTransactionDateRequest,
+  GetRekeningBelanjaByPeriodeRequest,
+  RekeningBelanja,
 } from 'global/types/TataUsaha'
 
 import { AktivasiBku } from 'main/models/AktivasiBku'
@@ -515,9 +517,37 @@ test('GetKegiatanByPeriode', async () => {
   expect(list[0].kode).toBe('02.03.65.')
   expect(list[0].program).toBe('Pengembangan Standar Isi')
   expect(list[0].kegiatan).toBe('Penyusunan Kurikulum')
+  expect(list[0].idKegiatan).toBe('rBdJhBgAdU2dU2DF6JFfhA')
 
   expect(list[1].idPeriode).toBe(92)
   expect(list[1].kode).toBe('07.12.01.')
   expect(list[1].program).toBe('Pengembangan standar pembiayaan')
   expect(list[1].kegiatan).toBe('Pembayaran Honor Guru')
+  expect(list[1].idKegiatan).toBe('JfpVF35Cd0aOZmb0bhN2iA')
+})
+
+test('GetRekeningBelanjaByPeriode', async () => {
+  const conn = getConnection()
+  const tataUsahaService = new TataUsahaService(conn)
+  const request = <GetRekeningBelanjaByPeriodeRequest>{
+    idAnggaran: 'apQwiAb-9EWxv74iwMY6aQ',
+    idPeriode: 92,
+    idKegiatan: 'rBdJhBgAdU2dU2DF6JFfhA',
+  }
+
+  const res = await tataUsahaService.GetRekeningBelanjaByPeriode(request)
+  const list = res.unwrapOr(Array<RekeningBelanja>())
+  expect(list[0].idPeriode).toBe(92)
+  expect(list[0].kode).toBe('5.1.02.01.01.0055')
+  expect(list[0].jenisBelanja).toBe('Operasional')
+  expect(list[0].rekeningBelanja).toBe(
+    'Belanja Makanan dan Minuman pada Fasilitas Pelayanan Urusan Pendidikan'
+  )
+
+  expect(list[1].idPeriode).toBe(92)
+  expect(list[1].kode).toBe('5.1.02.02.01.0003')
+  expect(list[1].jenisBelanja).toBe('Operasional')
+  expect(list[1].rekeningBelanja).toBe(
+    'Honorarium Narasumber atau Pembahas, Moderator, Pembawa Acara, dan Panitia'
+  )
 })

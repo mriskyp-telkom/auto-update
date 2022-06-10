@@ -11,6 +11,7 @@ import {
   GetTotalSaldoByPeriodeRequest,
   GetLastTransactionDateRequest,
   GetKegiatanByPeriodeRequest,
+  GetRekeningBelanjaByPeriodeRequest,
 } from 'global/types/TataUsaha'
 import { GetConfig } from 'main/repositories/ConfigRepository'
 
@@ -84,7 +85,7 @@ module.exports = {
       e.returnValue = await tataUsahaService.GetListKasUmum(request)
     }
   ),
-  GetLastTransactionDate: ipcMain.on(
+  getLastTransactionDate: ipcMain.on(
     IPC_TATA_USAHA.getLastTransactionDate,
     async (e, request: GetLastTransactionDateRequest) => {
       e.returnValue = await tataUsahaService.GetLastTransactionDate(request)
@@ -105,6 +106,14 @@ module.exports = {
       e.returnValue = await tataUsahaService.GetKegiatanByPeriode(
         request.idAnggaran,
         request.idPeriode
+      )
+    }
+  ),
+  getRekeningBelanjaByPeriode: ipcMain.on(
+    IPC_TATA_USAHA.getRekeningBelanjaByPeriode,
+    async (e, request: GetRekeningBelanjaByPeriodeRequest) => {
+      e.returnValue = await tataUsahaService.GetRekeningBelanjaByPeriode(
+        request
       )
     }
   ),
