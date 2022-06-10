@@ -32,6 +32,7 @@ import FormTambahPembelanjaanView from 'renderer/views/TataUsaha/Form/FormTambah
 import PerbaruiAplikasi from 'renderer/views/PerbaruiAplikasi'
 import { PAGE_PERBARUI_APLIKASI } from 'renderer/constants/routes'
 import DialogUpdate from './views/PerbaruiAplikasi/DialogUpdate'
+import SyncPerbaruiAplikasi from './views/PerbaruiAplikasi/SyncPerbaruiAplikasi'
 
 const ipcRenderer = window.require('electron').ipcRenderer
 
@@ -167,6 +168,10 @@ const App: FC = () => {
               <Route
                 path="perbarui-aplikasi/dialog/:q_response"
                 element={<DialogUpdate />}
+              />
+              <Route
+                path="sync/perbarui-aplikasi"
+                element={<SyncPerbaruiAplikasi />}
               />
             </Route>
           </Routes>
