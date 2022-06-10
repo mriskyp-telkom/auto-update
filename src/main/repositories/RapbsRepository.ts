@@ -1,5 +1,9 @@
 import { ERROR } from 'global/constants'
-import { Kegiatan } from 'global/types/TataUsaha'
+import {
+  GetRekeningBelanjaByPeriodeRequest,
+  Kegiatan,
+  RekeningBelanja,
+} from 'global/types/TataUsaha'
 import { Rapbs } from 'main/models/Rapbs'
 import { AnggaranKegiatan } from 'main/types/Anggaran'
 import { err, ok, Result } from 'neverthrow'
@@ -9,6 +13,7 @@ import {
   getRepository,
   InsertResult,
   Repository,
+  SelectQueryBuilder,
   UpdateResult,
 } from 'typeorm'
 
@@ -274,21 +279,33 @@ export class RapbsRepository {
     this.repo = conn.getRepository(Rapbs)
   }
 
-  async GetKegiatan(idAnggaran: string, periode?: number) {
-    const subQuery = this.repo
-      .createQueryBuilder('r')
+  protected kegiatanJoins<T = any>(
+    query: SelectQueryBuilder<any>,
+    tableJoinAlias = 'r'
+  ): SelectQueryBuilder<T> {
+    return query
+      .innerJoin(
+        'ref_kode',
+        'rk',
+        `${tableJoinAlias}.id_ref_kode = rk.id_ref_kode`
+      )
+      .innerJoin('ref_kode', 'rk2', 'rk.parent_kode = rk2.id_ref_kode')
+      .innerJoin('ref_kode', 'rk3', 'rk2.parent_kode = rk3.id_ref_kode')
+  }
+
+  async GetKegiatan(idAnggaran: string, periode?: number): Promise<Kegiatan[]> {
+    const subQuery = this.kegiatanJoins<Rapbs>(this.repo.createQueryBuilder())
       .select([
         'r.id_anggaran as idAnggaran',
         'rp.id_periode as idPeriode',
         'rk.id_kode as kode',
         'rk3.uraian_kode as program',
         'rk.uraian_kode as kegiatan',
+        'rk.id_ref_kode as idKegiatan',
       ])
+      .from(Rapbs, 'r')
       .innerJoin('anggaran', 'a', 'r.id_anggaran = a.id_anggaran')
       .innerJoin('rapbs_periode', 'rp', 'r.id_rapbs = rp.id_rapbs')
-      .innerJoin('ref_kode', 'rk', 'r.id_ref_kode = rk.id_ref_kode')
-      .innerJoin('ref_kode', 'rk2', 'rk.parent_kode = rk2.id_ref_kode')
-      .innerJoin('ref_kode', 'rk3', 'rk2.parent_kode = rk3.id_ref_kode')
       .where(
         ' r.soft_delete = 0' +
           ' AND rp.soft_delete = 0' +
@@ -308,7 +325,39 @@ export class RapbsRepository {
       .setParameters(subQuery.getParameters())
       .groupBy('tbl.kode')
 
-    const data = await query.getRawMany()
-    return <Kegiatan[]>data
+    return await query.getRawMany<Kegiatan>()
+  }
+
+  async GetRekeningBelanjaByPeriode(
+    request: GetRekeningBelanjaByPeriodeRequest
+  ): Promise<RekeningBelanja[]> {
+    const query = this.kegiatanJoins<Rapbs>(this.repo.createQueryBuilder())
+      .select([
+        'r.id_anggaran as idAnggaran',
+        'rp.id_periode as idPeriode',
+        'r.kode_rekening as kode',
+        `case when substr(r.kode_rekening, 1, 3) = '5.1' then 'Operasional' else 'Modal' end as jenisBelanja`,
+        'rr.rekening as rekeningBelanja',
+      ])
+      .from(Rapbs, 'r')
+      .innerJoin('anggaran', 'a', 'r.id_anggaran = a.id_anggaran')
+      .innerJoin('rapbs_periode', 'rp', 'r.id_rapbs = rp.id_rapbs')
+      .innerJoin('ref_rekening', 'rr', 'r.kode_rekening = rr.kode_rekening')
+      .where(
+        ' r.soft_delete = 0' +
+          ' AND rp.soft_delete = 0' +
+          ' AND a.is_approve = 1' +
+          ' AND r.id_anggaran = :idAnggaran' +
+          ' and rk.id_ref_kode = :idKegiatan' +
+          ' AND rp.id_periode = :periode',
+        {
+          idAnggaran: request.idAnggaran,
+          idKegiatan: request.idKegiatan,
+          periode: request.idPeriode,
+        }
+      )
+      .groupBy('r.kode_rekening')
+
+    return await query.getRawMany<RekeningBelanja>()
   }
 }

@@ -98,7 +98,20 @@ export interface Kegiatan {
   idPeriode: number
   kode: string
   program: string
+  idKegiatan: string
   kegiatan: string
 }
 
 export type GetKegiatanByPeriodeRequest = CommonRequest
+
+export interface GetRekeningBelanjaByPeriodeRequest extends CommonRequest {
+  idKegiatan: string
+}
+
+export interface RekeningBelanja {
+  idAnggaran: string
+  idPeriode: number
+  kode: string
+  jenisBelanja: string
+  rekeningBelanja: string
+}
