@@ -11,10 +11,7 @@ import DatePickerComponent from 'renderer/components/Form/DatePickerComponent'
 import InputSearchComponent from 'renderer/components/Form/InputSearchComponent'
 import InputComponent from 'renderer/components/Form/InputComponent'
 
-import {
-  FormTambahPembelanjaanData,
-  FormTambahPembelanjaanType,
-} from 'renderer/types/forms/TataUsahaType'
+import { FormTambahPembelanjaanData } from 'renderer/types/forms/TataUsahaType'
 import { GetLastTransactionDateRequest } from 'global/types/TataUsaha'
 
 import syncToIpcMain from 'renderer/configs/ipc'
@@ -42,14 +39,8 @@ const FormTambahPembelanjaanView: FC = () => {
 
   const {
     register,
-    setError,
-    clearErrors,
     formState: { errors },
   } = formMethods
-
-  const handleClearError = (name: FormTambahPembelanjaanType) => {
-    clearErrors(name)
-  }
 
   const closeModal = () => {
     navigate(-1)
@@ -157,10 +148,6 @@ const FormTambahPembelanjaanView: FC = () => {
                   type="name"
                   name="store_address"
                   placeholder="Nama jalan/blok, kelurahan, kecamatan, dan provinsi tempat Anda membeli barang/jasa"
-                  errors={errors}
-                  register={register}
-                  setError={setError}
-                  handleClearError={handleClearError}
                   required={true}
                 />
               </div>
@@ -172,10 +159,6 @@ const FormTambahPembelanjaanView: FC = () => {
                   type="name"
                   name="store_telephone"
                   placeholder="Nomor kontak toko/pemilik usaha yang bisa dihubungi"
-                  errors={errors}
-                  register={register}
-                  setError={setError}
-                  handleClearError={handleClearError}
                   required={true}
                 />
               </div>
@@ -187,10 +170,6 @@ const FormTambahPembelanjaanView: FC = () => {
                   type="name"
                   name="store_npwp"
                   placeholder="NPWP toko/pemilik usaha"
-                  errors={errors}
-                  register={register}
-                  setError={setError}
-                  handleClearError={handleClearError}
                   required={true}
                   isDisabled={noNpwp}
                 />

@@ -8,10 +8,7 @@ import FormDialogComponent from 'renderer/components/Dialog/FormDialogComponent'
 import InputComponent from 'renderer/components/Form/InputComponent'
 import DatePickerComponent from 'renderer/components/Form/DatePickerComponent'
 
-import {
-  FormPenarikanTunaiData,
-  FormPenarikanTunaiType,
-} from 'renderer/types/forms/TataUsahaType'
+import { FormPenarikanTunaiData } from 'renderer/types/forms/TataUsahaType'
 
 import { NOMINAL_TARIK_TUNAI_ERROR_MORE_THAN } from 'renderer/constants/errorForm'
 import {
@@ -37,9 +34,7 @@ const FormPenarikanTunaiView: FC = () => {
   })
 
   const {
-    register,
     handleSubmit,
-    setValue,
     setError,
     clearErrors,
     formState: { errors },
@@ -47,10 +42,6 @@ const FormPenarikanTunaiView: FC = () => {
 
   const closeModal = () => {
     navigate(-1)
-  }
-
-  const handleClearError = (name: FormPenarikanTunaiType) => {
-    clearErrors(name)
   }
 
   const onSubmit = async (data: FormPenarikanTunaiData) => {
@@ -120,12 +111,7 @@ const FormPenarikanTunaiView: FC = () => {
                 type="nominal"
                 name="nominal"
                 placeholder="Masukkan nominal tunai yang ditarik"
-                register={register}
                 required={true}
-                errors={errors}
-                handleClearError={handleClearError}
-                setError={setError}
-                setValue={setValue}
                 registerOption={{
                   validate: {
                     moreThan: (v: any) => {
