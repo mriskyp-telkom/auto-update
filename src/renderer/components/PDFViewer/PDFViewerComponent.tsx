@@ -17,7 +17,7 @@ const PDFViewerComponent: FC<PDFViewerProps> = (props: PDFViewerProps) => {
 }
 
 PDFViewerComponent.defaultProps = {
-  file: `./assets/pdfjs/web/viewer.html?file=../../helloworld.pdf}`,
+  file: `./assets/pdfjs/web/viewer.html?file=../../helloworld.pdf`,
 }
 
 export default PDFViewerComponent
