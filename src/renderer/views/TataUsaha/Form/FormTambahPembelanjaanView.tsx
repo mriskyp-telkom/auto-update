@@ -117,6 +117,7 @@ const FormTambahPembelanjaanView: FC = () => {
               labelPosition="center"
               onChange={handleChangeNoStore}
               checked={noStore}
+              controlled
             >
               Pembelanjaan ini tidak memiliki badan usaha (perusahaan, PT, CV,
               UD, firma, dll)
