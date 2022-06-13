@@ -26,8 +26,8 @@ const CetakKertasKerjaView = () => {
     navigate('/anggaran')
   }
 
-  const handleChange = () => {
-    //handle action
+  const handleChange = (value: string) => {
+    value
   }
 
   useEffect(() => {

@@ -20,3 +20,11 @@ export interface Anggaran {
   id_penjab: string | null
   tahun_anggaran: number
 }
+
+export interface GetPrintPDFPathRequest {
+  template: string
+  filename: string
+  listIdAnggaran: string[]
+  appDir?: string
+  dbPath?: string
+}

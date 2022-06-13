@@ -2,40 +2,37 @@ import path from 'path'
 import { execFile } from 'child_process'
 import { promisify } from 'util'
 import { err, ok, Result } from 'neverthrow'
+import { GetPrintPDFPathRequest } from 'global/types/Anggaran'
 
 export const printToPdf = async (
-  template: string,
-  filename: string,
-  arrayOfIdAnggaran: string[],
-  appDir?: string,
-  dbPath?: string
+  request: GetPrintPDFPathRequest
 ): Promise<Result<string, Error>> => {
   const appName = 'printarkas.exe'
   const printAppDir = 'print'
 
-  const executableFile = appDir
-    ? path.join(appDir, appName)
+  const executableFile = request.appDir
+    ? path.join(request.appDir, appName)
     : path.join(__dirname, printAppDir, appName)
 
   if (
-    template &&
-    filename &&
-    arrayOfIdAnggaran &&
-    arrayOfIdAnggaran.length > 0
+    request.template &&
+    request.filename &&
+    request.listIdAnggaran &&
+    request.listIdAnggaran.length > 0
   ) {
     const args = []
-    args.push(`/id:${template}`)
-    args.push(`/filename:${filename}`)
+    args.push(`/id:${request.template}`)
+    args.push(`/filename:${request.filename}`)
 
-    if (dbPath) {
-      args.push(`/db:${dbPath}`)
+    if (request.dbPath) {
+      args.push(`/db:${request.dbPath}`)
     }
 
-    if (arrayOfIdAnggaran.length == 1) {
-      args.push(`/id_anggaran:${arrayOfIdAnggaran[0]}`)
+    if (request.listIdAnggaran.length == 1) {
+      args.push(`/id_anggaran:${request.listIdAnggaran[0]}`)
     } else {
-      for (let index = 0; index < arrayOfIdAnggaran.length; index++) {
-        const idAnggaran = arrayOfIdAnggaran[index]
+      for (let index = 0; index < request.listIdAnggaran.length; index++) {
+        const idAnggaran = request.listIdAnggaran[index]
         args.push(`/id_anggaran${index + 1}:${idAnggaran}`)
       }
     }
