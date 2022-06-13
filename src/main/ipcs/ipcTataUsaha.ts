@@ -12,6 +12,7 @@ import {
   GetLastTransactionDateRequest,
   GetKegiatanByPeriodeRequest,
   GetRekeningBelanjaByPeriodeRequest,
+  GetUraianByKegiatanRequest,
 } from 'global/types/TataUsaha'
 import { GetConfig } from 'main/repositories/ConfigRepository'
 
@@ -115,6 +116,12 @@ module.exports = {
       e.returnValue = await tataUsahaService.GetRekeningBelanjaByPeriode(
         request
       )
+    }
+  ),
+  getUraianByKegiatan: ipcMain.on(
+    IPC_TATA_USAHA.getUraianByKegiatan,
+    async (e, request: GetUraianByKegiatanRequest) => {
+      e.returnValue = await tataUsahaService.GetUraianByKegiatan(request)
     }
   ),
 }

@@ -1,8 +1,10 @@
 import { ERROR } from 'global/constants'
 import {
   GetRekeningBelanjaByPeriodeRequest,
+  GetUraianByKegiatanRequest,
   Kegiatan,
   RekeningBelanja,
+  UraianBelanja,
 } from 'global/types/TataUsaha'
 import { Rapbs } from 'main/models/Rapbs'
 import { AnggaranKegiatan } from 'main/types/Anggaran'
@@ -340,13 +342,11 @@ export class RapbsRepository {
         'rr.rekening as rekeningBelanja',
       ])
       .from(Rapbs, 'r')
-      .innerJoin('anggaran', 'a', 'r.id_anggaran = a.id_anggaran')
       .innerJoin('rapbs_periode', 'rp', 'r.id_rapbs = rp.id_rapbs')
       .innerJoin('ref_rekening', 'rr', 'r.kode_rekening = rr.kode_rekening')
       .where(
         ' r.soft_delete = 0' +
           ' AND rp.soft_delete = 0' +
-          ' AND a.is_approve = 1' +
           ' AND r.id_anggaran = :idAnggaran' +
           ' and rk.id_ref_kode = :idKegiatan' +
           ' AND rp.id_periode = :periode',
@@ -359,5 +359,43 @@ export class RapbsRepository {
       .groupBy('r.kode_rekening')
 
     return await query.getRawMany<RekeningBelanja>()
+  }
+
+  async GetUraianByKegiatan(
+    request: GetUraianByKegiatanRequest
+  ): Promise<UraianBelanja[]> {
+    const query = this.kegiatanJoins<Rapbs>(this.repo.createQueryBuilder())
+      .select([
+        'rk3.uraian_kode as program',
+        'r.id_ref_kode as idKegiatan',
+        'rk.uraian_kode as kegiatan',
+        'rr.rekening as rekeningBelanja',
+        'r.uraian_text as uraian',
+        'rp.volume as jumlah',
+        'case when rs.unit is not null then rs.unit else rp.satuan end as satuan',
+        'rp.harga_satuan as hargaSatuan',
+        'rp.jumlah as total',
+      ])
+      .from(Rapbs, 'r')
+      .innerJoin('rapbs_periode', 'rp', 'r.id_rapbs = rp.id_rapbs')
+      .innerJoin('ref_rekening', 'rr', 'r.kode_rekening = rr.kode_rekening')
+      .leftJoin('ref_satuan', 'rs', 'rp.satuan = rs.satuan')
+      .where(
+        ' r.soft_delete = 0' +
+          ' AND rp.soft_delete = 0' +
+          ' AND r.id_anggaran = :idAnggaran' +
+          ' and rk.id_ref_kode = :idKegiatan' +
+          ' AND rp.id_periode = :periode' +
+          ' AND r.kode_rekening = :kode',
+        {
+          idAnggaran: request.idAnggaran,
+          idKegiatan: request.idKegiatan,
+          periode: request.idPeriode,
+          kode: request.kode,
+        }
+      )
+      .groupBy('r.kode_rekening')
+
+    return await query.getRawMany<UraianBelanja>()
   }
 }

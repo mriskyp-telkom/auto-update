@@ -17,6 +17,8 @@ import {
   InformasiToko,
   GetRekeningBelanjaByPeriodeRequest,
   RekeningBelanja,
+  GetUraianByKegiatanRequest,
+  UraianBelanja,
 } from 'global/types/TataUsaha'
 import {
   GetAnggaran,
@@ -446,6 +448,17 @@ export class TataUsahaService {
   ): Promise<Result<RekeningBelanja[], Error>> {
     try {
       const res = await this.rapbsRepo.GetRekeningBelanjaByPeriode(request)
+      return ok(res)
+    } catch (error) {
+      return err(new Error(error))
+    }
+  }
+
+  async GetUraianByKegiatan(
+    request: GetUraianByKegiatanRequest
+  ): Promise<Result<UraianBelanja[], Error>> {
+    try {
+      const res = await this.rapbsRepo.GetUraianByKegiatan(request)
       return ok(res)
     } catch (error) {
       return err(new Error(error))
