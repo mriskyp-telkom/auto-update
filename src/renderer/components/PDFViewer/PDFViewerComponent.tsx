@@ -11,13 +11,13 @@ const PDFViewerComponent: FC<PDFViewerProps> = (props: PDFViewerProps) => {
       height="1000px"
       title="PdfViewerHTML"
       style={{ border: 'none' }}
-      src={`./assets/pdfjs/web/viewer.html?file=${props.file}`}
+      src={`${props.file}`}
     />
   )
 }
 
 PDFViewerComponent.defaultProps = {
-  file: '../../helloworld.pdf',
+  file: `./assets/pdfjs/web/viewer.html?file=../../helloworld.pdf}`,
 }
 
 export default PDFViewerComponent

@@ -15,12 +15,16 @@ import syncToIPCMain from 'renderer/configs/ipc'
 import { IPC_ANGGARAN } from 'global/ipc'
 
 import { copyKertasKerja } from 'renderer/utils/copy-writing'
+import { GetPrintPDFPathRequest } from 'global/types/Anggaran'
 
 const CetakKertasKerjaView = () => {
+  const ipc = window.require('electron').ipcRenderer
   const navigate = useNavigate()
   const { q_id_anggaran } = useParams()
 
   const [tahun, setTahun] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const [pdfPath, setPdfPath] = useState('')
 
   const handleBackToBeranda = () => {
     navigate('/anggaran')
@@ -28,6 +32,26 @@ const CetakKertasKerjaView = () => {
 
   const handleChange = (value: string) => {
     value
+    setIsLoading(true)
+    isLoading
+
+    const filename = 'rapbs-tri-2022-output'
+    const request = {
+      template: 'rapbs-tri-2022',
+      filename: filename,
+      listIdAnggaran: ['nee1i6EqD0S04MZqg-GhtQ'],
+    } as GetPrintPDFPathRequest
+
+    const printPath = ipc.invoke('utils:getPrintPDFPathAsync', request)
+    printPath
+      .then((res: any) => {
+        if (!res?.error) {
+          setPdfPath(res.value)
+        }
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
   }
 
   useEffect(() => {
@@ -76,7 +100,7 @@ const CetakKertasKerjaView = () => {
         </span>
       </div>
       <div className="max-h-[715px] scrollBar overflow-y-scroll mt-4 mx-10">
-        <PDFViewerComponent />
+        <PDFViewerComponent file={pdfPath} />
       </div>
     </div>
   )

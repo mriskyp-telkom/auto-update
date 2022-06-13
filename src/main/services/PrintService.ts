@@ -43,7 +43,7 @@ export const printToPdf = async (
       return execPromisify(executableFile, args)
         .then((result) => {
           if (!result.stderr) {
-            return ok(result.stdout)
+            return ok(result.stdout.trim())
           } else {
             return err(new Error(result.stderr))
           }
