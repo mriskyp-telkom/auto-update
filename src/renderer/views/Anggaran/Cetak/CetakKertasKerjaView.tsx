@@ -7,6 +7,7 @@ import DropdownComponent from 'renderer/components/DropdownComponent'
 import PDFViewerComponent from 'renderer/components/PDFViewer/PDFViewerComponent'
 import PanduanCetakKKView from 'renderer/views/Anggaran/Panduan/PanduanCetakKKView'
 
+import { CETAK_RKAS_OPTIONS } from 'renderer/constants/anggaran'
 import { STATUS_KERTAS_KERJA } from 'global/constants'
 
 import syncToIPCMain from 'renderer/configs/ipc'
@@ -14,11 +15,6 @@ import syncToIPCMain from 'renderer/configs/ipc'
 import { IPC_ANGGARAN } from 'global/ipc'
 
 import { copyKertasKerja } from 'renderer/utils/copy-writing'
-
-export const CETAK_RKAS_OPTIONS = [
-  { id: 1, key: 'tahap', label: 'Lihat per tahapan' },
-  { id: 2, key: 'tahun', label: 'Lihat per tahun' },
-]
 
 const CetakKertasKerjaView = () => {
   const navigate = useNavigate()
