@@ -1,6 +1,6 @@
 import React, { FC, useEffect } from 'react'
 import { useNavigate } from 'react-router'
-import { useForm } from 'react-hook-form'
+import { FormProvider, useForm } from 'react-hook-form'
 
 import AuthLayout from 'renderer/views/Layout/AuthLayout'
 import ResetAccountLinkView from 'renderer/views/Auth/ResetAccountLinkView'
@@ -47,6 +47,15 @@ const LoginView: FC = () => {
     (state: AuthStates) => state.setMultipleDevice
   )
 
+  const formMethods = useForm<FormLoginData>({
+    mode: 'onSubmit',
+    reValidateMode: 'onBlur',
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  })
+
   const {
     register,
     handleSubmit,
@@ -55,14 +64,7 @@ const LoginView: FC = () => {
     getValues,
     clearErrors,
     formState: { errors },
-  } = useForm<FormLoginData>({
-    mode: 'onSubmit',
-    reValidateMode: 'onBlur',
-    defaultValues: {
-      email: '',
-      password: '',
-    },
-  })
+  } = formMethods
 
   const handleClearError = (name: FormLoginType) => {
     clearErrors(name)
@@ -130,49 +132,53 @@ const LoginView: FC = () => {
 
   return (
     <AuthLayout>
-      <form onSubmit={handleSubmit(onSubmit, onError)}>
-        <div>
-          <div className="text-base pb-1 font-normal text-gray-900">Email</div>
-          <InputComponent
-            type="email"
-            name="email"
-            placeholder="Masukkan email yang terdaftar di sekolah"
-            errors={errors}
-            register={register}
-            setError={setError}
-            handleClearError={handleClearError}
-            required={true}
-          />
-        </div>
-        <div className="pt-5">
-          <div className="text-base pb-1 font-normal text-gray-900">
-            Password
+      <FormProvider {...formMethods}>
+        <form onSubmit={handleSubmit(onSubmit, onError)}>
+          <div>
+            <div className="text-base pb-1 font-normal text-gray-900">
+              Email
+            </div>
+            <InputComponent
+              type="email"
+              name="email"
+              placeholder="Masukkan email yang terdaftar di sekolah"
+              errors={errors}
+              register={register}
+              setError={setError}
+              handleClearError={handleClearError}
+              required={true}
+            />
           </div>
-          <InputPasswordComponent
-            name="password"
-            errors={errors}
-            register={register}
-            setError={setError}
-            handleClearError={handleClearError}
-          />
-        </div>
-        <ResetAccountLinkView />
-        <div className="grid justify-items-end pb-[20px]">
-          <Button
-            className="px-[72px]"
-            color="blue"
-            size="lg"
-            variant="solid"
-            type="submit"
-            disabled={btnFormDisabled(errors)}
-          >
-            Masuk
-          </Button>
-        </div>
-        <div className="text-blue-700 text-[12px] text-right">
-          <b>“Reset Akun”</b> membutuhkan koneksi internet
-        </div>
-      </form>
+          <div className="pt-5">
+            <div className="text-base pb-1 font-normal text-gray-900">
+              Password
+            </div>
+            <InputPasswordComponent
+              name="password"
+              errors={errors}
+              register={register}
+              setError={setError}
+              handleClearError={handleClearError}
+            />
+          </div>
+          <ResetAccountLinkView />
+          <div className="grid justify-items-end pb-[20px]">
+            <Button
+              className="px-[72px]"
+              color="blue"
+              size="lg"
+              variant="solid"
+              type="submit"
+              disabled={btnFormDisabled(errors)}
+            >
+              Masuk
+            </Button>
+          </div>
+          <div className="text-blue-700 text-[12px] text-right">
+            <b>“Reset Akun”</b> membutuhkan koneksi internet
+          </div>
+        </form>
+      </FormProvider>
       {syncLogin ? <SyncLoginView /> : ''}
       <AlertDialogComponent
         type="failed"

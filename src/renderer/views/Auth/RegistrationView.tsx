@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
+import { FormProvider, useForm } from 'react-hook-form'
 
 import AuthLayout from 'renderer/views/Layout/AuthLayout'
 
@@ -95,6 +95,15 @@ const RegistrationView: FC = () => {
     enabled: api === stepApi[0],
   })
 
+  const formMethods = useForm<FormRegisterData>({
+    mode: 'onSubmit',
+    reValidateMode: 'onBlur',
+    defaultValues: {
+      npsn: '',
+      activation_code: '',
+    },
+  })
+
   const {
     register,
     handleSubmit,
@@ -104,14 +113,7 @@ const RegistrationView: FC = () => {
     clearErrors,
     setValue,
     formState: { errors },
-  } = useForm<FormRegisterData>({
-    mode: 'onSubmit',
-    reValidateMode: 'onBlur',
-    defaultValues: {
-      npsn: '',
-      activation_code: '',
-    },
-  })
+  } = formMethods
 
   const handleClearError = (name: FormRegisterType) => {
     clearErrors(name)
@@ -226,75 +228,77 @@ const RegistrationView: FC = () => {
 
   return (
     <AuthLayout>
-      <form ref={ref} onSubmit={handleSubmit(onSubmit, onError)}>
-        <div>
-          <div className="text-base pb-1 font-normal text-gray-900">NPSN</div>
-          <InputComponent
-            type="text"
-            name="npsn"
-            placeholder="Masukkan NPSN sekolah"
-            errors={errors}
-            register={register}
-            required={true}
-            setError={setError}
-            handleClearError={handleClearError}
-            registerOption={{
-              onChange: (e) => {
-                const value = e.target.value
-                setValue('npsn', value.replace(/\D/g, ''))
-              },
-            }}
-          />
-        </div>
-        <div className="pt-5">
-          <div className="flex items-center text-base pb-1 font-normal text-gray-900">
-            Kode Aktivasi
-            <Tooltip
-              content="Kode aktivasi yang didapatkan dari dinas ketika aktivasi akun"
-              maxWidth={362}
-              placement="right-start"
-              strategy="fixed"
-              trigger="hover"
-              offset={{ x: -12 }}
-            >
-              <Icon
-                as="i"
-                color="default"
-                fontSize="small"
-                style={{ fontSize: '14px' }}
-                className="ml-1"
-              >
-                info
-              </Icon>
-            </Tooltip>
+      <FormProvider {...formMethods}>
+        <form ref={ref} onSubmit={handleSubmit(onSubmit, onError)}>
+          <div>
+            <div className="text-base pb-1 font-normal text-gray-900">NPSN</div>
+            <InputComponent
+              type="text"
+              name="npsn"
+              placeholder="Masukkan NPSN sekolah"
+              errors={errors}
+              register={register}
+              required={true}
+              setError={setError}
+              handleClearError={handleClearError}
+              registerOption={{
+                onChange: (e) => {
+                  const value = e.target.value
+                  setValue('npsn', value.replace(/\D/g, ''))
+                },
+              }}
+            />
           </div>
-          <InputComponent
-            type="text"
-            name="activation_code"
-            placeholder="Masukkan kode aktivasi"
-            errors={errors}
-            register={register}
-            setError={setError}
-            handleClearError={handleClearError}
-            required={true}
-          />
-        </div>
-        <div className="grid justify-items-end pt-[50px] pb-[20px]">
-          <Button
-            className="px-[72px]"
-            color="blue"
-            size="lg"
-            variant="solid"
-            type="submit"
-            disabled={btnFormDisabled(errors)}
-          >
-            Daftar
-          </Button>
-        </div>
-        <div className="text-blue-700 text-[12px] text-right">
-          <b>“Daftar”</b> membutuhkan koneksi internet
-        </div>
-      </form>
+          <div className="pt-5">
+            <div className="flex items-center text-base pb-1 font-normal text-gray-900">
+              Kode Aktivasi
+              <Tooltip
+                content="Kode aktivasi yang didapatkan dari dinas ketika aktivasi akun"
+                maxWidth={362}
+                placement="right-start"
+                strategy="fixed"
+                trigger="hover"
+                offset={{ x: -12 }}
+              >
+                <Icon
+                  as="i"
+                  color="default"
+                  fontSize="small"
+                  style={{ fontSize: '14px' }}
+                  className="ml-1"
+                >
+                  info
+                </Icon>
+              </Tooltip>
+            </div>
+            <InputComponent
+              type="text"
+              name="activation_code"
+              placeholder="Masukkan kode aktivasi"
+              errors={errors}
+              register={register}
+              setError={setError}
+              handleClearError={handleClearError}
+              required={true}
+            />
+          </div>
+          <div className="grid justify-items-end pt-[50px] pb-[20px]">
+            <Button
+              className="px-[72px]"
+              color="blue"
+              size="lg"
+              variant="solid"
+              type="submit"
+              disabled={btnFormDisabled(errors)}
+            >
+              Daftar
+            </Button>
+          </div>
+          <div className="text-blue-700 text-[12px] text-right">
+            <b>“Daftar”</b> membutuhkan koneksi internet
+          </div>
+        </form>
+      </FormProvider>
       <SyncDialogComponent
         title="Mengirim Data..."
         percentage={50}

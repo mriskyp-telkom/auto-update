@@ -1,6 +1,6 @@
 import React, { FC, useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
+import { FormProvider, useForm } from 'react-hook-form'
 
 import AuthLayout from 'renderer/views/Layout/AuthLayout'
 
@@ -83,6 +83,16 @@ const CreateAccountView: FC = () => {
   )
   const setToken = useAppStore((state: AppStates) => state.setToken)
 
+  const formMethods = useForm<FormResetAccountData>({
+    mode: 'onSubmit',
+    reValidateMode: 'onBlur',
+    defaultValues: {
+      email: '',
+      password: '',
+      password_confirmation: '',
+    },
+  })
+
   const {
     register,
     handleSubmit,
@@ -92,15 +102,7 @@ const CreateAccountView: FC = () => {
     getValues,
     clearErrors,
     formState: { errors },
-  } = useForm<FormResetAccountData>({
-    mode: 'onSubmit',
-    reValidateMode: 'onBlur',
-    defaultValues: {
-      email: '',
-      password: '',
-      password_confirmation: '',
-    },
-  })
+  } = formMethods
 
   const {
     data: infoConnection,
@@ -394,61 +396,65 @@ const CreateAccountView: FC = () => {
 
   return (
     <AuthLayout>
-      <form onSubmit={handleSubmit(onSubmit, onError)}>
-        <div>
-          <div className="text-base pb-1 font-normal text-gray-900">Email</div>
-          <InputComponent
-            type="email"
-            name="email"
-            placeholder="Masukkan email yang terdaftar di sekolah"
-            errors={errors}
-            register={register}
-            setError={setError}
-            handleClearError={handleClearError}
-            required={true}
-            isDisabled={q_mode === 'reset'}
-          />
-        </div>
-        <div className="pt-5">
-          <div className="text-base pb-1 font-normal text-gray-900">
-            Password
+      <FormProvider {...formMethods}>
+        <form onSubmit={handleSubmit(onSubmit, onError)}>
+          <div>
+            <div className="text-base pb-1 font-normal text-gray-900">
+              Email
+            </div>
+            <InputComponent
+              type="email"
+              name="email"
+              placeholder="Masukkan email yang terdaftar di sekolah"
+              errors={errors}
+              register={register}
+              setError={setError}
+              handleClearError={handleClearError}
+              required={true}
+              isDisabled={q_mode === 'reset'}
+            />
           </div>
-          <InputPasswordComponent
-            name="password"
-            errors={errors}
-            register={register}
-            setError={setError}
-            handleClearError={handleClearError}
-          />
-        </div>
-        <div className="pt-5">
-          <div className="text-base pb-1 font-normal text-gray-900">
-            Konfirmasi Password
+          <div className="pt-5">
+            <div className="text-base pb-1 font-normal text-gray-900">
+              Password
+            </div>
+            <InputPasswordComponent
+              name="password"
+              errors={errors}
+              register={register}
+              setError={setError}
+              handleClearError={handleClearError}
+            />
           </div>
-          <InputPasswordComponent
-            name="password_confirmation"
-            errors={errors}
-            register={register}
-            setError={setError}
-            handleClearError={handleClearError}
-          />
-        </div>
-        <div className="grid justify-items-end pt-[50px] pb-[20px]">
-          <Button
-            className="px-[72px]"
-            color="blue"
-            size="lg"
-            variant="solid"
-            type="submit"
-            disabled={btnFormDisabled(errors)}
-          >
-            Masuk
-          </Button>
-        </div>
-        <div className="text-blue-700 text-[12px] text-right">
-          <b>“Daftar”</b> membutuhkan koneksi internet
-        </div>
-      </form>
+          <div className="pt-5">
+            <div className="text-base pb-1 font-normal text-gray-900">
+              Konfirmasi Password
+            </div>
+            <InputPasswordComponent
+              name="password_confirmation"
+              errors={errors}
+              register={register}
+              setError={setError}
+              handleClearError={handleClearError}
+            />
+          </div>
+          <div className="grid justify-items-end pt-[50px] pb-[20px]">
+            <Button
+              className="px-[72px]"
+              color="blue"
+              size="lg"
+              variant="solid"
+              type="submit"
+              disabled={btnFormDisabled(errors)}
+            >
+              Masuk
+            </Button>
+          </div>
+          <div className="text-blue-700 text-[12px] text-right">
+            <b>“Daftar”</b> membutuhkan koneksi internet
+          </div>
+        </form>
+      </FormProvider>
       <SyncDialogComponent
         title="Mencoba masuk ke ARKAS..."
         percentage={50}
