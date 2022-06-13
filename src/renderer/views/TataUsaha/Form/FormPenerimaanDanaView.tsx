@@ -28,7 +28,7 @@ const FormPenerimaanDanaView: FC = () => {
   const navigate = useNavigate()
   const { q_id_anggaran } = useParams()
 
-  const [defaultValue, setDefaultValue] = useState<FormPenerimaanDanaData>(null)
+  const [defaultDate, setDefaultDate] = useState(null)
   const [formDisable, setFormDisable] = useState(true)
 
   const [openModalConfirmation, setOpenModalConfirmation] = useState(false)
@@ -101,14 +101,7 @@ const FormPenerimaanDanaView: FC = () => {
         date = new Date(selectedPeriode.tanggal)
       }
 
-      const data = {
-        periode: selectedPeriode.label,
-        tanggal_penerimaan: date,
-        nominal: `Rp ${numberUtils.delimit(selectedPeriode.total, '.')}`,
-      }
-
-      //TODO
-      setDefaultValue(data)
+      setDefaultDate(date)
       setValue('periode', selectedPeriode.label, { shouldDirty: true })
       setValue(
         'nominal',
@@ -142,12 +135,12 @@ const FormPenerimaanDanaView: FC = () => {
 
       // set defaultvalue
       const data = {
-        periode: periodeSalurList[0].label,
+        periode: '',
         tanggal_penerimaan: date,
         nominal: `Rp ${numberUtils.delimit(periodeSalurList[0].total, '.')}`,
       }
 
-      setDefaultValue(data)
+      setDefaultDate(date)
       reset(data)
     }
   }, [])
@@ -176,11 +169,11 @@ const FormPenerimaanDanaView: FC = () => {
               </div>
               <SelectComponent
                 name="periode"
+                placeholder="Pilih tahap penerimaan dana"
                 options={periodeSalurList.map((b: any) => b.label)}
-                register={register}
-                selected={periodeSalurList[0]?.label}
                 handleSelect={handleSelectPeriode}
                 isDisabled={formDisable}
+                required={true}
               />
             </div>
             <div className="flex">
@@ -192,7 +185,7 @@ const FormPenerimaanDanaView: FC = () => {
                   name="tanggal_penerimaan"
                   placeholder="Pilih tanggal"
                   required={true}
-                  defaultValue={defaultValue?.tanggal_penerimaan}
+                  defaultValue={defaultDate}
                   isDisabled={formDisable}
                 />
               </div>

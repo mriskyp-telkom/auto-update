@@ -1,10 +1,12 @@
 import React, { FC, useState, useRef, useEffect } from 'react'
-import { RegisterOptions } from 'react-hook-form'
+import { useFormContext } from 'react-hook-form'
 
 import { Listbox } from '@headlessui/react'
 
 import { Input } from '@wartek-id/input'
 import { Icon } from '@wartek-id/icon'
+
+import { ERROR_REQUIRED } from 'renderer/constants/errorForm'
 
 import clsx from 'clsx'
 
@@ -14,9 +16,10 @@ interface SelectProps {
   selected?: string
   border?: boolean
   options: any
-  register: (arg0: string, arg1: RegisterOptions) => void
+  placeholder?: string
   handleSelect: (value: string) => void
   isDisabled?: boolean
+  required?: boolean
 }
 
 const SelectComponent: FC<SelectProps> = (props: SelectProps) => {
@@ -24,10 +27,39 @@ const SelectComponent: FC<SelectProps> = (props: SelectProps) => {
 
   const [selectedValue, setSelectedValue] = useState(null)
 
-  const { name, register } = props
+  const { name, required = false, placeholder = 'Pilih', border = true } = props
+
+  const {
+    register,
+    clearErrors,
+    setValue,
+    formState: { errors },
+  } = useFormContext()
+
+  const isInvalid = !!errors[name]
+
+  const clearErrorRequired = (value: string) => {
+    if (required && value !== '' && errors[name]?.message === ERROR_REQUIRED) {
+      clearErrors(name)
+      return
+    }
+  }
+
+  let validation = {}
+  if (required) {
+    validation = {
+      ...validation,
+      required: ERROR_REQUIRED,
+      onChange: (e: any) => {
+        const value = e.target.value
+        clearErrorRequired(value)
+      },
+    }
+  }
 
   const handleChange = (value: string) => {
     setSelectedValue(value)
+    setValue(name, value, { shouldValidate: true })
     props.handleSelect(value)
   }
 
@@ -42,7 +74,7 @@ const SelectComponent: FC<SelectProps> = (props: SelectProps) => {
         className="hidden"
         id={name}
         name={name}
-        {...register(name, {})}
+        {...register(name, validation)}
       />
       <Listbox
         value={selectedValue}
@@ -51,17 +83,20 @@ const SelectComponent: FC<SelectProps> = (props: SelectProps) => {
       >
         <Listbox.Button
           className={clsx(
-            props.border && 'rounded border border-solid py-3 px-4 text-form',
-            props.border && props.isDisabled
+            border && 'rounded border border-solid py-3 px-4 text-form',
+            border && props.isDisabled
               ? 'bg-gray-10 border-gray-200 text-gray-500 cursor-not-allowed'
-              : 'border-gray-500'
+              : 'border-gray-500',
+            isInvalid && 'border-red-600 bg-red-0'
           )}
           style={{
             width: props.width > 0 ? `${props.width}px` : '100%',
           }}
         >
           <span className="w-full flex justify-between items-center">
-            <span className="capitalize-first">{selectedValue}</span>
+            <span className="capitalize-first">
+              {selectedValue || placeholder}
+            </span>
             {!props.isDisabled && (
               <Icon as="i" color="default" fontSize="default">
                 arrow_drop_down
@@ -98,12 +133,13 @@ const SelectComponent: FC<SelectProps> = (props: SelectProps) => {
           ))}
         </Listbox.Options>
       </Listbox>
+      <span
+        className={clsx(!isInvalid && 'hidden', 'text-tiny text-red-600 pt-1')}
+      >
+        {errors[name]?.message}
+      </span>
     </div>
   )
-}
-
-SelectComponent.defaultProps = {
-  border: true,
 }
 
 export default SelectComponent
