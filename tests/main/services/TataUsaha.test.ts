@@ -184,7 +184,7 @@ test('GetTotalAnggaranPerBulan', async () => {
 
   const res = await tataUsahaService.GetTotalBisaDibelanjakan(request)
   expect(res.isOk()).toBe(true)
-  expect(res.unwrapOr(0)).toBe(147285000)
+  expect(res.unwrapOr(0)).toBe(102000000)
 })
 
 test('GetTotalPerluDianggarkanUlang', async () => {
@@ -421,14 +421,14 @@ test('GetListKasUmum ', async () => {
   expect(list[0].data.jumlah).toBe(1500)
   expect(list[0].data.date).toBe('2021-04-01')
   expect(list[0].data.message).toBe(
-    'Anda telah melakukan <b>Setor Tunai Rp. 1500 </b> pada 2021-04-01'
+    'Anda telah melakukan <span style="font-weight: 500;padding: unset">setor tunai Rp. 1500 </span> pada 2021-04-01'
   )
 
   expect(list[1].type).toBe('line')
   expect(list[1].data.jumlah).toBe(1501)
   expect(list[1].data.date).toBe('2021-04-22')
   expect(list[1].data.message).toBe(
-    'Anda telah melakukan <b>Tarik Tunai Rp. 1501 </b> pada 2021-04-22'
+    'Anda telah melakukan <span style="font-weight: 500;padding: unset">tarik tunai Rp. 1501 </span> pada 2021-04-22'
   )
 
   expect(list[2].type).toBe('row')
