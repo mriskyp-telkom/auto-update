@@ -18,6 +18,7 @@ import {
   SelectQueryBuilder,
   UpdateResult,
 } from 'typeorm'
+import { KegiatanBuilder } from './KegiatanBuilder'
 
 export const GetRapbsBulan = async (
   idAnggaran: string,
@@ -296,7 +297,7 @@ export class RapbsRepository {
   }
 
   async GetKegiatan(idAnggaran: string, periode?: number): Promise<Kegiatan[]> {
-    const subQuery = this.kegiatanJoins<Rapbs>(this.repo.createQueryBuilder())
+    const subQuery = new KegiatanBuilder(this.conn)
       .select([
         'r.id_anggaran as idAnggaran',
         'rp.id_periode as idPeriode',
@@ -305,9 +306,8 @@ export class RapbsRepository {
         'rk.uraian_kode as kegiatan',
         'rk.id_ref_kode as idKegiatan',
       ])
-      .from(Rapbs, 'r')
-      .innerJoin('anggaran', 'a', 'r.id_anggaran = a.id_anggaran')
-      .innerJoin('rapbs_periode', 'rp', 'r.id_rapbs = rp.id_rapbs')
+      .BuildListKegiatan()
+      .joinAnggaran()
       .where(
         ' r.soft_delete = 0' +
           ' AND rp.soft_delete = 0' +
@@ -364,7 +364,7 @@ export class RapbsRepository {
   async GetUraianByKegiatan(
     request: GetUraianByKegiatanRequest
   ): Promise<UraianBelanja[]> {
-    const query = this.kegiatanJoins<Rapbs>(this.repo.createQueryBuilder())
+    const query = new KegiatanBuilder(this.conn)
       .select([
         'rk3.uraian_kode as program',
         'r.id_ref_kode as idKegiatan',
@@ -376,10 +376,7 @@ export class RapbsRepository {
         'rp.harga_satuan as hargaSatuan',
         'rp.jumlah as total',
       ])
-      .from(Rapbs, 'r')
-      .innerJoin('rapbs_periode', 'rp', 'r.id_rapbs = rp.id_rapbs')
-      .innerJoin('ref_rekening', 'rr', 'r.kode_rekening = rr.kode_rekening')
-      .leftJoin('ref_satuan', 'rs', 'rp.satuan = rs.satuan')
+      .BuildUraianKegiatan()
       .where(
         ' r.soft_delete = 0' +
           ' AND rp.soft_delete = 0' +
