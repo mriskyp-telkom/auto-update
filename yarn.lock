@@ -2494,10 +2494,10 @@
     "@wartek-id/react-primitive" "*"
     clsx "^1.1.1"
 
-"@wartek-id/checkbox@^1.2.4":
-  version "1.2.4"
-  resolved "https://gitlab.com/api/v4/projects/25182406/packages/npm/@wartek-id/checkbox/-/@wartek-id/checkbox-1.2.4.tgz#18a09b3d8148fedef3d8f8f15851f809c3b9a265"
-  integrity sha1-GKCbPYFI/t7z2PjxWFH4CcO5omU=
+"@wartek-id/checkbox@^1.3.0":
+  version "1.3.0"
+  resolved "https://gitlab.com/api/v4/projects/25182406/packages/npm/@wartek-id/checkbox/-/@wartek-id/checkbox-1.3.0.tgz#936585326c68be6acfdbb8b2fe9b8e0816b2f800"
+  integrity sha1-k2WFMmxovmrP27iy/puOCBay+AA=
   dependencies:
     "@wartek-id/react-utils" "1.0.0"
     clsx "^1.1.1"

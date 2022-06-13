@@ -126,7 +126,7 @@
     "@wartek-id/avatar": "^1.1.4",
     "@wartek-id/badge": "^1.0.0",
     "@wartek-id/button": "^1.1.1",
-    "@wartek-id/checkbox": "^1.2.4",
+    "@wartek-id/checkbox": "^1.3.0",
     "@wartek-id/design-tokens": "^1.4.1",
     "@wartek-id/dialog": "^0.2.1",
     "@wartek-id/fe-toolbox": "^1.0.1",
