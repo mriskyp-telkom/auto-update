@@ -1,5 +1,6 @@
 import { Button } from '@wartek-id/button'
-import React, { FC } from 'react'
+import React, { FC, useEffect, useState } from 'react'
+import ReactMarkdown from 'react-markdown'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { APP_VERSION } from 'renderer/constants/appConfig'
 import { SYNC_PERBARUI_APLIKASI } from 'renderer/constants/routes'
@@ -8,6 +9,8 @@ import PageLayout from 'renderer/views/Layout/PageLayout'
 const PerbaruiAplikasi: FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
+  const [labelButton, setLabelButton] = useState('')
+  const [desc, setDesc] = useState('')
 
   const handlePeriksaUpdate = () => {
     // TODO: Get response from API
@@ -15,6 +18,26 @@ const PerbaruiAplikasi: FC = () => {
       state: { backgroundLocation: location },
     })
   }
+
+  const checkOnline = () => {
+    if (navigator.onLine) {
+      // TODO: get data from API
+      setLabelButton('Perbarui Aplikasi')
+      setDesc(`Wallet now enables Apple Cash customers to send and request money from their Apple Cash card
+        \nApple Podcasts includes a new setting to limit episodes stored on your iPhone and automatically delete older ones
+        \nFixes an issue where home automations, triggered by people arriving or leaving, may fail
+        \nFixes an issue that may cause iPhone SE (3rd gen) to unexpectedly shutdown`)
+      return
+    } else {
+      setLabelButton('Perbarui Aplikasi')
+      setDesc('Hak Cipta © 2021 Kemendikbudristek')
+    }
+  }
+
+  useEffect(() => {
+    checkOnline()
+  }, [])
+
   return (
     <PageLayout>
       <div className="flex w-[980px] mt-[45px] mx-auto border-b pb-14">
@@ -29,7 +52,7 @@ const PerbaruiAplikasi: FC = () => {
               Versi {APP_VERSION}{' '}
             </div>
             <div className="text-gray-50 text-sm">
-              Hak Cipta &copy; 2021 Kemendikbudristek
+              <ReactMarkdown>{desc}</ReactMarkdown>
             </div>
             <Button
               className="my-3"
@@ -38,7 +61,7 @@ const PerbaruiAplikasi: FC = () => {
               size="sm"
               onClick={handlePeriksaUpdate}
             >
-              Periksa Versi Terbaru
+              {labelButton}
             </Button>
             <div className="text-blue-800 text-sm">
               “Periksa Versi Terbaru” membutuhkan koneksi internet
