@@ -12,7 +12,10 @@ import InputSearchComponent from 'renderer/components/Form/InputSearchComponent'
 import InputComponent from 'renderer/components/Form/InputComponent'
 
 import { FormTambahPembelanjaanData } from 'renderer/types/forms/TataUsahaType'
-import { GetLastTransactionDateRequest } from 'global/types/TataUsaha'
+import {
+  GetLastTransactionDateRequest,
+  InformasiToko,
+} from 'global/types/TataUsaha'
 
 import syncToIpcMain from 'renderer/configs/ipc'
 
@@ -31,7 +34,7 @@ const FormTambahPembelanjaanView: FC = () => {
   const [noStore, setNoStore] = useState(false)
   const [noNpwp, setNoNpwp] = useState(false)
   const [openModalConfirmNoStore, setOpenModalConfirmNoStore] = useState(false)
-
+  const [listToko, setListToko] = useState([])
   const formMethods = useForm<FormTambahPembelanjaanData>({
     mode: 'onSubmit',
     reValidateMode: 'onBlur',
@@ -39,6 +42,7 @@ const FormTambahPembelanjaanView: FC = () => {
 
   const {
     register,
+    setValue,
     formState: { errors },
   } = formMethods
 
@@ -63,12 +67,46 @@ const FormTambahPembelanjaanView: FC = () => {
     setOpenModalConfirmNoStore(false)
   }
 
+  const handleClick = (data: {
+    id: string | number
+    name: string
+    value: string
+    defaultValue: string
+  }) => {
+    if (data.name === 'store_name') {
+      if (data.id != null) {
+        setValue(data?.name, data?.value, { shouldDirty: true })
+        const detailToko = syncToIpcMain(
+          IPC_TATA_USAHA.getInformasiToko,
+          data.id
+        )
+        if (detailToko.value) {
+          const toko = detailToko.value as InformasiToko
+          setValue('store_address', toko.alamat, { shouldDirty: true })
+          setValue('store_telephone', toko.telpon, { shouldDirty: true })
+          if (toko.npwp != null && toko.npwp.charAt(0) !== ' ') {
+            setValue('store_npwp', toko.npwp, { shouldDirty: true })
+          }
+        }
+      }
+    }
+  }
+
+  const handleChangeNpwp = () => {
+    setValue('store_npwp', '', { shouldDirty: true })
+    setNoNpwp(!noNpwp)
+  }
+
   useEffect(() => {
     const request: GetLastTransactionDateRequest = {
       idAnggaran: q_id_anggaran,
       idPeriode: parseInt(q_id_periode),
     }
     const result = syncToIpcMain(IPC_TATA_USAHA.getLastTransactionDate, request)
+    const resultListToko = syncToIpcMain(IPC_TATA_USAHA.getListToko)
+    if (resultListToko?.value) {
+      setListToko(resultListToko.value)
+    }
     setTanggalPelunasan(new Date(result.value))
   }, [])
 
@@ -134,11 +172,10 @@ const FormTambahPembelanjaanView: FC = () => {
                   errors={errors}
                   register={register}
                   required={true}
+                  headers={[{ key: 'value', show: true, width: '100%' }]}
                   defaultValue=""
-                  onClick={() => {
-                    //handle
-                  }}
-                  dataOptions={[]}
+                  onClick={handleClick}
+                  dataOptions={listToko}
                 />
               </div>
               <div className="pb-5">
@@ -177,7 +214,7 @@ const FormTambahPembelanjaanView: FC = () => {
               </div>
               <Checkbox
                 labelPosition="center"
-                onChange={() => setNoNpwp(!noNpwp)}
+                onChange={handleChangeNpwp}
                 checked={noNpwp}
               >
                 Toko/badan usaha ini tidak memiliki NPWP

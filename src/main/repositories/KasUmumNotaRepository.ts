@@ -1,5 +1,5 @@
+import { Option } from 'global/types/Common'
 import { KasUmumNota } from 'main/models/KasUmumNota'
-import { NamaToko } from 'main/types/TataUsaha'
 import { Connection, Repository } from 'typeorm'
 
 export class KasUmumNotaRepository {
@@ -18,10 +18,10 @@ export class KasUmumNotaRepository {
     )
   }
 
-  async GetListToko(): Promise<NamaToko[]> {
+  async GetListToko(): Promise<Option[]> {
     return await this.repo
       .createQueryBuilder()
-      .select('nama_toko AS namaToko')
+      .select(['nama_toko AS id', 'nama_toko AS value'])
       .distinct(true)
       .where('soft_delete = 0')
       .orderBy('nama_toko')

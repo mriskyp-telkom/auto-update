@@ -1,4 +1,5 @@
 import { STATUS_BKU_PERBULAN, STATUS_BKU_PERTAHUN } from 'global/constants'
+import { Option } from 'global/types/Common'
 import {
   InformasiToko,
   Kegiatan,
@@ -498,10 +499,10 @@ test('GetListToko', async () => {
 
   const res = await tataUsahaService.GetListToko()
   expect(res.isOk()).toBe(true)
-  const list = res.unwrapOr(Array<string>())
+  const list = res.unwrapOr(Array<Option>())
   expect(list.length).toBe(5)
-  expect(list[0]).toBe('ADARA MAKMUR')
-  expect(list[1]).toBe('Berkah Santosa')
+  expect(list[0].id).toBe('ADARA MAKMUR')
+  expect(list[1].id).toBe('Berkah Santosa')
 })
 
 test('GetKegiatanByPeriode', async () => {
