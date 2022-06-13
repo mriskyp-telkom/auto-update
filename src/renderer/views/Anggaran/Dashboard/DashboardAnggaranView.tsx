@@ -9,6 +9,9 @@ import { KKCardDashboardType } from 'renderer/types/AnggaranType'
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from '@wartek-id/tabs'
 import { ID_SUMBER_DANA } from 'renderer/constants/anggaran'
 import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
+import { Link } from 'react-router-dom'
+import { PAGE_PERBARUI_APLIKASI } from 'renderer/constants/routes'
+import NotificationComponent from 'renderer/components/NotificationComponent'
 
 const ipcRenderer = window.require('electron').ipcRenderer
 
@@ -41,8 +44,15 @@ const DashboardAnggaranView: FC = () => {
 
   return (
     <PageLayout>
-      <div className="flex w-[980px] bg-white rounded-[10px] mt-[45px] mx-auto">
-        <Tabs className="w-full">
+      <div className="flex flex-col w-[980px] mt-[45px] mx-auto">
+        <NotificationComponent>
+          Versi terbaru untuk ARKAS 4.1 sudah tersedia. Silahkan perbarui di
+          sini{` `}
+          <Link className="underline text-blue-600" to={PAGE_PERBARUI_APLIKASI}>
+            Perbarui Arkas
+          </Link>
+        </NotificationComponent>
+        <Tabs className="w-full bg-white rounded-[10px]">
           <div className="shadow pt-[14px]">
             <TabList style={{ marginLeft: 0 }}>
               <Tab>BOS Reguler</Tab>
