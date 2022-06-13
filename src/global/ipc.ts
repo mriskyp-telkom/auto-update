@@ -82,4 +82,5 @@ export const IPC_TATA_USAHA = {
   getListToko: `${TATA_USAHA}:getListToko`,
   getKegiatanByPeriode: `${TATA_USAHA}:getKegiatanByPeriode`,
   getRekeningBelanjaByPeriode: `${TATA_USAHA}:getRekeningBelanjaByPeriode`,
+  getUraianByKegiatan: `${TATA_USAHA}:getUraianByKegiatan`,
 }

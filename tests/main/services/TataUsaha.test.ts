@@ -14,6 +14,8 @@ import {
   GetLastTransactionDateRequest,
   GetRekeningBelanjaByPeriodeRequest,
   RekeningBelanja,
+  GetUraianByKegiatanRequest,
+  UraianBelanja,
 } from 'global/types/TataUsaha'
 
 import { AktivasiBku } from 'main/models/AktivasiBku'
@@ -536,6 +538,8 @@ test('GetRekeningBelanjaByPeriode', async () => {
   }
 
   const res = await tataUsahaService.GetRekeningBelanjaByPeriode(request)
+  expect(res.isOk()).toBe(true)
+
   const list = res.unwrapOr(Array<RekeningBelanja>())
   expect(list[0].idPeriode).toBe(92)
   expect(list[0].kode).toBe('5.1.02.01.01.0055')
@@ -550,4 +554,26 @@ test('GetRekeningBelanjaByPeriode', async () => {
   expect(list[1].rekeningBelanja).toBe(
     'Honorarium Narasumber atau Pembahas, Moderator, Pembawa Acara, dan Panitia'
   )
+})
+
+test('GetUraianByKegiatan', async () => {
+  const conn = getConnection()
+  const tataUsahaService = new TataUsahaService(conn)
+  const request = <GetUraianByKegiatanRequest>{
+    idAnggaran: 'apQwiAb-9EWxv74iwMY6aQ',
+    idPeriode: 92,
+    idKegiatan: 'rBdJhBgAdU2dU2DF6JFfhA',
+    kode: '5.1.02.02.01.0003',
+  }
+
+  const res = await tataUsahaService.GetUraianByKegiatan(request)
+  expect(res.isOk()).toBe(true)
+
+  const list = res.unwrapOr(Array<UraianBelanja>())
+  expect(list[0].uraian).toBe(
+    'Belanja jasa nara sumber Workshop Peningkatan Kapasitas Guru'
+  )
+  expect(list[0].jumlah).toBe(16)
+  expect(list[0].hargaSatuan).toBe(200000)
+  expect(list[0].satuan).toBe('Jam Pelajaran')
 })

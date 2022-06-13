@@ -108,10 +108,25 @@ export interface GetRekeningBelanjaByPeriodeRequest extends CommonRequest {
   idKegiatan: string
 }
 
+export interface GetUraianByKegiatanRequest extends CommonRequest {
+  idKegiatan: string
+  kode: string
+}
+
 export interface RekeningBelanja {
   idAnggaran: string
   idPeriode: number
   kode: string
   jenisBelanja: string
   rekeningBelanja: string
+}
+
+export interface UraianBelanja {
+  jenisBelanja: string
+  rekeningBelanja: string
+  uraian: string
+  jumlah: number
+  satuan: string
+  hargaSatuan: number
+  total: number
 }
