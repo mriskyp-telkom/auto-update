@@ -232,6 +232,7 @@ export class KasUmumRepository {
     and ku.id_ref_bku in (3,4,5,23,24,25,15,35) 
     and strftime('%m',tanggal_transaksi) = :bulan
     and ku.soft_delete = 0
+    order by ku.tanggal_transaksi asc
     `
 
     return await this.rawQuery<Array<TarikTunaiBKU>>(query, {
