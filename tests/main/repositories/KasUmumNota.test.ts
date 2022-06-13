@@ -1,6 +1,6 @@
+import { Option } from 'global/types/Common'
 import { KasUmumNota } from 'main/models/KasUmumNota'
 import { KasUmumNotaRepository } from 'main/repositories/KasUmumNotaRepository'
-import { NamaToko } from 'main/types/TataUsaha'
 import { createConnection, getConnection } from 'typeorm'
 import { cfg, Migrate } from '../migration'
 
@@ -42,8 +42,8 @@ test('GetTokoByName', async () => {
 })
 
 test('GetListToko', async () => {
-  const res: NamaToko[] = await kasUmumNotaRepo.GetListToko()
+  const res: Option[] = await kasUmumNotaRepo.GetListToko()
   expect(res.length).toBe(5)
-  expect(res[0].namaToko).toBe('ADARA MAKMUR')
-  expect(res[1].namaToko).toBe('Berkah Santosa')
+  expect(res[0].id).toBe('ADARA MAKMUR')
+  expect(res[1].id).toBe('Berkah Santosa')
 })
