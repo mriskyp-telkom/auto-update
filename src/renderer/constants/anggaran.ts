@@ -148,6 +148,20 @@ export const ALERT_CEK_STATUS = {
   },
 }
 
+export const CETAK_RKAS_OPTIONS = [
+  { id: 1, key: 'rapbs-all', label: 'Rincian (Tahunan)' },
+  { id: 2, key: 'rapbs-tahap', label: 'Rincian (Tahapan)' },
+  { id: 3, key: 'rapbs-tri', label: 'Rincian (Triwulan)' },
+  { id: 4, key: 'rka-unit', label: 'Lembar (Tahapan)' },
+  { id: 5, key: 'rka-unit-22', label: 'Lembar (Unit 2.2)' },
+  { id: 6, key: 'rka-unit-221', label: 'Lembar (Unit 2.2.1)' },
+  { id: 7, key: 'apbs-all', label: 'Rincian RKAS (Tahapan)' },
+  { id: 8, key: 'apbs-tri', label: 'Rincian RKAS (Triwulan)' },
+  { id: 9, key: 'apbs-tahap', label: 'Lembar RKAS (Tahapan)' },
+  { id: 10, key: 'dpa-unit-22', label: 'Lembar RKAS (Unit 2.2)' },
+  { id: 11, key: 'dpa-unit-221', label: 'Lembar RKAS (Unit 2.2.1)' },
+]
+
 export const ID_SUMBER_DANA = {
   BOS_REGULER: 1,
   BOS_DAERAH: 3,
