@@ -30,28 +30,31 @@ const CetakKertasKerjaView = () => {
     navigate('/anggaran')
   }
 
-  const handleChange = (value: string) => {
-    value
-    setIsLoading(true)
-    isLoading
+  const handleChange = (key: string) => {
+    const idAnggaran = decodeURIComponent(q_id_anggaran)
+    if ((idAnggaran !== undefined || idAnggaran !== '') && tahun !== null) {
+      setIsLoading(true)
+      isLoading
 
-    const filename = 'rapbs-tri-2022-output'
-    const request = {
-      template: 'rapbs-tri-2022',
-      filename: filename,
-      listIdAnggaran: ['nee1i6EqD0S04MZqg-GhtQ'],
-    } as GetPrintPDFPathRequest
+      const templateName = `${key}-${tahun}`
+      const filename = templateName + '-output'
+      const request = {
+        template: templateName,
+        filename: filename,
+        listIdAnggaran: [decodeURIComponent(q_id_anggaran)],
+      } as GetPrintPDFPathRequest
 
-    const printPath = ipc.invoke('utils:getPrintPDFPathAsync', request)
-    printPath
-      .then((res: any) => {
-        if (!res?.error) {
-          setPdfPath(res.value)
-        }
-      })
-      .finally(() => {
-        setIsLoading(false)
-      })
+      const printPath = ipc.invoke('utils:getPrintPDFPathAsync', request)
+      printPath
+        .then((res: any) => {
+          if (!res?.error) {
+            setPdfPath(res.value)
+          }
+        })
+        .finally(() => {
+          setIsLoading(false)
+        })
+    }
   }
 
   useEffect(() => {
