@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import fs from 'fs'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { Icon } from '@wartek-id/icon'
@@ -48,7 +49,14 @@ const CetakKertasKerjaView = () => {
       printPath
         .then((res: any) => {
           if (!res?.error) {
-            setPdfPath(res.value)
+            try {
+              const stat = fs.statSync(res.value)
+              if (stat.size > 10100) {
+                setPdfPath(res.value)
+              }
+            } catch (error) {
+              error
+            }
           }
         })
         .finally(() => {
