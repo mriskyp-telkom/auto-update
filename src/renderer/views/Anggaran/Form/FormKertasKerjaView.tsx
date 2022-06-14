@@ -599,7 +599,6 @@ const FormKertasKerjaView: FC = () => {
                 selected={field.bulan}
                 width={88}
                 border={false}
-                register={register}
                 handleSelect={handleSelect}
                 isDisabled={getMonthOptions().length === 0}
               />
