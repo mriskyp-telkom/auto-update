@@ -178,7 +178,6 @@ const FormTambahPembelanjaanView: FC = () => {
                   register={register}
                   required={true}
                   headers={[{ key: 'value', show: true, width: '100%' }]}
-                  defaultValue=""
                   onClick={handleClick}
                   dataOptions={listToko}
                   headerShow={false}
