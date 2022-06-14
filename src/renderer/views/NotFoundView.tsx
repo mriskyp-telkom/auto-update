@@ -7,7 +7,7 @@ const NotFoundView: FC = () => {
   return (
     <div>
       404 Page Not Found
-      <Link to="/">
+      <Link to="/anggaran">
         <Button color="blue" size="md" variant="solid">
           Back to dashboard
         </Button>

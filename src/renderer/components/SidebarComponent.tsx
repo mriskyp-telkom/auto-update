@@ -48,6 +48,7 @@ const MenusBottom = () => {
       icon: 'update',
       iconType: 'default',
       label: 'Perbarui Aplikasi',
+      badge: true,
     },
   ]
 }
@@ -88,20 +89,25 @@ const SidebarComponent: FC = () => {
                       'flex items-center px-[12px] py-[8px] hover:font-semibold'
                     )}
                   >
-                    <Icon
-                      as="i"
-                      color="default"
-                      fontSize="default"
-                      style={{ color: '#ffffff' }}
-                      className={clsx(
-                        menu.iconType === 'outlined'
-                          ? 'material-icons-outlined'
-                          : '',
-                        'mr-[15px]'
+                    <div className="relative">
+                      <Icon
+                        as="i"
+                        color="default"
+                        fontSize="default"
+                        style={{ color: '#ffffff' }}
+                        className={clsx(
+                          menu.iconType === 'outlined'
+                            ? 'material-icons-outlined'
+                            : '',
+                          'mr-[15px]'
+                        )}
+                      >
+                        {menu.icon}
+                      </Icon>
+                      {menu.badge && (
+                        <div className="absolute top-0 right-3 w-3 h-3 bg-[#E02D38] rounded-full" />
                       )}
-                    >
-                      {menu.icon}
-                    </Icon>
+                    </div>
                     {menu.label}
                   </div>
                 )}

@@ -43,6 +43,7 @@ const FormTambahPembelanjaanView: FC = () => {
   const {
     register,
     setValue,
+    handleSubmit,
     formState: { errors },
   } = formMethods
 
@@ -97,6 +98,10 @@ const FormTambahPembelanjaanView: FC = () => {
     setNoNpwp(!noNpwp)
   }
 
+  const onSubmit = () => {
+    //handlesubmit
+  }
+
   useEffect(() => {
     const request: GetLastTransactionDateRequest = {
       idAnggaran: q_id_anggaran,
@@ -121,7 +126,7 @@ const FormTambahPembelanjaanView: FC = () => {
           btnAlertSubmitText="Kembali Isi Penerimaan Dana"
           btnSubmitText="Konfirmasi"
           onCancel={closeModal}
-          onSubmit={null}
+          onSubmit={handleSubmit(onSubmit)}
           steps={formSteps}
         >
           <div>
@@ -132,10 +137,10 @@ const FormTambahPembelanjaanView: FC = () => {
                 </div>
                 <SelectComponent
                   name="transaction_type"
+                  placeholder="Pilih tunai/nontunai"
                   options={transactionTypeList}
-                  register={register}
-                  selected={transactionTypeList[0]}
                   handleSelect={handleSelectType}
+                  required={true}
                 />
               </div>
               <div className="flex-grow">
@@ -173,9 +178,9 @@ const FormTambahPembelanjaanView: FC = () => {
                   register={register}
                   required={true}
                   headers={[{ key: 'value', show: true, width: '100%' }]}
-                  defaultValue=""
                   onClick={handleClick}
                   dataOptions={listToko}
+                  headerShow={false}
                 />
               </div>
               <div className="pb-5">
