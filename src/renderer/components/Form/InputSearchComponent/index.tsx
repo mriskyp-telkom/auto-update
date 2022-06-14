@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect, ChangeEvent, useRef } from 'react'
-import { FieldErrors, RegisterOptions } from 'react-hook-form'
+import { FieldErrors, RegisterOptions, useFormContext } from 'react-hook-form'
 
 import { InputGroup, InputLeftAddon, Input } from '@wartek-id/input'
 import { Icon } from '@wartek-id/icon'
@@ -20,7 +20,6 @@ interface InputSearchProps {
   isDisabled?: boolean
   name: string
   customNotFound?: (query: string) => React.ReactNode
-  defaultValue: string
   placeholder: string
   errors: FieldErrors
   register: (arg0: string, arg1: RegisterOptions) => void
@@ -33,6 +32,7 @@ const InputSearchComponent: FC<InputSearchProps> = (
   const ref = useRef(null)
 
   const [open, setOpen] = useState(false)
+  const [selected, setSelected] = useState('')
   const [query, setQuery] = useState('')
   const [data, setData] = useState([])
 
@@ -42,9 +42,12 @@ const InputSearchComponent: FC<InputSearchProps> = (
     placeholder,
     isDisabled,
     errors,
-    defaultValue,
     register,
+    headerShow = true,
+    height = 100,
   } = props
+
+  const { setValue, setFocus, clearErrors } = useFormContext()
 
   let validation = {}
 
@@ -92,14 +95,14 @@ const InputSearchComponent: FC<InputSearchProps> = (
   const handleClickOutside = (event: any) => {
     if (open && ref.current && !ref.current.contains(event.target)) {
       const inputValue = ref.current.children[0].children[1].children[0].value
-      handleSendData('', name, inputValue, defaultValue)
+      handleSendData('', name, inputValue)
     }
   }
 
   const handleClick = (event: any) => {
     const id = event.target.dataset.id
     const value = event.target.dataset.value
-    handleSendData(id, name, value, defaultValue)
+    handleSendData(id, name, value)
   }
 
   const getValueDisplay = (data: any) => {
@@ -107,25 +110,37 @@ const InputSearchComponent: FC<InputSearchProps> = (
     return data[fieldShow]
   }
 
-  const handleSendData = (
-    id: string | number,
-    name: string,
-    value: string,
-    defaultValue: string
-  ) => {
+  const handleSendData = (id: string | number, name: string, value: string) => {
     if (id === '') {
+      if (value !== '') {
+        setValue(name, selected, { shouldDirty: true })
+        setFocus(name)
+      }
+
+      if (value === '') {
+        setValue(name, '', { shouldDirty: true })
+        setSelected('')
+        setFocus(name)
+      }
+
       setQuery('')
     } else {
+      clearErrors(name)
+      setSelected(value)
+      setValue(name, value, { shouldDirty: true })
       setQuery(value)
     }
-    const sendData = {
-      id: id,
-      name: name,
-      value: value,
-      defaultValue: defaultValue,
-    }
+
     setOpen(false)
-    props.onClick(sendData)
+
+    if (id !== '') {
+      const sendData = {
+        id: id,
+        name: name,
+        value: value,
+      }
+      props.onClick(sendData)
+    }
   }
 
   const getDropdownView = () => {
@@ -142,7 +157,7 @@ const InputSearchComponent: FC<InputSearchProps> = (
         style={{ width: `${props.width - 8}px` }}
       >
         <thead className="text-[14px] font-semibold bg-gray-5">
-          {props.headerShow && (
+          {headerShow && (
             <tr className={styles.headerTable} style={{ display: 'flex' }}>
               {props.headers?.map((header: any) => (
                 <th key={header.key} style={{ width: header.width }}>
@@ -154,7 +169,7 @@ const InputSearchComponent: FC<InputSearchProps> = (
         </thead>
         <tbody
           className="text-[14px] font-normal"
-          style={{ height: `${props.height}px` }}
+          style={{ height: `${height}px` }}
         >
           {data?.map((data: any, indexData) => (
             <tr
@@ -225,11 +240,6 @@ const InputSearchComponent: FC<InputSearchProps> = (
       {open && getDropdownView()}
     </div>
   )
-}
-
-InputSearchComponent.defaultProps = {
-  headerShow: true,
-  height: 100,
 }
 
 export default InputSearchComponent
