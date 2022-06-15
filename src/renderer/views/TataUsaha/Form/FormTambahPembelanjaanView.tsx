@@ -72,11 +72,19 @@ const FormTambahPembelanjaanView: FC = () => {
     id: string | number
     name: string
     value: string
-    defaultValue: string
   }) => {
     if (data.name === 'store_name') {
-      if (data.id != null) {
-        setValue(data?.name, data?.value, { shouldDirty: true })
+      if (data.id === '') {
+        // tambah baru
+        setListToko([
+          ...listToko,
+          {
+            id: data.value,
+            value: data.value,
+          },
+        ])
+      }
+      if (data.id !== '') {
         const detailToko = syncToIpcMain(
           IPC_TATA_USAHA.getInformasiToko,
           data.id
@@ -173,6 +181,7 @@ const FormTambahPembelanjaanView: FC = () => {
                 <InputSearchComponent
                   name="store_name"
                   width={900}
+                  maxHeight={250}
                   placeholder="Nama toko tempat Anda membeli barang/jasa"
                   errors={errors}
                   register={register}
@@ -181,6 +190,7 @@ const FormTambahPembelanjaanView: FC = () => {
                   onClick={handleClick}
                   dataOptions={listToko}
                   headerShow={false}
+                  enableAdd={true}
                 />
               </div>
               <div className="pb-5">
