@@ -8,6 +8,8 @@ import { Icon } from '@wartek-id/icon'
 
 import { ERROR_REQUIRED } from 'renderer/constants/errorForm'
 
+import { amountFormatting } from 'renderer/utils/number-formatting'
+
 import clsx from 'clsx'
 
 interface SelectProps {
@@ -63,6 +65,34 @@ const SelectComponent: FC<SelectProps> = (props: SelectProps) => {
     props.handleSelect(value)
   }
 
+  const getOptions = (isOptions: boolean, option: any) => {
+    const isObject = selectedValue !== null && typeof option === 'object'
+    if (isObject) {
+      return (
+        <div className="w-full flex justify-between items-center">
+          <span>{option.label}</span>
+          <span
+            className={clsx(
+              option.amount > 0 ? 'text-blue-700' : 'text-red-600',
+              'text-tiny font-semibold'
+            )}
+          >
+            {option.amount <= 0 && isOptions
+              ? option.errorInfo.replace(
+                  '$amount',
+                  amountFormatting(option.amount)
+                )
+              : option.additionalInfo.replace(
+                  '$amount',
+                  amountFormatting(option.amount)
+                )}
+          </span>
+        </div>
+      )
+    }
+    return <span className="capitalize-first">{option || placeholder}</span>
+  }
+
   useEffect(() => {
     setSelectedValue(props.selected)
   }, [])
@@ -94,9 +124,7 @@ const SelectComponent: FC<SelectProps> = (props: SelectProps) => {
           }}
         >
           <span className="w-full flex justify-between items-center">
-            <span className="capitalize-first">
-              {selectedValue || placeholder}
-            </span>
+            {getOptions(false, selectedValue)}
             {!props.isDisabled && (
               <Icon as="i" color="default" fontSize="default">
                 arrow_drop_down
@@ -123,12 +151,12 @@ const SelectComponent: FC<SelectProps> = (props: SelectProps) => {
               value={option}
               className={({ selected }) =>
                 clsx(
-                  'px-3 py-3 hover:bg-gray-5 cursor-pointer capitalize-first',
+                  'px-3 py-3 hover:bg-gray-5 cursor-pointer',
                   selected && 'bg-gray-5'
                 )
               }
             >
-              {option}
+              {getOptions(true, option)}
             </Listbox.Option>
           ))}
         </Listbox.Options>

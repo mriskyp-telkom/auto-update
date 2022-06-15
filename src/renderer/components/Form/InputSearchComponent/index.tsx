@@ -11,19 +11,20 @@ import styles from './index.module.css'
 import clsx from 'clsx'
 
 interface InputSearchProps {
-  headers?: Array<any>
   dataOptions?: Array<any>
+  enableAdd?: boolean
+  errors: FieldErrors
+  headers?: Array<any>
   headerShow?: boolean
-  width: number
-  height?: number
-  required: boolean
+  maxHeight?: number
   isDisabled?: boolean
   name: string
-  customNotFound?: (query: string) => React.ReactNode
   placeholder: string
-  errors: FieldErrors
-  register: (arg0: string, arg1: RegisterOptions) => void
+  required: boolean
+  width: number
+  customNotFound?: (query: string) => React.ReactNode
   onClick: (e: any) => void
+  register: (arg0: string, arg1: RegisterOptions) => void
 }
 
 const InputSearchComponent: FC<InputSearchProps> = (
@@ -35,16 +36,18 @@ const InputSearchComponent: FC<InputSearchProps> = (
   const [selected, setSelected] = useState('')
   const [query, setQuery] = useState('')
   const [data, setData] = useState([])
+  const [isMatch, setIsMatch] = useState(false)
 
   const {
-    required,
+    enableAdd = false,
+    errors,
+    headerShow = true,
+    maxHeight = 100,
+    isDisabled,
     name,
     placeholder,
-    isDisabled,
-    errors,
+    required,
     register,
-    headerShow = true,
-    height = 100,
   } = props
 
   const { setValue, setFocus, clearErrors } = useFormContext()
@@ -71,11 +74,15 @@ const InputSearchComponent: FC<InputSearchProps> = (
 
   const filterOptions = (query: string) => {
     const lowercasedFilter = query.toLowerCase()
+    setIsMatch(false)
     setData(
       props.dataOptions.filter((item: any) => {
-        const res = Object.keys(item).some((key) =>
-          `${item[key]}`.toLowerCase().includes(lowercasedFilter)
-        )
+        const res = Object.keys(item).some((key) => {
+          if (`${item[key]}`.toLowerCase() === lowercasedFilter) {
+            setIsMatch(true)
+          }
+          return `${item[key]}`.toLowerCase().includes(lowercasedFilter)
+        })
         return res
       })
     )
@@ -94,15 +101,19 @@ const InputSearchComponent: FC<InputSearchProps> = (
 
   const handleClickOutside = (event: any) => {
     if (open && ref.current && !ref.current.contains(event.target)) {
-      const inputValue = ref.current.children[0].children[1].children[0].value
-      handleSendData('', name, inputValue)
+      handleSendData('clickOutside', '', '')
     }
   }
 
   const handleClick = (event: any) => {
     const id = event.target.dataset.id
     const value = event.target.dataset.value
-    handleSendData(id, name, value)
+    handleSendData('clickRow', id, value)
+  }
+
+  const handleClickAdd = () => {
+    setIsMatch(true)
+    handleSendData('clickAdd', '', query)
   }
 
   const getValueDisplay = (data: any) => {
@@ -110,21 +121,25 @@ const InputSearchComponent: FC<InputSearchProps> = (
     return data[fieldShow]
   }
 
-  const handleSendData = (id: string | number, name: string, value: string) => {
-    if (id === '') {
-      if (value !== '') {
+  const handleSendData = (
+    event: 'clickOutside' | 'clickRow' | 'clickAdd',
+    id: string | number,
+    value: string
+  ) => {
+    let sendData = false
+    if (event === 'clickOutside') {
+      if (query !== '') {
         setValue(name, selected, { shouldDirty: true })
-        setFocus(name)
       }
-
-      if (value === '') {
+      if (query === '') {
         setValue(name, '', { shouldDirty: true })
         setSelected('')
-        setFocus(name)
       }
-
+      setFocus(name)
       setQuery('')
-    } else {
+    }
+    if (event === 'clickRow' || event === 'clickAdd') {
+      sendData = true
       clearErrors(name)
       setSelected(value)
       setValue(name, value, { shouldDirty: true })
@@ -133,7 +148,7 @@ const InputSearchComponent: FC<InputSearchProps> = (
 
     setOpen(false)
 
-    if (id !== '') {
+    if (sendData) {
       const sendData = {
         id: id,
         name: name,
@@ -145,7 +160,11 @@ const InputSearchComponent: FC<InputSearchProps> = (
 
   const getDropdownView = () => {
     if (data.length === 0 && props.customNotFound !== undefined) {
-      return <div className="absolute z-10">{props.customNotFound(query)}</div>
+      return (
+        <div className={clsx(styles.dropdownOptions, 'absolute z-10')}>
+          {props.customNotFound(query)}
+        </div>
+      )
     }
 
     return (
@@ -168,8 +187,8 @@ const InputSearchComponent: FC<InputSearchProps> = (
           )}
         </thead>
         <tbody
-          className="text-[14px] font-normal"
-          style={{ height: `${height}px` }}
+          className="text-base font-normal"
+          style={{ maxHeight: `${maxHeight}px` }}
         >
           {data?.map((data: any, indexData) => (
             <tr
@@ -192,6 +211,15 @@ const InputSearchComponent: FC<InputSearchProps> = (
             </tr>
           ))}
         </tbody>
+        {!isMatch && query.length > 0 && enableAdd && (
+          <tfoot className="text-base font-normal">
+            <tr onClick={handleClickAdd}>
+              <td>
+                + Tambah <b>“{query}”</b>
+              </td>
+            </tr>
+          </tfoot>
+        )}
       </table>
     )
   }

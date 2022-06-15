@@ -648,7 +648,7 @@ const FormKertasKerjaView: FC = () => {
               </div>
               <InputSearchComponent
                 width={888}
-                height={250}
+                maxHeight={250}
                 name="kegiatan"
                 placeholder="Apa kegiatan yang ingin Anda anggarkan?"
                 errors={errors}
@@ -665,7 +665,7 @@ const FormKertasKerjaView: FC = () => {
               </div>
               <InputSearchComponent
                 width={888}
-                height={250}
+                maxHeight={250}
                 name="rekening_belanja"
                 placeholder="Apa jenis rekening belanja yang ingin Anda anggarkan untuk kegiatan tersebut?"
                 errors={errors}
@@ -685,12 +685,12 @@ const FormKertasKerjaView: FC = () => {
                   </div>
                   <InputUraian
                     width={543}
-                    height={150}
+                    maxHeight={150}
                     name="uraian"
                     placeholder="Apa detail barang atau jasanya? (mis. papan tulis, honor narasumber)"
                     customNotFound={(query: string) => {
                       return (
-                        <div className="p-4 bg-gray-5 shadow-inputSearch">
+                        <div className="p-4 bg-gray-5">
                           “{query}” tidak ditemukan. Hubungi dinas setempat
                           untuk menambah barang/jasa ini ke daftar kode barang.
                         </div>

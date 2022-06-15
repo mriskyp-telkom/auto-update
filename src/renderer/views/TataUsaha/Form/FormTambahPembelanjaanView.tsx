@@ -23,7 +23,21 @@ import { IPC_TATA_USAHA } from 'global/ipc'
 
 import clsx from 'clsx'
 
-const transactionTypeList = ['Tunai', 'Non Tunai']
+const transactionTypeList = [
+  {
+    label: 'Tunai',
+    amount: 0,
+    additionalInfo: 'Saldo Tunai : $amount',
+    errorInfo: 'Saldo tunai $amount. Silakan tarik tunai terlebih dulu',
+  },
+  {
+    label: 'Non Tunai',
+    amount: 9000000,
+    additionalInfo: 'Saldo Non Tunai : $amount',
+    errorInfo: 'Saldo non tunai $amount. Silakan setor tunai terlebih dulu',
+  },
+]
+
 const formSteps = ['Bukti Belanja', 'Detail Barang/Jasa', 'Perhitungan Pajak']
 
 const FormTambahPembelanjaanView: FC = () => {
@@ -72,11 +86,19 @@ const FormTambahPembelanjaanView: FC = () => {
     id: string | number
     name: string
     value: string
-    defaultValue: string
   }) => {
     if (data.name === 'store_name') {
-      if (data.id != null) {
-        setValue(data?.name, data?.value, { shouldDirty: true })
+      if (data.id === '') {
+        // tambah baru
+        setListToko([
+          ...listToko,
+          {
+            id: data.value,
+            value: data.value,
+          },
+        ])
+      }
+      if (data.id !== '') {
         const detailToko = syncToIpcMain(
           IPC_TATA_USAHA.getInformasiToko,
           data.id
@@ -173,6 +195,7 @@ const FormTambahPembelanjaanView: FC = () => {
                 <InputSearchComponent
                   name="store_name"
                   width={900}
+                  maxHeight={250}
                   placeholder="Nama toko tempat Anda membeli barang/jasa"
                   errors={errors}
                   register={register}
@@ -181,6 +204,7 @@ const FormTambahPembelanjaanView: FC = () => {
                   onClick={handleClick}
                   dataOptions={listToko}
                   headerShow={false}
+                  enableAdd={true}
                 />
               </div>
               <div className="pb-5">
