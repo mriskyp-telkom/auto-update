@@ -23,7 +23,21 @@ import { IPC_TATA_USAHA } from 'global/ipc'
 
 import clsx from 'clsx'
 
-const transactionTypeList = ['Tunai', 'Non Tunai']
+const transactionTypeList = [
+  {
+    label: 'Tunai',
+    amount: 0,
+    additionalInfo: 'Saldo Tunai : $amount',
+    errorInfo: 'Saldo tunai $amount. Silakan tarik tunai terlebih dulu',
+  },
+  {
+    label: 'Non Tunai',
+    amount: 9000000,
+    additionalInfo: 'Saldo Non Tunai : $amount',
+    errorInfo: 'Saldo non tunai $amount. Silakan setor tunai terlebih dulu',
+  },
+]
+
 const formSteps = ['Bukti Belanja', 'Detail Barang/Jasa', 'Perhitungan Pajak']
 
 const FormTambahPembelanjaanView: FC = () => {

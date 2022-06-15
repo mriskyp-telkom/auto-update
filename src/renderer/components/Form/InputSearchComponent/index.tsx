@@ -78,7 +78,7 @@ const InputSearchComponent: FC<InputSearchProps> = (
     setData(
       props.dataOptions.filter((item: any) => {
         const res = Object.keys(item).some((key) => {
-          if (item[key].toLowerCase() === lowercasedFilter) {
+          if (`${item[key]}`.toLowerCase() === lowercasedFilter) {
             setIsMatch(true)
           }
           return `${item[key]}`.toLowerCase().includes(lowercasedFilter)
