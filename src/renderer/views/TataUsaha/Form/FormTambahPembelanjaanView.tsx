@@ -54,12 +54,7 @@ const FormTambahPembelanjaanView: FC = () => {
     reValidateMode: 'onBlur',
   })
 
-  const {
-    register,
-    setValue,
-    handleSubmit,
-    formState: { errors },
-  } = formMethods
+  const { setValue, handleSubmit } = formMethods
 
   const closeModal = () => {
     navigate(-1)
@@ -197,8 +192,6 @@ const FormTambahPembelanjaanView: FC = () => {
                   width={900}
                   maxHeight={250}
                   placeholder="Nama toko tempat Anda membeli barang/jasa"
-                  errors={errors}
-                  register={register}
                   required={true}
                   headers={[{ key: 'value', show: true, width: '100%' }]}
                   onClick={handleClick}
