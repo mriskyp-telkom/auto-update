@@ -91,10 +91,7 @@ const DetailTataUsahaView: FC = () => {
               delete
             </Icon>
           </div>
-          <div
-            className="text-base font-semibold text-gray-600 mb-[57px]"
-            style={{ display: 'inline-block' }}
-          >
+          <div className="text-base font-semibold text-gray-600 mb-[57px] uppercase inline-block">
             Bos reguler {tahun}
           </div>
         </span>

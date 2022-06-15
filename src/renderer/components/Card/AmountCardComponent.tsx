@@ -9,10 +9,11 @@ interface AmountCardProps {
   amount: number
   width?: number
   class?: string
+  fill?: boolean
 }
 
 const AmountCardComponent: FC<AmountCardProps> = (props: AmountCardProps) => {
-  let borderColor = 'border-blue-700'
+  let borderColor = 'border-primary'
   let amountColor = 'text-blueCustom'
   if (props.type === 'disabled') {
     borderColor = 'border-gray-500'
@@ -27,7 +28,7 @@ const AmountCardComponent: FC<AmountCardProps> = (props: AmountCardProps) => {
     <div
       className={clsx(
         props.class,
-        borderColor,
+        props.fill ? 'bg-lightBlue' : borderColor,
         'flex justify-between items-center',
         'rounded border',
         'px-[14px] py-1'
