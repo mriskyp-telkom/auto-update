@@ -40,6 +40,7 @@ beforeEach(async () => {
     database: ':memory:',
     dropSchema: true,
     entities: [
+      Anggaran,
       AktivasiBku,
       AppConfig,
       KasUmum,
@@ -193,6 +194,17 @@ test('GetTotalPerluDianggarkanUlang', async () => {
   const idAnggaran = 'idAnggaran-1'
   const conn = getConnection()
   const tataUsahaService = new TataUsahaService(conn)
+
+  const seedAnggaran = new Anggaran({
+    idAnggaran: idAnggaran,
+    idRefSumberDana: 1,
+    sekolahId: 'sekolahid-1',
+    softDelete: 0,
+    createDate: now,
+    lastUpdate: now,
+  })
+
+  promises.push(conn.getRepository(Anggaran).insert([seedAnggaran]))
 
   const seedKasUmum = new KasUmum({
     idAnggaran: idAnggaran,

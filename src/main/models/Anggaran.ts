@@ -3,6 +3,11 @@ import { MstSekolah } from './MstSekolah'
 
 @Entity('anggaran')
 export class Anggaran extends BaseEntity {
+  public constructor(init?: Partial<Anggaran>) {
+    super()
+    Object.assign(this, init)
+  }
+
   @Column('varchar', {
     primary: true,
     name: 'id_anggaran',

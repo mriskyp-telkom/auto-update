@@ -144,38 +144,45 @@ export class KasUmumRepository {
         from 
           (
             select 
-              ku.id_rapbs_periode, 
+              r.id_anggaran,
+              r.id_barang, 
               0 as volume_rencana, 
               0 as total_rencana, 
-              ku.volume as volume_realisasi, 
-              ku.saldo as total_realisasi 
+              sum(ku.volume) as volume_realisasi, 
+              sum(ku.saldo) as total_realisasi 
             from 
               kas_umum ku 
               join rapbs_periode rp on rp.id_rapbs_periode = ku.id_rapbs_periode 
+              join rapbs r on r.id_rapbs = rp.id_rapbs 
+    				  join anggaran a on a.id_anggaran = r.id_anggaran
             where 
               ku.soft_delete = 0 
               and ku.id_anggaran = :idAnggaran 
               and ku.id_ref_bku in (4,24,15,35) 
               and rp.id_periode in (:...listIdPeriode)
               and rp.soft_delete = 0
+            group by r.id_barang
             UNION ALL 
             select 
-              rp.id_rapbs_periode, 
-              rp.volume as volume_rencana, 
-              rp.jumlah as total_rencana, 
+              a.id_anggaran,
+              r.id_barang, 
+              sum(rp.volume) as volume_rencana, 
+              sum(rp.jumlah) as total_rencana, 
               0 as volume_realisasi, 
               0 as total_realisasi 
             from 
               rapbs r 
-              join rapbs_periode rp on rp.id_rapbs = r.id_rapbs 
+              join rapbs_periode rp on rp.id_rapbs = r.id_rapbs
+              join anggaran a on a.id_anggaran = r.id_anggaran
             where 
               r.id_anggaran = :idAnggaran 
               and rp.id_periode in (:...listIdPeriode)
               and rp.soft_delete = 0 
               and r.soft_delete = 0 
+            group by r.id_barang
           ) a 
         group by 
-          id_rapbs_periode
+          id_anggaran, id_barang
       ) b;
     `
 
