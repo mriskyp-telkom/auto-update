@@ -1,5 +1,5 @@
 import React, { FC, useState, useRef, useEffect } from 'react'
-import { useFormContext } from 'react-hook-form'
+import { RegisterOptions, useFormContext } from 'react-hook-form'
 
 import { Listbox } from '@headlessui/react'
 
@@ -13,15 +13,16 @@ import { amountFormatting } from 'renderer/utils/number-formatting'
 import clsx from 'clsx'
 
 interface SelectProps {
-  name: string
-  width?: number
-  selected?: string
   border?: boolean
+  isDisabled?: boolean
+  name: string
   options: any
   placeholder?: string
-  handleSelect: (value: string) => void
-  isDisabled?: boolean
   required?: boolean
+  selected?: string
+  registerOption?: RegisterOptions
+  width?: number
+  handleSelect: (value: string) => void
 }
 
 const SelectComponent: FC<SelectProps> = (props: SelectProps) => {
@@ -47,7 +48,13 @@ const SelectComponent: FC<SelectProps> = (props: SelectProps) => {
     }
   }
 
-  let validation = {}
+  let validation = {
+    ...props.registerOption,
+    onChange: (e: any) => {
+      props.registerOption?.onChange(e)
+    },
+  }
+
   if (required) {
     validation = {
       ...validation,
@@ -55,11 +62,12 @@ const SelectComponent: FC<SelectProps> = (props: SelectProps) => {
       onChange: (e: any) => {
         const value = e.target.value
         clearErrorRequired(value)
+        props.registerOption?.onChange(e)
       },
     }
   }
 
-  const handleChange = (value: string) => {
+  const handleChange = (value: any) => {
     setSelectedValue(value)
     setValue(name, value, { shouldValidate: true })
     props.handleSelect(value)
@@ -67,7 +75,7 @@ const SelectComponent: FC<SelectProps> = (props: SelectProps) => {
 
   const getOptions = (isOptions: boolean, option: any) => {
     const isObject = selectedValue !== null && typeof option === 'object'
-    if (isObject) {
+    if (isObject && name === 'transaction_type') {
       return (
         <div className="w-full flex justify-between items-center">
           <span>{option.label}</span>
@@ -113,7 +121,8 @@ const SelectComponent: FC<SelectProps> = (props: SelectProps) => {
       >
         <Listbox.Button
           className={clsx(
-            border && 'rounded border border-solid py-3 px-4 text-form',
+            border &&
+              'rounded border border-solid py-3 px-4 text-form h-[46px] flex items-center',
             border && props.isDisabled
               ? 'bg-gray-10 border-gray-200 text-gray-500 cursor-not-allowed'
               : 'border-gray-500',

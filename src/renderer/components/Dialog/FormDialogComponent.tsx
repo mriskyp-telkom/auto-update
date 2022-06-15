@@ -53,6 +53,7 @@ const FormDialogComponent: FC<FormDialogProps> = (props: FormDialogProps) => {
       : props.btnSubmitText
 
   const {
+    handleSubmit,
     formState: { errors, isDirty },
   } = useFormContext()
 
@@ -178,7 +179,7 @@ const FormDialogComponent: FC<FormDialogProps> = (props: FormDialogProps) => {
                 variant="solid"
                 className="px-4 py-2"
                 disabled={props.isSubmitDisabled || btnFormDisabled()}
-                onClick={handleSubmitForm}
+                onClick={handleSubmit(handleSubmitForm)}
               >
                 {props.icon && (
                   <Icon

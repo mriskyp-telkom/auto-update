@@ -3,6 +3,8 @@ export const ERROR_NUMBER_ONLY = 'Isi dengan format angka'
 export const ERROR_ALPHABET_ONLY = 'Isi dengan format huruf'
 export const ERROR_NOMINAL_MINLENGTH = (label: string, digit: number) =>
   `${label} minimal ${digit} digit angka`
+export const ERROR_LENGTH = (label: string, digit: number) =>
+  `${label} harus terdiri dari ${digit} angka`
 
 /* Nama */
 export const NAMA_ERROR_VALIDATION =
@@ -28,9 +30,6 @@ export const NPSN_ERROR_NOT_REGISTERED =
 
 /* Kode Aktivasi */
 export const KODE_AKTIVASI_ERROR_WRONG = 'Kode aktivasi salah'
-
-/* NIP */
-export const NIP_ERROR_LENGTH = 'NIP harus terdiri dari 18 angka'
 
 /* Harga Satuan */
 export const HARGA_SATUAN_ERROR_LESS_THAN = 'Harga kurang dari batas bawah SSH'

@@ -14,12 +14,14 @@ import { AnggaranStates, useAnggaranStore } from 'renderer/stores/anggaran'
 
 import syncToIPCMain from 'renderer/configs/ipc'
 
-import { NIP_ERROR_LENGTH } from 'renderer/constants/errorForm'
+import { ERROR_LENGTH } from 'renderer/constants/errorForm'
 
 import { btnFormDisabled } from 'renderer/utils/form-validation'
-import { formattingToNumber } from 'renderer/utils/number-formatting'
+import { formatNIP, formattingToNumber } from 'renderer/utils/number-formatting'
 
 import { IPC_ANGGARAN, IPC_PENJAB } from 'global/ipc'
+
+const NIP_ERROR_LENGTH = ERROR_LENGTH('NIP', 18)
 
 const FormPenanggungJawabView: FC = () => {
   const navigate = useNavigate()
@@ -106,16 +108,6 @@ const FormPenanggungJawabView: FC = () => {
 
   const closeModal = () => {
     navigate(-1)
-  }
-
-  const formatNIP = (value: string) => {
-    return value != null
-      ? value
-          .replace(/\D/g, '')
-          .replace(/(\d{15})(\d)/, '$1.$2')
-          .replace(/(\d{14})(\d)/, '$1.$2')
-          .replace(/(\d{8})(\d)/, '$1.$2')
-      : ''
   }
 
   const handleMinLengthNip = (v: any) => {
