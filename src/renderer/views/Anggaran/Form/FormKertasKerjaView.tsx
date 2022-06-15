@@ -52,7 +52,6 @@ import { btnFormDisabled } from 'renderer/utils/form-validation'
 
 import differenceWith from 'lodash/differenceWith'
 import isEqual from 'lodash/isEqual'
-import isEmpty from 'lodash/isEmpty'
 
 import styles from './index.module.css'
 
@@ -526,22 +525,6 @@ const FormKertasKerjaView: FC = () => {
       setTotalPerMonth(harga_satuan * jumlah)
     }
 
-    const getError = () => {
-      /* eslint-disable */
-      if (!isEmpty(errors?.anggaran_bulan)) {
-        if (errors?.anggaran_bulan.hasOwnProperty(props.index)) {
-          return {
-            [`anggaran_bulan.${props.index}.jumlah`]:
-              errors.anggaran_bulan[props.index].jumlah,
-            [`anggaran_bulan.${props.index}.satuan`]:
-              errors.anggaran_bulan[props.index].satuan,
-          }
-        }
-        return {}
-      }
-      return {}
-    }
-
     useEffect(() => {
       const jumlah = getValues(`anggaran_bulan.${props.index}.jumlah`)
       countTotal(jumlah)
@@ -574,9 +557,6 @@ const FormKertasKerjaView: FC = () => {
                 type="text"
                 name={`anggaran_bulan.${props.index}.jumlah`}
                 placeholder="Jumlah"
-                errors={getError()}
-                handleClearError={handleClearError}
-                register={register}
                 registerOption={{
                   onChange: (e) => {
                     const value = e.target.value
@@ -594,8 +574,6 @@ const FormKertasKerjaView: FC = () => {
                 width={255}
                 name={`anggaran_bulan.${props.index}.satuan`}
                 placeholder="Satuan"
-                errors={getError()}
-                register={register}
                 onClick={handleClick}
                 required={true}
                 headers={headerSatuan}
@@ -651,8 +629,6 @@ const FormKertasKerjaView: FC = () => {
                 maxHeight={250}
                 name="kegiatan"
                 placeholder="Apa kegiatan yang ingin Anda anggarkan?"
-                errors={errors}
-                register={register}
                 onClick={handleClick}
                 required={true}
                 headers={headerKegiatan}
@@ -668,8 +644,6 @@ const FormKertasKerjaView: FC = () => {
                 maxHeight={250}
                 name="rekening_belanja"
                 placeholder="Apa jenis rekening belanja yang ingin Anda anggarkan untuk kegiatan tersebut?"
-                errors={errors}
-                register={register}
                 onClick={handleClick}
                 required={true}
                 isDisabled={formDisable.rekening_belanja}
@@ -696,8 +670,6 @@ const FormKertasKerjaView: FC = () => {
                         </div>
                       )
                     }}
-                    errors={errors}
-                    register={register}
                     handleClearError={handleClearError}
                     onClick={handleClick}
                     required={true}

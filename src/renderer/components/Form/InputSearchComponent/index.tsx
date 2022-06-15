@@ -1,10 +1,13 @@
 import React, { FC, useState, useEffect, ChangeEvent, useRef } from 'react'
-import { FieldErrors, RegisterOptions, useFormContext } from 'react-hook-form'
+import { useFormContext } from 'react-hook-form'
 
 import { InputGroup, InputLeftAddon, Input } from '@wartek-id/input'
 import { Icon } from '@wartek-id/icon'
 
+import { findValueDeep } from 'renderer/utils/array-util'
+
 import filter from 'lodash/filter'
+import isEmpty from 'lodash/isEmpty'
 
 import styles from './index.module.css'
 
@@ -13,7 +16,6 @@ import clsx from 'clsx'
 interface InputSearchProps {
   dataOptions?: Array<any>
   enableAdd?: boolean
-  errors: FieldErrors
   headers?: Array<any>
   headerShow?: boolean
   maxHeight?: number
@@ -24,7 +26,6 @@ interface InputSearchProps {
   width: number
   customNotFound?: (query: string) => React.ReactNode
   onClick: (e: any) => void
-  register: (arg0: string, arg1: RegisterOptions) => void
 }
 
 const InputSearchComponent: FC<InputSearchProps> = (
@@ -40,17 +41,21 @@ const InputSearchComponent: FC<InputSearchProps> = (
 
   const {
     enableAdd = false,
-    errors,
     headerShow = true,
     maxHeight = 100,
     isDisabled,
     name,
     placeholder,
     required,
-    register,
   } = props
 
-  const { setValue, setFocus, clearErrors } = useFormContext()
+  const {
+    setValue,
+    setFocus,
+    clearErrors,
+    register,
+    formState: { errors },
+  } = useFormContext()
 
   let validation = {}
 
@@ -260,8 +265,8 @@ const InputSearchComponent: FC<InputSearchProps> = (
             'text-base'
           )}
           isDisabled={isDisabled}
-          isInvalid={open ? false : !!errors[name]}
-          errorMessage={open ? '' : errors[name]?.message}
+          isInvalid={open ? false : !isEmpty(findValueDeep(errors, name))}
+          errorMessage={open ? '' : findValueDeep(errors, name)?.message}
           {...register(name, validation)}
         />
       </InputGroup>

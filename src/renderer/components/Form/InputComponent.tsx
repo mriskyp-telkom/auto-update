@@ -17,6 +17,7 @@ import {
   isOnlyAlphabet,
   isNameValid,
 } from 'renderer/utils/form-validation'
+import { findValueDeep } from 'renderer/utils/array-util'
 
 import {
   NAMA_ERROR_VALIDATION,
@@ -33,6 +34,7 @@ import {
 } from 'renderer/constants/errorForm'
 
 import includes from 'lodash/includes'
+import isEmpty from 'lodash/isEmpty'
 
 import clsx from 'clsx'
 
@@ -316,8 +318,8 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
       isDisabled={isDisabled}
       id={name}
       name={name}
-      isInvalid={!!errors[name]}
-      errorMessage={errors[name]?.message}
+      isInvalid={!isEmpty(findValueDeep(errors, name))}
+      errorMessage={findValueDeep(errors, name)?.message}
       {...register(name, validation)}
     />
   )
