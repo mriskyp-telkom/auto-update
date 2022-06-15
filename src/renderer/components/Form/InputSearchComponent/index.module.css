@@ -28,7 +28,8 @@ table.searchTable thead tr.headerTable th:last-child {
   padding-right: 20px;
 }
 
-table.searchTable tbody td {
+table.searchTable tbody td,
+table.searchTable tfoot td {
   padding: 14px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -41,4 +42,8 @@ table.searchTable tbody td:first-child {
 
 table.searchTable tbody td:last-child {
   padding-right: 20px;
+}
+
+.dropdownOptions {
+  box-shadow: 0px 8px 20px rgba(37, 40, 43, 0.2);
 }
