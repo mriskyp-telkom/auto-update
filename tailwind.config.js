@@ -1,5 +1,6 @@
 /* eslint-disable */
 const { guruMobile } = require('@wartek-id/tailwind-config')
+const colors = require('tailwindcss/colors')
 
 module.exports = {
   mode: 'jit',
@@ -23,6 +24,7 @@ module.exports = {
         ...guruMobile.backgroundColor,
         default: '#ffffff',
         warning: '#ffc453',
+        lightBlue: colors.blue[50],
       },
       borderColor: {
         ...guruMobile.colors,

@@ -102,7 +102,10 @@ const CardDanaPembelanjaanView: FC<CardDanaPembelanjaanViewProps> = (
   }, [])
 
   return (
-    <div className="border w-min px-6 pb-6 pt-5 rounded grid place-content-end">
+    <div className="border border-primary w-min px-6 pb-6 pt-5 rounded grid place-content-between">
+      <div className="text-primary uppercase font-semibold mt-3">
+        ANGGARAN PER BULAN INI
+      </div>
       <div className="flex content-end">
         {list.map((data, index) => (
           <span key={index} className={clsx(index < list.length - 1 && 'mr-6')}>
@@ -130,6 +133,7 @@ const CardDanaPembelanjaanView: FC<CardDanaPembelanjaanViewProps> = (
               type="default"
               width={201}
               amount={data.amount}
+              fill={true}
             />
           </span>
         ))}
