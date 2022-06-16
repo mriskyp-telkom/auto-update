@@ -112,6 +112,8 @@ const FormPenarikanTunaiView: FC = () => {
                 name="nominal"
                 placeholder="Masukkan nominal tunai yang ditarik"
                 required={true}
+                label="Penarikan tunai"
+                minDigit={4}
                 registerOption={{
                   validate: {
                     moreThan: (v: any) => {

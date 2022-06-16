@@ -1,7 +1,8 @@
 export const ERROR_REQUIRED = 'Wajib Diisi'
 export const ERROR_NUMBER_ONLY = 'Isi dengan format angka'
 export const ERROR_ALPHABET_ONLY = 'Isi dengan format huruf'
-export const ERROR_NOMINAL_MINLENGTH = 'Harga satuan minimal 2 digit angka'
+export const ERROR_NOMINAL_MINLENGTH = (label: string, digit: number) =>
+  `${label} minimal ${digit} digit angka`
 
 /* Nama */
 export const NAMA_ERROR_VALIDATION =
