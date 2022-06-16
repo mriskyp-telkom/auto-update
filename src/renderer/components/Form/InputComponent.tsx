@@ -57,6 +57,8 @@ interface InputProps {
   setValue?: (name: string, value: string) => void
   registerOption?: RegisterOptions
   className?: string
+  label?: string
+  minDigit?: number
 }
 
 const error_server = [
@@ -67,7 +69,15 @@ const error_server = [
 ]
 
 const InputComponent: FC<InputProps> = (props: InputProps) => {
-  const { type, required, isDisabled, placeholder, name } = props
+  const {
+    type,
+    required,
+    isDisabled,
+    placeholder,
+    name,
+    minDigit = 2,
+    label = '',
+  } = props
 
   const {
     setValue,
@@ -241,16 +251,17 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
         ...props.registerOption?.validate,
         minLength: (v: any) => {
           const value = v.replace(/[^,\d]/g, '').toString()
-          return value >= 10 || ERROR_NOMINAL_MINLENGTH
+          return (
+            value.length >= minDigit || ERROR_NOMINAL_MINLENGTH(label, minDigit)
+          )
         },
       },
       onBlur: (e) => {
         const value = e.target.value.replace(/[^,\d]/g, '').toString()
-
-        if (value < 10) {
+        if (value.length < minDigit) {
           setError(name, {
             type: 'manual',
-            message: ERROR_NOMINAL_MINLENGTH,
+            message: ERROR_NOMINAL_MINLENGTH(label, minDigit),
           })
           return
         }
@@ -269,7 +280,10 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
         clearErrorRequired(value)
         clearErrorServer(value)
         props.registerOption?.onChange(e)
-        if (value >= 10 && errors[name]?.message === ERROR_NOMINAL_MINLENGTH) {
+        if (
+          value.length >= minDigit &&
+          errors[name]?.message === ERROR_NOMINAL_MINLENGTH(label, minDigit)
+        ) {
           handleClearError()
           return
         }

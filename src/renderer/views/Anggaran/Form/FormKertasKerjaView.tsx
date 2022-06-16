@@ -709,7 +709,10 @@ const FormKertasKerjaView: FC = () => {
                         minLength: (v: any) => {
                           const value = v.replace(/[^,\d]/g, '').toString()
 
-                          return value >= 10 || ERROR_NOMINAL_MINLENGTH
+                          return (
+                            value >= 10 ||
+                            ERROR_NOMINAL_MINLENGTH('Harga satuan', 2)
+                          )
                         },
                         lessThan: (v: any) => {
                           if (optionsHarga.length > 0) {
@@ -747,7 +750,7 @@ const FormKertasKerjaView: FC = () => {
                         if (value < 10) {
                           setError('harga_satuan', {
                             type: 'manual',
-                            message: ERROR_NOMINAL_MINLENGTH,
+                            message: ERROR_NOMINAL_MINLENGTH('Harga satuan', 2),
                           })
                           return
                         }
@@ -798,7 +801,7 @@ const FormKertasKerjaView: FC = () => {
                         if (
                           value >= 10 &&
                           errors.harga_satuan?.message ===
-                            ERROR_NOMINAL_MINLENGTH
+                            ERROR_NOMINAL_MINLENGTH('Harga satuan', 2)
                         ) {
                           clearErrors('harga_satuan')
                           return
