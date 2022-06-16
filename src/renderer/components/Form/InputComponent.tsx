@@ -71,7 +71,7 @@ const error_server = [
 const InputComponent: FC<InputProps> = (props: InputProps) => {
   const {
     type,
-    required,
+    required = false,
     isDisabled,
     placeholder,
     name,
@@ -107,24 +107,16 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
 
   let validation = {
     ...props.registerOption,
+    required: {
+      value: required,
+      message: ERROR_REQUIRED,
+    },
     onChange: (e: any) => {
       const value = e.target.value
+      clearErrorRequired(value)
       clearErrorServer(value)
       props.registerOption?.onChange(e)
     },
-  }
-
-  if (required) {
-    validation = {
-      ...validation,
-      required: ERROR_REQUIRED,
-      onChange: (e) => {
-        const value = e.target.value
-        clearErrorRequired(value)
-        clearErrorServer(value)
-        props.registerOption?.onChange(e)
-      },
-    }
   }
 
   if (type === 'email') {
@@ -337,10 +329,6 @@ const InputComponent: FC<InputProps> = (props: InputProps) => {
       {...register(name, validation)}
     />
   )
-}
-
-InputComponent.defaultProps = {
-  required: false,
 }
 
 export default InputComponent

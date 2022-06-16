@@ -4,6 +4,8 @@ import { useFormContext } from 'react-hook-form'
 import { InputGroup, InputLeftAddon, Input } from '@wartek-id/input'
 import { Icon } from '@wartek-id/icon'
 
+import { ERROR_REQUIRED } from 'renderer/constants/errorForm'
+
 import { findValueDeep } from 'renderer/utils/array-util'
 
 import filter from 'lodash/filter'
@@ -57,16 +59,14 @@ const InputSearchComponent: FC<InputSearchProps> = (
     formState: { errors },
   } = useFormContext()
 
-  let validation = {}
-
-  if (required) {
-    validation = {
-      ...validation,
-      required: 'Wajib diisi',
-      onChange: (e: ChangeEvent<HTMLInputElement>) => {
-        handleChange(e)
-      },
-    }
+  const validation = {
+    required: {
+      value: required,
+      message: ERROR_REQUIRED,
+    },
+    onChange: (e: ChangeEvent<HTMLInputElement>) => {
+      handleChange(e)
+    },
   }
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {

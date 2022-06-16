@@ -18,6 +18,13 @@ import {
   InformasiToko,
 } from 'global/types/TataUsaha'
 
+import { ERROR_LENGTH } from 'renderer/constants/errorForm'
+
+import {
+  formatNPWP,
+  formattingToNumber,
+} from 'renderer/utils/number-formatting'
+
 import syncToIpcMain from 'renderer/configs/ipc'
 
 import { IPC_TATA_USAHA } from 'global/ipc'
@@ -25,6 +32,9 @@ import { IPC_TATA_USAHA } from 'global/ipc'
 import clsx from 'clsx'
 
 const formSteps = ['Bukti Belanja', 'Detail Barang/Jasa', 'Perhitungan Pajak']
+
+const NPWP_LENGTH = 15
+const NPWP_ERROR_LENGTH = ERROR_LENGTH('NPWP', NPWP_LENGTH)
 
 const FormTambahPembelanjaanView: FC = () => {
   const navigate = useNavigate()
@@ -41,7 +51,13 @@ const FormTambahPembelanjaanView: FC = () => {
     reValidateMode: 'onBlur',
   })
 
-  const { setValue, handleSubmit } = formMethods
+  const {
+    setValue,
+    handleSubmit,
+    clearErrors,
+    setError,
+    formState: { errors },
+  } = formMethods
 
   const closeModal = () => {
     navigate(-1)
@@ -59,9 +75,19 @@ const FormTambahPembelanjaanView: FC = () => {
     }
   }
 
+  const handleChangeNoNpwp = () => {
+    setValue('store_npwp', '')
+    setNoNpwp(!noNpwp)
+    clearErrors('store_npwp')
+  }
+
   const closeModalConfirmNoStore = () => {
     setNoStore(true)
     setOpenModalConfirmNoStore(false)
+    clearErrors('store_name')
+    clearErrors('store_address')
+    clearErrors('store_telephone')
+    clearErrors('store_npwp')
   }
 
   const handleClick = (data: {
@@ -95,11 +121,6 @@ const FormTambahPembelanjaanView: FC = () => {
         }
       }
     }
-  }
-
-  const handleChangeNpwp = () => {
-    setValue('store_npwp', '', { shouldDirty: true })
-    setNoNpwp(!noNpwp)
   }
 
   const onSubmit = () => {
@@ -147,8 +168,8 @@ const FormTambahPembelanjaanView: FC = () => {
           steps={formSteps}
         >
           <div>
-            <div className="flex pb-5">
-              <div className="flex-grow pr-6">
+            <div className="grid grid-cols-2 gap-6 pb-5">
+              <div>
                 <div className="text-base pb-1 font-normal text-gray-900">
                   Jenis Transaksi
                 </div>
@@ -158,9 +179,14 @@ const FormTambahPembelanjaanView: FC = () => {
                   options={transactionTypeList}
                   handleSelect={handleSelectType}
                   required={true}
+                  registerOption={{
+                    validate: {
+                      minValue: (v) => v.amount > 0 || v.errorMsg,
+                    },
+                  }}
                 />
               </div>
-              <div className="flex-grow">
+              <div>
                 <div className="text-base pb-1 font-normal text-gray-900">
                   Tanggal Pelunasan
                 </div>
@@ -192,7 +218,7 @@ const FormTambahPembelanjaanView: FC = () => {
                   width={900}
                   maxHeight={250}
                   placeholder="Nama toko tempat Anda membeli barang/jasa"
-                  required={true}
+                  required={!noStore}
                   headers={[{ key: 'value', show: true, width: '100%' }]}
                   onClick={handleClick}
                   dataOptions={listToko}
@@ -208,7 +234,7 @@ const FormTambahPembelanjaanView: FC = () => {
                   type="name"
                   name="store_address"
                   placeholder="Nama jalan/blok, kelurahan, kecamatan, dan provinsi tempat Anda membeli barang/jasa"
-                  required={true}
+                  required={!noStore}
                 />
               </div>
               <div className="pb-5">
@@ -219,7 +245,7 @@ const FormTambahPembelanjaanView: FC = () => {
                   type="name"
                   name="store_telephone"
                   placeholder="Nomor kontak toko/pemilik usaha yang bisa dihubungi"
-                  required={true}
+                  required={!noStore}
                 />
               </div>
               <div className="pb-5">
@@ -227,16 +253,48 @@ const FormTambahPembelanjaanView: FC = () => {
                   NPWP Toko/Badan Usaha
                 </div>
                 <InputComponent
-                  type="name"
+                  type="text"
                   name="store_npwp"
                   placeholder="NPWP toko/pemilik usaha"
-                  required={true}
+                  required={!noStore && !noNpwp}
                   isDisabled={noNpwp}
+                  registerOption={{
+                    validate: {
+                      minMaxLength: (v) => {
+                        const value = formattingToNumber(v)
+                        const fixed = value.length === NPWP_LENGTH
+                        return v === '' || fixed || NPWP_ERROR_LENGTH
+                      },
+                    },
+                    onBlur: (e) => {
+                      const value = formattingToNumber(e.target.value)
+                      if (value !== '' && value.length !== NPWP_LENGTH) {
+                        setError('store_npwp', {
+                          type: 'manual',
+                          message: NPWP_ERROR_LENGTH,
+                        })
+                        return
+                      }
+                      clearErrors('store_npwp')
+                    },
+                    onChange: (e) => {
+                      const value = formattingToNumber(e.target.value)
+                      setValue('store_npwp', formatNPWP(value))
+                      if (
+                        value !== '' &&
+                        value.length === NPWP_LENGTH &&
+                        errors['store_npwp']?.message === NPWP_ERROR_LENGTH
+                      ) {
+                        clearErrors('store_npwp')
+                        return
+                      }
+                    },
+                  }}
                 />
               </div>
               <Checkbox
                 labelPosition="center"
-                onChange={handleChangeNpwp}
+                onChange={handleChangeNoNpwp}
                 checked={noNpwp}
               >
                 Toko/badan usaha ini tidak memiliki NPWP
