@@ -447,7 +447,7 @@ const CreateAccountView: FC = () => {
               type="submit"
               disabled={btnFormDisabled(errors)}
             >
-              Masuk
+              Daftar
             </Button>
           </div>
           <div className="text-blue-700 text-[12px] text-right">
