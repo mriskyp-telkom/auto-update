@@ -19,6 +19,7 @@ import {
   RekeningBelanja,
   GetUraianByKegiatanRequest,
   UraianBelanja,
+  JenisTransaksi,
 } from 'global/types/TataUsaha'
 import {
   GetAnggaran,
@@ -460,6 +461,48 @@ export class TataUsahaService {
     try {
       const res = await this.rapbsRepo.GetUraianByKegiatan(request)
       return ok(res)
+    } catch (error) {
+      return err(new Error(error))
+    }
+  }
+
+  async GetJenisTransaksiList(
+    request: GetTotalSaldoByPeriodeRequest
+  ): Promise<Result<JenisTransaksi[], Error>> {
+    const anggaran = await GetAnggaranById(request.idAnggaran)
+    const month = GetMonth(request.idPeriode)
+    const monthDate = GetMonthDateRange(
+      anggaran.tahunAnggaran,
+      month.monthNumber
+    )
+    const endDateMs = monthDate.endDate.setDate(monthDate.endDate.getDate() + 1)
+    const endDate = new Date(endDateMs)
+    try {
+      const result = await this.kasUmumRepo.GetTotalSaldo(
+        request.idAnggaran,
+        monthDate.startDate,
+        endDate
+      )
+      const jenisTransaksiList: JenisTransaksi[] = []
+      if (result.isOk()) {
+        const saldo = result.unwrapOr(<Saldo>{})
+        const jenisTransaksiTunai: JenisTransaksi = {
+          label: 'Tunai',
+          amount: saldo.sisaTunai,
+          additionalInfo: 'Saldo Tunai : $amount',
+          errorInfo: 'Saldo tunai $amount. Silakan tarik tunai terlebih dulu',
+        }
+        const jenisTransaksiNonTunai: JenisTransaksi = {
+          label: 'Non Tunai',
+          amount: saldo.sisaBank,
+          additionalInfo: 'Saldo Non Tunai : $amount',
+          errorInfo:
+            'Saldo non tunai $amount. Silakan setor tunai terlebih dulu',
+        }
+        jenisTransaksiList.push(jenisTransaksiTunai)
+        jenisTransaksiList.push(jenisTransaksiNonTunai)
+      }
+      return ok(jenisTransaksiList)
     } catch (error) {
       return err(new Error(error))
     }

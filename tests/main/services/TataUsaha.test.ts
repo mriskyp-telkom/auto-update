@@ -17,6 +17,7 @@ import {
   RekeningBelanja,
   GetUraianByKegiatanRequest,
   UraianBelanja,
+  JenisTransaksi,
 } from 'global/types/TataUsaha'
 
 import { AktivasiBku } from 'main/models/AktivasiBku'
@@ -577,4 +578,21 @@ test('GetUraianByKegiatan', async () => {
   expect(list[0].jumlah).toBe(16)
   expect(list[0].hargaSatuan).toBe(200000)
   expect(list[0].satuan).toBe('Jam Pelajaran')
+})
+
+test('GetJenisTransaksiList', async () => {
+  const conn = getConnection()
+  const tataUsahaService = new TataUsahaService(conn)
+  const request = <GetTotalSaldoByPeriodeRequest>{
+    idAnggaran: '-ywMrrqE30Ck6P0p08Uj2w',
+    idPeriode: 84,
+  }
+
+  const res = await tataUsahaService.GetJenisTransaksiList(request)
+  const result = res.unwrapOr(Array<JenisTransaksi>())
+  expect(result.length).toBe(2)
+  expect(result[0].label).toBe('Tunai')
+  expect(result[0].amount).toBe(25)
+  expect(result[1].label).toBe('Non Tunai')
+  expect(result[1].amount).toBe(50)
 })

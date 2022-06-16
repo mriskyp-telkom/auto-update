@@ -130,3 +130,10 @@ export interface UraianBelanja {
   hargaSatuan: number
   total: number
 }
+
+export interface JenisTransaksi {
+  label: string
+  amount: number
+  additionalInfo: string
+  errorInfo: string
+}

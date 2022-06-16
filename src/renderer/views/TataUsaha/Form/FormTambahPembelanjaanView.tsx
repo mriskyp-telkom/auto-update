@@ -14,6 +14,7 @@ import InputComponent from 'renderer/components/Form/InputComponent'
 import { FormTambahPembelanjaanData } from 'renderer/types/forms/TataUsahaType'
 import {
   GetLastTransactionDateRequest,
+  GetTotalSaldoByPeriodeRequest,
   InformasiToko,
 } from 'global/types/TataUsaha'
 
@@ -22,21 +23,6 @@ import syncToIpcMain from 'renderer/configs/ipc'
 import { IPC_TATA_USAHA } from 'global/ipc'
 
 import clsx from 'clsx'
-
-const transactionTypeList = [
-  {
-    label: 'Tunai',
-    amount: 0,
-    additionalInfo: 'Saldo Tunai : $amount',
-    errorInfo: 'Saldo tunai $amount. Silakan tarik tunai terlebih dulu',
-  },
-  {
-    label: 'Non Tunai',
-    amount: 9000000,
-    additionalInfo: 'Saldo Non Tunai : $amount',
-    errorInfo: 'Saldo non tunai $amount. Silakan setor tunai terlebih dulu',
-  },
-]
 
 const formSteps = ['Bukti Belanja', 'Detail Barang/Jasa', 'Perhitungan Pajak']
 
@@ -49,6 +35,7 @@ const FormTambahPembelanjaanView: FC = () => {
   const [noNpwp, setNoNpwp] = useState(false)
   const [openModalConfirmNoStore, setOpenModalConfirmNoStore] = useState(false)
   const [listToko, setListToko] = useState([])
+  const [transactionTypeList, setTransactionTypeList] = useState([])
   const formMethods = useForm<FormTambahPembelanjaanData>({
     mode: 'onSubmit',
     reValidateMode: 'onBlur',
@@ -124,10 +111,23 @@ const FormTambahPembelanjaanView: FC = () => {
       idAnggaran: q_id_anggaran,
       idPeriode: parseInt(q_id_periode),
     }
+
+    const requestJenisTransaksi: GetTotalSaldoByPeriodeRequest = {
+      idAnggaran: q_id_anggaran,
+      idPeriode: parseInt(q_id_periode),
+    }
+
     const result = syncToIpcMain(IPC_TATA_USAHA.getLastTransactionDate, request)
     const resultListToko = syncToIpcMain(IPC_TATA_USAHA.getListToko)
+    const resultJenisTransaksi = syncToIpcMain(
+      IPC_TATA_USAHA.getJenisTransaksiList,
+      requestJenisTransaksi
+    )
     if (resultListToko?.value) {
       setListToko(resultListToko.value)
+    }
+    if (resultJenisTransaksi?.value) {
+      setTransactionTypeList(resultJenisTransaksi.value)
     }
     setTanggalPelunasan(new Date(result.value))
   }, [])

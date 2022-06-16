@@ -124,4 +124,11 @@ module.exports = {
       e.returnValue = await tataUsahaService.GetUraianByKegiatan(request)
     }
   ),
+
+  getJenisTransaksiList: ipcMain.on(
+    IPC_TATA_USAHA.getJenisTransaksiList,
+    async (e, request: GetTotalSaldoByPeriodeRequest) => {
+      e.returnValue = await tataUsahaService.GetJenisTransaksiList(request)
+    }
+  ),
 }
