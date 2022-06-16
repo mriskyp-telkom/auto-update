@@ -123,6 +123,7 @@
   "dependencies": {
     "@electron/remote": "^2.0.8",
     "@headlessui/react": "^1.5.0",
+    "@types/node-schedule": "^2.1.0",
     "@wartek-id/avatar": "^1.1.4",
     "@wartek-id/badge": "^1.0.0",
     "@wartek-id/button": "^1.1.1",
@@ -149,6 +150,7 @@
     "moment": "^2.29.1",
     "neverthrow": "^4.3.1",
     "node-machine-id": "^1.1.12",
+    "node-schedule": "^2.1.0",
     "npm": "^8.5.0",
     "query-string": "^7.1.1",
     "react": "^17.0.2",

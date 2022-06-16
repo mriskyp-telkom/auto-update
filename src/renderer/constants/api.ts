@@ -49,6 +49,9 @@ export const API_POST_RKAS_DETAIL = `/api/rkas/detail`
 export const API_POST_RKAS_PTK = `/api/rkas/ptk`
 export const API_POST_RKAS_FINAL = `/api/rkas/final`
 
-//check-sync
+// check-sync
 export const API_GET_SYNC_STATUS = (syncGuid: string) =>
   `/api/sync/status/${syncGuid}`
+
+// update
+export const API_GET_CHECK_UPDATE = `/api/version/latest?type=release`
