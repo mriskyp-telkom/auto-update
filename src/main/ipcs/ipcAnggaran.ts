@@ -1,6 +1,6 @@
 import { ipcMain } from 'electron'
 import { Anggaran } from 'main/models/Anggaran'
-import { Anggaran as AnggaranData } from 'global/types/Anggaran'
+import { Anggaran as AnggaranData, AnggaranReset } from 'global/types/Anggaran'
 import {
   AddAnggaran,
   DelAnggaran,
@@ -168,8 +168,12 @@ module.exports = {
 
   resetAnggaranAfterPengajuan: ipcMain.on(
     IPC_ANGGARAN.resetAnggaranAfterPengajuan,
-    async (e, idAnggaran: string) => {
-      e.returnValue = await ResetAnggaranAfterPengajuan(idAnggaran)
+    async (e, request: AnggaranReset) => {
+      e.returnValue = await ResetAnggaranAfterPengajuan(
+        request.idAnggaran,
+        request.tanggalPengajuan,
+        request.isPengesahan
+      )
     }
   ),
 }

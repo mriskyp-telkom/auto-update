@@ -159,7 +159,7 @@ const MengulasKertasKerjaView: FC = () => {
 
   const handleSubmit = () => {
     setAlertMengulas(false)
-    if (responseMengulas === RESPONSE_PENGESAHAN.success) {
+    if (responseMengulas === RESPONSE_PENGESAHAN.send) {
       navigate('/anggaran')
     }
     if (

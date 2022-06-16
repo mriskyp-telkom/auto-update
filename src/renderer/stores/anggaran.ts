@@ -52,9 +52,6 @@ export interface AnggaranStates extends State {
   counterRetryPengajuan: number
   setCounterRetryPengajuan: (counterRetryPengajuan: number) => void
 
-  syncId: string
-  setSyncId: (syncId: string) => void
-
   tanggalPengajuan: Date
   setTanggalPengajuan: (tanggalPengajuan: Date) => void
 }
@@ -104,9 +101,6 @@ export const useAnggaranStore = create<AnggaranStates>((set) => ({
   counterRetryPengajuan: 0,
   setCounterRetryPengajuan: (counterRetryPengajuan) =>
     set(() => ({ counterRetryPengajuan })),
-
-  syncId: '',
-  setSyncId: (syncId) => set(() => ({ syncId })),
 
   tanggalPengajuan: null,
   setTanggalPengajuan: (tanggalPengajuan) => set(() => ({ tanggalPengajuan })),

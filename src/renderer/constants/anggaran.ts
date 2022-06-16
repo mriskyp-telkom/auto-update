@@ -44,6 +44,7 @@ export const RESPONSE_PENGESAHAN = {
   error_sync_status_final: 'error_sync_status_final',
   error_multiple_device: 'error_multiple_device',
   error_lost_connection: 'error_lost_connection',
+  send: 'send',
 }
 
 export const ALERT_MENGULAS = {
@@ -110,6 +111,14 @@ export const ALERT_MENGULAS = {
     desc: `Periksa kembali koneksi internet Anda lalu sinkronisasi ulang.`,
     btnCancelText: 'Kembali',
     btnActionText: `Sinkronisasi Ulang`,
+  },
+  [RESPONSE_PENGESAHAN.send]: {
+    type: 'warning',
+    icon: 'hourglass_bottom',
+    title: `${copyKertasKerja()} Sedang Dikirim`,
+    desc: `Mohon cek status terbaru secara berkala.`,
+    btnCancelText: 'Tutup',
+    btnActionText: `Kembali ke Beranda`,
   },
 }
 

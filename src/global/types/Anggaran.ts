@@ -20,3 +20,9 @@ export interface Anggaran {
   id_penjab: string | null
   tahun_anggaran: number
 }
+
+export interface AnggaranReset {
+  idAnggaran: string
+  tanggalPengajuan: Date
+  isPengesahan: number
+}

@@ -5,6 +5,8 @@ export const STATUS_KERTAS_KERJA = {
   not_created: 'not_created',
   approved: 'approved',
   disabled: 'disabled',
+  sending: 'sending',
+  retry: 'retry',
 }
 
 export const VERSI_ANGGARAN = {
@@ -116,6 +118,8 @@ export const CONST_ACCOUNT = {
 export const STATUS_INVALID_PENGESAHAN = {
   invalidSisaDana: 2,
   invalidDataCentral: 3,
+  mengirimKertasKerja: 4,
+  gagalMengirim: 5,
 }
 
 export const STATUS_BKU_PERBULAN = {

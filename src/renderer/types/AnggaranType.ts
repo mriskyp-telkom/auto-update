@@ -13,6 +13,7 @@ export type ResponseMengulas =
   | 'success'
   | 'error_sisa_dana'
   | 'error_data_sentral'
+  | 'send'
 
 export interface Ptk {
   idPtk: string

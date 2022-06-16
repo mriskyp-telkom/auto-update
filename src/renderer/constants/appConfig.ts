@@ -5,6 +5,7 @@ export const APP_CONFIG = {
   tahunAktif: 'tahun_aktif',
   tahunAnggaran: 'tahun_anggaran',
   koregInvalid: 'koreg_invalid',
+  syncPengajuanKKId: 'sync_pengajuan_kk_id',
 }
 
 export const TYPE_SESSION = {

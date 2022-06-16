@@ -377,12 +377,15 @@ export const GetTotalAnggaran = async (
 }
 
 export const ResetAnggaranAfterPengajuan = async (
-  idAnggaran: string
+  idAnggaran: string,
+  tanggalPengajuan: Date,
+  isPengesahan: number
 ): Promise<UpdateResult> => {
   return await createQueryBuilder()
     .update(Anggaran)
     .set({
-      isPengesahan: 0,
+      tanggalPengajuan: tanggalPengajuan,
+      isPengesahan: isPengesahan,
       tanggalPengesahan: null,
       alasanPenolakan: null,
       lastUpdate: new Date(),
