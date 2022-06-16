@@ -143,3 +143,7 @@ export const KAS_UMUM_TYPE = {
   line: 'line',
   row: 'row',
 }
+
+export const TIME_CHECK_UPDATE_APP = {
+  hour: 8,
+}

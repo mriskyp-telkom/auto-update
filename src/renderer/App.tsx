@@ -31,8 +31,10 @@ import FormPenarikanTunaiView from 'renderer/views/TataUsaha/Form/FormPenarikanT
 import FormTambahPembelanjaanView from 'renderer/views/TataUsaha/Form/FormTambahPembelanjaanView'
 import PerbaruiAplikasi from 'renderer/views/PerbaruiAplikasi'
 import { PAGE_PERBARUI_APLIKASI } from 'renderer/constants/routes'
-import DialogUpdate from './views/PerbaruiAplikasi/DialogUpdate'
-import SyncPerbaruiAplikasi from './views/PerbaruiAplikasi/SyncPerbaruiAplikasi'
+import DialogUpdate from 'renderer/views/PerbaruiAplikasi/DialogUpdate'
+import SyncPerbaruiAplikasi from 'renderer/views/PerbaruiAplikasi/SyncPerbaruiAplikasi'
+import schedule from 'node-schedule'
+import { TIME_CHECK_UPDATE_APP } from 'global/constants'
 
 const ipcRenderer = window.require('electron').ipcRenderer
 
@@ -73,6 +75,12 @@ const App: FC = () => {
       default:
         navigate('/registration')
     }
+  }, [])
+
+  useEffect(() => {
+    schedule.scheduleJob({ hour: TIME_CHECK_UPDATE_APP.hour }, function () {
+      // TODO: Hit api check latest app
+    })
   }, [])
 
   return (
